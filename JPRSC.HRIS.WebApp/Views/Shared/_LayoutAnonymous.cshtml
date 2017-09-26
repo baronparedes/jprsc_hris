@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - @AppSettings.String("ApplicationName")</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/stylebundles/metronic-global")
+    @Styles.Render("~/stylebundles/metronic-theme")
+    @RenderSection("styles", required: false)
+    <link rel="icon" href="@Url.Content("~/wwwroot/favicon.ico")" />
+</head>
+<body class="login">
+    <div class="logo">
+        <a href="@Url.Action("Home", "Index")">
+            <img src="~/wwwroot/metronic/pages/img/logo-big.png" alt="" />
+        </a>
+    </div>
+    <div class="content">
+        @RenderBody()
+    </div>
+    <div class="copyright"> @DateTime.Now.Year &copy; @AppSettings.String("ApplicationName").</div>
+    @Scripts.Render("~/scriptbundles/metronic-core")
+    @Scripts.Render("~/scriptbundles/metronic-theme-global")
+    @Scripts.Render("~/scriptbundles/metronic-theme-layout")
+    <script>
+        configureJQueryValidator();
+
+        $(document).ready(function () {
+            addBootstrapClassesToValidationElements();
+        });
+
+        function addBootstrapClassesToValidationElements() {
+            $("span.field-validation-valid, span.field-validation-error").addClass('help-block');
+            $("div.form-group").has("span.field-validation-error").addClass('has-error');
+            $("div.validation-summary-errors").has("li:visible").addClass("alert alert-block alert-danger");
+        };
+
+        function configureJQueryValidator() {
+            jQuery.validator.setDefaults({
+                highlight: function (element, errorClass, validClass) {
+                    if (element.type === 'radio') {
+                        this.findByName(element.name).addClass(errorClass).removeClass(validClass);
+                    } else {
+                        $(element).addClass(errorClass).removeClass(validClass);
+                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    }
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    if (element.type === 'radio') {
+                        this.findByName(element.name).removeClass(errorClass).addClass(validClass);
+                    } else {
+                        $(element).removeClass(errorClass).addClass(validClass);
+                        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                    }
+                }
+            });
+        };
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

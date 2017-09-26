@@ -1,0 +1,46 @@
+﻿@{
+    User loggedInUser;
+    using (var db = new JPRSC.HRIS.Infrastructure.Data.ApplicationDbContext())
+    {
+        loggedInUser = db.Users.SingleOrDefault(u => u.UserName == User.Identity.Name);
+    }
+}
+
+<div class="page-header navbar navbar-fixed-top">
+    <div class="page-header-inner ">
+        <div class="page-logo">
+            <a href="@Url.Action("Index", "Home")">
+                <img src="~/wwwroot/metronic/layouts/layout/img/logo.png" alt="logo" class="logo-default" />
+            </a>
+            <div class="menu-toggler sidebar-toggler">
+                <span></span>
+            </div>
+        </div>
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+            <span></span>
+        </a>
+        <div class="top-menu">
+            <ul class="nav navbar-nav pull-right">
+                <li class="dropdown dropdown-user">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        @*<img alt="" class="img-circle" src="@Url.Content(loggedInUser.ProfileImageUrl)" />*@
+                        @*<span class="username username-hide-on-mobile"> @(loggedInUser?.DisplayName) </span>*@
+                        <span class="username username-hide-on-mobile"> Admin </span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                            <a href="" id="logoutLink">
+                                <i class="fa fa-sign-out"></i> Log Out
+                            </a>
+                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                            }
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

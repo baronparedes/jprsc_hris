@@ -102,6 +102,7 @@
       <DependentUpon>201709080246062_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
+    <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
     <Compile Include="Infrastructure\Email\EmailMessage.cs" />
     <Compile Include="Infrastructure\Email\NoopEmailService.cs" />

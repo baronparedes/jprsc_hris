@@ -1,0 +1,159 @@
+﻿<div class="page-sidebar-wrapper">
+    @*DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing*@
+    @*DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed*@
+    <div class="page-sidebar navbar-collapse collapse">
+        @*DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders)*@
+        @*DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode*@
+        @*DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode*@
+        @*DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing*@
+        @*DOC: Set data-keep-expand="true" to keep the submenues expanded*@
+        @*DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed*@
+        <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
+            @*DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element*@
+            <li class="sidebar-toggler-wrapper hide">
+                <div class="sidebar-toggler">
+                    <span></span>
+                </div>
+            </li>
+            @*DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element*@
+            @*<li class="sidebar-search-wrapper">
+                    <!-- DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box -->
+                    <!-- DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box -->
+                    <form class="sidebar-search  sidebar-search-bordered" action="page_general_search_3.html" method="POST">
+                        <a href="javascript:;" class="remove">
+                            <i class="icon-close"></i>
+                        </a>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
+                                <a href="javascript:;" class="btn submit">
+                                    <i class="icon-magnifier"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </form>
+                </li>*@
+            <li class="nav-item start @(Html.HasSelectedMenu("Index", "Home") ? "active" : String.Empty)">
+                <a href="@Url.Action("Index", "Home")" class="nav-link">
+                    <i class="fa fa-home"></i>
+                    <span class="title">Home</span>
+                </a>
+            </li>
+            @*@if (User.IsInRole(RoleNames.Admin))
+            {
+                <li class="nav-item @(Html.HasSelectedMenu("Clients") ? "active" : String.Empty)">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-users"></i>
+                        <span class="title">Clients</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item start @(Html.HasSelectedMenu("Index", "Clients") ? "active" : String.Empty)">
+                            <a href="@Url.Action("Index", "Clients")" class="nav-link ">
+                                <i class="fa fa-users"></i>
+                                <span class="title">Client List</span>
+                            </a>
+                        </li>
+                        <li class="nav-item start @(Html.HasSelectedMenu("Add", "Clients") ? "active" : String.Empty)">
+                            <a href="@Url.Action("Add", "Clients")" class="nav-link ">
+                                <i class="fa fa-user-plus"></i>
+                                <span class="title">Add Client</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item @(Html.HasSelectedMenu("Releases", "Home") || Html.HasSelectedMenu("Testing", "Home") ? "active" : String.Empty)">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-laptop"></i>
+                        <span class="title">Software Dev't</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item start @(Html.HasSelectedMenu("Releases", "Home") ? "active" : String.Empty)">
+                            <a href="@Url.Action("Releases", "Home")" class="nav-link ">
+                                <i class="fa fa-book"></i>
+                                <span class="title">Releases</span>
+                            </a>
+                        </li>
+                        <li class="nav-item start @(Html.HasSelectedMenu("Testing", "Home") ? "active" : String.Empty)">
+                            <a href="@Url.Action("Testing", "Home")" class="nav-link ">
+                                <i class="fa fa-bug"></i>
+                                <span class="title">For Testers</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            }
+            @if (User.IsInRole(RoleNames.Agent))
+            {
+                <li class="nav-item  @(Html.HasSelectedMenu("Index", "Chat") ? "active" : String.Empty)">
+                    <a href="@Url.Action("Index", "Chat")" class="nav-link">
+                        <i class="fa fa-comments"></i>
+                        <span class="title">Chat</span>
+                    </a>
+                </li>
+            }
+            @if (User.IsInRole(RoleNames.Client))
+            {
+                <li class="nav-item @(Html.HasSelectedMenu("Agents") ? "active" : String.Empty)">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-users"></i>
+                        <span class="title">Agents</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item start @(Html.HasSelectedMenu("Index", "Agents") ? "active" : String.Empty)">
+                            <a href="@Url.Action("Index", "Agents")" class="nav-link ">
+                                <i class="fa fa-users"></i>
+                                <span class="title">Agent List</span>
+                            </a>
+                        </li>
+                        <li class="nav-item start @(Html.HasSelectedMenu("Add", "Agents") ? "active" : String.Empty)">
+                            <a href="@Url.Action("Add", "Agents")" class="nav-link ">
+                                <i class="fa fa-user-plus"></i>
+                                <span class="title">Add Agent</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item @(Html.HasSelectedMenu("Index", "Conversations") ? "active" : String.Empty)">
+                    <a href="@Url.Action("Index", "Conversations")" class="nav-link">
+                        <i class="fa fa-comments"></i>
+                        <span class="title">Conversations</span>
+                    </a>
+                </li>
+                <li class="nav-item @(Html.HasSelectedMenu("Settings") ? "active" : String.Empty)">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-cog"></i>
+                        <span class="title">Settings</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item start @(Html.HasSelectedMenu("Chatbox", "Settings") ? "active" : String.Empty)">
+                            <a href="@Url.Action("Chatbox", "Settings")" class="nav-link ">
+                                <i class="fa fa-comments"></i>
+                                <span class="title">Chatbox</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            }
+
+            <li class="nav-item @(Html.HasSelectedMenu("Manage") ? "active" : String.Empty)">
+                <a href="javascript:;" class="nav-link nav-toggle">
+                    <i class="fa fa-user"></i>
+                    <span class="title">Account</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item start @(Html.HasSelectedMenu("ChangePassword", "Manage") ? "active" : String.Empty)">
+                        <a href="@Url.Action("ChangePassword", "Manage")" class="nav-link ">
+                            <i class="fa fa-lock"></i>
+                            <span class="title">Change Password</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>*@
+        </ul>
+    </div>
+</div>
