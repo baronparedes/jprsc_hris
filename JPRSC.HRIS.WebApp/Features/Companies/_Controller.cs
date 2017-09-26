@@ -45,6 +45,11 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Edit.Command command)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(command);
+            }
+
             await _mediator.Send(command);
 
             return RedirectToAction(nameof(Index));
