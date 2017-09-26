@@ -39,6 +39,12 @@
                     <span class="title">Home</span>
                 </a>
             </li>
+            <li class="nav-item start @(Html.HasSelectedMenu("Companies") ? "active" : String.Empty)">
+                <a href="@Url.Action("Index", "Companies")" class="nav-link">
+                    <i class="fa fa-building"></i>
+                    <span class="title">Companies</span>
+                </a>
+            </li>
             @*@if (User.IsInRole(RoleNames.Admin))
             {
                 <li class="nav-item @(Html.HasSelectedMenu("Clients") ? "active" : String.Empty)">

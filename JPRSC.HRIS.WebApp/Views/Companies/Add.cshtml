@@ -1,0 +1,80 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Companies.Add.Command
+
+@{
+    ViewBag.Title = "Add a Company";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Add Company</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Add Company
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-user-plus font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Add Company</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form">
+                        <form role="form" action="@Url.Action("Add", "Companies")" method="post">
+                            @Html.AntiForgeryToken()
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="control-label">Code</label>
+                                    @Html.TextBoxFor(m => m.Code, new { @class = "form-control", placeholder = nameof(Model.Code) })
+                                    @Html.ValidationMessageFor(m => m.Code)
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Name</label>
+                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = nameof(Model.Name) })
+                                    @Html.ValidationMessageFor(m => m.Name)
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Address</label>
+                                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = nameof(Model.Address) })
+                                    @Html.ValidationMessageFor(m => m.Address)
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Email</label>
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = nameof(Model.Email) })
+                                    @Html.ValidationMessageFor(m => m.Email)
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Phone</label>
+                                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = nameof(Model.Phone) })
+                                    @Html.ValidationMessageFor(m => m.Phone)
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Signatory</label>
+                                    @Html.TextBoxFor(m => m.Signatory, new { @class = "form-control", placeholder = nameof(Model.Signatory) })
+                                    @Html.ValidationMessageFor(m => m.Signatory)
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Position</label>
+                                    @Html.TextBoxFor(m => m.Position, new { @class = "form-control", placeholder = nameof(Model.Position) })
+                                    @Html.ValidationMessageFor(m => m.Position)
+                                </div>
+                            </div>
+                            <div class="form-actions right">
+                                <a href="@Url.Action("Index", "Companies")" class="btn default">Cancel</a>
+                                <button type="submit" class="btn green">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -10,8 +10,9 @@ namespace JPRSC.HRIS.Infrastructure.Data
         {
         }
 
-        public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<CompanyProfile> CompanyProfiles { get; set; }
         public DbSet<CustomRole> CustomRoles { get; set; }
+        public DbSet<LogEntry> LogEntries { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -217,6 +217,11 @@
   <ItemGroup>
     <Compile Include="Features\Account\SendCode.cs" />
     <Compile Include="Features\Account\VerifyCode.cs" />
+    <Compile Include="Features\Companies\Add.cs" />
+    <Compile Include="Features\Companies\Edit.cs" />
+    <Compile Include="Features\Companies\_Controller.cs" />
+    <Compile Include="Features\Companies\Index.cs" />
+    <Compile Include="Features\Companies\_MappingProfile.cs" />
     <Compile Include="Features\Manage\AddPhoneNumber.cs" />
     <Compile Include="Features\Manage\SettPassword.cs" />
     <Compile Include="Infrastructure\Mapping\MappingConfig.cs" />
@@ -6507,6 +6512,15 @@
     <Content Include="wwwroot\lib\jquery\external\sizzle\dist\sizzle.min.map" />
     <Content Include="wwwroot\lib\jquery\README.md" />
     <Content Include="wwwroot\lib\jquery\src\.jshintrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Companies\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Companies\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Companies\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

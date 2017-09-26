@@ -101,6 +101,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201709080246062_Initial.Designer.cs">
       <DependentUpon>201709080246062_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201709260900067_AddCompanyProfile.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201709260900067_AddCompanyProfile.Designer.cs">
+      <DependentUpon>201709260900067_AddCompanyProfile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -110,6 +114,7 @@
     <Compile Include="Infrastructure\Identity\SignInManager.cs" />
     <Compile Include="Infrastructure\Identity\UserManager.cs" />
     <Compile Include="Infrastructure\Sms\NoopSmsService.cs" />
+    <Compile Include="Models\CompanyProfile.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Models\Permission.cs" />
@@ -123,6 +128,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201709080246062_Initial.resx">
       <DependentUpon>201709080246062_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201709260900067_AddCompanyProfile.resx">
+      <DependentUpon>201709260900067_AddCompanyProfile.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
