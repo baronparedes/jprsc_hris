@@ -1,0 +1,14 @@
+{
+  "name": "jprsc-hris",
+  "private": true,
+  "dependencies": {
+    "angular": "1.6.5",
+    "angular-bootstrap": "2.5.0",
+    "bootstrap": "3.3.7",
+    "font-awesome": "4.7.0",
+    "jquery": "3.2.1",
+    "jquery-validation": "1.16.0",
+    "jquery-validation-unobtrusive": "3.2.6",
+    "Microsoft.jQuery.Unobtrusive.Ajax": "3.2.3"
+  }
+}
