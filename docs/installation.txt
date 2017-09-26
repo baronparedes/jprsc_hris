@@ -1,0 +1,21 @@
+STEP 1: Creating the Database
+1. Open the Package Manager Console window. (View > Other Windows > Package Manager Console)
+2. In the Default Project dropdown, select JPRSC.HRIS.
+3. On the Solution Explorer, right click on JPRSC.HRIS.WebApp > Set as StartUp Project.
+4. Back in the Package Manager Console window, click on PM>
+5. Type Update-Database and press Enter.
+6. Some text will appear on the Package Manager Console window. If all you see is white text, that's good. Any red text indicates an error. In either case, the PM> prompt will eventually reappear. Contact me in case of any error.
+
+STEP 2: Testing Login
+1. On the Solution Explorer, right click on JPRSC.HRIS.WebApp > Set as StartUp Project.
+2. Run the application (F5).
+3. A browser window/tab will open and you should be presented with the login screen.
+4. Use the following credentials to log in: admin01@email.com / password123
+5. You will be taken to the dashboard screen (currently blank).
+
+STEP 3. Testing Companies
+This is loosely based on the Company Profile screen on the PDF. Fields are incomplete at this time.
+1. On the dashboard page, select Companies on the left sidebar.
+2. You should be presented with a list of companies, or a message stating that there are no companies yet.
+3. To add a company: click Add Company, fill in the fields, and click the Add button. You will be taken back to the companies page, with the newly added company now displaying.
+4. To edit a company: on the companies page, on the table displaying the list of companies, click the respective Edit button. Update the fields and click the Save button. You will be taken back to the companies page.
