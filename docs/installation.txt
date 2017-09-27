@@ -1,10 +1,11 @@
 STEP 1: Creating the Database
-1. Open the Package Manager Console window. (View > Other Windows > Package Manager Console)
-2. In the Default Project dropdown, select JPRSC.HRIS.
-3. On the Solution Explorer, right click on JPRSC.HRIS.WebApp > Set as StartUp Project.
-4. Back in the Package Manager Console window, click on PM>
-5. Type Update-Database and press Enter.
-6. Some text will appear on the Package Manager Console window. If all you see is white text, that's good. Any red text indicates an error. In either case, the PM> prompt will eventually reappear. Contact me in case of any error.
+1. Build the solution. This will restore the NuGet packages.
+2. Open the Package Manager Console window. (View > Other Windows > Package Manager Console)
+3. In the Default Project dropdown, select JPRSC.HRIS.
+4. On the Solution Explorer, right click on JPRSC.HRIS.WebApp > Set as StartUp Project.
+5. Back in the Package Manager Console window, click on PM>
+6. Type Update-Database and press Enter.
+7. Some text will appear on the Package Manager Console window. If all you see is white text, that's good. Any red text indicates an error. In either case, the PM> prompt will eventually reappear. Contact me in case of any error.
 
 STEP 2: Testing Login
 1. On the Solution Explorer, right click on JPRSC.HRIS.WebApp > Set as StartUp Project.
