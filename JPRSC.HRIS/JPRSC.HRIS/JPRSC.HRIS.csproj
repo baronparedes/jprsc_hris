@@ -105,6 +105,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201709260900067_AddCompanyProfile.Designer.cs">
       <DependentUpon>201709260900067_AddCompanyProfile.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201711150444435_UpdateCompanyFields.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201711150444435_UpdateCompanyFields.Designer.cs">
+      <DependentUpon>201711150444435_UpdateCompanyFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -131,6 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201709260900067_AddCompanyProfile.resx">
       <DependentUpon>201709260900067_AddCompanyProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201711150444435_UpdateCompanyFields.resx">
+      <DependentUpon>201711150444435_UpdateCompanyFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

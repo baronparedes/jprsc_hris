@@ -1,4 +1,5 @@
-﻿using System.Web.Optimization;
+﻿using System;
+using System.Web.Optimization;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
 {
@@ -6,8 +7,15 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
+            AddCompanyBundles(bundles);
             AddCoreBundles(bundles);
             AddLoginBundles(bundles);
+        }
+
+        private static void AddCompanyBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/companies",
+                "~/wwwroot/scripts/companies/add.js");
         }
 
         private static void AddCoreBundles(BundleCollection bundles)

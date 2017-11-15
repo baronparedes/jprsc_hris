@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Mvc
 {
@@ -15,6 +17,27 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Mvc
         protected JsonCamelCaseResult JsonCamelCase(object data)
         {
             return new JsonCamelCaseResult(data);
+        }
+
+        protected JsonCamelCaseResult JsonValidationError()
+        {
+            // An errors dictionary where
+            // The keys are property names and
+            // The values are errors for those property names
+            var errorsDictionary = new Dictionary<string, IEnumerable<string>>();
+
+            foreach (var modelState in ModelState)
+            {
+                if (modelState.Value.Errors.Any())
+                {
+                    errorsDictionary.Add(modelState.Key, modelState.Value.Errors.Select(e => e.ErrorMessage));
+                }
+            }
+
+            Response.StatusCode = 400;
+            Response.TrySkipIisCustomErrors = true;
+
+            return JsonCamelCase(errorsDictionary);
         }
 
         protected new RedirectToRouteResult RedirectToAction(string actionName, string controllerName)

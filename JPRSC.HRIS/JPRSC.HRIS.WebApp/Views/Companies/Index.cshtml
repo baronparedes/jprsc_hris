@@ -1,4 +1,4 @@
-﻿@model JPRSC.HRIS.WebApp.Features.Companies.Index.Result
+﻿@model JPRSC.HRIS.WebApp.Features.Companies.Index.QueryResult
 
 @{
     ViewBag.Title = "Companies";
@@ -38,7 +38,7 @@
                     <div class="portlet light bordered">
                         <div class="portlet-title">
                             <div class="caption font-red-sunglo">
-                                <i class="fa fa-users font-red-sunglo"></i>
+                                <i class="fa fa-building font-red-sunglo"></i>
                                 <span class="caption-subject font-red-sunglo bold uppercase">Companies</span>
                             </div>
                         </div>
@@ -47,8 +47,10 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Code</th>
                                             <th>Name</th>
+                                            <th>Address</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
                                             <th>&nbsp;</th>
                                         </tr>
                                     </thead>
@@ -56,8 +58,10 @@
                                         @foreach (var company in Model.CompanyProfiles)
                                         {
                                             <tr>
-                                                <td>@company.Code</td>
                                                 <td>@company.Name</td>
+                                                <td>@company.Address</td>
+                                                <td>@company.Email</td>
+                                                <td>@company.Phone</td>
                                                 <td>@Html.ActionLink("Edit", "Edit", new { CompanyProfileId = company.Id }, new { @class = "btn btn-primary" })</td>
                                             </tr>
                                         }

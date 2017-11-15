@@ -1,10 +1,11 @@
-﻿using MediatR;
+﻿using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
+using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Companies
 {
-    public class CompaniesController : Controller
+    public class CompaniesController : AppController
     {
         private readonly IMediator _mediator;
 
@@ -25,12 +26,12 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         {
             if (!ModelState.IsValid)
             {
-                return View(command);
+                return JsonValidationError();
             }
 
             await _mediator.Send(command);
 
-            return RedirectToAction(nameof(Index));
+            return Json("success");
         }
 
         [HttpGet]
