@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,11 +14,22 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
     {
         public class Query : IRequest<QueryResult>
         {
+            public string SearchTerm { get; set; }
+
+            public string SearchLikeTerm
+            {
+                get
+                {
+                    if (String.IsNullOrWhiteSpace(SearchTerm)) return null;
+
+                    return $"%{SearchTerm}%";
+                }
+            }
         }
 
         public class QueryResult
         {
-            public IEnumerable<CompanyProfile> CompanyProfiles { get; set; } = new List<CompanyProfile>();
+            public IEnumerable<CompanyProfile> Companies { get; set; } = new List<CompanyProfile>();
 
             public class CompanyProfile
             {
@@ -39,14 +52,27 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             public async Task<QueryResult> Handle(Query query)
             {
-                var companyProfiles = await _db
+                var dbQuery = _db
                     .CompanyProfiles
-                    .Where(cp => !cp.DeletedOn.HasValue)
+                    .Where(cp => !cp.DeletedOn.HasValue);
+
+                if (!String.IsNullOrWhiteSpace(query.SearchTerm))
+                {
+                    dbQuery = dbQuery
+                        .Where(cp => DbFunctions.Like(cp.Name, query.SearchLikeTerm) ||
+                            DbFunctions.Like(cp.Address, query.SearchLikeTerm) ||
+                            DbFunctions.Like(cp.Email, query.SearchLikeTerm) ||
+                            DbFunctions.Like(cp.Phone, query.SearchLikeTerm));
+                }
+
+                var companies = await dbQuery
+                    .OrderBy(cp => cp.Id)
+                    .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.CompanyProfile>();
 
                 return new QueryResult
                 {
-                    CompanyProfiles = companyProfiles
+                    Companies = companies
                 };
             }
         }

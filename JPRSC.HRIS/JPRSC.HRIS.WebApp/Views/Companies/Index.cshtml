@@ -1,6 +1,4 @@
-﻿@model JPRSC.HRIS.WebApp.Features.Companies.Index.QueryResult
-
-@{
+﻿@{
     ViewBag.Title = "Companies";
 }
 
@@ -26,53 +24,62 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" ng-controller="CompanyIndexCtrl as vm">
             <div class="col-sm-12">
-                @if (!Model.CompanyProfiles.Any())
-                {
-                    <div class="note note-info">
-                        <p>No companies found.</p>
-                    </div>
-                }
-                else
-                {
-                    <div class="portlet light bordered">
-                        <div class="portlet-title">
-                            <div class="caption font-red-sunglo">
-                                <i class="fa fa-building font-red-sunglo"></i>
-                                <span class="caption-subject font-red-sunglo bold uppercase">Companies</span>
-                            </div>
-                        </div>
-                        <div class="portlet-body">
-                            <div class="table-scrollable">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Address</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
-                                            <th>&nbsp;</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var company in Model.CompanyProfiles)
-                                        {
-                                            <tr>
-                                                <td>@company.Name</td>
-                                                <td>@company.Address</td>
-                                                <td>@company.Email</td>
-                                                <td>@company.Phone</td>
-                                                <td>@Html.ActionLink("Edit", "Edit", new { CompanyProfileId = company.Id }, new { @class = "btn btn-primary" })</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
+                <form role="form">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                    <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                </span>
+                                <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
                             </div>
                         </div>
                     </div>
-                }
+                </form>
+                <div class="note note-info" ng-show="!vm.companies.length">
+                    <p>No companies found.</p>
+                </div>
+                <div class="portlet light bordered" ng-show="vm.companies.length">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-building font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Companies</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">                        
+                        <div class="table-scrollable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="company in vm.companies track by company.id">
+                                        <td>{{company.name}}</td>
+                                        <td>{{company.address}}</td>
+                                        <td>{{company.email}}</td>
+                                        <td>{{company.phone}}</td>
+                                        <td><a href="{{'/Companies/Edit?companyProfileId=' + company.id}}" class="btn btn-primary">Edit</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/companies")
+}

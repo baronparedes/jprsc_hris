@@ -16,7 +16,8 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
         {
             bundles.AddScriptBundle("~/scriptbundles/companies",
                 "~/wwwroot/scripts/companies/add.js",
-                "~/wwwroot/scripts/companies/edit.js");
+                "~/wwwroot/scripts/companies/edit.js",
+                "~/wwwroot/scripts/companies/index.js");
         }
 
         private static void AddCoreBundles(BundleCollection bundles)

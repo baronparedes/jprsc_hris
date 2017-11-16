@@ -74,7 +74,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         {
             var queryResult = await _mediator.Send(query);
 
-            return View(queryResult);
+            return JsonCamelCase(queryResult);
         }
     }
 }
