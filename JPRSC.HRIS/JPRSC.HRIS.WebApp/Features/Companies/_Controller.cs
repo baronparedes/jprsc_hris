@@ -1,4 +1,5 @@
-﻿using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
+﻿using JPRSC.HRIS.WebApp.Infrastructure.Html;
+using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
 using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -31,6 +32,8 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             await _mediator.Send(command);
 
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully added company {command.Name}.");
+
             return Json("success");
         }
 
@@ -48,12 +51,14 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         {
             if (!ModelState.IsValid)
             {
-                return View(command);
+                return JsonValidationError();
             }
 
             await _mediator.Send(command);
 
-            return RedirectToAction(nameof(Index));
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully edited company {command.Name}.");
+
+            return Json("success");
         }
 
         [HttpGet]
@@ -62,6 +67,14 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             var result = await _mediator.Send(query);
 
             return View(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Search(Search.Query query)
+        {
+            var queryResult = await _mediator.Send(query);
+
+            return View(queryResult);
         }
     }
 }

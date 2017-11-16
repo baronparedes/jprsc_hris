@@ -158,12 +158,13 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             {
                 var companyProfile = _db.CompanyProfiles.Single(cp => cp.Id == command.Id);
 
+                companyProfile.Address = command.Address;
                 companyProfile.BOI = command.BOI;
                 companyProfile.DateIssued = command.DateIssued;
                 companyProfile.DTI = command.DTI;
                 companyProfile.Email = command.Email;
                 companyProfile.ModifiedOn = DateTime.UtcNow;
-                companyProfile.Name = command.Email;
+                companyProfile.Name = command.Name;
                 companyProfile.PagIbig = command.PagIbig;
                 companyProfile.PERAA = command.PERAA;
                 companyProfile.PhilHealth = command.PhilHealth;

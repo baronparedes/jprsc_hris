@@ -1,15 +1,15 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('AddCompanyCtrl', ['$http', '$window', AddCompanyCtrl]);
+        .controller('EditCompanyCtrl', ['$http', '$window', EditCompanyCtrl]);
 
-    function AddCompanyCtrl($http, $window) {
+    function EditCompanyCtrl($http, $window) {
         var vm = this;
-        vm.addCompanySubmit = addCompanySubmit;
+        vm.editCompanySubmit = editCompanySubmit;
         vm.validationErrors = {};
 
-        function addCompanySubmit(e) {
-            var action = '/Companies/Add';
+        function editCompanySubmit(e) {
+            var action = '/Companies/Edit';
             var data = $(angular.element(e.target)[0]).serialize();
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
 

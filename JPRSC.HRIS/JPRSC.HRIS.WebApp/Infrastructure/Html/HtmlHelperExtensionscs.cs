@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 
@@ -10,8 +11,10 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
 {
     public static class HtmlHelperExtensionscs
     {
-        public static IHtmlString TextBoxHorizontalFormGroup(this HtmlHelper helper, string propertyName, string labelText = null, string placeholder = null)
+        public static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
         {
+            var model = helper.ViewData.Model;
+
             if (String.IsNullOrWhiteSpace(labelText))
             {
                 labelText = propertyName;
@@ -34,6 +37,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             input.Attr("type", "text");
             input.AddClass("form-control");
             input.Attr("name", propertyName);
+            input.Attr("value", GetPropertyValue(model, propertyName));
 
             if (!String.IsNullOrWhiteSpace(placeholder))
             {
@@ -52,6 +56,22 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             formGroup.Append(inputContainer);
 
             return new MvcHtmlString(formGroup.ToHtmlString());
+        }
+
+        private static string GetPropertyValue(object model, string propertyName)
+        {
+            var property = model.GetType().GetProperty(propertyName);
+
+            var propertyValue = property.GetValue(model);
+
+            var propertyValueAsString = Convert.ToString(propertyValue);
+
+            if (DateTime.TryParse(propertyValueAsString, out DateTime d))
+            {
+                propertyValueAsString = String.Format("{0:M/d/yyyy}", d);
+            }
+
+            return propertyValueAsString;
         }
 
         private static string GetCamelCasePropertyName(string propertyName)

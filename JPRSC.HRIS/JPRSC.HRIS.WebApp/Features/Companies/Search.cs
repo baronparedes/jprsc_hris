@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Companies
 {
-    public class Index
+    public class Search
     {
         public class Query : IRequest<QueryResult>
         {

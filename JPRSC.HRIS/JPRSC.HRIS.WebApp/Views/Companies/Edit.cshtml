@@ -1,7 +1,7 @@
 ﻿@model JPRSC.HRIS.WebApp.Features.Companies.Edit.Command
 
 @{
-    ViewBag.Title = "Edit Company" + Model.Code;
+    ViewBag.Title = "Edit Company" + Model.Name;
 }
 
 <div class="page-content-wrapper">
@@ -16,52 +16,38 @@
             </ul>
         </div>
         <h1 class="page-title">
-            Edit Company @Model.Code
+            Edit Company @Model.Name
         </h1>
         <div class="row">
             <div class="col-sm-12">
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
-                            <i class="fa fa-user-plus font-red-sunglo"></i>
-                            <span class="caption-subject font-red-sunglo bold uppercase">Edit Company @Model.Code</span>
+                            <i class="fa fa-building font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Edit Company @Model.Name</span>
                         </div>
                     </div>
-                    <div class="portlet-body form">
-                        <form role="form" action="@Url.Action("Edit", "Companies")" method="post">
+                    <div class="portlet-body form" ng-controller="EditCompanyCtrl as vm">
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.editCompanySubmit($event)">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(m => m.Id)
                             <div class="form-body">
-                                <div class="form-group">
-                                    <label class="control-label">Name</label>
-                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = nameof(Model.Name) })
-                                    @Html.ValidationMessageFor(m => m.Name)
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Address</label>
-                                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = nameof(Model.Address) })
-                                    @Html.ValidationMessageFor(m => m.Address)
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Email</label>
-                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = nameof(Model.Email) })
-                                    @Html.ValidationMessageFor(m => m.Email)
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Phone</label>
-                                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = nameof(Model.Phone) })
-                                    @Html.ValidationMessageFor(m => m.Phone)
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Signatory</label>
-                                    @Html.TextBoxFor(m => m.Signatory, new { @class = "form-control", placeholder = nameof(Model.Signatory) })
-                                    @Html.ValidationMessageFor(m => m.Signatory)
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Position</label>
-                                    @Html.TextBoxFor(m => m.Position, new { @class = "form-control", placeholder = nameof(Model.Position) })
-                                    @Html.ValidationMessageFor(m => m.Position)
-                                </div>
+                                @Html.TextBoxHorizontalFormGroup("Name")
+                                @Html.TextBoxHorizontalFormGroup("Address")
+                                @Html.TextBoxHorizontalFormGroup("Email")
+                                @Html.TextBoxHorizontalFormGroup("Phone", "Telephone num")
+                                @Html.TextBoxHorizontalFormGroup("SSS", "SSS no.")
+                                @Html.TextBoxHorizontalFormGroup("PagIbig", "Pag-ibig")
+                                @Html.TextBoxHorizontalFormGroup("Registration", "Registration no.")
+                                @Html.TextBoxHorizontalFormGroup("BOI")
+                                @Html.TextBoxHorizontalFormGroup("DateIssued", "Date issued", "MM/dd/yyyy")
+                                @Html.TextBoxHorizontalFormGroup("DTI", "DTI No")
+                                @Html.TextBoxHorizontalFormGroup("PERAA", "PERAA Code No.")
+                                @Html.TextBoxHorizontalFormGroup("VAT", "Vat No.")
+                                @Html.TextBoxHorizontalFormGroup("PhilHealth", "Phil Health No.")
+                                @Html.TextBoxHorizontalFormGroup("PlaceIssued", "Place Issued")
+                                @Html.TextBoxHorizontalFormGroup("SEC", "SEC Reg No.")
+                                @Html.TextBoxHorizontalFormGroup("ZipCode", "Zip Code")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Companies")" class="btn default">Cancel</a>
@@ -74,3 +60,8 @@
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/companies")
+}

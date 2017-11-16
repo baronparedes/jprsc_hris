@@ -226,11 +226,13 @@
     <Compile Include="Features\Account\VerifyCode.cs" />
     <Compile Include="Features\Companies\Add.cs" />
     <Compile Include="Features\Companies\Edit.cs" />
+    <Compile Include="Features\Companies\Search.cs" />
     <Compile Include="Features\Companies\_Controller.cs" />
     <Compile Include="Features\Companies\Index.cs" />
     <Compile Include="Features\Companies\_MappingProfile.cs" />
     <Compile Include="Features\Manage\AddPhoneNumber.cs" />
     <Compile Include="Features\Manage\SettPassword.cs" />
+    <Compile Include="Infrastructure\Angular\AngularHtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Html\HtmlHelperExtensionscs.cs" />
     <Compile Include="Infrastructure\Mapping\MappingConfig.cs" />
     <Compile Include="Infrastructure\Html\NotificationHelper.cs" />
@@ -5742,6 +5744,7 @@
     <Content Include="wwwroot\metronic\pages\scripts\widgets.js" />
     <Content Include="wwwroot\metronic\pages\scripts\widgets.min.js" />
     <Content Include="wwwroot\scripts\account\login.js" />
+    <Content Include="wwwroot\scripts\companies\edit.js" />
     <Content Include="wwwroot\scripts\companies\add.js" />
     <Content Include="wwwroot\styles\shared\app.css" />
     <Content Include="wwwroot\favicon.ico" />
@@ -5917,7 +5920,9 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LayoutAuthenticated.cshtml" />
