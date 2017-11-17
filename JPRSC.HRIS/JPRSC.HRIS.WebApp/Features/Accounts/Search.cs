@@ -8,7 +8,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JPRSC.HRIS.WebApp.Features.Companies
+namespace JPRSC.HRIS.WebApp.Features.Accounts
 {
     public class Search
     {
@@ -29,15 +29,14 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
         public class QueryResult
         {
-            public IEnumerable<CompanyProfile> Companies { get; set; } = new List<CompanyProfile>();
+            public IEnumerable<Account> Accounts { get; set; } = new List<Account>();
 
-            public class CompanyProfile
+            public class Account
             {
-                public string Address { get; set; }
-                public string Email { get; set; }
-                public int Id { get; set; }
                 public string Name { get; set; }
-                public string Phone { get; set; }
+                public string JobTitle { get; set; }
+                public string UserName { get; set; }
+                public string Id { get; set; }
             }
         }
 
@@ -53,26 +52,25 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             public async Task<QueryResult> Handle(Query query)
             {
                 var dbQuery = _db
-                    .CompanyProfiles
-                    .Where(cp => !cp.DeletedOn.HasValue);
+                    .Users
+                    .Where(u => !u.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(cp => DbFunctions.Like(cp.Name, query.SearchLikeTerm) ||
-                            DbFunctions.Like(cp.Address, query.SearchLikeTerm) ||
-                            DbFunctions.Like(cp.Email, query.SearchLikeTerm) ||
-                            DbFunctions.Like(cp.Phone, query.SearchLikeTerm));
+                        .Where(u => DbFunctions.Like(u.Name, query.SearchLikeTerm) ||
+                            DbFunctions.Like(u.JobTitle, query.SearchLikeTerm) ||
+                            DbFunctions.Like(u.UserName, query.SearchLikeTerm));
                 }
 
-                var companies = await dbQuery
-                    .OrderBy(cp => cp.Id)
+                var users = await dbQuery
+                    .OrderBy(u => u.Name)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
-                    .ProjectToListAsync<QueryResult.CompanyProfile>();
+                    .ProjectToListAsync<QueryResult.Account>();
 
                 return new QueryResult
                 {
-                    Companies = companies
+                    Accounts = users
                 };
             }
         }

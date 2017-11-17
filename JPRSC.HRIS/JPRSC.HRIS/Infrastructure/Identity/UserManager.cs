@@ -31,7 +31,7 @@ namespace JPRSC.HRIS.Infrastructure.Identity
             manager.UserValidator = new UserValidator<User>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = false
             };
 
             // Configure validation logic for passwords
@@ -72,9 +72,9 @@ namespace JPRSC.HRIS.Infrastructure.Identity
         {
             return new PasswordValidator
             {
-                RequiredLength = 6,
+                RequiredLength = 3,
                 RequireNonLetterOrDigit = false,
-                RequireDigit = true,
+                RequireDigit = false,
                 RequireLowercase = false,
                 RequireUppercase = false,
             };

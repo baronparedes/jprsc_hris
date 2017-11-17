@@ -223,9 +223,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\Accounts\Add.cs" />
+    <Compile Include="Features\Accounts\Delete.cs" />
+    <Compile Include="Features\Accounts\Edit.cs" />
+    <Compile Include="Features\Accounts\ChangePassword.cs" />
+    <Compile Include="Features\Accounts\Index.cs" />
+    <Compile Include="Features\Accounts\Search.cs" />
+    <Compile Include="Features\Accounts\_Controller.cs" />
+    <Compile Include="Features\Accounts\_MappingProfile.cs" />
     <Compile Include="Features\Account\SendCode.cs" />
     <Compile Include="Features\Account\VerifyCode.cs" />
     <Compile Include="Features\Companies\Add.cs" />
+    <Compile Include="Features\Companies\Delete.cs" />
     <Compile Include="Features\Companies\Edit.cs" />
     <Compile Include="Features\Companies\Search.cs" />
     <Compile Include="Features\Companies\_Controller.cs" />
@@ -247,6 +256,7 @@
     <Compile Include="Infrastructure\Sidebar\SelectedSidebarItem.cs" />
     <Compile Include="Infrastructure\Sidebar\SidebarAttribute.cs" />
     <Compile Include="Infrastructure\Sidebar\SidebarHtmlHelperExtensions.cs" />
+    <Compile Include="Infrastructure\Sidebar\SidebarMenuItem.cs" />
     <Compile Include="Infrastructure\Validation\FluentValidationExtensions.cs" />
     <Compile Include="Infrastructure\Validation\ValidationConfig.cs" />
     <Compile Include="Features\Account\_Controller.cs" />
@@ -5745,6 +5755,10 @@
     <Content Include="wwwroot\metronic\pages\scripts\v,..min.js" />
     <Content Include="wwwroot\metronic\pages\scripts\widgets.js" />
     <Content Include="wwwroot\metronic\pages\scripts\widgets.min.js" />
+    <Content Include="wwwroot\scripts\accounts\add.js" />
+    <Content Include="wwwroot\scripts\accounts\changePassword.js" />
+    <Content Include="wwwroot\scripts\accounts\edit.js" />
+    <Content Include="wwwroot\scripts\accounts\index.js" />
     <Content Include="wwwroot\scripts\account\login.js" />
     <Content Include="wwwroot\scripts\companies\index.js" />
     <Content Include="wwwroot\scripts\companies\edit.js" />
@@ -6542,6 +6556,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="tsconfig.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Accounts\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Accounts\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Accounts\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Accounts\ChangePassword.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

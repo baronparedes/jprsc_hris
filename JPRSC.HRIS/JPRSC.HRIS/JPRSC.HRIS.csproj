@@ -114,6 +114,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201711170231427_UpdateLogEntry.Designer.cs">
       <DependentUpon>201711170231427_UpdateLogEntry.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201711170342519_AddUserFields.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201711170342519_AddUserFields.Designer.cs">
+      <DependentUpon>201711170342519_AddUserFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -148,6 +152,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201711170231427_UpdateLogEntry.resx">
       <DependentUpon>201711170231427_UpdateLogEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201711170342519_AddUserFields.resx">
+      <DependentUpon>201711170342519_AddUserFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,6 +3,10 @@ using MediatR;
 using Microsoft.AspNet.Identity.Owin;
 using JPRSC.HRIS.Infrastructure.Identity;
 using System.Threading.Tasks;
+using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
+using JPRSC.HRIS.Infrastructure.Data;
+using System;
+using System.Linq;
 
 namespace JPRSC.HRIS.WebApp.Features.Account
 {
@@ -26,7 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
 
         public class Command : IRequest<SignInStatus>
         {
-            public string Email { get; set; }
+            public string UserName { get; set; }
             public string Password { get; set; }
             public bool RememberMe { get; set; }
             public string ReturnUrl { get; set; }
@@ -34,16 +38,24 @@ namespace JPRSC.HRIS.WebApp.Features.Account
 
         public class CommandValidator : AbstractValidator<Command>
         {
+            private readonly ApplicationDbContext _db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
+
             public CommandValidator()
             {
-                RuleFor(c => c.Email)
+                RuleFor(c => c.UserName)
                     .NotEmpty();
 
-                RuleFor(c => c.Email)
-                    .EmailAddress();
+                RuleFor(c => c.UserName)
+                    .Must(NotBeDeleted)
+                    .WithMessage("User not found.");
 
                 RuleFor(c => c.Password)
                     .NotEmpty();
+            }
+
+            private bool NotBeDeleted(string userName)
+            {
+                return _db.Users.Any(u => u.UserName == userName && !u.DeletedOn.HasValue);
             }
         }
 
@@ -60,7 +72,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, change to shouldLockout: true
-                return await _signInManager.PasswordSignInAsync(command.Email, command.Password, command.RememberMe, shouldLockout: false);
+                return await _signInManager.PasswordSignInAsync(command.UserName, command.Password, command.RememberMe, shouldLockout: false);
             }
         }
     }

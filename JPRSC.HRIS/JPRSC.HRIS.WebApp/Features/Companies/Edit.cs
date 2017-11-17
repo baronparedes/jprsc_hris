@@ -47,7 +47,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             public async Task<Command> Handle(Query query)
             {
-                return await _db.CompanyProfiles.Where(cp => cp.Id == query.CompanyProfileId).ProjectToSingleAsync<Command>();
+                return await _db.CompanyProfiles.Where(cp => cp.Id == query.CompanyProfileId && !cp.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
         }
 

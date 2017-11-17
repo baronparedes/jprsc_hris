@@ -1,8 +1,11 @@
-﻿using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
+﻿using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
+using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Controllers
 {
+    [AuthorizePermission(Permission.HomeDefault)]
     public class HomeController : AppController
     {
         public ActionResult About()

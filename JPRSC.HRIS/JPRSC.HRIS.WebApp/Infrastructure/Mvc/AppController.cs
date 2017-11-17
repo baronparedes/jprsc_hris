@@ -54,7 +54,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Mvc
                 return Redirect(returnUrl);
             }
 
-            return Redirect(Url.RouteUrl("Default"));
+            return RedirectToAction("Index", "Home");
         }
     }
 }

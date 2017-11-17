@@ -7,9 +7,19 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
+            AddAccountBundles(bundles);
             AddCompanyBundles(bundles);
             AddCoreBundles(bundles);
             AddLoginBundles(bundles);
+        }
+
+        private static void AddAccountBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/accounts",
+                "~/wwwroot/scripts/accounts/add.js",
+                "~/wwwroot/scripts/accounts/changePassword.js",
+                "~/wwwroot/scripts/accounts/edit.js",
+                "~/wwwroot/scripts/accounts/index.js");
         }
 
         private static void AddCompanyBundles(BundleCollection bundles)

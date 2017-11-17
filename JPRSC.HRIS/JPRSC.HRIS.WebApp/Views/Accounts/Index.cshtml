@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Companies";
+    ViewBag.Title = "Accounts";
 }
 
 <div class="page-content-wrapper">
@@ -10,21 +10,21 @@
                     <a href="@Url.Action("Index", "Home")">Home</a>
                     <i class="fa fa-circle"></i>
                 </li>
-                <li>Companies</li>
+                <li>Accounts</li>
             </ul>
         </div>
         <h1 class="page-title">
-            Companies
+            Accounts
         </h1>
         @Html.RenderSuccessNotification()
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <a href="@Url.Action("Add", "Companies")" class="btn btn-primary">Add Company</a>
+                    <a href="@Url.Action("Add", "Accounts")" class="btn btn-primary">Add Account</a>
                 </div>
             </div>
         </div>
-        <div class="row" ng-controller="CompanyIndexCtrl as vm">
+        <div class="row" ng-controller="AccountIndexCtrl as vm">
             <div class="col-sm-12">
                 <form role="form">
                     <div class="form-body">
@@ -39,14 +39,14 @@
                         </div>
                     </div>
                 </form>
-                <div class="note note-info" ng-show="!vm.companies.length">
-                    <p>No companies found.</p>
+                <div class="note note-info" ng-show="!vm.accounts.length">
+                    <p>No accounts found.</p>
                 </div>
-                <div class="portlet light bordered" ng-show="vm.companies.length">
+                <div class="portlet light bordered" ng-show="vm.accounts.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
-                            <i class="fa fa-building font-red-sunglo"></i>
-                            <span class="caption-subject font-red-sunglo bold uppercase">Companies</span>
+                            <i class="fa fa-user font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Accounts</span>
                         </div>
                     </div>
                     <div class="portlet-body">                        
@@ -55,23 +55,22 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Address</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
+                                        <th>Job Title</th>
+                                        <th>UserName</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="company in vm.companies track by company.id">
-                                        <td>{{company.name}}</td>
-                                        <td>{{company.address}}</td>
-                                        <td>{{company.email}}</td>
-                                        <td>{{company.phone}}</td>
+                                    <tr ng-repeat="account in vm.accounts track by account.id">
+                                        <td>{{account.name}}</td>
+                                        <td>{{account.jobTitle}}</td>
+                                        <td>{{account.userName}}</td>
                                         <td>
-                                            <a href="{{'/Companies/Edit?companyProfileId=' + company.id}}" class="btn btn-primary btn-sm">Edit</a>
-                                            <form action="/Companies/Delete" method="post" style="display: inline-block;">
+                                            <a href="{{'/Accounts/Edit?userId=' + account.id}}" class="btn btn-primary btn-sm">Edit</a>
+                                            <a href="{{'/Accounts/ChangePassword?userId=' + account.id}}" class="btn btn-primary btn-sm">Change Password</a>
+                                            <form action="/Accounts/Delete" method="post" style="display: inline-block;">
                                                 @Html.AntiForgeryToken()
-                                                <input type="hidden" name="CompanyProfileId" value="{{company.id}}" />
+                                                <input type="hidden" name="UserId" value="{{account.id}}" />
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                             </form>
                                         </td>
@@ -88,5 +87,5 @@
 
 @section scripts
 {
-    @Scripts.Render("~/scriptbundles/companies")
+    @Scripts.Render("~/scriptbundles/accounts")
 }

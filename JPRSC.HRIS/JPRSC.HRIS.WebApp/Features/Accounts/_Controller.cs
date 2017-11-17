@@ -6,14 +6,14 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.Companies
+namespace JPRSC.HRIS.WebApp.Features.Accounts
 {
-    [AuthorizePermission(Permission.CompanyDefault)]
-    public class CompaniesController : AppController
+    [AuthorizePermission(Permission.AccountDefault)]
+    public class AccountsController : AppController
     {
         private readonly IMediator _mediator;
 
-        public CompaniesController(IMediator mediator)
+        public AccountsController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -35,9 +35,33 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully added company {command.Name}.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully added user {command.Name}.");
 
             return Json("success");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ChangePassword(ChangePassword.Query query)
+        {
+            var queryResult = await _mediator.Send(query);
+
+            return View(queryResult);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePassword.Command command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(command);
+            }
+
+            var commandResult = await _mediator.Send(command);
+
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully changed password for user {commandResult.Name}.");
+
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -46,7 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         {
             var commandResult = await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted company {commandResult.Name}.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted user {commandResult.Name}.");
 
             return RedirectToAction(nameof(Index));
         }
@@ -70,7 +94,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully edited company {command.Name}.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully edited user {command.Name}.");
 
             return Json("success");
         }
