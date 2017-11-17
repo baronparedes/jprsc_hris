@@ -92,6 +92,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\.NET\DateTimeExtensions.cs" />
     <Compile Include="Infrastructure\.NET\IEnumerableExtensions.cs" />
     <Compile Include="Infrastructure\.NET\StringExtensions.cs" />
     <Compile Include="Infrastructure\Configuration\AppSettings.cs" />
@@ -109,6 +110,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201711150444435_UpdateCompanyFields.Designer.cs">
       <DependentUpon>201711150444435_UpdateCompanyFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201711170231427_UpdateLogEntry.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201711170231427_UpdateLogEntry.Designer.cs">
+      <DependentUpon>201711170231427_UpdateLogEntry.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -117,6 +122,8 @@
     <Compile Include="Infrastructure\Email\SendGridEmailService.cs" />
     <Compile Include="Infrastructure\Identity\SignInManager.cs" />
     <Compile Include="Infrastructure\Identity\UserManager.cs" />
+    <Compile Include="Infrastructure\Logging\Logger.cs" />
+    <Compile Include="Infrastructure\Logging\LogLevel.cs" />
     <Compile Include="Infrastructure\Sms\NoopSmsService.cs" />
     <Compile Include="Models\CompanyProfile.cs" />
     <Compile Include="Models\User.cs" />
@@ -138,6 +145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201711150444435_UpdateCompanyFields.resx">
       <DependentUpon>201711150444435_UpdateCompanyFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201711170231427_UpdateLogEntry.resx">
+      <DependentUpon>201711170231427_UpdateLogEntry.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

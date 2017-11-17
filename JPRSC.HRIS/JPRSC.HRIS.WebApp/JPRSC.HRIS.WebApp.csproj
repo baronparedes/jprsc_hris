@@ -235,6 +235,7 @@
     <Compile Include="Features\Manage\SettPassword.cs" />
     <Compile Include="Infrastructure\Angular\AngularHtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Html\HtmlHelperExtensionscs.cs" />
+    <Compile Include="Infrastructure\Logging\LogHelper.cs" />
     <Compile Include="Infrastructure\Mapping\MappingConfig.cs" />
     <Compile Include="Infrastructure\Html\NotificationHelper.cs" />
     <Compile Include="Infrastructure\Security\AuthorizePermissionAttribute.cs" />

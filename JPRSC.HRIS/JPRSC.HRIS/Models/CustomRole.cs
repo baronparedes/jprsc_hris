@@ -7,6 +7,7 @@ namespace JPRSC.HRIS.Models
     public class CustomRole
     {
         public DateTime AddedOn { get; set; }
+        public DateTime? DeletedOn { get; set; }
         public int Id { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string Name { get; set; }
@@ -16,9 +17,18 @@ namespace JPRSC.HRIS.Models
 
         public void AddPermission(Permission permission)
         {
-            PermissionsString = String.IsNullOrWhiteSpace(PermissionsString) ?
-                permission.ToString() :
-                PermissionsString + $",{permission}";
+            var permissionAsInt = (int)permission;
+
+            if (String.IsNullOrWhiteSpace(PermissionsString))
+            {
+                PermissionsString = permissionAsInt.ToString();
+                return;
+            }
+
+            if (!HasPermission(permission))
+            {
+                PermissionsString = PermissionsString + $",{permissionAsInt}";
+            }
         }
 
         public void AddPermissions(IEnumerable<Permission> permissions)
@@ -28,11 +38,21 @@ namespace JPRSC.HRIS.Models
             permissions.ForEach(p => AddPermission(p));
         }
 
+        public bool HasPermission(Permission permission)
+        {
+            var permissionAsInt = (int)permission;
+
+            return PermissionsString == permissionAsInt.ToString() ||
+                PermissionsString.Contains($",{permissionAsInt},") ||
+                PermissionsString.StartsWith($"{permissionAsInt},") ||
+                PermissionsString.EndsWith($",{permissionAsInt}");
+        }
+
         public void RemovePermission(Permission permission)
         {
             if (String.IsNullOrWhiteSpace(PermissionsString)) return;
 
-            PermissionsString = RemoveStringFromCSV(permission.ToString(), PermissionsString);
+            PermissionsString = RemoveStringFromCSV(((int)permission).ToString(), PermissionsString);
         }
 
         public void RemovePermissions(IEnumerable<Permission> permissions)
