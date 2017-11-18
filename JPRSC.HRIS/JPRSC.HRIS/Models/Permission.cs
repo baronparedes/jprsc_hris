@@ -12,6 +12,9 @@
         AccountDefault = 300,
 
         // Religion
-        ReligionDefault = 400
+        ReligionDefault = 400,
+
+        // Client
+        ClientDefault = 500
     }
 }

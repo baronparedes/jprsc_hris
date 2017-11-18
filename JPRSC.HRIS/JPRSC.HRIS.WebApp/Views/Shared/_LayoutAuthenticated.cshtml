@@ -36,8 +36,12 @@
     @Scripts.Render("~/scriptbundles/angular")
     <script>
         (function () {
-            window.global = {
-                
+            window.lookups = {
+                cutOffPeriods: {
+                    daily: @Html.EnumLookup(CutOffPeriod.Daily),
+                    biMonthly: @Html.EnumLookup(CutOffPeriod.BiMonthly),
+                    monthly: @Html.EnumLookup(CutOffPeriod.Monthly)
+                }
             };
         }());
     </script>

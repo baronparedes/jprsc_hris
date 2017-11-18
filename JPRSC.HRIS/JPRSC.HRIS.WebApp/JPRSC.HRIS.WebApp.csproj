@@ -233,6 +233,13 @@
     <Compile Include="Features\Accounts\_MappingProfile.cs" />
     <Compile Include="Features\Account\SendCode.cs" />
     <Compile Include="Features\Account\VerifyCode.cs" />
+    <Compile Include="Features\Clients\Add.cs" />
+    <Compile Include="Features\Clients\Delete.cs" />
+    <Compile Include="Features\Clients\Edit.cs" />
+    <Compile Include="Features\Clients\Index.cs" />
+    <Compile Include="Features\Clients\Search.cs" />
+    <Compile Include="Features\Clients\_Controller.cs" />
+    <Compile Include="Features\Clients\_MappingProfile.cs" />
     <Compile Include="Features\Companies\Add.cs" />
     <Compile Include="Features\Companies\Delete.cs" />
     <Compile Include="Features\Companies\Edit.cs" />
@@ -254,6 +261,7 @@
     <Compile Include="Infrastructure\Logging\LogHelper.cs" />
     <Compile Include="Infrastructure\Mapping\MappingConfig.cs" />
     <Compile Include="Infrastructure\Html\NotificationHelper.cs" />
+    <Compile Include="Infrastructure\Mvc\EnumHtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Security\AuthorizePermissionAttribute.cs" />
     <Compile Include="Infrastructure\Bundling\BundleConfig.cs" />
     <Compile Include="Infrastructure\Dependency\DependencyConfig.cs" />
@@ -5767,6 +5775,9 @@
     <Content Include="wwwroot\scripts\accounts\edit.js" />
     <Content Include="wwwroot\scripts\accounts\index.js" />
     <Content Include="wwwroot\scripts\account\login.js" />
+    <Content Include="wwwroot\scripts\clients\add.js" />
+    <Content Include="wwwroot\scripts\clients\edit.js" />
+    <Content Include="wwwroot\scripts\clients\index.js" />
     <Content Include="wwwroot\scripts\companies\index.js" />
     <Content Include="wwwroot\scripts\companies\edit.js" />
     <Content Include="wwwroot\scripts\companies\add.js" />
@@ -6587,6 +6598,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Religions\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Clients\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Clients\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Clients\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

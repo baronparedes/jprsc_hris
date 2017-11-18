@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Clients";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Clients</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Clients
+        </h1>
+        @Html.RenderSuccessNotification()
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <a href="@Url.Action("Add", "Clients")" class="btn btn-primary">Add Client</a>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-controller="ClientIndexCtrl as vm">
+            <div class="col-sm-12">
+                <form role="form">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                    <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                </span>
+                                <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="note note-info" ng-show="!vm.clients.length">
+                    <p>No clients found.</p>
+                </div>
+                <div class="portlet light bordered" ng-show="vm.clients.length">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-user font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Clients</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">                        
+                        <div class="table-scrollable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="client in vm.clients track by client.id">
+                                        <td>{{client.name}}</td>
+                                        <td>
+                                            <a href="{{'/Clients/Edit?clientId=' + client.id}}" class="btn btn-primary btn-sm">Edit</a>
+                                            <form action="/Clients/Delete" method="post" style="display: inline-block;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="ClientId" value="{{client.id}}" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/clients")
+}

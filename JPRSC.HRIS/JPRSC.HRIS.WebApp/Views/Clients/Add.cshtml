@@ -1,0 +1,61 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Clients.Add.Command
+
+@{
+    ViewBag.Title = "Add a Client";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Add Client</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Add Client
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-plus font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Add Client</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form" ng-controller="AddClientCtrl as vm">
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.addClientSubmit($event)">
+                            @Html.AntiForgeryToken()
+                            <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("Name")
+                                <div ng-class="{ 'has-error': vm.validationErrors.cutOffPeriod }" class="form-group">
+                                    <label class="col-md-3 col-lg-2 control-label">CutOff Period</label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <input type="hidden" name="CutOffPeriod" value="{{vm.cutOffPeriod.value}}" />
+                                        <select class="form-control" ng-model="vm.cutOffPeriod" ng-options="cutOffPeriod.text for cutOffPeriod in vm.lookups.cutOffPeriods track by cutOffPeriod.value"></select>
+                                        <span ng-show="vm.validationErrors.cutOffPeriod" class="help-block">{{vm.validationErrors.cutOffPeriod.join(' ')}}</span>
+                                    </div>
+                                </div>                                
+                                @Html.TextBoxHorizontalFormGroup("DaysPerWeek")
+                                @Html.TextBoxHorizontalFormGroup("HoursPerDay")
+                            </div>
+                            <div class="form-actions right">
+                                <a href="@Url.Action("Index", "Clients")" class="btn default">Cancel</a>
+                                <button type="submit" class="btn green">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/clients")
+}

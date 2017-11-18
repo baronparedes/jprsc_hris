@@ -11,7 +11,17 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
 {
     public static class HtmlHelperExtensionscs
     {
+        public static IHtmlString PasswordBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
+        {
+            return TextBoxHorizontalFormGroup(helper, propertyName, "password", labelText, placeholder);
+        }
+
         public static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
+        {
+            return TextBoxHorizontalFormGroup(helper, propertyName, "text", labelText, placeholder);
+        }
+
+        private static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string type, string labelText = null, string placeholder = null)
         {
             if (String.IsNullOrWhiteSpace(labelText))
             {
@@ -32,7 +42,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             inputContainer.AddClasses("col-md-9", "col-lg-10");
 
             var input = new HtmlTag("input");
-            input.Attr("type", "text");
+            input.Attr("type", type);
             input.AddClass("form-control");
             input.Attr("name", propertyName);
             input.Attr("value", GetPropertyValue(helper.ViewData.Model, propertyName));

@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\.NET\DateTimeExtensions.cs" />
+    <Compile Include="Infrastructure\.NET\EnumHelper.cs" />
     <Compile Include="Infrastructure\.NET\IEnumerableExtensions.cs" />
     <Compile Include="Infrastructure\.NET\StringExtensions.cs" />
     <Compile Include="Infrastructure\Configuration\AppSettings.cs" />
@@ -122,6 +123,14 @@
     <Compile Include="Infrastructure\Data\Migrations\201711180641535_AddReligion.Designer.cs">
       <DependentUpon>201711180641535_AddReligion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201711181003350_AddClient.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201711181003350_AddClient.Designer.cs">
+      <DependentUpon>201711181003350_AddClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201711181016235_Test.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201711181016235_Test.Designer.cs">
+      <DependentUpon>201711181016235_Test.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -133,7 +142,9 @@
     <Compile Include="Infrastructure\Logging\Logger.cs" />
     <Compile Include="Infrastructure\Logging\LogLevel.cs" />
     <Compile Include="Infrastructure\Sms\NoopSmsService.cs" />
+    <Compile Include="Models\Client.cs" />
     <Compile Include="Models\CompanyProfile.cs" />
+    <Compile Include="Models\CutOffPeriod.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\LogEntry.cs" />
@@ -163,6 +174,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201711180641535_AddReligion.resx">
       <DependentUpon>201711180641535_AddReligion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201711181003350_AddClient.resx">
+      <DependentUpon>201711181003350_AddClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201711181016235_Test.resx">
+      <DependentUpon>201711181016235_Test.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,8 @@
 ﻿(function () {
     var app = angular.module('app', ['ui.bootstrap']);
 
+    app.constant('lookups', window.lookups);
+
     // This has to be done before document.ready.
     configureJQueryValidator();
 

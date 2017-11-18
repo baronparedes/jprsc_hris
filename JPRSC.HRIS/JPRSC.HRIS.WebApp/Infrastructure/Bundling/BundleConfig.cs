@@ -1,4 +1,5 @@
-﻿using System.Web.Optimization;
+﻿using System;
+using System.Web.Optimization;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
 {
@@ -7,6 +8,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
         public static void RegisterBundles(BundleCollection bundles)
         {
             AddAccountBundles(bundles);
+            AddClientBundles(bundles);
             AddCompanyBundles(bundles);
             AddCoreBundles(bundles);
             AddLoginBundles(bundles);
@@ -20,6 +22,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/accounts/changePassword.js",
                 "~/wwwroot/scripts/accounts/edit.js",
                 "~/wwwroot/scripts/accounts/index.js");
+        }
+
+        private static void AddClientBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/clients",
+                "~/wwwroot/scripts/clients/add.js",
+                "~/wwwroot/scripts/clients/edit.js",
+                "~/wwwroot/scripts/clients/index.js");
         }
 
         private static void AddCompanyBundles(BundleCollection bundles)
