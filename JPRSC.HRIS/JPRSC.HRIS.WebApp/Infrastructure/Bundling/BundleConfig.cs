@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
 {
@@ -11,6 +10,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddCompanyBundles(bundles);
             AddCoreBundles(bundles);
             AddLoginBundles(bundles);
+            AddReligionBundles(bundles);
         }
 
         private static void AddAccountBundles(BundleCollection bundles)
@@ -85,6 +85,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             bundles.AddScriptBundle("~/scriptbundles/account-login",
                 "~/wwwroot/metronic/pages/scripts/login.min.js",
                 "~/wwwroot/scripts/account/login.js");
+        }
+
+        private static void AddReligionBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/religions",
+                "~/wwwroot/scripts/religions/add.js",
+                "~/wwwroot/scripts/religions/edit.js",
+                "~/wwwroot/scripts/religions/index.js");
         }
     }
 }

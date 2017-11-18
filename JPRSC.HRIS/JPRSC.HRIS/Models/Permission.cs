@@ -9,6 +9,9 @@
         CompanyDefault = 200,
 
         // Account
-        AccountDefault = 300
+        AccountDefault = 300,
+
+        // Religion
+        ReligionDefault = 400
     }
 }

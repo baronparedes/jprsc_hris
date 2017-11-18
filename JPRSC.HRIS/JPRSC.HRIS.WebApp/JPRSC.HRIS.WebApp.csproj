@@ -242,6 +242,13 @@
     <Compile Include="Features\Companies\_MappingProfile.cs" />
     <Compile Include="Features\Manage\AddPhoneNumber.cs" />
     <Compile Include="Features\Manage\SettPassword.cs" />
+    <Compile Include="Features\Religions\Add.cs" />
+    <Compile Include="Features\Religions\Delete.cs" />
+    <Compile Include="Features\Religions\Edit.cs" />
+    <Compile Include="Features\Religions\Index.cs" />
+    <Compile Include="Features\Religions\Search.cs" />
+    <Compile Include="Features\Religions\_Controller.cs" />
+    <Compile Include="Features\Religions\_MappingProfile.cs" />
     <Compile Include="Infrastructure\Angular\AngularHtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Html\HtmlHelperExtensionscs.cs" />
     <Compile Include="Infrastructure\Logging\LogHelper.cs" />
@@ -5763,6 +5770,9 @@
     <Content Include="wwwroot\scripts\companies\index.js" />
     <Content Include="wwwroot\scripts\companies\edit.js" />
     <Content Include="wwwroot\scripts\companies\add.js" />
+    <Content Include="wwwroot\scripts\religions\add.js" />
+    <Content Include="wwwroot\scripts\religions\edit.js" />
+    <Content Include="wwwroot\scripts\religions\index.js" />
     <Content Include="wwwroot\styles\shared\app.css" />
     <Content Include="wwwroot\favicon.ico" />
     <Content Include="Global.asax" />
@@ -6568,6 +6578,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Accounts\ChangePassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Religions\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Religions\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Religions\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

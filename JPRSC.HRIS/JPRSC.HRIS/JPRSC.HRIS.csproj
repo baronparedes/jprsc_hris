@@ -118,6 +118,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201711170342519_AddUserFields.Designer.cs">
       <DependentUpon>201711170342519_AddUserFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201711180641535_AddReligion.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201711180641535_AddReligion.Designer.cs">
+      <DependentUpon>201711180641535_AddReligion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -130,6 +134,7 @@
     <Compile Include="Infrastructure\Logging\LogLevel.cs" />
     <Compile Include="Infrastructure\Sms\NoopSmsService.cs" />
     <Compile Include="Models\CompanyProfile.cs" />
+    <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Models\Permission.cs" />
@@ -155,6 +160,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201711170342519_AddUserFields.resx">
       <DependentUpon>201711170342519_AddUserFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201711180641535_AddReligion.resx">
+      <DependentUpon>201711180641535_AddReligion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

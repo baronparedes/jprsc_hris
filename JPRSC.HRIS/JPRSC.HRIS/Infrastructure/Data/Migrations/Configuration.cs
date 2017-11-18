@@ -42,7 +42,8 @@
             {
                 Permission.HomeDefault,
                 Permission.CompanyDefault,
-                Permission.AccountDefault
+                Permission.AccountDefault,
+                Permission.ReligionDefault
             });
 
             var defaultRole = new CustomRole
