@@ -11,6 +11,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddClientBundles(bundles);
             AddCompanyBundles(bundles);
             AddCoreBundles(bundles);
+            AddCustomRolesBundles(bundles);
             AddLoginBundles(bundles);
             AddReligionBundles(bundles);
         }
@@ -83,6 +84,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/metronic/layouts/layout/scripts/demo.min.js",
                 "~/wwwroot/metronic/layouts/global/scripts/quick-sidebar.min.js",
                 "~/wwwroot/metronic/layouts/global/scripts/quick-nav.min.js");
+        }
+
+        private static void AddCustomRolesBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/customRoles",
+                "~/wwwroot/scripts/customRoles/add.js",
+                "~/wwwroot/scripts/customRoles/edit.js",
+                "~/wwwroot/scripts/customRoles/index.js");
         }
 
         private static void AddLoginBundles(BundleCollection bundles)

@@ -247,6 +247,13 @@
     <Compile Include="Features\Companies\_Controller.cs" />
     <Compile Include="Features\Companies\Index.cs" />
     <Compile Include="Features\Companies\_MappingProfile.cs" />
+    <Compile Include="Features\CustomRoles\Add.cs" />
+    <Compile Include="Features\CustomRoles\Delete.cs" />
+    <Compile Include="Features\CustomRoles\Edit.cs" />
+    <Compile Include="Features\CustomRoles\Index.cs" />
+    <Compile Include="Features\CustomRoles\Search.cs" />
+    <Compile Include="Features\CustomRoles\_Controller.cs" />
+    <Compile Include="Features\CustomRoles\_MappingProfile.cs" />
     <Compile Include="Features\Manage\AddPhoneNumber.cs" />
     <Compile Include="Features\Manage\SettPassword.cs" />
     <Compile Include="Features\Religions\Add.cs" />
@@ -5781,6 +5788,9 @@
     <Content Include="wwwroot\scripts\companies\index.js" />
     <Content Include="wwwroot\scripts\companies\edit.js" />
     <Content Include="wwwroot\scripts\companies\add.js" />
+    <Content Include="wwwroot\scripts\customRoles\add.js" />
+    <Content Include="wwwroot\scripts\customRoles\edit.js" />
+    <Content Include="wwwroot\scripts\customRoles\index.js" />
     <Content Include="wwwroot\scripts\religions\add.js" />
     <Content Include="wwwroot\scripts\religions\edit.js" />
     <Content Include="wwwroot\scripts\religions\index.js" />
@@ -6607,6 +6617,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Clients\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomRoles\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomRoles\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomRoles\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

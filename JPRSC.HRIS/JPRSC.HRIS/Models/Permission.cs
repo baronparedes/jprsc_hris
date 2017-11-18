@@ -15,6 +15,9 @@
         ReligionDefault = 400,
 
         // Client
-        ClientDefault = 500
+        ClientDefault = 500,
+
+        // Custom Role
+        CustomRoleDefault = 600
     }
 }
