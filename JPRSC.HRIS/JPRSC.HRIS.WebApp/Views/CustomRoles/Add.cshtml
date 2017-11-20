@@ -32,22 +32,7 @@
                             @Html.AntiForgeryToken()
                             <div class="form-body">
                                 @Html.TextBoxHorizontalFormGroup("Name")
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label">Permissions</label>
-                                    <div class="col-md-9">
-                                        <div class="mt-checkbox-list">
-                                            @for (var i = 0; i < Model.PermissionsList.Count; i++)
-                                            {
-                                                <input type="hidden" name="@String.Format("PermissionsList[{0}].Value", i)" value="@Model.PermissionsList[i].Value" />
-                                                <input type="hidden" name="@String.Format("PermissionsList[{0}].Text", i)" value="@Model.PermissionsList[i].Text" />
-                                                <label class="mt-checkbox mt-checkbox-outline">
-                                                    <input type="checkbox" name="@String.Format("PermissionsList[{0}].Selected", i)" checked="@Model.PermissionsList[i].Selected" value="true"> @Model.PermissionsList[i].Text
-                                                    <span></span>
-                                                </label>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
+                                @Html.CheckboxSelectListItemHorizontalFormGroup(Model.PermissionsList, "PermissionsList", "Permissions")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "CustomRoles")" class="btn default">Cancel</a>

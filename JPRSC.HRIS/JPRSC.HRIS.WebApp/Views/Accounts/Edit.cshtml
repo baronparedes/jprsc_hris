@@ -35,22 +35,7 @@
                                 @Html.TextBoxHorizontalFormGroup("Name")
                                 @Html.TextBoxHorizontalFormGroup("JobTitle")
                                 @Html.TextBoxHorizontalFormGroup("UserName")
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label">Roles</label>
-                                    <div class="col-md-9">
-                                        <div class="mt-checkbox-list">
-                                            @for (var i = 0; i < Model.RolesList.Count; i++)
-                                            {
-                                                <input type="hidden" name="@String.Format("RolesList[{0}].Value", i)" value="@Model.RolesList[i].Value" />
-                                                <input type="hidden" name="@String.Format("RolesList[{0}].Text", i)" value="@Model.RolesList[i].Text" />
-                                                <label class="mt-checkbox mt-checkbox-outline">
-                                                    <input type="checkbox" name="@String.Format("RolesList[{0}].Selected", i)" checked="@Model.RolesList[i].Selected" value="true"> @Model.RolesList[i].Text
-                                                    <span></span>
-                                                </label>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
+                                @Html.CheckboxSelectListItemHorizontalFormGroup(Model.RolesList, "RolesList", "Roles")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Accounts")" class="btn default">Cancel</a>

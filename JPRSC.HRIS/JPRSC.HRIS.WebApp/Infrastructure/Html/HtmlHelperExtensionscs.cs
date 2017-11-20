@@ -13,15 +13,20 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
     {
         public static IHtmlString PasswordBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
         {
-            return TextBoxHorizontalFormGroup(helper, propertyName, "password", labelText, placeholder);
+            return HorizontalFormGroup(helper, propertyName, "password", null, labelText, placeholder);
         }
 
         public static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
         {
-            return TextBoxHorizontalFormGroup(helper, propertyName, "text", labelText, placeholder);
+            return HorizontalFormGroup(helper, propertyName, "text", null, labelText, placeholder);
         }
 
-        private static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string type, string labelText = null, string placeholder = null)
+        public static IHtmlString CheckboxSelectListItemHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, IList<SelectListItem> items, string propertyName, string labelText = null, string placeholder = null)
+        {
+            return HorizontalFormGroup(helper, propertyName, "checkboxlist", items, labelText, placeholder);
+        }
+
+        private static IHtmlString HorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string type, IList<SelectListItem> items, string labelText, string placeholder)
         {
             if (String.IsNullOrWhiteSpace(labelText))
             {
@@ -38,18 +43,83 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             label.AddClasses("col-md-3", "col-lg-2", "control-label");
             label.Text(labelText);
 
-            var inputContainer = new HtmlTag("div");
-            inputContainer.AddClasses("col-md-9", "col-lg-10");
+            var controlContainer = new HtmlTag("div");
+            controlContainer.AddClasses("col-md-9", "col-lg-10");
 
-            var input = new HtmlTag("input");
-            input.Attr("type", type);
-            input.AddClass("form-control");
-            input.Attr("name", propertyName);
-            input.Attr("value", GetPropertyValue(helper.ViewData.Model, propertyName));
+            HtmlTag control = null;
+
+            if (type == "text" || type == "password")
+            {
+                control = InputControl(helper, propertyName, type, placeholder, camelCasePropertyName);
+            }
+            else if (type == "checkboxlist")
+            {
+                control = CheckboxListControl(helper, propertyName, items);
+            }
+
+            controlContainer.Append(control);
+
+            formGroup.Append(label);
+            formGroup.Append(controlContainer);
+
+            return new MvcHtmlString(formGroup.ToHtmlString());
+        }
+
+        private static HtmlTag CheckboxListControl<TModel>(HtmlHelper<TModel> helper, string propertyName, IList<SelectListItem> items)
+        {
+            var checkBoxList = new HtmlTag("div");
+            checkBoxList.AddClass("mt-checkbox-list");
+
+            for (var i = 0; i < items.Count; i++)
+            {
+                var hiddenValueInput = new HtmlTag("input");
+                hiddenValueInput.Attr("type", "hidden");
+                hiddenValueInput.Attr("name", $"{propertyName}[{i}].Value");
+                hiddenValueInput.Attr("value", items[i].Value);
+
+                var hiddenTextInput = new HtmlTag("input");
+                hiddenTextInput.Attr("type", "hidden");
+                hiddenTextInput.Attr("name", $"{propertyName}[{i}].Text");
+                hiddenTextInput.Attr("value", items[i].Text);
+
+                var label = new HtmlTag("label");
+                label.AddClasses("mt-checkbox", "mt-checkbox-outline");
+
+                var checkbox = new HtmlTag("input");
+                checkbox.Attr("type", "checkbox");
+                checkbox.Attr("name", $"{propertyName}[{i}].Selected");
+                checkbox.Attr("value", "true");
+                checkbox.AppendText(items[i].Text);
+
+                if (items[i].Selected)
+                {
+                    checkbox.Attr("checked", "checked");
+                }
+
+                var span = new HtmlTag("span");
+
+                label.Append(checkbox);
+                label.Append(span);
+
+                checkBoxList.Append(hiddenValueInput);
+                checkBoxList.Append(hiddenTextInput);
+                checkBoxList.Append(label);
+            }
+
+            return checkBoxList;
+        }
+
+        private static HtmlTag InputControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string type, string placeholder, string camelCasePropertyName)
+        {
+            var control = new HtmlTag("input");
+            control.Attr("type", type);
+            control.AddClass("form-control");
+            control.Attr("name", propertyName);
+            control.Attr("value", GetPropertyValue(helper.ViewData.Model, propertyName));
 
             if (!String.IsNullOrWhiteSpace(placeholder))
             {
-                input.Attr("placeholder", placeholder);
+                control.Attr("placeholder", placeholder);
             }
 
             var helpBlock = new HtmlTag("span");
@@ -57,13 +127,9 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             helpBlock.Attr("ng-show", $"vm.validationErrors.{camelCasePropertyName}");
             helpBlock.Text($"{{{{vm.validationErrors.{camelCasePropertyName}.join(' ')}}}}");
 
-            inputContainer.Append(input);
-            inputContainer.Append(helpBlock);
+            control.After(helpBlock);
 
-            formGroup.Append(label);
-            formGroup.Append(inputContainer);
-
-            return new MvcHtmlString(formGroup.ToHtmlString());
+            return control;
         }
 
         private static string GetPropertyValue(object model, string propertyName)
