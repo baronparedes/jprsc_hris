@@ -1,10 +1,14 @@
-﻿using AutoMapper;
-using FluentValidation;
+﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
 
 namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 {
@@ -17,8 +21,9 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 
         public class Command : IRequest
         {
-            public string Name { get; set; }
             public int Id { get; set; }
+            public string Name { get; set; }
+            public IList<SelectListItem> PermissionsList { get; set; } = EnumHelper.GetSelectList(typeof(Permission));
         }
 
         public class QueryHandler : IAsyncRequestHandler<Query, Command>
@@ -32,7 +37,24 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 
             public async Task<Command> Handle(Query query)
             {
-                return await _db.CustomRoles.Where(cr => cr.Id == query.CustomRoleId && !cr.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+                var customRole = await _db
+                    .CustomRoles
+                    .SingleAsync(cr => cr.Id == query.CustomRoleId && !cr.DeletedOn.HasValue);
+
+                var command = new Command
+                {
+                    Id = customRole.Id,
+                    Name = customRole.Name,
+                    PermissionsList = EnumHelper.GetSelectList(typeof(Permission))
+                };
+
+                foreach (var permission in customRole.Permissions)
+                {
+                    var correspondingPermissionListItem = command.PermissionsList.Single(p => p.Value == ((int)permission).ToString());
+                    correspondingPermissionListItem.Selected = true;
+                }
+
+                return command;
             }
         }
 
@@ -60,6 +82,20 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 
                 customRole.Name = command.Name;
                 customRole.ModifiedOn = DateTime.UtcNow;
+
+                foreach (var permissionListItem in command.PermissionsList)
+                {
+                    Enum.TryParse(permissionListItem.Value, out Permission permission);
+
+                    if (permissionListItem.Selected)
+                    {
+                        customRole.AddPermission(permission);
+                    }
+                    else
+                    {
+                        customRole.RemovePermission(permission);
+                    }
+                }
 
                 await _db.SaveChangesAsync();
             }
