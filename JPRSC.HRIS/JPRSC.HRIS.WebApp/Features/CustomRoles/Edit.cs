@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
@@ -37,16 +38,16 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 
             public async Task<Command> Handle(Query query)
             {
+                var command = await _db
+                    .CustomRoles
+                    .Where(cr => cr.Id == query.CustomRoleId && !cr.DeletedOn.HasValue)
+                    .ProjectToSingleAsync<Edit.Command>();
+
+                command.PermissionsList = EnumHelper.GetSelectList(typeof(Permission));
+
                 var customRole = await _db
                     .CustomRoles
                     .SingleAsync(cr => cr.Id == query.CustomRoleId && !cr.DeletedOn.HasValue);
-
-                var command = new Command
-                {
-                    Id = customRole.Id,
-                    Name = customRole.Name,
-                    PermissionsList = EnumHelper.GetSelectList(typeof(Permission))
-                };
 
                 foreach (var permission in customRole.Permissions)
                 {

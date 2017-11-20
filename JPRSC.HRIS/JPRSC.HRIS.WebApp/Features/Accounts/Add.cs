@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Infrastructure.Identity;
 using JPRSC.HRIS.Models;
@@ -9,11 +10,16 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Accounts
 {
     public class Add
     {
+        public class Query: IRequest<Command>
+        {
+        }
+
         public class Command : IRequest
         {
             public string Name { get; set; }
@@ -21,6 +27,36 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             public string UserName { get; set; }
             public string Password { get; set; }
             public string RepeatPassword { get; set; }
+            public IList<SelectListItem> RolesList { get; set; } = new List<SelectListItem>();
+        }
+
+        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        {
+            private readonly ApplicationDbContext _db;
+
+            public QueryHandler(ApplicationDbContext db)
+            {
+                _db = db;
+            }
+
+            public async Task<Command> Handle(Query query)
+            {
+                var command = new Command();
+
+                var customRoles = await _db.CustomRoles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
+
+                foreach (var customRole in customRoles)
+                {
+                    command.RolesList.Add(new SelectListItem
+                    {
+                        Text = customRole.Name,
+                        Value = customRole.Id.ToString(),
+                        Selected = AppSettings.Ints("DefaultCustomRoleIds").Contains(customRole.Id)
+                    });
+                }
+
+                return command;
+            }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -86,10 +122,16 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 {
                     throw new Exception($"Unable to create user. Errors: {createUserResult.Errors.Join(",")}");
                 }
+                
+                var attachedUser = _db.Users.Include(u => u.CustomRoles).Single(u => u.Id == user.Id);
 
-                var defaultCustomRoleId = 2;
-                var attachedUser = _db.Users.Single(u => u.Id == user.Id);
-                attachedUser.CustomRoles.Add(await _db.CustomRoles.SingleAsync(cr => cr.Id == defaultCustomRoleId));
+                foreach (var roleItem in command.RolesList.Where(ri => ri.Selected))
+                {
+                    var customRoleId = Convert.ToInt32(roleItem.Value);
+                    var customRole = await _db.CustomRoles.SingleAsync(cr => cr.Id == customRoleId);
+                    attachedUser.CustomRoles.Add(customRole);
+                }
+                
                 await _db.SaveChangesAsync();
             }
         }
