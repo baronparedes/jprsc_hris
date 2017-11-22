@@ -11,58 +11,24 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
 {
     public static class HtmlHelperExtensionscs
     {
+        public static IHtmlString CheckboxSelectListItemHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, IList<SelectListItem> items, string propertyName, string labelText = null, string placeholder = null)
+        {
+            return HorizontalFormGroup(helper, propertyName, "checkboxlist", items, null, labelText, placeholder);
+        }
+
+        public static IHtmlString DropdownHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string lookupListName, string propertyName, string labelText = null, string placeholder = null)
+        {
+            return HorizontalFormGroup(helper, propertyName, "dropdown", null, lookupListName, labelText, placeholder);
+        }
+
         public static IHtmlString PasswordBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
         {
-            return HorizontalFormGroup(helper, propertyName, "password", null, labelText, placeholder);
+            return HorizontalFormGroup(helper, propertyName, "password", null, null, labelText, placeholder);
         }
 
         public static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
         {
-            return HorizontalFormGroup(helper, propertyName, "text", null, labelText, placeholder);
-        }
-
-        public static IHtmlString CheckboxSelectListItemHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, IList<SelectListItem> items, string propertyName, string labelText = null, string placeholder = null)
-        {
-            return HorizontalFormGroup(helper, propertyName, "checkboxlist", items, labelText, placeholder);
-        }
-
-        private static IHtmlString HorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string type, IList<SelectListItem> items, string labelText, string placeholder)
-        {
-            if (String.IsNullOrWhiteSpace(labelText))
-            {
-                labelText = propertyName.Humanize();
-            }
-
-            var camelCasePropertyName = GetCamelCasePropertyName(propertyName);
-
-            var formGroup = new HtmlTag("div");
-            formGroup.AddClass("form-group");
-            formGroup.Attr("ng-class", $"{{ 'has-error': vm.validationErrors.{camelCasePropertyName} }}");
-
-            var label = new HtmlTag("label");
-            label.AddClasses("col-md-3", "col-lg-2", "control-label");
-            label.Text(labelText);
-
-            var controlContainer = new HtmlTag("div");
-            controlContainer.AddClasses("col-md-9", "col-lg-10");
-
-            HtmlTag control = null;
-
-            if (type == "text" || type == "password")
-            {
-                control = InputControl(helper, propertyName, type, placeholder, camelCasePropertyName);
-            }
-            else if (type == "checkboxlist")
-            {
-                control = CheckboxListControl(helper, propertyName, items);
-            }
-
-            controlContainer.Append(control);
-
-            formGroup.Append(label);
-            formGroup.Append(controlContainer);
-
-            return new MvcHtmlString(formGroup.ToHtmlString());
+            return HorizontalFormGroup(helper, propertyName, "text", null, null, labelText, placeholder);
         }
 
         private static HtmlTag CheckboxListControl<TModel>(HtmlHelper<TModel> helper, string propertyName, IList<SelectListItem> items)
@@ -109,27 +75,50 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             return checkBoxList;
         }
 
-        private static HtmlTag InputControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string type, string placeholder, string camelCasePropertyName)
+        private static HtmlTag DropdownControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string lookupListName)
         {
-            var control = new HtmlTag("input");
-            control.Attr("type", type);
-            control.AddClass("form-control");
-            control.Attr("name", propertyName);
-            control.Attr("value", GetPropertyValue(helper.ViewData.Model, propertyName));
+            /*
+            <input type="hidden" name="CutOffPeriod" value="{{vm.cutOffPeriod.value}}" />
+            <select class="form-control" ng-model="vm.cutOffPeriod" ng-options="cutOffPeriod.text for cutOffPeriod in vm.lookups.cutOffPeriods track by cutOffPeriod.value"></select>
+            <span ng-show="vm.validationErrors.cutOffPeriod" class="help-block">{{vm.validationErrors.cutOffPeriod.join(' ')}}</span>
+            */
 
-            if (!String.IsNullOrWhiteSpace(placeholder))
+            var camelCasePropertyName = GetCamelCasePropertyName(propertyName);
+
+            var input = new HtmlTag("input");
+            input.Attr("type", "hidden");
+            input.Attr("name", propertyName);
+            input.Attr("value", $"{{{{vm.{camelCasePropertyName}.value}}}}");
+
+            var select = new HtmlTag("select");
+            select.AddClass("form-control");
+            select.Attr("ng-model", $"vm.{camelCasePropertyName}");
+            select.Attr("ng-options", $"item.text for item in vm.lookups.{lookupListName} track by item.value");
+
+            var helpBlock = HelpBlock(camelCasePropertyName);
+
+            select.After(helpBlock);
+
+            input.After(select);
+
+            return input;
+        }
+
+        private static string GetCamelCasePropertyName(string propertyName)
+        {
+            var test = new Dictionary<string, string>
             {
-                control.Attr("placeholder", placeholder);
-            }
+                { propertyName, "Test" }
+            };
 
-            var helpBlock = new HtmlTag("span");
-            helpBlock.AddClass("help-block");
-            helpBlock.Attr("ng-show", $"vm.validationErrors.{camelCasePropertyName}");
-            helpBlock.Text($"{{{{vm.validationErrors.{camelCasePropertyName}.join(' ')}}}}");
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
 
-            control.After(helpBlock);
+            var json = JsonConvert.SerializeObject(test, settings);
 
-            return control;
+            return json.Substring(json.IndexOf("\"") + 1, json.IndexOf(":") - 3);
         }
 
         private static string GetPropertyValue(object model, string propertyName)
@@ -148,21 +137,77 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             return propertyValueAsString;
         }
 
-        private static string GetCamelCasePropertyName(string propertyName)
+        private static IHtmlString HorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string type, IList<SelectListItem> items, string lookupListName, string labelText, string placeholder)
         {
-            var test = new Dictionary<string, string>
+            if (String.IsNullOrWhiteSpace(labelText))
             {
-                { propertyName, "Test" }
-            };
+                labelText = propertyName.Humanize();
+            }
 
-            var settings = new JsonSerializerSettings
+            var camelCasePropertyName = GetCamelCasePropertyName(propertyName);
+
+            var formGroup = new HtmlTag("div");
+            formGroup.AddClass("form-group");
+            formGroup.Attr("ng-class", $"{{ 'has-error': vm.validationErrors.{camelCasePropertyName} }}");
+
+            var label = new HtmlTag("label");
+            label.AddClasses("col-md-3", "col-lg-2", "control-label");
+            label.Text(labelText);
+
+            var controlContainer = new HtmlTag("div");
+            controlContainer.AddClasses("col-md-9", "col-lg-10");
+
+            HtmlTag control = null;
+
+            if (type == "text" || type == "password")
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
+                control = InputControl(helper, propertyName, type, placeholder, camelCasePropertyName);
+            }
+            else if (type == "checkboxlist")
+            {
+                control = CheckboxListControl(helper, propertyName, items);
+            }
+            else if (type == "dropdown")
+            {
+                control = DropdownControl(helper, propertyName, lookupListName);
+            }
 
-            var json = JsonConvert.SerializeObject(test, settings);
+            controlContainer.Append(control);
 
-            return json.Substring(json.IndexOf("\"") + 1, json.IndexOf(":") - 3);
+            formGroup.Append(label);
+            formGroup.Append(controlContainer);
+
+            return new MvcHtmlString(formGroup.ToHtmlString());
+        }
+
+        private static HtmlTag InputControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string type, string placeholder, string camelCasePropertyName)
+        {
+            var control = new HtmlTag("input");
+            control.Attr("type", type);
+            control.AddClass("form-control");
+            control.Attr("name", propertyName);
+            control.Attr("value", GetPropertyValue(helper.ViewData.Model, propertyName));
+
+            if (!String.IsNullOrWhiteSpace(placeholder))
+            {
+                control.Attr("placeholder", placeholder);
+            }
+
+            var helpBlock = HelpBlock(camelCasePropertyName);
+
+            control.After(helpBlock);
+
+            return control;
+        }
+
+        private static HtmlTag HelpBlock(string camelCasePropertyName)
+        {
+            var helpBlock = new HtmlTag("span");
+            helpBlock.AddClass("help-block");
+            helpBlock.Attr("ng-show", $"vm.validationErrors.{camelCasePropertyName}");
+            helpBlock.Text($"{{{{vm.validationErrors.{camelCasePropertyName}.join(' ')}}}}");
+
+            return helpBlock;
         }
     }
 }

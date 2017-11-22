@@ -1,7 +1,7 @@
-﻿@model JPRSC.HRIS.WebApp.Features.Clients.Edit.Command
+﻿@model JPRSC.HRIS.WebApp.Features.EarningDeductions.Edit.Command
 
 @{
-    ViewBag.Title = "Edit Client " + Model.Name;
+    ViewBag.Title = "Edit Earning / Deduction " + Model.Code;
 }
 
 <div class="page-content-wrapper">
@@ -12,33 +12,32 @@
                     <a href="@Url.Action("Index", "Home")">Home</a>
                     <i class="fa fa-circle"></i>
                 </li>
-                <li>Edit Client</li>
+                <li>Edit Earning / Deduction</li>
             </ul>
         </div>
         <h1 class="page-title">
-            Edit Client @Model.Name
+            Edit Earning / Deduction @Model.Code
         </h1>
         <div class="row">
             <div class="col-sm-12">
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
-                            <i class="fa fa-book font-red-sunglo"></i>
-                            <span class="caption-subject font-red-sunglo bold uppercase">Edit Client @Model.Name</span>
+                            <i class="fa fa-dollar font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Edit Earning / Deduction @Model.Code</span>
                         </div>
                     </div>
-                    <div class="portlet-body form" ng-controller="EditClientCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
-                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.editClientSubmit($event)">
+                    <div class="portlet-body form" ng-controller="EditEarningDeductionCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.editEarningDeductionSubmit($event)">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(m => m.Id)
                             <div class="form-body">
-                                @Html.TextBoxHorizontalFormGroup("Name")
-                                @Html.DropdownHorizontalFormGroup("cutOffPeriods", "CutOffPeriod", "CutOff Period")
-                                @Html.TextBoxHorizontalFormGroup("DaysPerWeek")
-                                @Html.TextBoxHorizontalFormGroup("HoursPerDay")
+                                @Html.TextBoxHorizontalFormGroup("Code")
+                                @Html.TextBoxHorizontalFormGroup("Description")
+                                @Html.DropdownHorizontalFormGroup("earningDeductionTypes", "EarningDeductionType", "Type")
                             </div>
                             <div class="form-actions right">
-                                <a href="@Url.Action("Index", "Clients")" class="btn default">Cancel</a>
+                                <a href="@Url.Action("Index", "EarningDeductions")" class="btn default">Cancel</a>
                                 <button type="submit" class="btn green">Save</button>
                             </div>
                         </form>
@@ -51,5 +50,5 @@
 
 @section scripts
 {
-    @Scripts.Render("~/scriptbundles/clients")
+    @Scripts.Render("~/scriptbundles/earningDeductions")
 }

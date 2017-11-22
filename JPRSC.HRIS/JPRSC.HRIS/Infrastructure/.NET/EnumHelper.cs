@@ -9,14 +9,19 @@ namespace JPRSC.HRIS.Infrastructure.NET
     {
         public static object ConvertToLookup<TEnum>(TEnum enumValue, bool camelCase = true) where TEnum : struct, IComparable, IFormattable, IConvertible
         {
-            var displayAttributeName = enumValue.GetType().GetMember(enumValue.ToString()).First().GetCustomAttribute<DisplayAttribute>()?.Name;
+            var displayName = GetDisplayName(enumValue);
 
             if (camelCase)
             {
-                return new { value = Convert.ToInt32(enumValue), text = displayAttributeName ?? enumValue.ToString() };
+                return new { value = Convert.ToInt32(enumValue), text = displayName ?? enumValue.ToString() };
             }
 
-            return new { Value = Convert.ToInt32(enumValue), Text = displayAttributeName ?? enumValue.ToString() };
+            return new { Value = Convert.ToInt32(enumValue), Text = displayName ?? enumValue.ToString() };
+        }
+
+        public static string GetDisplayName<TEnum>(TEnum enumValue) where TEnum : struct, IComparable, IFormattable, IConvertible
+        {
+            return enumValue.GetType().GetMember(enumValue.ToString()).First().GetCustomAttribute<DisplayAttribute>()?.Name;
         }
     }
 }

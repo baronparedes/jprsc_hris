@@ -41,6 +41,10 @@
                     daily: @Html.EnumLookup(CutOffPeriod.Daily),
                     biMonthly: @Html.EnumLookup(CutOffPeriod.BiMonthly),
                     monthly: @Html.EnumLookup(CutOffPeriod.Monthly)
+                },
+                earningDeductionTypes: {
+                    earnings: @Html.EnumLookup(EarningDeductionType.Earnings),
+                    deductions: @Html.EnumLookup(EarningDeductionType.Deductions)
                 }
             };
         }());

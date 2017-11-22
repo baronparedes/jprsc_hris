@@ -26,6 +26,10 @@ namespace JPRSC.HRIS.Models
 
         // Custom Role
         [Display(Name = "Roles")]
-        CustomRoleDefault = 600
+        CustomRoleDefault = 600,
+
+        // Earnings and Deductions
+        [Display(Name = "Earnings and Deductions")]
+        EarningDeductionDefault = 700
     }
 }

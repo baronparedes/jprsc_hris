@@ -131,6 +131,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201711181016235_Test.Designer.cs">
       <DependentUpon>201711181016235_Test.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201711220314038_AddEarningDeductions.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201711220314038_AddEarningDeductions.Designer.cs">
+      <DependentUpon>201711220314038_AddEarningDeductions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -145,6 +149,8 @@
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\CompanyProfile.cs" />
     <Compile Include="Models\CutOffPeriod.cs" />
+    <Compile Include="Models\EarningDeduction.cs" />
+    <Compile Include="Models\EarningDeductionType.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\LogEntry.cs" />
@@ -180,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201711181016235_Test.resx">
       <DependentUpon>201711181016235_Test.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201711220314038_AddEarningDeductions.resx">
+      <DependentUpon>201711220314038_AddEarningDeductions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

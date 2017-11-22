@@ -1,7 +1,7 @@
-﻿@model JPRSC.HRIS.WebApp.Features.Clients.Add.Command
+﻿@model JPRSC.HRIS.WebApp.Features.EarningDeductions.Add.Command
 
 @{
-    ViewBag.Title = "Add a Client";
+    ViewBag.Title = "Add an Earning / Deduction";
 }
 
 <div class="page-content-wrapper">
@@ -12,11 +12,11 @@
                     <a href="@Url.Action("Index", "Home")">Home</a>
                     <i class="fa fa-circle"></i>
                 </li>
-                <li>Add Client</li>
+                <li>Add Earning / Deduction</li>
             </ul>
         </div>
         <h1 class="page-title">
-            Add Client
+            Add Earning / Deduction
         </h1>
         <div class="row">
             <div class="col-sm-12">
@@ -24,20 +24,19 @@
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-plus font-red-sunglo"></i>
-                            <span class="caption-subject font-red-sunglo bold uppercase">Add Client</span>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Add Earning / Deduction</span>
                         </div>
                     </div>
-                    <div class="portlet-body form" ng-controller="AddClientCtrl as vm">
-                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.addClientSubmit($event)">
+                    <div class="portlet-body form" ng-controller="AddEarningDeductionCtrl as vm">
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.addEarningDeductionSubmit($event)">
                             @Html.AntiForgeryToken()
                             <div class="form-body">
-                                @Html.TextBoxHorizontalFormGroup("Name")
-                                @Html.DropdownHorizontalFormGroup("cutOffPeriods", "CutOffPeriod", "CutOff Period")
-                                @Html.TextBoxHorizontalFormGroup("DaysPerWeek")
-                                @Html.TextBoxHorizontalFormGroup("HoursPerDay")
+                                @Html.TextBoxHorizontalFormGroup("Code")
+                                @Html.TextBoxHorizontalFormGroup("Description")
+                                @Html.DropdownHorizontalFormGroup("earningDeductionTypes", "EarningDeductionType", "Type")
                             </div>
                             <div class="form-actions right">
-                                <a href="@Url.Action("Index", "Clients")" class="btn default">Cancel</a>
+                                <a href="@Url.Action("Index", "EarningDeductions")" class="btn default">Cancel</a>
                                 <button type="submit" class="btn green">Add</button>
                             </div>
                         </form>
@@ -50,5 +49,5 @@
 
 @section scripts
 {
-    @Scripts.Render("~/scriptbundles/clients")
+    @Scripts.Render("~/scriptbundles/earningDeductions")    
 }
