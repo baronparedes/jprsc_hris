@@ -135,6 +135,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201711220314038_AddEarningDeductions.Designer.cs">
       <DependentUpon>201711220314038_AddEarningDeductions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201711230531336_AddCompanyProfileDefaultAndUserRelation.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201711230531336_AddCompanyProfileDefaultAndUserRelation.Designer.cs">
+      <DependentUpon>201711230531336_AddCompanyProfileDefaultAndUserRelation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -189,6 +193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201711220314038_AddEarningDeductions.resx">
       <DependentUpon>201711220314038_AddEarningDeductions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201711230531336_AddCompanyProfileDefaultAndUserRelation.resx">
+      <DependentUpon>201711230531336_AddCompanyProfileDefaultAndUserRelation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -11,9 +11,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
 {
     public static class HtmlHelperExtensionscs
     {
-        public static IHtmlString CheckboxSelectListItemHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, IList<SelectListItem> items, string propertyName, string labelText = null, string placeholder = null)
+        public static IHtmlString CheckboxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null)
         {
-            return HorizontalFormGroup(helper, propertyName, "checkboxlist", items, null, labelText, placeholder);
+            return HorizontalFormGroup(helper, propertyName, "checkbox", null, null, labelText, null);
+        }
+
+        public static IHtmlString CheckboxSelectListItemHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, IList<SelectListItem> items, string propertyName, string labelText = null)
+        {
+            return HorizontalFormGroup(helper, propertyName, "checkboxlist", items, null, labelText, null);
         }
 
         public static IHtmlString DropdownHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string lookupListName, string propertyName, string labelText = null, string placeholder = null)
@@ -29,6 +34,39 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
         public static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
         {
             return HorizontalFormGroup(helper, propertyName, "text", null, null, labelText, placeholder);
+        }
+
+        private static HtmlTag CheckboxControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string labelText)
+        {
+            var checkBoxList = new HtmlTag("div");
+            checkBoxList.AddClass("mt-checkbox-list");
+            checkBoxList.Attr("style", "padding-top: 8px;");
+
+            var label = new HtmlTag("label");
+            label.AddClasses("mt-checkbox", "mt-checkbox-outline");
+            label.Attr("style", "margin-bottom: 0px;");
+
+            var checkbox = new HtmlTag("input");
+            checkbox.Attr("type", "checkbox");
+            checkbox.Attr("name", propertyName);
+            checkbox.Attr("value", "true");
+            checkbox.AppendText(String.Empty);
+
+            var propertyValue = GetPropertyValue(helper.ViewData.Model, propertyName);
+
+            if (bool.TryParse(propertyValue, out bool isTrue) && isTrue)
+            {
+                checkbox.Attr("checked", "checked");
+            }
+
+            var span = new HtmlTag("span");
+
+            label.Append(checkbox);
+            label.Append(span);
+
+            checkBoxList.Append(label);
+
+            return checkBoxList;
         }
 
         private static HtmlTag CheckboxListControl<TModel>(HtmlHelper<TModel> helper, string propertyName, IList<SelectListItem> items)
@@ -77,12 +115,6 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
 
         private static HtmlTag DropdownControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string lookupListName)
         {
-            /*
-            <input type="hidden" name="CutOffPeriod" value="{{vm.cutOffPeriod.value}}" />
-            <select class="form-control" ng-model="vm.cutOffPeriod" ng-options="cutOffPeriod.text for cutOffPeriod in vm.lookups.cutOffPeriods track by cutOffPeriod.value"></select>
-            <span ng-show="vm.validationErrors.cutOffPeriod" class="help-block">{{vm.validationErrors.cutOffPeriod.join(' ')}}</span>
-            */
-
             var camelCasePropertyName = GetCamelCasePropertyName(propertyName);
 
             var input = new HtmlTag("input");
@@ -159,17 +191,23 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
 
             HtmlTag control = null;
 
-            if (type == "text" || type == "password")
+            switch (type)
             {
-                control = InputControl(helper, propertyName, type, placeholder, camelCasePropertyName);
-            }
-            else if (type == "checkboxlist")
-            {
-                control = CheckboxListControl(helper, propertyName, items);
-            }
-            else if (type == "dropdown")
-            {
-                control = DropdownControl(helper, propertyName, lookupListName);
+                case "text":
+                case "password":
+                    control = InputControl(helper, propertyName, type, placeholder, camelCasePropertyName);
+                    break;
+                case "checkbox":
+                    control = CheckboxControl(helper, propertyName, labelText);
+                    break;
+                case "checkboxlist":
+                    control = CheckboxListControl(helper, propertyName, items);
+                    break;
+                case "dropdown":
+                    control = DropdownControl(helper, propertyName, lookupListName);
+                    break;
+                default:
+                    break;
             }
 
             controlContainer.Append(control);
