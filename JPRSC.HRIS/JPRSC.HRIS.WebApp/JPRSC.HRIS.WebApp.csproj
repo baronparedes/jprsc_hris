@@ -271,7 +271,7 @@
     <Compile Include="Features\Religions\_Controller.cs" />
     <Compile Include="Features\Religions\_MappingProfile.cs" />
     <Compile Include="Infrastructure\Angular\AngularHtmlHelperExtensions.cs" />
-    <Compile Include="Infrastructure\Html\HtmlHelperExtensionscs.cs" />
+    <Compile Include="Infrastructure\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Logging\LogHelper.cs" />
     <Compile Include="Infrastructure\Mapping\MappingConfig.cs" />
     <Compile Include="Infrastructure\Html\NotificationHelper.cs" />

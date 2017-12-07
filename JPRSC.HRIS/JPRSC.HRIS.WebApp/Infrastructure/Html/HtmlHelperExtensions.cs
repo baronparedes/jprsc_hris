@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Html
 {
-    public static class HtmlHelperExtensionscs
+    public static class HtmlHelperExtensions
     {
         public static IHtmlString CheckboxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null)
         {
@@ -31,9 +31,9 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             return HorizontalFormGroup(helper, propertyName, "dropdown", items, null, labelText, null);
         }
 
-        public static IHtmlString PasswordBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
+        public static IHtmlString PasswordBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null)
         {
-            return HorizontalFormGroup(helper, propertyName, "password", null, null, labelText, placeholder);
+            return HorizontalFormGroup(helper, propertyName, "password", null, null, labelText, null);
         }
 
         public static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
