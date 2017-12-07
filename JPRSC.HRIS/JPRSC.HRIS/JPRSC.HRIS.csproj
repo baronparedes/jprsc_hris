@@ -139,6 +139,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201711230531336_AddCompanyProfileDefaultAndUserRelation.Designer.cs">
       <DependentUpon>201711230531336_AddCompanyProfileDefaultAndUserRelation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201712071055540_RemoveCompanyIsDefault.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201712071055540_RemoveCompanyIsDefault.Designer.cs">
+      <DependentUpon>201712071055540_RemoveCompanyIsDefault.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -196,6 +200,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201711230531336_AddCompanyProfileDefaultAndUserRelation.resx">
       <DependentUpon>201711230531336_AddCompanyProfileDefaultAndUserRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201712071055540_RemoveCompanyIsDefault.resx">
+      <DependentUpon>201712071055540_RemoveCompanyIsDefault.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -13,7 +13,6 @@ namespace JPRSC.HRIS.Models
         public string DTI { get; set; }
         public string Email { get; set; }
         public int Id { get; set; }
-        public bool? IsDefault { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string Name { get; set; }
         public string PagIbig { get; set; }
