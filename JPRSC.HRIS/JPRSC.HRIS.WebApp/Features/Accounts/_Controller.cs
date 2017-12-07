@@ -102,6 +102,30 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         }
 
         [HttpGet]
+        public async Task<ActionResult> EditOwn(EditOwn.Query query)
+        {
+            var queryResult = await _mediator.Send(query);
+
+            return View(queryResult);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditOwn(EditOwn.Command command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return JsonValidationError();
+            }
+
+            await _mediator.Send(command);
+
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully edited account.");
+
+            return Json("success");
+        }
+
+        [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)
         {
             var result = await _mediator.Send(query);

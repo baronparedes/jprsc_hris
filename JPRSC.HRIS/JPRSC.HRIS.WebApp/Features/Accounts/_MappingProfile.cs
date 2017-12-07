@@ -9,6 +9,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         {
             CreateMap<User, Search.QueryResult.Account>();
             CreateMap<User, Edit.Command>();
+            CreateMap<User, EditOwn.Command>();
             CreateMap<User, ChangePassword.Command>();
         }
     }

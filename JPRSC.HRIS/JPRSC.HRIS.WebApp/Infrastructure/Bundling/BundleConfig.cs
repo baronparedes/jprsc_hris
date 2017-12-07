@@ -23,6 +23,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/accounts/add.js",
                 "~/wwwroot/scripts/accounts/changePassword.js",
                 "~/wwwroot/scripts/accounts/edit.js",
+                "~/wwwroot/scripts/accounts/editOwn.js",
                 "~/wwwroot/scripts/accounts/index.js");
         }
 

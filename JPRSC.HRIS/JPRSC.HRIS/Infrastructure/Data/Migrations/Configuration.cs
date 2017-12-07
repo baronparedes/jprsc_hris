@@ -43,6 +43,7 @@
                 Permission.HomeDefault,
                 Permission.CompanyDefault,
                 Permission.AccountDefault,
+                Permission.AccountEditOwn,
                 Permission.ReligionDefault,
                 Permission.ClientDefault,
                 Permission.CustomRoleDefault,
@@ -58,7 +59,8 @@
 
             defaultRole.AddPermissions(new List<Permission>
             {
-                Permission.HomeDefault
+                Permission.HomeDefault,
+                Permission.AccountEditOwn
             });
 
             var customRolesSeed = new List<CustomRole>

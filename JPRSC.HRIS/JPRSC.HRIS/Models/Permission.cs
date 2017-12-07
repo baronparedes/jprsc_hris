@@ -15,6 +15,7 @@ namespace JPRSC.HRIS.Models
         // Account
         [Display(Name = "Accounts")]
         AccountDefault = 300,
+        AccountEditOwn = 301,
 
         // Religion
         [Display(Name = "Religions")]

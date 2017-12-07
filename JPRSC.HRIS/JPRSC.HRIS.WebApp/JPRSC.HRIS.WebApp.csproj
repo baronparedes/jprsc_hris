@@ -227,6 +227,7 @@
     <Compile Include="Features\Accounts\Delete.cs" />
     <Compile Include="Features\Accounts\Edit.cs" />
     <Compile Include="Features\Accounts\ChangePassword.cs" />
+    <Compile Include="Features\Accounts\EditOwn.cs" />
     <Compile Include="Features\Accounts\Index.cs" />
     <Compile Include="Features\Accounts\Search.cs" />
     <Compile Include="Features\Accounts\_Controller.cs" />
@@ -5786,6 +5787,7 @@
     <Content Include="wwwroot\metronic\pages\scripts\widgets.min.js" />
     <Content Include="wwwroot\scripts\accounts\add.js" />
     <Content Include="wwwroot\scripts\accounts\changePassword.js" />
+    <Content Include="wwwroot\scripts\accounts\editOwn.js" />
     <Content Include="wwwroot\scripts\accounts\edit.js" />
     <Content Include="wwwroot\scripts\accounts\index.js" />
     <Content Include="wwwroot\scripts\account\login.js" />
@@ -6645,6 +6647,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EarningDeductions\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Accounts\EditOwn.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
