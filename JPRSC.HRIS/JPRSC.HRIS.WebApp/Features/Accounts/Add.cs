@@ -22,12 +22,14 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         public class Command : IRequest
         {
+            public int? CompanyProfileId { get; set; }
             public string Name { get; set; }
             public string JobTitle { get; set; }
             public string UserName { get; set; }
             public string Password { get; set; }
             public string RepeatPassword { get; set; }
             public IList<SelectListItem> RolesList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> CompaniesList { get; set; } = new List<SelectListItem>();
         }
 
         public class QueryHandler : IAsyncRequestHandler<Query, Command>
@@ -43,11 +45,21 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             {
                 var command = new Command();
 
+                command.RolesList = await GetRolesList();
+                command.CompaniesList = await GetCompaniesList();
+
+                return command;
+            }
+
+            private async Task<IList<SelectListItem>> GetRolesList()
+            {
+                var rolesList = new List<SelectListItem>();
+
                 var customRoles = await _db.CustomRoles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
 
                 foreach (var customRole in customRoles)
                 {
-                    command.RolesList.Add(new SelectListItem
+                    rolesList.Add(new SelectListItem
                     {
                         Text = customRole.Name,
                         Value = customRole.Id.ToString(),
@@ -55,7 +67,25 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                     });
                 }
 
-                return command;
+                return rolesList;
+            }
+
+            private async Task<IList<SelectListItem>> GetCompaniesList()
+            {
+                var companiesList = new List<SelectListItem>();
+
+                var companyProfiles = await _db.CompanyProfiles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
+
+                foreach (var companyProfile in companyProfiles)
+                {
+                    companiesList.Add(new SelectListItem
+                    {
+                        Text = companyProfile.Name,
+                        Value = companyProfile.Id.ToString()
+                    });
+                }
+
+                return companiesList;
             }
         }
 
@@ -112,6 +142,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 var user = new User
                 {
                     AddedOn = DateTime.UtcNow,
+                    CompanyProfileId = command.CompanyProfileId,
                     Name = command.Name,
                     JobTitle = command.JobTitle,
                     UserName = command.UserName

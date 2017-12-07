@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace JPRSC.HRIS.Models
 {
@@ -23,6 +24,7 @@ namespace JPRSC.HRIS.Models
         public string Registration { get; set; }
         public string SEC { get; set; }
         public string SSS { get; set; }
+        public ICollection<User> Users { get; set; } = new List<User>();
         public string VAT { get; set; }
         public string ZipCode { get; set; }
     }

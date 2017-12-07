@@ -21,9 +21,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             return HorizontalFormGroup(helper, propertyName, "checkboxlist", items, null, labelText, null);
         }
 
-        public static IHtmlString DropdownHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string lookupListName, string propertyName, string labelText = null, string placeholder = null)
+        public static IHtmlString DropdownHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string lookupListName, string propertyName, string labelText = null)
         {
-            return HorizontalFormGroup(helper, propertyName, "dropdown", null, lookupListName, labelText, placeholder);
+            return HorizontalFormGroup(helper, propertyName, "dropdown", null, lookupListName, labelText, null);
+        }
+
+        public static IHtmlString DropdownHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, IList<SelectListItem> items, string propertyName, string labelText = null)
+        {
+            return HorizontalFormGroup(helper, propertyName, "dropdown", items, null, labelText, null);
         }
 
         public static IHtmlString PasswordBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
@@ -136,6 +141,36 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             return input;
         }
 
+        private static HtmlTag DropdownControl<TModel>(HtmlHelper<TModel> helper, string propertyName, IList<SelectListItem> items)
+        {
+            var camelCasePropertyName = GetCamelCasePropertyName(propertyName);
+            var propertyValue = GetPropertyValue(helper.ViewData.Model, propertyName);
+
+            var select = new HtmlTag("select");
+            select.AddClass("form-control");
+            select.Attr("name", propertyName);
+
+            foreach (var item in items)
+            {
+                var option = new HtmlTag("option");
+                option.Attr("value", item.Value);
+                option.AppendText(item.Text);
+                
+                if (propertyValue == item.Value)
+                {
+                    option.Attr("selected", "selected");
+                }
+
+                select.Append(option);
+            }
+
+            var helpBlock = HelpBlock(camelCasePropertyName);
+
+            select.After(helpBlock);
+
+            return select;
+        }
+
         private static string GetCamelCasePropertyName(string propertyName)
         {
             var test = new Dictionary<string, string>
@@ -204,7 +239,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
                     control = CheckboxListControl(helper, propertyName, items);
                     break;
                 case "dropdown":
-                    control = DropdownControl(helper, propertyName, lookupListName);
+                    if (!String.IsNullOrWhiteSpace(lookupListName))
+                    {
+                        control = DropdownControl(helper, propertyName, lookupListName);
+                    }
+                    else
+                    {
+                        control = DropdownControl(helper, propertyName, items);
+                    }
                     break;
                 default:
                     break;
