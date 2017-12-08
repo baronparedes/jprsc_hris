@@ -34,7 +34,11 @@ namespace JPRSC.HRIS.Models
         EarningDeductionDefault = 700,
 
         // Job Title
-        [Display(Name = "Job Title")]
-        JobTitleDefault = 800
+        [Display(Name = "Job Titles")]
+        JobTitleDefault = 800,
+
+        // Department
+        [Display(Name = "Departments")]
+        DepartmentDefault = 900
     }
 }

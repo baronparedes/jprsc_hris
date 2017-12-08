@@ -255,6 +255,13 @@
     <Compile Include="Features\CustomRoles\Search.cs" />
     <Compile Include="Features\CustomRoles\_Controller.cs" />
     <Compile Include="Features\CustomRoles\_MappingProfile.cs" />
+    <Compile Include="Features\Departments\Add.cs" />
+    <Compile Include="Features\Departments\Delete.cs" />
+    <Compile Include="Features\Departments\Edit.cs" />
+    <Compile Include="Features\Departments\Index.cs" />
+    <Compile Include="Features\Departments\Search.cs" />
+    <Compile Include="Features\Departments\_Controller.cs" />
+    <Compile Include="Features\Departments\_MappingProfile.cs" />
     <Compile Include="Features\EarningDeductions\Add.cs" />
     <Compile Include="Features\EarningDeductions\Delete.cs" />
     <Compile Include="Features\EarningDeductions\Edit.cs" />
@@ -5807,6 +5814,9 @@
     <Content Include="wwwroot\scripts\customRoles\add.js" />
     <Content Include="wwwroot\scripts\customRoles\edit.js" />
     <Content Include="wwwroot\scripts\customRoles\index.js" />
+    <Content Include="wwwroot\scripts\departments\add.js" />
+    <Content Include="wwwroot\scripts\departments\edit.js" />
+    <Content Include="wwwroot\scripts\departments\index.js" />
     <Content Include="wwwroot\scripts\earningDeductions\add.js" />
     <Content Include="wwwroot\scripts\earningDeductions\edit.js" />
     <Content Include="wwwroot\scripts\earningDeductions\index.js" />
@@ -6669,6 +6679,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\JobTitles\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Departments\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Departments\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Departments\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

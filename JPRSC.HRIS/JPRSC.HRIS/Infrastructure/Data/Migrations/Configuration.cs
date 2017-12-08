@@ -48,7 +48,8 @@
                 Permission.ClientDefault,
                 Permission.CustomRoleDefault,
                 Permission.EarningDeductionDefault,
-                Permission.JobTitleDefault
+                Permission.JobTitleDefault,
+                Permission.DepartmentDefault
             });
 
             var defaultRole = new CustomRole

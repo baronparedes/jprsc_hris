@@ -12,6 +12,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddCompanyBundles(bundles);
             AddCoreBundles(bundles);
             AddCustomRolesBundles(bundles);
+            AddDepartmentBundles(bundles);
             AddEarningDeductionBundles(bundles);
             AddJobTitleBundles(bundles);
             AddLoginBundles(bundles);
@@ -95,6 +96,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/customRoles/add.js",
                 "~/wwwroot/scripts/customRoles/edit.js",
                 "~/wwwroot/scripts/customRoles/index.js");
+        }
+
+        private static void AddDepartmentBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/departments",
+                "~/wwwroot/scripts/departments/add.js",
+                "~/wwwroot/scripts/departments/edit.js",
+                "~/wwwroot/scripts/departments/index.js");
         }
 
         private static void AddEarningDeductionBundles(BundleCollection bundles)

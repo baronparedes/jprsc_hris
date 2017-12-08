@@ -156,6 +156,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201712080438464_AddAlloweduserCompanies.Designer.cs">
       <DependentUpon>201712080438464_AddAlloweduserCompanies.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201712080454133_AddDepartment.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201712080454133_AddDepartment.Designer.cs">
+      <DependentUpon>201712080454133_AddDepartment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -170,8 +174,10 @@
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\CompanyProfile.cs" />
     <Compile Include="Models\CutOffPeriod.cs" />
+    <Compile Include="Models\Department.cs" />
     <Compile Include="Models\EarningDeduction.cs" />
     <Compile Include="Models\EarningDeductionType.cs" />
+    <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\JobTitle.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\User.cs" />
@@ -226,6 +232,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201712080438464_AddAlloweduserCompanies.resx">
       <DependentUpon>201712080438464_AddAlloweduserCompanies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201712080454133_AddDepartment.resx">
+      <DependentUpon>201712080454133_AddDepartment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

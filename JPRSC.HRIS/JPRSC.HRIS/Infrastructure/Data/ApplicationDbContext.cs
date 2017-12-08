@@ -13,6 +13,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<CompanyProfile> CompanyProfiles { get; set; }
         public DbSet<CustomRole> CustomRoles { get; set; }
+        public DbSet<Department> Departments { get; set; }
         public DbSet<EarningDeduction> EarningDeductions { get; set; }
         public DbSet<JobTitle> JobTitles { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
