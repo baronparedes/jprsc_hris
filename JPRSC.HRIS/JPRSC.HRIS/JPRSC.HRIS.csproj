@@ -139,9 +139,15 @@
     <Compile Include="Infrastructure\Data\Migrations\201711230531336_AddCompanyProfileDefaultAndUserRelation.Designer.cs">
       <DependentUpon>201711230531336_AddCompanyProfileDefaultAndUserRelation.cs</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Infrastructure\Data\Migrations\201712080254425_AddJobTitle.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201712080254425_AddJobTitle.Designer.cs">
       <DependentUpon>201712080254425_AddJobTitle.cs</DependentUpon>
+=======
+    <Compile Include="Infrastructure\Data\Migrations\201712071055540_RemoveCompanyIsDefault.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201712071055540_RemoveCompanyIsDefault.Designer.cs">
+      <DependentUpon>201712071055540_RemoveCompanyIsDefault.cs</DependentUpon>
+>>>>>>> 5b38bee61a46f19d3befe5cc3aae7d510b8b5625
     </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
@@ -202,8 +208,13 @@
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201711230531336_AddCompanyProfileDefaultAndUserRelation.resx">
       <DependentUpon>201711230531336_AddCompanyProfileDefaultAndUserRelation.cs</DependentUpon>
     </EmbeddedResource>
+<<<<<<< HEAD
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201712080254425_AddJobTitle.resx">
       <DependentUpon>201712080254425_AddJobTitle.cs</DependentUpon>
+=======
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201712071055540_RemoveCompanyIsDefault.resx">
+      <DependentUpon>201712071055540_RemoveCompanyIsDefault.cs</DependentUpon>
+>>>>>>> 5b38bee61a46f19d3befe5cc3aae7d510b8b5625
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -23,7 +23,6 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             public string DTI { get; set; }
             public string Email { get; set; }
             public int Id { get; set; }
-            public bool? IsDefault { get; set; }
             public string Name { get; set; }
             public string PagIbig { get; set; }
             public string PERAA { get; set; }
@@ -164,7 +163,6 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 companyProfile.DateIssued = command.DateIssued;
                 companyProfile.DTI = command.DTI;
                 companyProfile.Email = command.Email;
-                companyProfile.IsDefault = command.IsDefault;
                 companyProfile.ModifiedOn = DateTime.UtcNow;
                 companyProfile.Name = command.Name;
                 companyProfile.PagIbig = command.PagIbig;
@@ -177,11 +175,6 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 companyProfile.SSS = command.SSS;
                 companyProfile.VAT = command.VAT;
                 companyProfile.ZipCode = command.ZipCode;
-
-                if (command.IsDefault.HasValue && command.IsDefault.HasValue)
-                {
-                    _db.Database.ExecuteSqlCommand($"UPDATE [dbo].[CompanyProfiles] SET [IsDefault] = 0 WHERE [IsDefault] = 1");
-                }
 
                 await _db.SaveChangesAsync();
             }
