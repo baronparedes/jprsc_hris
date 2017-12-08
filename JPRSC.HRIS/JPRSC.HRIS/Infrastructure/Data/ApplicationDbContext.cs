@@ -18,6 +18,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<JobTitle> JobTitles { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<Religion> Religions { get; set; }
+        public DbSet<TaxStatus> TaxStatuses { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

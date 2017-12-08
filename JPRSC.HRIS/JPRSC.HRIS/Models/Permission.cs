@@ -39,6 +39,10 @@ namespace JPRSC.HRIS.Models
 
         // Department
         [Display(Name = "Departments")]
-        DepartmentDefault = 900
+        DepartmentDefault = 900,
+
+        // Tax Status
+        [Display(Name = "Tax Statuses")]
+        TaxStatusDefault = 1000
     }
 }

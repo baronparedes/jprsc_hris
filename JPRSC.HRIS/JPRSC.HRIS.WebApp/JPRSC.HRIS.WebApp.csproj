@@ -285,6 +285,13 @@
     <Compile Include="Features\Religions\Search.cs" />
     <Compile Include="Features\Religions\_Controller.cs" />
     <Compile Include="Features\Religions\_MappingProfile.cs" />
+    <Compile Include="Features\TaxStatuses\Add.cs" />
+    <Compile Include="Features\TaxStatuses\Delete.cs" />
+    <Compile Include="Features\TaxStatuses\Edit.cs" />
+    <Compile Include="Features\TaxStatuses\Index.cs" />
+    <Compile Include="Features\TaxStatuses\Search.cs" />
+    <Compile Include="Features\TaxStatuses\_Controller.cs" />
+    <Compile Include="Features\TaxStatuses\_MappingProfile.cs" />
     <Compile Include="Infrastructure\Angular\AngularHtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Logging\LogHelper.cs" />
@@ -5826,6 +5833,9 @@
     <Content Include="wwwroot\scripts\religions\add.js" />
     <Content Include="wwwroot\scripts\religions\edit.js" />
     <Content Include="wwwroot\scripts\religions\index.js" />
+    <Content Include="wwwroot\scripts\taxStatuses\add.js" />
+    <Content Include="wwwroot\scripts\taxStatuses\edit.js" />
+    <Content Include="wwwroot\scripts\taxStatuses\index.js" />
     <Content Include="wwwroot\styles\shared\app.css" />
     <Content Include="wwwroot\favicon.ico" />
     <Content Include="Global.asax" />
@@ -6688,6 +6698,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Departments\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TaxStatuses\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TaxStatuses\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TaxStatuses\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
