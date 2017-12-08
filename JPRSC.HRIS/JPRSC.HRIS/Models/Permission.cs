@@ -31,6 +31,10 @@ namespace JPRSC.HRIS.Models
 
         // Earnings and Deductions
         [Display(Name = "Earnings and Deductions")]
-        EarningDeductionDefault = 700
+        EarningDeductionDefault = 700,
+
+        // Job Title
+        [Display(Name = "Job Title")]
+        JobTitleDefault = 800
     }
 }

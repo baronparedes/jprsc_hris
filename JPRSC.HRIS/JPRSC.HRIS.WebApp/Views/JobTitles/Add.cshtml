@@ -1,0 +1,51 @@
+﻿@model JPRSC.HRIS.WebApp.Features.JobTitles.Add.Command
+
+@{
+    ViewBag.Title = "Add a Job Title";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Add Job Title</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Add Job Title
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-plus font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Add Job Title</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form" ng-controller="AddJobTitleCtrl as vm">
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.addJobTitleSubmit($event)">
+                            @Html.AntiForgeryToken()
+                            <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("Name")
+                            </div>
+                            <div class="form-actions right">
+                                <a href="@Url.Action("Index", "JobTitles")" class="btn default">Cancel</a>
+                                <button type="submit" class="btn green">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/jobTitles")    
+}

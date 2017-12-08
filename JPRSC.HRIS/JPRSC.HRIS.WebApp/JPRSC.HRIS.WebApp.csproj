@@ -262,6 +262,13 @@
     <Compile Include="Features\EarningDeductions\Search.cs" />
     <Compile Include="Features\EarningDeductions\_Controller.cs" />
     <Compile Include="Features\EarningDeductions\_MappingProfile.cs" />
+    <Compile Include="Features\JobTitles\Add.cs" />
+    <Compile Include="Features\JobTitles\Delete.cs" />
+    <Compile Include="Features\JobTitles\Edit.cs" />
+    <Compile Include="Features\JobTitles\Index.cs" />
+    <Compile Include="Features\JobTitles\Search.cs" />
+    <Compile Include="Features\JobTitles\_Controller.cs" />
+    <Compile Include="Features\JobTitles\_MappingProfile.cs" />
     <Compile Include="Features\Manage\AddPhoneNumber.cs" />
     <Compile Include="Features\Manage\SettPassword.cs" />
     <Compile Include="Features\Religions\Add.cs" />
@@ -5803,6 +5810,9 @@
     <Content Include="wwwroot\scripts\earningDeductions\add.js" />
     <Content Include="wwwroot\scripts\earningDeductions\edit.js" />
     <Content Include="wwwroot\scripts\earningDeductions\index.js" />
+    <Content Include="wwwroot\scripts\jobTitles\add.js" />
+    <Content Include="wwwroot\scripts\jobTitles\edit.js" />
+    <Content Include="wwwroot\scripts\jobTitles\index.js" />
     <Content Include="wwwroot\scripts\religions\add.js" />
     <Content Include="wwwroot\scripts\religions\edit.js" />
     <Content Include="wwwroot\scripts\religions\index.js" />
@@ -6650,6 +6660,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Accounts\EditOwn.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\JobTitles\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\JobTitles\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\JobTitles\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -13,6 +13,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddCoreBundles(bundles);
             AddCustomRolesBundles(bundles);
             AddEarningDeductionBundles(bundles);
+            AddJobTitleBundles(bundles);
             AddLoginBundles(bundles);
             AddReligionBundles(bundles);
         }
@@ -102,6 +103,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/earningDeductions/add.js",
                 "~/wwwroot/scripts/earningDeductions/edit.js",
                 "~/wwwroot/scripts/earningDeductions/index.js");
+        }
+
+        private static void AddJobTitleBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/jobTitles",
+                "~/wwwroot/scripts/jobTitles/add.js",
+                "~/wwwroot/scripts/jobTitles/edit.js",
+                "~/wwwroot/scripts/jobTitles/index.js");
         }
 
         private static void AddLoginBundles(BundleCollection bundles)
