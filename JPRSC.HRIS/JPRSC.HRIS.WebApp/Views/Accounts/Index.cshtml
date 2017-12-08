@@ -55,7 +55,6 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Job Title</th>
                                         <th>UserName</th>
                                         <th>&nbsp;</th>
                                     </tr>
@@ -63,7 +62,6 @@
                                 <tbody>
                                     <tr ng-repeat="account in vm.accounts track by account.id">
                                         <td>{{account.name}}</td>
-                                        <td>{{account.jobTitle}}</td>
                                         <td>{{account.userName}}</td>
                                         <td>
                                             <a href="{{'/Accounts/Edit?userId=' + account.id}}" class="btn btn-primary btn-sm">Edit</a>

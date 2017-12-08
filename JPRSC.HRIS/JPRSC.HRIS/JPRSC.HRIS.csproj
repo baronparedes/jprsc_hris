@@ -146,7 +146,11 @@
     <Compile Include="Infrastructure\Data\Migrations\201712080254425_AddJobTitle.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201712080254425_AddJobTitle.Designer.cs">
       <DependentUpon>201712080254425_AddJobTitle.cs</DependentUpon>
-	</Compile>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201712080325139_AddUserJobTitleRelation.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201712080325139_AddUserJobTitleRelation.Designer.cs">
+      <DependentUpon>201712080325139_AddUserJobTitleRelation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -211,7 +215,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201712080254425_AddJobTitle.resx">
       <DependentUpon>201712080254425_AddJobTitle.cs</DependentUpon>
-	</EmbeddedResource>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201712080325139_AddUserJobTitleRelation.resx">
+      <DependentUpon>201712080325139_AddUserJobTitleRelation.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

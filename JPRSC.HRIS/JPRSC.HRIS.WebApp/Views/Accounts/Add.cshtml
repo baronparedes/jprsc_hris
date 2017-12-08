@@ -32,12 +32,12 @@
                             @Html.AntiForgeryToken()
                             <div class="form-body">
                                 @Html.TextBoxHorizontalFormGroup("Name")
-                                @Html.TextBoxHorizontalFormGroup("JobTitle")
                                 @Html.TextBoxHorizontalFormGroup("UserName")
                                 @Html.PasswordBoxHorizontalFormGroup("Password")
                                 @Html.PasswordBoxHorizontalFormGroup("RepeatPassword")
                                 @Html.CheckboxSelectListItemHorizontalFormGroup(Model.RolesList, "RolesList", "Roles")
-                                @Html.DropdownHorizontalFormGroup(Model.CompaniesList, "CompanyProfileId", "Companies")
+                                @Html.DropdownHorizontalFormGroup(Model.CompaniesList, "CompanyProfileId", "Company")
+                                @Html.DropdownHorizontalFormGroup(Model.JobTitlesList, "JobTitleId", "Job Title")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Accounts")" class="btn default">Cancel</a>

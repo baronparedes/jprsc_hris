@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Accounts
 {
-    [AuthorizePermission(Permission.AccountDefault)]
     public class AccountsController : AppController
     {
         private readonly IMediator _mediator;
@@ -19,6 +18,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         }
 
         [HttpGet]
+        [AuthorizePermission(Permission.AccountDefault)]
         public async Task<ActionResult> Add()
         {
             var command = await _mediator.Send(new Add.Query());
@@ -28,6 +28,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission(Permission.AccountDefault)]
         public async Task<ActionResult> Add(Add.Command command)
         {
             if (!ModelState.IsValid)
@@ -43,6 +44,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         }
 
         [HttpGet]
+        [AuthorizePermission(Permission.AccountDefault)]
         public async Task<ActionResult> ChangePassword(ChangePassword.Query query)
         {
             var queryResult = await _mediator.Send(query);
@@ -52,6 +54,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission(Permission.AccountDefault)]
         public async Task<ActionResult> ChangePassword(ChangePassword.Command command)
         {
             if (!ModelState.IsValid)
@@ -68,6 +71,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission(Permission.AccountDefault)]
         public async Task<ActionResult> Delete(Delete.Command command)
         {
             var commandResult = await _mediator.Send(command);
@@ -78,6 +82,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         }
 
         [HttpGet]
+        [AuthorizePermission(Permission.AccountDefault)]
         public async Task<ActionResult> Edit(Edit.Query query)
         {
             var command = await _mediator.Send(query);
@@ -87,6 +92,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission(Permission.AccountDefault)]
         public async Task<ActionResult> Edit(Edit.Command command)
         {
             if (!ModelState.IsValid)
@@ -102,6 +108,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         }
 
         [HttpGet]
+        [AuthorizePermission(Permission.AccountEditOwn)]
         public async Task<ActionResult> EditOwn(EditOwn.Query query)
         {
             var queryResult = await _mediator.Send(query);
@@ -111,6 +118,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission(Permission.AccountEditOwn)]
         public async Task<ActionResult> EditOwn(EditOwn.Command command)
         {
             if (!ModelState.IsValid)
@@ -126,6 +134,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         }
 
         [HttpGet]
+        [AuthorizePermission(Permission.AccountDefault)]
         public async Task<ActionResult> Index(Index.Query query)
         {
             var result = await _mediator.Send(query);
@@ -134,6 +143,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         }
 
         [HttpGet]
+        [AuthorizePermission(Permission.AccountDefault)]
         public async Task<ActionResult> Search(Search.Query query)
         {
             var queryResult = await _mediator.Send(query);

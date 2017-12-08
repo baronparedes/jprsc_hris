@@ -27,7 +27,7 @@
                             <span class="caption-subject font-red-sunglo bold uppercase">Edit Account</span>
                         </div>
                     </div>
-                    <div class="portlet-body form" ng-controller="EditAccountCtrl as vm">
+                    <div class="portlet-body form" ng-controller="EditOwnAccountCtrl as vm">
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.editAccountSubmit($event)">
                             @Html.AntiForgeryToken()
                             <div class="form-body">

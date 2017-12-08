@@ -14,7 +14,8 @@ namespace JPRSC.HRIS.Models
         public int? CompanyProfileId { get; set; }
         public ICollection<CustomRole> CustomRoles { get; set; } = new List<CustomRole>();
         public DateTime? DeletedOn { get; set; }
-        public string JobTitle { get; set; }
+        public JobTitle JobTitle { get; set; }
+        public int? JobTitleId { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string Name { get; set; }
 

@@ -24,12 +24,13 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         {
             public int? CompanyProfileId { get; set; }
             public string Name { get; set; }
-            public string JobTitle { get; set; }
+            public int? JobTitleId { get; set; }
             public string UserName { get; set; }
             public string Password { get; set; }
             public string RepeatPassword { get; set; }
             public IList<SelectListItem> RolesList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> CompaniesList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> JobTitlesList { get; set; } = new List<SelectListItem>();
         }
 
         public class QueryHandler : IAsyncRequestHandler<Query, Command>
@@ -47,45 +48,49 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
                 command.RolesList = await GetRolesList();
                 command.CompaniesList = await GetCompaniesList();
+                command.JobTitlesList = await GetJobTitlesList();
 
                 return command;
             }
 
             private async Task<IList<SelectListItem>> GetRolesList()
             {
-                var rolesList = new List<SelectListItem>();
-
                 var customRoles = await _db.CustomRoles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
 
-                foreach (var customRole in customRoles)
-                {
-                    rolesList.Add(new SelectListItem
+                return customRoles
+                    .Select(cr => new SelectListItem
                     {
-                        Text = customRole.Name,
-                        Value = customRole.Id.ToString(),
-                        Selected = AppSettings.Ints("DefaultCustomRoleIds").Contains(customRole.Id)
-                    });
-                }
-
-                return rolesList;
+                        Text = cr.Name,
+                        Value = cr.Id.ToString(),
+                        Selected = AppSettings.Ints("DefaultCustomRoleIds").Contains(cr.Id)
+                    })
+                    .ToList();
             }
 
             private async Task<IList<SelectListItem>> GetCompaniesList()
             {
-                var companiesList = new List<SelectListItem>();
-
                 var companyProfiles = await _db.CompanyProfiles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
 
-                foreach (var companyProfile in companyProfiles)
-                {
-                    companiesList.Add(new SelectListItem
+                return companyProfiles
+                    .Select(cp => new SelectListItem
                     {
-                        Text = companyProfile.Name,
-                        Value = companyProfile.Id.ToString()
-                    });
-                }
+                        Text = cp.Name,
+                        Value = cp.Id.ToString()
+                    })
+                    .ToList();
+            }
 
-                return companiesList;
+            private async Task<IList<SelectListItem>> GetJobTitlesList()
+            {
+                var jobTitles = await _db.JobTitles.Where(jt => !jt.DeletedOn.HasValue).ToListAsync();
+
+                return jobTitles
+                    .Select(jt => new SelectListItem
+                    {
+                        Text = jt.Name,
+                        Value = jt.Id.ToString()
+                    })
+                    .ToList();
             }
         }
 
@@ -144,7 +149,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                     AddedOn = DateTime.UtcNow,
                     CompanyProfileId = command.CompanyProfileId,
                     Name = command.Name,
-                    JobTitle = command.JobTitle,
+                    JobTitleId = command.JobTitleId,
                     UserName = command.UserName
                 };
 

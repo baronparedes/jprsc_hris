@@ -1,9 +1,9 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('EditAccountCtrl', ['$http', '$window', EditAccountCtrl]);
+        .controller('EditOwnAccountCtrl', ['$http', '$window', EditOwnAccountCtrl]);
 
-    function EditAccountCtrl($http, $window) {
+    function EditOwnAccountCtrl($http, $window) {
         var vm = this;
         vm.editAccountSubmit = editAccountSubmit;
         vm.validationErrors = {};

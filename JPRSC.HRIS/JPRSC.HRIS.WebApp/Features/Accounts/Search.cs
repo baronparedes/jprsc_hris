@@ -34,7 +34,6 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             public class Account
             {
                 public string Name { get; set; }
-                public string JobTitle { get; set; }
                 public string UserName { get; set; }
                 public string Id { get; set; }
             }
@@ -59,7 +58,6 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 {
                     dbQuery = dbQuery
                         .Where(u => DbFunctions.Like(u.Name, query.SearchLikeTerm) ||
-                            DbFunctions.Like(u.JobTitle, query.SearchLikeTerm) ||
                             DbFunctions.Like(u.UserName, query.SearchLikeTerm));
                 }
 
