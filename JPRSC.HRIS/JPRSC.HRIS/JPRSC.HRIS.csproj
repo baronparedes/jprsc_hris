@@ -98,6 +98,7 @@
     <Compile Include="Infrastructure\.NET\StringExtensions.cs" />
     <Compile Include="Infrastructure\Configuration\AppSettings.cs" />
     <Compile Include="Infrastructure\Data\ApplicationDbContext.cs" />
+    <Compile Include="Infrastructure\Data\EntityConfiguration\CompanyProfileConfiguration.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CustomRoleConfiguration.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201709080246062_Initial.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201709080246062_Initial.Designer.cs">
@@ -150,6 +151,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201712080325139_AddUserJobTitleRelation.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201712080325139_AddUserJobTitleRelation.Designer.cs">
       <DependentUpon>201712080325139_AddUserJobTitleRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201712080438464_AddAlloweduserCompanies.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201712080438464_AddAlloweduserCompanies.Designer.cs">
+      <DependentUpon>201712080438464_AddAlloweduserCompanies.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
@@ -218,6 +223,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201712080325139_AddUserJobTitleRelation.resx">
       <DependentUpon>201712080325139_AddUserJobTitleRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201712080438464_AddAlloweduserCompanies.resx">
+      <DependentUpon>201712080438464_AddAlloweduserCompanies.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

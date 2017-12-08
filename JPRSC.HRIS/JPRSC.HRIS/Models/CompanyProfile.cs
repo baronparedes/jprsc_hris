@@ -24,6 +24,7 @@ namespace JPRSC.HRIS.Models
         public string SEC { get; set; }
         public string SSS { get; set; }
         public ICollection<User> Users { get; set; } = new List<User>();
+        public ICollection<User> UsersAllowed { get; set; } = new List<User>();
         public string VAT { get; set; }
         public string ZipCode { get; set; }
     }

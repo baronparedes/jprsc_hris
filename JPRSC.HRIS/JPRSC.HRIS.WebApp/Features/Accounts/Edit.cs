@@ -77,7 +77,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             {
                 var user = await _db
                     .Users
-                    .Include(u => u.CompanyProfile)
+                    .Include(u => u.AllowedCompanies)
                     .SingleAsync(u => u.Id == query.UserId && !u.DeletedOn.HasValue);
 
                 var companyProfiles = await _db.CompanyProfiles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
@@ -87,7 +87,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                     {
                         Text = cp.Name,
                         Value = cp.Id.ToString(),
-                        Selected = user.CompanyProfileId == cp.Id
+                        Selected = user.AllowedCompanies.Any(uac => uac.Id == cp.Id)
                     })
                     .ToList();
             }
@@ -143,7 +143,12 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
             public async Task Handle(Command command)
             {
-                var user = await _db.Users.Include(u => u.CustomRoles).SingleAsync(u => u.Id == command.Id);
+                var user = await _db
+                    .Users
+                    .Include(u => u.CustomRoles)
+                    .Include(u => u.AllowedCompanies)
+                    .SingleAsync(u => u.Id == command.Id);
+
                 user.CompanyProfileId = command.CompanyProfileId;
                 user.Name = command.Name;
                 user.JobTitleId = command.JobTitleId;
@@ -162,6 +167,21 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                     else
                     {
                         user.CustomRoles.Remove(customRole);
+                    }
+                }
+
+                foreach (var companyItem in command.CompaniesList)
+                {
+                    var companyId = Convert.ToInt32(companyItem.Value);
+                    var company = await _db.CompanyProfiles.SingleAsync(cp => cp.Id == companyId);
+
+                    if (companyItem.Selected)
+                    {
+                        user.AllowedCompanies.Add(company);
+                    }
+                    else
+                    {
+                        user.AllowedCompanies.Remove(company);
                     }
                 }
 

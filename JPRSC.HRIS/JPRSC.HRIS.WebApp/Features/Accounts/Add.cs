@@ -167,6 +167,13 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                     var customRole = await _db.CustomRoles.SingleAsync(cr => cr.Id == customRoleId);
                     attachedUser.CustomRoles.Add(customRole);
                 }
+
+                foreach (var companyItem in command.CompaniesList.Where(ci => ci.Selected))
+                {
+                    var companyId = Convert.ToInt32(companyItem.Value);
+                    var company = await _db.CompanyProfiles.SingleAsync(cp => cp.Id == companyId);
+                    attachedUser.AllowedCompanies.Add(company);
+                }
                 
                 await _db.SaveChangesAsync();
             }

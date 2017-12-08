@@ -36,6 +36,7 @@
                                 @Html.PasswordBoxHorizontalFormGroup("Password")
                                 @Html.PasswordBoxHorizontalFormGroup("RepeatPassword")
                                 @Html.CheckboxSelectListItemHorizontalFormGroup(Model.RolesList, "RolesList", "Roles")
+                                @Html.CheckboxSelectListItemHorizontalFormGroup(Model.CompaniesList, "CompaniesList", "Allowed Companies")
                                 @Html.DropdownHorizontalFormGroup(Model.CompaniesList, "CompanyProfileId", "Company")
                                 @Html.DropdownHorizontalFormGroup(Model.JobTitlesList, "JobTitleId", "Job Title")
                             </div>

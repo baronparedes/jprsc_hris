@@ -10,6 +10,7 @@ namespace JPRSC.HRIS.Models
     public class User : IdentityUser
     {
         public DateTime AddedOn { get; set; }
+        public ICollection<CompanyProfile> AllowedCompanies { get; set; } = new List<CompanyProfile>();
         public CompanyProfile CompanyProfile { get; set; }
         public int? CompanyProfileId { get; set; }
         public ICollection<CustomRole> CustomRoles { get; set; } = new List<CustomRole>();
