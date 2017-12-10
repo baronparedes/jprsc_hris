@@ -3,6 +3,7 @@ using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -56,7 +57,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
 
             public async Task Handle(Command command)
             {
-                var taxStatus = _db.TaxStatuses.Single(r => r.Id == command.Id);
+                var taxStatus = await _db.TaxStatuses.SingleAsync(r => r.Id == command.Id);
                 
                 taxStatus.ModifiedOn = DateTime.UtcNow;
                 taxStatus.Name = command.Name;

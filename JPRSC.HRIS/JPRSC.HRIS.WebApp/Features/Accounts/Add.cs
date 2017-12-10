@@ -159,7 +159,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                     throw new Exception($"Unable to create user. Errors: {createUserResult.Errors.Join(",")}");
                 }
                 
-                var attachedUser = _db.Users.Include(u => u.CustomRoles).Single(u => u.Id == user.Id);
+                var attachedUser = await _db.Users.Include(u => u.CustomRoles).SingleAsync(u => u.Id == user.Id);
 
                 foreach (var roleItem in command.RolesList.Where(ri => ri.Selected))
                 {

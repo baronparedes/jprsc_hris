@@ -1,6 +1,7 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 
             public async Task<CommandResult> Handle(Command command)
             {
-                var customRole = _db.CustomRoles.Single(cr => cr.Id == command.CustomRoleId);
+                var customRole = await _db.CustomRoles.SingleAsync(cr => cr.Id == command.CustomRoleId);
                 customRole.DeletedOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();

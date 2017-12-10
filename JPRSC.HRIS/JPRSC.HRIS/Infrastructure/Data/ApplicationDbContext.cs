@@ -15,6 +15,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<CustomRole> CustomRoles { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<EarningDeduction> EarningDeductions { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<JobTitle> JobTitles { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<Religion> Religions { get; set; }

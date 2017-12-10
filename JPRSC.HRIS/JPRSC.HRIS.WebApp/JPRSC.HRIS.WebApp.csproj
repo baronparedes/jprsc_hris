@@ -269,6 +269,13 @@
     <Compile Include="Features\EarningDeductions\Search.cs" />
     <Compile Include="Features\EarningDeductions\_Controller.cs" />
     <Compile Include="Features\EarningDeductions\_MappingProfile.cs" />
+    <Compile Include="Features\Employees\Add.cs" />
+    <Compile Include="Features\Employees\Delete.cs" />
+    <Compile Include="Features\Employees\Edit.cs" />
+    <Compile Include="Features\Employees\Index.cs" />
+    <Compile Include="Features\Employees\Search.cs" />
+    <Compile Include="Features\Employees\_Controller.cs" />
+    <Compile Include="Features\Employees\_MappingProfile.cs" />
     <Compile Include="Features\JobTitles\Add.cs" />
     <Compile Include="Features\JobTitles\Delete.cs" />
     <Compile Include="Features\JobTitles\Edit.cs" />
@@ -5827,6 +5834,9 @@
     <Content Include="wwwroot\scripts\earningDeductions\add.js" />
     <Content Include="wwwroot\scripts\earningDeductions\edit.js" />
     <Content Include="wwwroot\scripts\earningDeductions\index.js" />
+    <Content Include="wwwroot\scripts\employees\add.js" />
+    <Content Include="wwwroot\scripts\employees\edit.js" />
+    <Content Include="wwwroot\scripts\employees\index.js" />
     <Content Include="wwwroot\scripts\jobTitles\add.js" />
     <Content Include="wwwroot\scripts\jobTitles\edit.js" />
     <Content Include="wwwroot\scripts\jobTitles\index.js" />
@@ -6707,6 +6717,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TaxStatuses\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Employees\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Employees\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Employees\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

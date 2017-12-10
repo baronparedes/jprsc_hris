@@ -43,6 +43,9 @@ namespace JPRSC.HRIS.Models
 
         // Tax Status
         [Display(Name = "Tax Statuses")]
-        TaxStatusDefault = 1000
+        TaxStatusDefault = 1000,
+
+        [Display(Name = "Employees")]
+        EmployeeDefault = 1100
     }
 }

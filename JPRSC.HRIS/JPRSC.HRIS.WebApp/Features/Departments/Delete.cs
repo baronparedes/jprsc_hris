@@ -1,6 +1,7 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
 
             public async Task<CommandResult> Handle(Command command)
             {
-                var department = _db.Departments.Single(r => r.Id == command.DepartmentId);
+                var department = await _db.Departments.SingleAsync(r => r.Id == command.DepartmentId);
                 department.DeletedOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();

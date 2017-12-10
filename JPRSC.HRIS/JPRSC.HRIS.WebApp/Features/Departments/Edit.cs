@@ -3,6 +3,7 @@ using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -56,7 +57,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
 
             public async Task Handle(Command command)
             {
-                var department = _db.Departments.Single(r => r.Id == command.Id);
+                var department = await _db.Departments.SingleAsync(r => r.Id == command.Id);
                 
                 department.ModifiedOn = DateTime.UtcNow;
                 department.Name = command.Name;

@@ -1,6 +1,7 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
 
             public async Task<CommandResult> Handle(Command command)
             {
-                var jobTitle = _db.JobTitles.Single(r => r.Id == command.JobTitleId);
+                var jobTitle = await _db.JobTitles.SingleAsync(r => r.Id == command.JobTitleId);
                 jobTitle.DeletedOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();

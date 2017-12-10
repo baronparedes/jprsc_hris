@@ -5,18 +5,19 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JPRSC.HRIS.WebApp.Features.Clients
+namespace JPRSC.HRIS.WebApp.Features.Employees
 {
     public class Delete
     {
         public class Command : IRequest<CommandResult>
         {
-            public int? ClientId { get; set; }
+            public int? EmployeeId { get; set; }
         }
 
         public class CommandResult
         {
-            public string Name { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
         }
 
         public class CommandHandler : IAsyncRequestHandler<Command, CommandResult>
@@ -30,14 +31,15 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
 
             public async Task<CommandResult> Handle(Command command)
             {
-                var client = await _db.Clients.SingleAsync(c => c.Id == command.ClientId);
-                client.DeletedOn = DateTime.UtcNow;
+                var employee = await _db.Employees.SingleAsync(r => r.Id == command.EmployeeId);
+                employee.DeletedOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();
 
                 return new CommandResult
                 {
-                    Name = client.Name
+                    FirstName = employee.FirstName,
+                    LastName = employee.LastName
                 };
             }
         }

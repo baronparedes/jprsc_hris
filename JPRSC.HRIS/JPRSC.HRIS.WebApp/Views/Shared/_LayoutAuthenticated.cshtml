@@ -37,6 +37,21 @@
     <script>
         (function () {
             window.lookups = {
+                accountTypes: {
+                    savings: @Html.EnumLookup(AccountType.Savings),
+                    current: @Html.EnumLookup(AccountType.Current),
+                    checking: @Html.EnumLookup(AccountType.Checking)
+                },
+                citizenships: {
+
+                },
+                civilStatuses: {
+                    single: @Html.EnumLookup(CivilStatus.Single),
+                    married: @Html.EnumLookup(CivilStatus.Married),
+                    divorced: @Html.EnumLookup(CivilStatus.Divorced),
+                    widowed: @Html.EnumLookup(CivilStatus.Widowed),
+                    separated: @Html.EnumLookup(CivilStatus.Separated)
+                },
                 cutOffPeriods: {
                     daily: @Html.EnumLookup(CutOffPeriod.Daily),
                     biMonthly: @Html.EnumLookup(CutOffPeriod.BiMonthly),
@@ -45,6 +60,10 @@
                 earningDeductionTypes: {
                     earnings: @Html.EnumLookup(EarningDeductionType.Earnings),
                     deductions: @Html.EnumLookup(EarningDeductionType.Deductions)
+                },
+                genders: {
+                    male: @Html.EnumLookup(Gender.Male),
+                    female: @Html.EnumLookup(Gender.Female)
                 }
             };
         }());

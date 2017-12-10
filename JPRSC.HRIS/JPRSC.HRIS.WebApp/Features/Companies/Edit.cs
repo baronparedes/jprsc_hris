@@ -3,6 +3,7 @@ using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -156,7 +157,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             public async Task Handle(Command command)
             {
-                var companyProfile = _db.CompanyProfiles.Single(cp => cp.Id == command.Id);
+                var companyProfile = await _db.CompanyProfiles.SingleAsync(cp => cp.Id == command.Id);
 
                 companyProfile.Address = command.Address;
                 companyProfile.BOI = command.BOI;

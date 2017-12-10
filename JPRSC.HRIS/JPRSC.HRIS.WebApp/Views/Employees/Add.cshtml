@@ -1,0 +1,52 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Employees.Add.Command
+
+@{
+    ViewBag.Title = "Add a Employee";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Add Employee</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Add Employee
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-plus font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Add Employee</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form" ng-controller="AddEmployeeCtrl as vm">
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.addEmployeeSubmit($event)">
+                            @Html.AntiForgeryToken()
+                            <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("FirstName")
+                                @Html.TextBoxHorizontalFormGroup("LastName")
+                            </div>
+                            <div class="form-actions right">
+                                <a href="@Url.Action("Index", "Employees")" class="btn default">Cancel</a>
+                                <button type="submit" class="btn green">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/employees")    
+}

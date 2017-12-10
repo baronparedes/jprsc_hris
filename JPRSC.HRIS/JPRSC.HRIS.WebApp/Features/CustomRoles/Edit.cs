@@ -79,7 +79,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 
             public async Task Handle(Command command)
             {
-                var customRole = _db.CustomRoles.Single(cr => cr.Id == command.Id);
+                var customRole = await _db.CustomRoles.SingleAsync(cr => cr.Id == command.Id);
 
                 customRole.Name = command.Name;
                 customRole.ModifiedOn = DateTime.UtcNow;

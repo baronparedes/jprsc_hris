@@ -1,6 +1,7 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             public async Task<CommandResult> Handle(Command command)
             {
-                var company = _db.CompanyProfiles.Single(cp => cp.Id == command.CompanyProfileId);
+                var company = await _db.CompanyProfiles.SingleAsync(cp => cp.Id == command.CompanyProfileId);
                 company.DeletedOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();

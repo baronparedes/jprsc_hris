@@ -50,7 +50,8 @@
                 Permission.EarningDeductionDefault,
                 Permission.JobTitleDefault,
                 Permission.DepartmentDefault,
-                Permission.TaxStatusDefault
+                Permission.TaxStatusDefault,
+                Permission.EmployeeDefault
             });
 
             var defaultRole = new CustomRole

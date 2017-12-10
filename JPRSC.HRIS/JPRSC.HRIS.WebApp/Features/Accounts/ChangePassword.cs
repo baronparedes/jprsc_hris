@@ -4,6 +4,7 @@ using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Infrastructure.Identity;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -89,7 +90,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
                 return new CommandResult
                 {
-                    Name = _db.Users.Single(u => u.Id == command.Id).Name
+                    Name = (await _db.Users.SingleAsync(u => u.Id == command.Id)).Name
                 };
             }
         }

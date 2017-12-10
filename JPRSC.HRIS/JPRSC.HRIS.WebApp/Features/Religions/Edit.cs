@@ -3,6 +3,7 @@ using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,7 +58,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
 
             public async Task Handle(Command command)
             {
-                var religion = _db.Religions.Single(r => r.Id == command.Id);
+                var religion = await _db.Religions.SingleAsync(r => r.Id == command.Id);
 
                 religion.Code = command.Code;
                 religion.Description = command.Description;

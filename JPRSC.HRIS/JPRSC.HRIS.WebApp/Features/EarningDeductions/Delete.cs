@@ -1,6 +1,7 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
 
             public async Task<CommandResult> Handle(Command command)
             {
-                var earningDeduction = _db.EarningDeductions.Single(r => r.Id == command.EarningDeductionId);
+                var earningDeduction = await _db.EarningDeductions.SingleAsync(r => r.Id == command.EarningDeductionId);
                 earningDeduction.DeletedOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();

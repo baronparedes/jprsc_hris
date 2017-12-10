@@ -1,6 +1,7 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
             public async Task<CommandResult> Handle(Command command)
             {
-                var user = _db.Users.Single(u => u.Id == command.UserId);
+                var user = await _db.Users.SingleAsync(u => u.Id == command.UserId);
                 user.DeletedOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();

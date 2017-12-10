@@ -3,6 +3,7 @@ using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -56,7 +57,7 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
 
             public async Task Handle(Command command)
             {
-                var jobTitle = _db.JobTitles.Single(r => r.Id == command.Id);
+                var jobTitle = await _db.JobTitles.SingleAsync(r => r.Id == command.Id);
                 
                 jobTitle.ModifiedOn = DateTime.UtcNow;
                 jobTitle.Name = command.Name;
