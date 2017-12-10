@@ -4,9 +4,11 @@ using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Employees
 {
@@ -19,11 +21,16 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
         public class Command : IRequest
         {
-            public int? EmployeeCode { get; set; }
+            public IList<SelectListItem> ReligionsList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> ClientsList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
+
+            public string EmployeeCode { get; set; }
             public int Id { get; set; }
             public string FirstName { get; set; }
-            public string LastName { get; set; }
             public string MiddleName { get; set; }
+            public string LastName { get; set; }
             public string Nickname { get; set; }
             public string CityAddress { get; set; }
             public DateTime? DateOfBirth { get; set; }
@@ -67,7 +74,74 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
             public async Task<Command> Handle(Query query)
             {
-                return await _db.Employees.Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+                var command = await _db.Employees.Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+
+                command.ReligionsList = await GetReligionsList(query);
+                command.ClientsList = await GetClientsList(query);
+                command.DepartmentsList = await GetDepartmentsList(query);
+                command.TaxStatusesList = await GetTaxStatusesList(query);
+
+                return command;
+            }
+
+            private async Task<IList<SelectListItem>> GetReligionsList(Query query)
+            {
+                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
+                var religions = await _db.Religions.Where(r => !r.DeletedOn.HasValue).ToListAsync();
+
+                return religions
+                    .Select(r => new SelectListItem
+                    {
+                        Text = r.Code,
+                        Value = r.Id.ToString(),
+                        Selected = employee.ReligionId == r.Id
+                    })
+                    .ToList();
+            }
+
+            private async Task<IList<SelectListItem>> GetClientsList(Query query)
+            {
+                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
+                var clients = await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync();
+
+                return clients
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString(),
+                        Selected = employee.ClientId == c.Id
+                    })
+                    .ToList();
+            }
+
+            private async Task<IList<SelectListItem>> GetDepartmentsList(Query query)
+            {
+                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
+                var departments = await _db.Departments.Where(d => !d.DeletedOn.HasValue).ToListAsync();
+
+                return departments
+                    .Select(d => new SelectListItem
+                    {
+                        Text = d.Name,
+                        Value = d.Id.ToString(),
+                        Selected = employee.DepartmentId == d.Id
+                    })
+                    .ToList();
+            }
+
+            private async Task<IList<SelectListItem>> GetTaxStatusesList(Query query)
+            {
+                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
+                var taxStatuses = await _db.TaxStatuses.Where(ts => !ts.DeletedOn.HasValue).ToListAsync();
+
+                return taxStatuses
+                    .Select(ts => new SelectListItem
+                    {
+                        Text = ts.Name,
+                        Value = ts.Id.ToString(),
+                        Selected = employee.TaxStatusId == ts.Id
+                    })
+                    .ToList();
             }
         }
 
@@ -75,11 +149,18 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
         {
             public CommandValidator()
             {
+                RuleFor(c => c.EmployeeCode)
+                    .MustBeANumber();
+
                 RuleFor(c => c.FirstName)
                     .NotEmpty();
 
                 RuleFor(c => c.LastName)
                     .NotEmpty();
+
+                RuleFor(c => c.Email)
+                    .EmailAddress()
+                    .When(c => !String.IsNullOrWhiteSpace(c.Email));
             }
         }
 

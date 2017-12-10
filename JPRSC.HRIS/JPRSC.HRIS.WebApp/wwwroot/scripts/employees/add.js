@@ -1,11 +1,12 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('AddEmployeeCtrl', ['$http', '$window', AddEmployeeCtrl]);
+        .controller('AddEmployeeCtrl', ['$http', '$window', 'lookups', AddEmployeeCtrl]);
 
-    function AddEmployeeCtrl($http, $window) {
+    function AddEmployeeCtrl($http, $window, lookups) {
         var vm = this;
         vm.addEmployeeSubmit = addEmployeeSubmit;
+        vm.lookups = lookups;
         vm.validationErrors = {};
 
         function addEmployeeSubmit(e) {

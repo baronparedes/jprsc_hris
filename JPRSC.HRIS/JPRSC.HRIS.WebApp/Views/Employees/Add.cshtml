@@ -32,7 +32,33 @@
                             @Html.AntiForgeryToken()
                             <div class="form-body">
                                 @Html.TextBoxHorizontalFormGroup("FirstName")
+                                @Html.TextBoxHorizontalFormGroup("MiddleName")
                                 @Html.TextBoxHorizontalFormGroup("LastName")
+                                @Html.TextBoxHorizontalFormGroup("Nickname")
+                                @Html.TextBoxHorizontalFormGroup("CityAddress")
+                                @Html.TextBoxHorizontalFormGroup("DateOfBirth", "Date of Birth", "MM/dd/yyyy")
+                                @Html.TextBoxHorizontalFormGroup("ZipCode")
+                                @Html.TextBoxHorizontalFormGroup("TelNo")
+                                @Html.TextBoxHorizontalFormGroup("CelNo")
+                                @Html.DropdownHorizontalFormGroup("genders", "Gender")
+                                @Html.DropdownHorizontalFormGroup(Model.ReligionsList, "ReligionId", "Religion")
+                                @Html.DropdownHorizontalFormGroup("citizenships", "Citizenship")
+                                @Html.DropdownHorizontalFormGroup("civilStatuses", "CivilStatus")
+                                @Html.TextBoxHorizontalFormGroup("SSS")
+                                @Html.TextBoxHorizontalFormGroup("TIN")
+                                @Html.TextBoxHorizontalFormGroup("Email")
+
+                                @Html.TextBoxHorizontalFormGroup("DateHired", "Date Hired", "MM/dd/yyyy")
+                                @Html.TextBoxHorizontalFormGroup("DateResigned", "DateResigned", "MM/dd/yyyy")
+                                @Html.DropdownHorizontalFormGroup(Model.ClientsList, "ClientId", "Client")
+                                @Html.TextBoxHorizontalFormGroup("Position")
+                                @Html.DropdownHorizontalFormGroup(Model.DepartmentsList, "DepartmentId", "Department")
+                                @Html.DropdownHorizontalFormGroup(Model.TaxStatusesList, "TaxStatusId", "Tax Status")
+                                @Html.TextBoxHorizontalFormGroup("EmployeeStatus")
+                                @Html.TextBoxHorizontalFormGroup("PagIbig")
+                                @Html.TextBoxHorizontalFormGroup("PhilHealth")
+                                @Html.DropdownHorizontalFormGroup("accountTypes", "AccountType")
+                                @Html.TextBoxHorizontalFormGroup("ATMAccountNumber")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Employees")" class="btn default">Cancel</a>

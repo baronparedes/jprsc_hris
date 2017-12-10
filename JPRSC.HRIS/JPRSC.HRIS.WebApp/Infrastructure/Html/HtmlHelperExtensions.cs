@@ -208,7 +208,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
         {
             if (String.IsNullOrWhiteSpace(labelText))
             {
-                labelText = propertyName.Humanize();
+                labelText = propertyName.Humanize().Titleize();
             }
 
             var camelCasePropertyName = GetCamelCasePropertyName(propertyName);

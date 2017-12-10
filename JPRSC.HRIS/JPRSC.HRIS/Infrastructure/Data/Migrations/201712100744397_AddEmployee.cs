@@ -27,7 +27,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Migrations
                         DeletedOn = c.DateTime(),
                         DepartmentId = c.Int(),
                         Email = c.String(),
-                        EmployeeCode = c.Int(),
+                        EmployeeCode = c.String(),
                         EmployeeStatus = c.String(),
                         FirstName = c.String(),
                         Gender = c.Int(),

@@ -13,7 +13,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201712100406031_AddEmployee"; }
+            get { return "201712100744397_AddEmployee"; }
         }
         
         string IMigrationMetadata.Source

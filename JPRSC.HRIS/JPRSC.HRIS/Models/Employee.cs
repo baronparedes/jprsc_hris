@@ -22,7 +22,7 @@ namespace JPRSC.HRIS.Models
         public Department Department { get; set; }
         public int? DepartmentId { get; set; }
         public string Email { get; set; }
-        public int? EmployeeCode { get; set; }
+        public string EmployeeCode { get; set; }
         public string EmployeeStatus { get; set; }
         public string FirstName { get; set; }
         public Gender? Gender { get; set; }

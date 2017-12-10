@@ -4,20 +4,31 @@ using JPRSC.HRIS.Models;
 using MediatR;
 using Microsoft.AspNet.Identity;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Employees
 {
     public class Add
     {
+        public class Query : IRequest<Command>
+        {            
+        }
+
         public class Command : IRequest
         {
-            public string LastName { get; set; }
+            public IList<SelectListItem> ReligionsList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> ClientsList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
+
             public string FirstName { get; set; }
             public string MiddleName { get; set; }
+            public string LastName { get; set; }
             public string Nickname { get; set; }
             public string CityAddress { get; set; }
             public DateTime? DateOfBirth { get; set; }
@@ -50,6 +61,80 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string ATMAccountNumber { get; set; }
         }
 
+        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        {
+            private readonly ApplicationDbContext _db;
+
+            public QueryHandler(ApplicationDbContext db)
+            {
+                _db = db;
+            }
+
+            public async Task<Command> Handle(Query query)
+            {
+                var command = new Command();
+
+                command.ReligionsList = await GetReligionsList();
+                command.ClientsList = await GetClientsList();
+                command.DepartmentsList = await GetDepartmentsList();
+                command.TaxStatusesList = await GetTaxStatusesList();
+
+                return command;
+            }
+
+            private async Task<IList<SelectListItem>> GetReligionsList()
+            {
+                var religions = await _db.Religions.Where(r => !r.DeletedOn.HasValue).ToListAsync();
+
+                return religions
+                    .Select(r => new SelectListItem
+                    {
+                        Text = r.Code,
+                        Value = r.Id.ToString()
+                    })
+                    .ToList();
+            }
+
+            private async Task<IList<SelectListItem>> GetClientsList()
+            {
+                var clients = await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync();
+
+                return clients
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    })
+                    .ToList();
+            }
+
+            private async Task<IList<SelectListItem>> GetDepartmentsList()
+            {
+                var departments = await _db.Departments.Where(d => !d.DeletedOn.HasValue).ToListAsync();
+
+                return departments
+                    .Select(d => new SelectListItem
+                    {
+                        Text = d.Name,
+                        Value = d.Id.ToString()
+                    })
+                    .ToList();
+            }
+
+            private async Task<IList<SelectListItem>> GetTaxStatusesList()
+            {
+                var taxStatuses = await _db.TaxStatuses.Where(ts => !ts.DeletedOn.HasValue).ToListAsync();
+
+                return taxStatuses
+                    .Select(ts => new SelectListItem
+                    {
+                        Text = ts.Name,
+                        Value = ts.Id.ToString()
+                    })
+                    .ToList();
+            }
+        }
+
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
@@ -59,6 +144,10 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
                 RuleFor(c => c.LastName)
                     .NotEmpty();
+
+                RuleFor(c => c.Email)
+                    .EmailAddress()
+                    .When(c => !String.IsNullOrWhiteSpace(c.Email));
             }
         }
 
@@ -97,7 +186,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     DateResigned = command.DateResigned,
                     DepartmentId = command.DepartmentId,
                     Email = command.Email,
-                    EmployeeCode = await GetNextEmployeeCode(currentUser.CompanyProfile),
+                    EmployeeCode = GetNextEmployeeCode(currentUser.CompanyProfile),
                     EmployeeStatus = command.EmployeeStatus,
                     FirstName = command.FirstName,
                     Gender = command.Gender,
@@ -119,16 +208,23 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 await _db.SaveChangesAsync();
             }
 
-            private async Task<int> GetNextEmployeeCode(CompanyProfile company)
+            private string GetNextEmployeeCode(CompanyProfile company)
             {
-                if (company == null) return 1;
+                if (company == null) return "0001";
 
-                var maxEmployeeCode = await _db
+                var employeeCodes = _db
                     .Employees
-                    .Where(e => e.CompanyProfileId == company.Id && e.EmployeeCode.HasValue)
-                    .MaxAsync(e => e.EmployeeCode);
+                    .Where(e => e.CompanyProfileId == company.Id && e.EmployeeCode != null)
+                    .Select(e => e.EmployeeCode)
+                    .ToList();
 
-                return maxEmployeeCode.Value + 1;
+                if (!employeeCodes.Any()) return "0001";
+
+                var maxEmployeeCode = employeeCodes
+                    .ConvertAll(Convert.ToInt32)
+                    .Max();
+
+                return (maxEmployeeCode + 1).ToString("D4");
             }
         }
     }

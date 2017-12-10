@@ -19,9 +19,11 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public async Task<ActionResult> Add()
         {
-            return View(new Add.Command());
+            var command = await _mediator.Send(new Add.Query());
+
+            return View(command);
         }
 
         [HttpPost]

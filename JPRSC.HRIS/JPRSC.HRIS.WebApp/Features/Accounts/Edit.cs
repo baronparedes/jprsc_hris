@@ -56,11 +56,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
             private async Task<IList<SelectListItem>> GetRolesList(Query query)
             {
-                var user = await _db
-                    .Users
-                    .Include(u => u.CustomRoles)
-                    .SingleAsync(u => u.Id == query.UserId && !u.DeletedOn.HasValue);
-
+                var user = await _db.Users.Include(u => u.CustomRoles).SingleAsync(u => u.Id == query.UserId && !u.DeletedOn.HasValue);
                 var customRoles = await _db.CustomRoles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
 
                 return customRoles
@@ -75,11 +71,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
             private async Task<IList<SelectListItem>> GetCompaniesList(Query query)
             {
-                var user = await _db
-                    .Users
-                    .Include(u => u.AllowedCompanies)
-                    .SingleAsync(u => u.Id == query.UserId && !u.DeletedOn.HasValue);
-
+                var user = await _db.Users.Include(u => u.CustomRoles).SingleAsync(u => u.Id == query.UserId && !u.DeletedOn.HasValue);
                 var companyProfiles = await _db.CompanyProfiles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
 
                 return companyProfiles
@@ -94,11 +86,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
             private async Task<IList<SelectListItem>> GetJobTitlesList(Query query)
             {
-                var user = await _db
-                    .Users
-                    .Include(u => u.CompanyProfile)
-                    .SingleAsync(u => u.Id == query.UserId && !u.DeletedOn.HasValue);
-
+                var user = await _db.Users.SingleAsync(u => u.Id == query.UserId && !u.DeletedOn.HasValue);
                 var jobTitles = await _db.JobTitles.Where(jt => !jt.DeletedOn.HasValue).ToListAsync();
 
                 return jobTitles

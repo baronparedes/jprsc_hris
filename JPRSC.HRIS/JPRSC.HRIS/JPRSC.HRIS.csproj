@@ -164,9 +164,9 @@
     <Compile Include="Infrastructure\Data\Migrations\201712080503069_AddTaxStatus.Designer.cs">
       <DependentUpon>201712080503069_AddTaxStatus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\Data\Migrations\201712100406031_AddEmployee.cs" />
-    <Compile Include="Infrastructure\Data\Migrations\201712100406031_AddEmployee.Designer.cs">
-      <DependentUpon>201712100406031_AddEmployee.cs</DependentUpon>
+    <Compile Include="Infrastructure\Data\Migrations\201712100744397_AddEmployee.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201712100744397_AddEmployee.Designer.cs">
+      <DependentUpon>201712100744397_AddEmployee.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
@@ -252,8 +252,8 @@
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201712080503069_AddTaxStatus.resx">
       <DependentUpon>201712080503069_AddTaxStatus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data\Migrations\201712100406031_AddEmployee.resx">
-      <DependentUpon>201712100406031_AddEmployee.cs</DependentUpon>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201712100744397_AddEmployee.resx">
+      <DependentUpon>201712100744397_AddEmployee.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
