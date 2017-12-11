@@ -168,8 +168,6 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     .Include(u => u.CompanyProfile)
                     .SingleAsync(u => u.Id == currentUserId);
 
-                var employeeCode = GetNextEmployeeCode(currentUser.CompanyProfile);
-
                 var employee = new Employee
                 {
                     AccountType = command.AccountType,
@@ -186,7 +184,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     DateResigned = command.DateResigned,
                     DepartmentId = command.DepartmentId,
                     Email = command.Email,
-                    EmployeeCode = GetNextEmployeeCode(currentUser.CompanyProfile),
+                    EmployeeCode = await GetNextEmployeeCode(),
                     EmployeeStatus = command.EmployeeStatus,
                     FirstName = command.FirstName,
                     Gender = command.Gender,
@@ -208,15 +206,13 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 await _db.SaveChangesAsync();
             }
 
-            private string GetNextEmployeeCode(CompanyProfile company)
+            private async Task<string> GetNextEmployeeCode()
             {
-                if (company == null) return "0001";
-
-                var employeeCodes = _db
+                var employeeCodes = await _db
                     .Employees
-                    .Where(e => e.CompanyProfileId == company.Id && e.EmployeeCode != null)
+                    .Where(e => e.EmployeeCode != null)
                     .Select(e => e.EmployeeCode)
-                    .ToList();
+                    .ToListAsync();
 
                 if (!employeeCodes.Any()) return "0001";
 
