@@ -51,7 +51,8 @@
                 Permission.JobTitleDefault,
                 Permission.DepartmentDefault,
                 Permission.TaxStatusDefault,
-                Permission.EmployeeDefault
+                Permission.EmployeeDefault,
+                Permission.ApprovalLevelDefault
             });
 
             var defaultRole = new CustomRole

@@ -234,6 +234,13 @@
     <Compile Include="Features\Accounts\_MappingProfile.cs" />
     <Compile Include="Features\Account\SendCode.cs" />
     <Compile Include="Features\Account\VerifyCode.cs" />
+    <Compile Include="Features\ApprovalLevels\Add.cs" />
+    <Compile Include="Features\ApprovalLevels\Delete.cs" />
+    <Compile Include="Features\ApprovalLevels\Edit.cs" />
+    <Compile Include="Features\ApprovalLevels\Index.cs" />
+    <Compile Include="Features\ApprovalLevels\Search.cs" />
+    <Compile Include="Features\ApprovalLevels\_Controller.cs" />
+    <Compile Include="Features\ApprovalLevels\_MappingProfile.cs" />
     <Compile Include="Features\Clients\Add.cs" />
     <Compile Include="Features\Clients\Delete.cs" />
     <Compile Include="Features\Clients\Edit.cs" />
@@ -5819,6 +5826,9 @@
     <Content Include="wwwroot\scripts\accounts\edit.js" />
     <Content Include="wwwroot\scripts\accounts\index.js" />
     <Content Include="wwwroot\scripts\account\login.js" />
+    <Content Include="wwwroot\scripts\approvalLevels\add.js" />
+    <Content Include="wwwroot\scripts\approvalLevels\edit.js" />
+    <Content Include="wwwroot\scripts\approvalLevels\index.js" />
     <Content Include="wwwroot\scripts\clients\add.js" />
     <Content Include="wwwroot\scripts\clients\edit.js" />
     <Content Include="wwwroot\scripts\clients\index.js" />
@@ -6726,6 +6736,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Employees\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ApprovalLevels\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ApprovalLevels\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ApprovalLevels\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

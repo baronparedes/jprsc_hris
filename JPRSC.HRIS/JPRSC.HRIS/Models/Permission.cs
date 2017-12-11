@@ -46,6 +46,9 @@ namespace JPRSC.HRIS.Models
         TaxStatusDefault = 1000,
 
         [Display(Name = "Employees")]
-        EmployeeDefault = 1100
+        EmployeeDefault = 1100,
+
+        [Display(Name = "Approval Levels")]
+        ApprovalLevelDefault = 1200
     }
 }

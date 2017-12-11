@@ -8,6 +8,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
         public static void RegisterBundles(BundleCollection bundles)
         {
             AddAccountBundles(bundles);
+            AddApprovalLevelBundles(bundles);
             AddClientBundles(bundles);
             AddCompanyBundles(bundles);
             AddCoreBundles(bundles);
@@ -29,6 +30,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/accounts/edit.js",
                 "~/wwwroot/scripts/accounts/editOwn.js",
                 "~/wwwroot/scripts/accounts/index.js");
+        }
+
+        private static void AddApprovalLevelBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/approvalLevels",
+                "~/wwwroot/scripts/approvalLevels/add.js",
+                "~/wwwroot/scripts/approvalLevels/edit.js",
+                "~/wwwroot/scripts/approvalLevels/index.js");
         }
 
         private static void AddClientBundles(BundleCollection bundles)

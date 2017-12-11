@@ -210,7 +210,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             {
                 var employeeCodes = await _db
                     .Employees
-                    .Where(e => e.EmployeeCode != null)
+                    .Where(e => !e.DeletedOn.HasValue && e.EmployeeCode != null)
                     .Select(e => e.EmployeeCode)
                     .ToListAsync();
 

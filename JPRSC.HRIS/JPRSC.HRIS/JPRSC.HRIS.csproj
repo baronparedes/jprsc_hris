@@ -168,6 +168,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201712100744397_AddEmployee.Designer.cs">
       <DependentUpon>201712100744397_AddEmployee.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201712110331565_AddApprovalLevel.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201712110331565_AddApprovalLevel.Designer.cs">
+      <DependentUpon>201712110331565_AddApprovalLevel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
@@ -180,6 +184,7 @@
     <Compile Include="Infrastructure\Logging\LogLevel.cs" />
     <Compile Include="Infrastructure\Sms\NoopSmsService.cs" />
     <Compile Include="Models\AccountType.cs" />
+    <Compile Include="Models\ApprovalLevel.cs" />
     <Compile Include="Models\Citizenship.cs" />
     <Compile Include="Models\CivilStatus.cs" />
     <Compile Include="Models\Client.cs" />
@@ -254,6 +259,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201712100744397_AddEmployee.resx">
       <DependentUpon>201712100744397_AddEmployee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201712110331565_AddApprovalLevel.resx">
+      <DependentUpon>201712110331565_AddApprovalLevel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Approval Levels";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Approval Levels</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Approval Levels
+        </h1>
+        @Html.RenderSuccessNotification()
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <a href="@Url.Action("Add", "ApprovalLevels")" class="btn btn-primary">Add Approval Level</a>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-controller="ApprovalLevelIndexCtrl as vm">
+            <div class="col-sm-12">
+                @*<form role="form">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                    <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                </span>
+                                <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+                </form>*@
+                <div class="note note-info" ng-show="!vm.approvalLevels.length">
+                    <p>No approval levels found.</p>
+                </div>
+                <div class="portlet light bordered" ng-show="vm.approvalLevels.length">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-user font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Approval Levels</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Level</th>
+                                        <th>User</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="approvalLevel in vm.approvalLevels track by approvalLevel.id">
+                                        <td>{{approvalLevel.level}}</td>
+                                        <td>{{approvalLevel.userName}}</td>
+                                        <td>
+                                            <a href="{{'/ApprovalLevels/Edit?approvalLevelId=' + approvalLevel.id}}" class="btn btn-primary btn-sm">Edit</a>
+                                            <form action="/ApprovalLevels/Delete" method="post" style="display: inline-block;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="ApprovalLevelId" value="{{approvalLevel.id}}" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/approvalLevels")
+}
