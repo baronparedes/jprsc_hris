@@ -29,9 +29,9 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
         public class QueryResult
         {
-            public IEnumerable<CompanyProfile> Companies { get; set; } = new List<CompanyProfile>();
+            public IEnumerable<Company> Companies { get; set; } = new List<Company>();
 
-            public class CompanyProfile
+            public class Company
             {
                 public string Address { get; set; }
                 public string Email { get; set; }
@@ -53,7 +53,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             public async Task<QueryResult> Handle(Query query)
             {
                 var dbQuery = _db
-                    .CompanyProfiles
+                    .Companies
                     .Where(cp => !cp.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
@@ -68,7 +68,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 var companies = await dbQuery
                     .OrderBy(cp => cp.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
-                    .ProjectToListAsync<QueryResult.CompanyProfile>();
+                    .ProjectToListAsync<QueryResult.Company>();
 
                 return new QueryResult
                 {

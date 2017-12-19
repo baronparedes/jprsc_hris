@@ -13,8 +13,8 @@ namespace JPRSC.HRIS.Models
         public CivilStatus? CivilStatus { get; set; }
         public Client Client { get; set; }
         public int? ClientId { get; set; }
-        public CompanyProfile CompanyProfile { get; set; }
-        public int? CompanyProfileId { get; set; }
+        public Company Company { get; set; }
+        public int? CompanyId { get; set; }
         public DateTime? DateHired { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public DateTime? DateResigned { get; set; }

@@ -13,7 +13,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
     {
         public class Query : IRequest<Command>
         {
-            public int CompanyProfileId { get; set; }
+            public int CompanyId { get; set; }
         }
 
         public class Command : IRequest
@@ -48,7 +48,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             public async Task<Command> Handle(Query query)
             {
-                return await _db.CompanyProfiles.Where(cp => cp.Id == query.CompanyProfileId && !cp.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+                return await _db.Companies.Where(cp => cp.Id == query.CompanyId && !cp.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
         }
 
@@ -157,25 +157,25 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             public async Task Handle(Command command)
             {
-                var companyProfile = await _db.CompanyProfiles.SingleAsync(cp => cp.Id == command.Id);
+                var Company = await _db.Companies.SingleAsync(cp => cp.Id == command.Id);
 
-                companyProfile.Address = command.Address;
-                companyProfile.BOI = command.BOI;
-                companyProfile.DateIssued = command.DateIssued;
-                companyProfile.DTI = command.DTI;
-                companyProfile.Email = command.Email;
-                companyProfile.ModifiedOn = DateTime.UtcNow;
-                companyProfile.Name = command.Name;
-                companyProfile.PagIbig = command.PagIbig;
-                companyProfile.PERAA = command.PERAA;
-                companyProfile.PhilHealth = command.PhilHealth;
-                companyProfile.Phone = command.Phone;
-                companyProfile.PlaceIssued = command.PlaceIssued;
-                companyProfile.Registration = command.Registration;
-                companyProfile.SEC = command.SEC;
-                companyProfile.SSS = command.SSS;
-                companyProfile.VAT = command.VAT;
-                companyProfile.ZipCode = command.ZipCode;
+                Company.Address = command.Address;
+                Company.BOI = command.BOI;
+                Company.DateIssued = command.DateIssued;
+                Company.DTI = command.DTI;
+                Company.Email = command.Email;
+                Company.ModifiedOn = DateTime.UtcNow;
+                Company.Name = command.Name;
+                Company.PagIbig = command.PagIbig;
+                Company.PERAA = command.PERAA;
+                Company.PhilHealth = command.PhilHealth;
+                Company.Phone = command.Phone;
+                Company.PlaceIssued = command.PlaceIssued;
+                Company.Registration = command.Registration;
+                Company.SEC = command.SEC;
+                Company.SSS = command.SSS;
+                Company.VAT = command.VAT;
+                Company.ZipCode = command.ZipCode;
 
                 await _db.SaveChangesAsync();
             }

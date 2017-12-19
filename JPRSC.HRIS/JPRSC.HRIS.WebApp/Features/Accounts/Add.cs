@@ -22,7 +22,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         public class Command : IRequest
         {
-            public int? CompanyProfileId { get; set; }
+            public int? CompanyId { get; set; }
             public string Name { get; set; }
             public int? JobTitleId { get; set; }
             public string UserName { get; set; }
@@ -69,9 +69,9 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
             private async Task<IList<SelectListItem>> GetCompaniesList()
             {
-                var companyProfiles = await _db.CompanyProfiles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
+                var Companies = await _db.Companies.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
 
-                return companyProfiles
+                return Companies
                     .Select(cp => new SelectListItem
                     {
                         Text = cp.Name,
@@ -147,7 +147,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 var user = new User
                 {
                     AddedOn = DateTime.UtcNow,
-                    CompanyProfileId = command.CompanyProfileId,
+                    CompanyId = command.CompanyId,
                     Name = command.Name,
                     JobTitleId = command.JobTitleId,
                     UserName = command.UserName
@@ -171,7 +171,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 foreach (var companyItem in command.CompaniesList.Where(ci => ci.Selected))
                 {
                     var companyId = Convert.ToInt32(companyItem.Value);
-                    var company = await _db.CompanyProfiles.SingleAsync(cp => cp.Id == companyId);
+                    var company = await _db.Companies.SingleAsync(cp => cp.Id == companyId);
                     attachedUser.AllowedCompanies.Add(company);
                 }
                 

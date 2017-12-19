@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JPRSC.HRIS.Models
 {
-    public class CompanyProfile
+    public class Company
     {
         public DateTime AddedOn { get; set; }
         public string Address { get; set; }

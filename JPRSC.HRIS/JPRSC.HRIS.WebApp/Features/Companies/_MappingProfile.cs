@@ -7,8 +7,8 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
     {
         public MappingProfile()
         {
-            CreateMap<CompanyProfile, Search.QueryResult.CompanyProfile>();
-            CreateMap<CompanyProfile, Edit.Command>();
+            CreateMap<Company, Search.QueryResult.Company>();
+            CreateMap<Company, Edit.Command>();
         }
     }
 }

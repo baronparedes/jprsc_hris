@@ -21,7 +21,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         public class Command : IRequest
         {
-            public int? CompanyProfileId { get; set; }
+            public int? CompanyId { get; set; }
             public string Name { get; set; }
             public string Id { get; set; }
             public int? JobTitleId { get; set; }
@@ -72,9 +72,9 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             private async Task<IList<SelectListItem>> GetCompaniesList(Query query)
             {
                 var user = await _db.Users.Include(u => u.CustomRoles).SingleAsync(u => u.Id == query.UserId && !u.DeletedOn.HasValue);
-                var companyProfiles = await _db.CompanyProfiles.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
+                var Companies = await _db.Companies.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
 
-                return companyProfiles
+                return Companies
                     .Select(cp => new SelectListItem
                     {
                         Text = cp.Name,
@@ -137,7 +137,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                     .Include(u => u.AllowedCompanies)
                     .SingleAsync(u => u.Id == command.Id);
 
-                user.CompanyProfileId = command.CompanyProfileId;
+                user.CompanyId = command.CompanyId;
                 user.Name = command.Name;
                 user.JobTitleId = command.JobTitleId;
                 user.ModifiedOn = DateTime.UtcNow;
@@ -161,7 +161,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 foreach (var companyItem in command.CompaniesList)
                 {
                     var companyId = Convert.ToInt32(companyItem.Value);
-                    var company = await _db.CompanyProfiles.SingleAsync(cp => cp.Id == companyId);
+                    var company = await _db.Companies.SingleAsync(cp => cp.Id == companyId);
 
                     if (companyItem.Selected)
                     {

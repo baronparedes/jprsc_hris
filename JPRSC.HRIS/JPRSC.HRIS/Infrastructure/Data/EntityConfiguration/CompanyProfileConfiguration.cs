@@ -3,16 +3,16 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace JPRSC.HRIS.Infrastructure.Data.EntityConfiguration
 {
-    public class CompanyProfileConfiguration : EntityTypeConfiguration<CompanyProfile>
+    public class CompanyConfiguration : EntityTypeConfiguration<Company>
     {
-        public CompanyProfileConfiguration()
+        public CompanyConfiguration()
         {
             HasMany(cp => cp.UsersAllowed)
                 .WithMany(u => u.AllowedCompanies)
                 .Map(config =>
                 {
                     config.ToTable("AllowedUserCompanies");
-                    config.MapLeftKey("CompanyProfileId");
+                    config.MapLeftKey("CompanyId");
                     config.MapRightKey("UserId");
                 });
         }

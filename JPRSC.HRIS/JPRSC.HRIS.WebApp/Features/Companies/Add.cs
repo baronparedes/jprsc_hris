@@ -134,7 +134,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             public async Task Handle(Command command)
             {
-                var companyProfile = new CompanyProfile
+                var Company = new Company
                 {
                     AddedOn = DateTime.UtcNow,
                     Address = command.Address,
@@ -155,7 +155,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                     ZipCode = command.ZipCode
                 };
 
-                _db.CompanyProfiles.Add(companyProfile);
+                _db.Companies.Add(Company);
                 await _db.SaveChangesAsync();
             }
         }

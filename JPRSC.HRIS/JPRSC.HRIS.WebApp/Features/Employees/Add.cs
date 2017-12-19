@@ -165,7 +165,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 var currentUserId = HttpContext.Current.User.Identity.GetUserId();
                 var currentUser = await _db
                     .Users
-                    .Include(u => u.CompanyProfile)
+                    .Include(u => u.Company)
                     .SingleAsync(u => u.Id == currentUserId);
 
                 var employee = new Employee
@@ -178,7 +178,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     CityAddress = command.CityAddress,
                     CivilStatus = command.CivilStatus,
                     ClientId = command.ClientId,
-                    CompanyProfileId = currentUser.CompanyProfile?.Id,
+                    CompanyId = currentUser.Company?.Id,
                     DateHired = command.DateHired,
                     DateOfBirth = command.DateOfBirth,
                     DateResigned = command.DateResigned,

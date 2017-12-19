@@ -11,7 +11,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
     {
         public class Command : IRequest<CommandResult>
         {
-            public int? CompanyProfileId { get; set; }
+            public int? CompanyId { get; set; }
         }
 
         public class CommandResult
@@ -30,7 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             public async Task<CommandResult> Handle(Command command)
             {
-                var company = await _db.CompanyProfiles.SingleAsync(cp => cp.Id == command.CompanyProfileId);
+                var company = await _db.Companies.SingleAsync(cp => cp.Id == command.CompanyId);
                 company.DeletedOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();

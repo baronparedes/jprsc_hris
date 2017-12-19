@@ -6,7 +6,6 @@
     using JPRSC.HRIS.Models;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -22,81 +21,128 @@
 
         protected override void Seed(ApplicationDbContext context)
         {
-            SeedUsers(context);
+            if (!AppSettings.Bool("ShouldSeedDummyData")) return;
+
+            // Order matters!
+            SeedCompanies(context);
+            SeedJobTitles(context);
+            SeedDepartments(context);
+            SeedReligions(context);
+            SeedTaxStatuses(context);
+            SeedClients(context);
             SeedCustomRoles(context);
+            SeedEarningDeductions(context);
             context.SaveChanges();
 
+            SeedUsers(context);
+            SeedApprovalLevels(context);
             SeedUserCustomRoles(context);
+            SeedAllowedUserCompanies(context);
+            SeedEmployees(context);
+        }
+
+        private static void SeedAllowedUserCompanies(ApplicationDbContext context)
+        {
+            for (var i = 0; i < UserSeed.DefaultUsers.Length; i++)
+            {
+                var userId = UserSeed.DefaultUsers[i].Id;
+                var user = context.Users.Include(u => u.AllowedCompanies).Single(u => u.Id == userId);
+
+                var companyId = CompanySeed.Companies[i].Id;
+
+                if (!user.AllowedCompanies.Any(c => c.Id == companyId))
+                {
+                    var company = context.Companies.Single(c => c.Id == companyId);
+                    user.AllowedCompanies.Add(company);
+                }
+            }
+        }
+
+        private static void SeedApprovalLevels(ApplicationDbContext context)
+        {
+            context.ApprovalLevels.AddOrUpdate(al => al.Id, ApprovalLevelSeed.ApprovalLevels(context));
+        }
+
+        private static void SeedClients(ApplicationDbContext context)
+        {
+            context.Clients.AddOrUpdate(c => c.Id, ClientSeed.Clients);
+        }
+
+        private static void SeedCompanies(ApplicationDbContext context)
+        {
+            context.Companies.AddOrUpdate(c => c.Id, CompanySeed.Companies);
         }
 
         private static void SeedCustomRoles(ApplicationDbContext context)
         {
-            var superAdmin = new CustomRole
-            {
-                AddedOn = DateTime.UtcNow,
-                Id = 1,
-                Name = "Super Admin"
-            };
+            context.CustomRoles.AddOrUpdate(cr => cr.Id, CustomRoleSeed.CustomRoles());
+        }
 
-            superAdmin.AddPermissions(new List<Permission>
-            {
-                Permission.HomeDefault,
-                Permission.CompanyDefault,
-                Permission.AccountDefault,
-                Permission.AccountEditOwn,
-                Permission.ReligionDefault,
-                Permission.ClientDefault,
-                Permission.CustomRoleDefault,
-                Permission.EarningDeductionDefault,
-                Permission.JobTitleDefault,
-                Permission.DepartmentDefault,
-                Permission.TaxStatusDefault,
-                Permission.EmployeeDefault,
-                Permission.ApprovalLevelDefault
-            });
+        private static void SeedDepartments(ApplicationDbContext context)
+        {
+            context.Departments.AddOrUpdate(d => d.Id, DepartmentSeed.Departments);
+        }
 
-            var defaultRole = new CustomRole
-            {
-                AddedOn = DateTime.UtcNow,
-                Id = 2,
-                Name = "Default"
-            };
+        private static void SeedEarningDeductions(ApplicationDbContext context)
+        {
+            context.EarningDeductions.AddOrUpdate(ed => ed.Id, EarningDeductionSeed.EarningDeductions);
+        }
 
-            defaultRole.AddPermissions(new List<Permission>
-            {
-                Permission.HomeDefault,
-                Permission.AccountEditOwn
-            });
+        private static void SeedEmployees(ApplicationDbContext context)
+        {
+            context.Employees.AddOrUpdate(e => e.Id, EmployeeSeed.Employees);
+        }
 
-            var customRolesSeed = new List<CustomRole>
-            {
-                superAdmin,
-                defaultRole
-            }
-            .ToArray();
+        private static void SeedJobTitles(ApplicationDbContext context)
+        {
+            context.JobTitles.AddOrUpdate(jt => jt.Id, JobTitleSeed.JobTitles);
+        }
 
-            context.CustomRoles.AddOrUpdate(cr => cr.Id, customRolesSeed);
+        private static void SeedReligions(ApplicationDbContext context)
+        {
+            context.Religions.AddOrUpdate(r => r.Id, ReligionSeed.Religions);
+        }
+
+        private static void SeedTaxStatuses(ApplicationDbContext context)
+        {
+            context.TaxStatuses.AddOrUpdate(ts => ts.Id, TaxStatusSeed.TaxStatuses);
         }
 
         private static void SeedUserCustomRoles(ApplicationDbContext context)
         {
-            var superAdminCustomRoleId = 1;
-            var admin01 = context.Users.Include(u => u.CustomRoles).Single(u => u.UserName == "admin01@email.com");
+            var superAdminCustomRole = context.CustomRoles.Single(cr => cr.Id == CustomRoleSeed.SuperAdminCustomRoleId);
+            var adminUsernames = UserSeed.Admins.Select(u => u.UserName).ToList();
+            var adminUsers = context.Users.Include(u => u.CustomRoles).Where(u => adminUsernames.Contains(u.UserName));
 
-            if (!admin01.CustomRoles.Any(cr => cr.Id == superAdminCustomRoleId))
+            foreach (var adminUser in adminUsers)
             {
-                var superAdmin = context.CustomRoles.Single(cr => cr.Id == superAdminCustomRoleId);
-                admin01.CustomRoles.Add(superAdmin);
+                if (!adminUser.CustomRoles.Any(cr => cr.Id == superAdminCustomRole.Id))
+                {
+                    adminUser.CustomRoles.Add(superAdminCustomRole);
+                }
+            }
+
+            var defaultCustomRole = context.CustomRoles.Single(cr => cr.Id == CustomRoleSeed.DefaultCustomRoleId);
+            var defaultUsernames = UserSeed.DefaultUsers.Select(u => u.UserName).ToList();
+            var defaultUsers = context.Users.Include(u => u.CustomRoles).Where(u => defaultUsernames.Contains(u.UserName));
+
+            foreach (var defaultUser in defaultUsers)
+            {
+                if (!defaultUser.CustomRoles.Any(cr => cr.Id == defaultCustomRole.Id))
+                {
+                    defaultUser.CustomRoles.Add(defaultCustomRole);
+                }
             }
         }
 
-        private void SeedUsers(ApplicationDbContext context)
+        private static void SeedUsers(ApplicationDbContext context)
         {
             var userManager = new UserManager(new UserStore<User>(context));
             var commonPassword = AppSettings.String("DefaultPassword");
 
             var allUsers = new List<User>();
             allUsers.AddRange(UserSeed.Admins);
+            allUsers.AddRange(UserSeed.DefaultUsers);
 
             foreach (var user in allUsers)
             {

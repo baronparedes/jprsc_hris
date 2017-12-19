@@ -70,10 +70,10 @@
                                         <td>{{company.email}}</td>
                                         <td>{{company.phone}}</td>
                                         <td>
-                                            <a href="{{'/Companies/Edit?companyProfileId=' + company.id}}" class="btn btn-primary btn-sm">Edit</a>
+                                            <a href="{{'/Companies/Edit?CompanyId=' + company.id}}" class="btn btn-primary btn-sm">Edit</a>
                                             <form action="/Companies/Delete" method="post" style="display: inline-block;">
                                                 @Html.AntiForgeryToken()
-                                                <input type="hidden" name="CompanyProfileId" value="{{company.id}}" />
+                                                <input type="hidden" name="CompanyId" value="{{company.id}}" />
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                             </form>
                                         </td>
