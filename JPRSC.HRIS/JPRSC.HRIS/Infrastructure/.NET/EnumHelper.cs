@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
@@ -22,6 +23,11 @@ namespace JPRSC.HRIS.Infrastructure.NET
         public static string GetDisplayName<TEnum>(TEnum enumValue) where TEnum : struct, IComparable, IFormattable, IConvertible
         {
             return enumValue.GetType().GetMember(enumValue.ToString()).First().GetCustomAttribute<DisplayAttribute>()?.Name;
+        }
+
+        public static IEnumerable<T> GetValues<T>()
+        {
+            return Enum.GetValues(typeof(T)).Cast<T>();
         }
     }
 }
