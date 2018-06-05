@@ -123,7 +123,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -132,7 +132,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 _db = db;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var Company = new Company
                 {

@@ -16,7 +16,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             public string ReturnUrl { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly SignInManager _signInManager;
             private readonly UserManager _userManager;
@@ -27,7 +27,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            public async Task<Command> Handle(Query query)
+            protected override async Task<Command> HandleCore(Query query)
             {
                 var userId = await _signInManager.GetVerifiedUserIdAsync();
                 if (userId == null)
@@ -55,7 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             public string SelectedProvider { get; set; }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command, VerifyCode.Query>
+        public class CommandHandler : AsyncRequestHandler<Command, VerifyCode.Query>
         {
             private readonly SignInManager _signInManager;
 
@@ -64,7 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task<VerifyCode.Query> Handle(Command command)
+            protected override async Task<VerifyCode.Query> HandleCore(Command command)
             {
                 // Generate the token and send it
                 if (!await _signInManager.SendTwoFactorCodeAsync(command.SelectedProvider))

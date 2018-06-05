@@ -55,7 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command>
         {
             private readonly UserManager _userManager;
             private readonly SignInManager _signInManager;
@@ -66,7 +66,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
                 _signInManager = signInManager;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var addPasswordResult = await _userManager.AddPasswordAsync(HttpContext.Current.User.Identity.GetUserId(), command.NewPassword);
                 if (!addPasswordResult.Succeeded)

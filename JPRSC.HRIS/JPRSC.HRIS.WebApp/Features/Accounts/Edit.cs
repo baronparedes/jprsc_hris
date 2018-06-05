@@ -31,7 +31,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             public IList<SelectListItem> JobTitlesList { get; set; } = new List<SelectListItem>();
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -40,7 +40,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query)
+            protected override async Task<Command> HandleCore(Query query)
             {
                 var command = await _db
                     .Users
@@ -120,7 +120,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -129,7 +129,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var user = await _db
                     .Users

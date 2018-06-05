@@ -17,9 +17,9 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             public string ReturnUrl { get; set; }
         }
 
-        public class QueryHandler : IRequestHandler<Query, Command>
+        public class QueryHandler : RequestHandler<Query, Command>
         {
-            public Command Handle(Query query)
+            protected override Command HandleCore(Query query)
             {
                 return new Command
                 {
@@ -59,7 +59,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command, SignInStatus>
+        public class CommandHandler : AsyncRequestHandler<Command, SignInStatus>
         {
             private readonly SignInManager _signInManager;
 
@@ -68,7 +68,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task<SignInStatus> Handle(Command command)
+            protected override async Task<SignInStatus> HandleCore(Command command)
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, change to shouldLockout: true

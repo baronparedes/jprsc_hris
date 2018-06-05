@@ -19,7 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
             public int? Level { get; set; }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command, CommandResult>
+        public class CommandHandler : AsyncRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -28,7 +28,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
                 _db = db;
             }
 
-            public async Task<CommandResult> Handle(Command command)
+            protected override async Task<CommandResult> HandleCore(Command command)
             {
                 var approvalLevel = await _db.ApprovalLevels.SingleAsync(r => r.Id == command.ApprovalLevelId);
                 approvalLevel.DeletedOn = DateTime.UtcNow;

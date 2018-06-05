@@ -13,9 +13,9 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         {
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, QueryResult>
+        public class QueryHandler : AsyncRequestHandler<Query, QueryResult>
         {
-            public async Task<QueryResult> Handle(Query query)
+            protected override async Task<QueryResult> HandleCore(Query query)
             {
                 return new QueryResult();
             }

@@ -24,7 +24,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
             public string UserId { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -33,7 +33,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query)
+            protected override async Task<Command> HandleCore(Query query)
             {
                 var command = new Command();
 
@@ -61,7 +61,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
             public int? Level { get; set; }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command, CommandResult>
+        public class CommandHandler : AsyncRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -70,7 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
                 _db = db;
             }
 
-            public async Task<CommandResult> Handle(Command command)
+            protected override async Task<CommandResult> HandleCore(Command command)
             {
                 var approvalLevel = new ApprovalLevel
                 {

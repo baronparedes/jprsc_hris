@@ -17,7 +17,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             public string ReturnUrl { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly SignInManager _signInManager;
 
@@ -26,7 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task<Command> Handle(Query query)
+            protected override async Task<Command> HandleCore(Query query)
             {
                 // Require that the user has already logged in via username/password or external login
                 if (!await _signInManager.HasBeenVerifiedAsync())
@@ -65,7 +65,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command, SignInStatus>
+        public class CommandHandler : AsyncRequestHandler<Command, SignInStatus>
         {
             private readonly SignInManager _signInManager;
 
@@ -74,7 +74,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task<SignInStatus> Handle(Command command)
+            protected override async Task<SignInStatus> HandleCore(Command command)
             {
                 // The following code protects for brute force attacks against the two factor codes.
                 // If a user enters incorrect codes for a specified amount of time then the user account

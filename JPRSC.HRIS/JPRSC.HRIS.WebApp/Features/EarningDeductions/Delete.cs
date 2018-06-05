@@ -19,7 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
             public string Code { get; set; }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command, CommandResult>
+        public class CommandHandler : AsyncRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -28,7 +28,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
                 _db = db;
             }
 
-            public async Task<CommandResult> Handle(Command command)
+            protected override async Task<CommandResult> HandleCore(Command command)
             {
                 var earningDeduction = await _db.EarningDeductions.SingleAsync(r => r.Id == command.EarningDeductionId);
                 earningDeduction.DeletedOn = DateTime.UtcNow;

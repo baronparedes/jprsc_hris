@@ -22,7 +22,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
             public string Name { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -31,7 +31,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query)
+            protected override async Task<Command> HandleCore(Query query)
             {
                 return await _db.TaxStatuses.Where(r => r.Id == query.TaxStatusId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
@@ -46,7 +46,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
             }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -55,7 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
                 _db = db;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var taxStatus = await _db.TaxStatuses.SingleAsync(r => r.Id == command.Id);
                 

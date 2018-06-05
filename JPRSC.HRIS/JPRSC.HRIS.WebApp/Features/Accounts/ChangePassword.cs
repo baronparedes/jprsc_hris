@@ -26,7 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             public string RepeatNewPassword { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -35,7 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query)
+            protected override async Task<Command> HandleCore(Query query)
             {
                 return await _db.Users.Where(u => u.Id == query.UserId).ProjectToSingleAsync<Command>();
             }
@@ -67,7 +67,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command, CommandResult>
+        public class CommandHandler : AsyncRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
             private readonly SignInManager _signInManager;
@@ -80,7 +80,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _signInManager = signInManager;
             }
 
-            public async Task<CommandResult> Handle(Command command)
+            protected override async Task<CommandResult> HandleCore(Command command)
             {
                 var changePasswordResult = await _userManager.ChangePasswordAsync(command.Id, command.OldPassword, command.NewPassword);
                 if (!changePasswordResult.Succeeded)

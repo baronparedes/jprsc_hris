@@ -23,7 +23,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
             public string Description { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Command>
+        public class QueryHandler : AsyncRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -32,7 +32,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query)
+            protected override async Task<Command> HandleCore(Query query)
             {
                 return await _db.Religions.Where(r => r.Id == query.ReligionId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
@@ -47,7 +47,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
             }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -56,7 +56,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
                 _db = db;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var religion = await _db.Religions.SingleAsync(r => r.Id == command.Id);
 

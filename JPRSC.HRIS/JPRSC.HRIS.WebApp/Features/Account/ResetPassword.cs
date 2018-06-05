@@ -24,9 +24,9 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class QueryHandler : IRequestHandler<Query, Command>
+        public class QueryHandler : RequestHandler<Query, Command>
         {
-            public Command Handle(Query query)
+            protected override Command HandleCore(Query query)
             {
                 return new Command
                 {
@@ -74,7 +74,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly UserManager _userManager;
 
@@ -83,7 +83,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var user = await _userManager.FindByNameAsync(command.Email);
                 if (user == null)

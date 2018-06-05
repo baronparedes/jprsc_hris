@@ -41,7 +41,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, QueryResult>
+        public class QueryHandler : AsyncRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -50,7 +50,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 _db = db;
             }
 
-            public async Task<QueryResult> Handle(Query query)
+            protected override async Task<QueryResult> HandleCore(Query query)
             {
                 var dbQuery = _db
                     .Companies

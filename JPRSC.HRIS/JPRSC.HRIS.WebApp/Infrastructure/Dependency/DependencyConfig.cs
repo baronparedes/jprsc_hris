@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
 {
@@ -75,14 +76,9 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             var assemblyOfMediatRClasses = Assembly.GetExecutingAssembly();
             var assemblies = new[] { assemblyOfMediatRClasses };
             container.RegisterSingleton<IMediator, Mediator>();
-            container.Register(typeof(IRequestHandler<,>), assemblies);
-            container.Register(typeof(IAsyncRequestHandler<,>), assemblies);
-            container.Register(typeof(IRequestHandler<>), assemblies);
-            container.Register(typeof(IAsyncRequestHandler<>), assemblies);
-            container.Register(typeof(ICancellableAsyncRequestHandler<>), assemblies);
+            container.Register(typeof(RequestHandler<,>), assemblies);
+            container.Register(typeof(RequestHandler<>), assemblies);
             container.RegisterCollection(typeof(INotificationHandler<>), assemblies);
-            container.RegisterCollection(typeof(IAsyncNotificationHandler<>), assemblies);
-            container.RegisterCollection(typeof(ICancellableAsyncNotificationHandler<>), assemblies);
             container.RegisterSingleton(Console.Out);
 
             //Pipeline
@@ -117,7 +113,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             _writer = writer;
         }
 
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             _writer.WriteLine("-- Handling Request");
             var response = await next();
@@ -153,7 +149,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             _writer = writer;
         }
 
-        public Task Process(TRequest request)
+        public Task Process(TRequest request, CancellationToken cancellationToken)
         {
             _writer.WriteLine("- Starting Up");
             return Task.FromResult(0);

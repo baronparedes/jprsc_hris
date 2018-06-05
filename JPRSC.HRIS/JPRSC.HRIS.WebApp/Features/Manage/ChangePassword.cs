@@ -68,7 +68,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command>
         {
             private readonly SignInManager _signInManager;
             private readonly UserManager _userManager;
@@ -79,7 +79,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
                 _signInManager = signInManager;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var currentUser = _userManager.FindByName(HttpContext.Current.User.Identity.Name);
                 var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser.Id, command.OldPassword, command.NewPassword);

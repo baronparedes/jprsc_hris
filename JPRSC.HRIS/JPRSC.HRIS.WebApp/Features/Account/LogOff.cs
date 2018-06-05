@@ -11,7 +11,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
         {
         }
 
-        public class Handler : IAsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command>
         {
             private readonly IAuthenticationManager _authenticationManager;
 
@@ -20,7 +20,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _authenticationManager = authenticationManager;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 await Task.Factory.StartNew(() =>
                 {

@@ -26,7 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command>
+        public class CommandHandler : AsyncRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -35,7 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 _db = db;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var client = new Client
                 {

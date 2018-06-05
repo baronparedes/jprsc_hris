@@ -20,7 +20,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string LastName { get; set; }
         }
 
-        public class CommandHandler : IAsyncRequestHandler<Command, CommandResult>
+        public class CommandHandler : AsyncRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -29,7 +29,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 _db = db;
             }
 
-            public async Task<CommandResult> Handle(Command command)
+            protected override async Task<CommandResult> HandleCore(Command command)
             {
                 var employee = await _db.Employees.SingleAsync(r => r.Id == command.EmployeeId);
                 employee.DeletedOn = DateTime.UtcNow;

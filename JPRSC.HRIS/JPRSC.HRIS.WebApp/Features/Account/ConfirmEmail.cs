@@ -26,7 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command>
         {
             private readonly UserManager _userManager;
 
@@ -35,7 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var confirmEmailResult = await _userManager.ConfirmEmailAsync(command.UserId, command.Code);
                 if (!confirmEmailResult.Succeeded)

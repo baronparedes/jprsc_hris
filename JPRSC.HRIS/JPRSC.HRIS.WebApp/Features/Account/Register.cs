@@ -55,7 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
             private readonly UserManager _userManager;
@@ -68,7 +68,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task Handle(Command command)
+            protected override async Task HandleCore(Command command)
             {
                 var user = new User { Email = command.Email, UserName = command.Email, };
                 var createUserResult = await _userManager.CreateAsync(user, command.Password);
