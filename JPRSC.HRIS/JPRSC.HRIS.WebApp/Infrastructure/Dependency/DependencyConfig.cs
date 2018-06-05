@@ -76,8 +76,8 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             var assemblyOfMediatRClasses = Assembly.GetExecutingAssembly();
             var assemblies = new[] { assemblyOfMediatRClasses };
             container.RegisterSingleton<IMediator, Mediator>();
-            container.Register(typeof(RequestHandler<,>), assemblies);
-            container.Register(typeof(RequestHandler<>), assemblies);
+            container.Register(typeof(IRequestHandler<,>), assemblies);
+            container.Register(typeof(IRequestHandler<>), assemblies);
             container.RegisterCollection(typeof(INotificationHandler<>), assemblies);
             container.RegisterSingleton(Console.Out);
 
