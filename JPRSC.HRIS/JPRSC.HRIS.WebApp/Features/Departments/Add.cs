@@ -23,7 +23,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -32,7 +32,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var department = new Department
                 {
@@ -42,6 +42,8 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
 
                 _db.Departments.Add(department);
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

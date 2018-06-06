@@ -123,7 +123,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -132,7 +132,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var Company = new Company
                 {
@@ -157,6 +157,8 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
                 _db.Companies.Add(Company);
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

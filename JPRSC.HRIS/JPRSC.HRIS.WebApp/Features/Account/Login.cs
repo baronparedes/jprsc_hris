@@ -7,6 +7,7 @@ using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using JPRSC.HRIS.Infrastructure.Data;
 using System;
 using System.Linq;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Account
 {
@@ -17,9 +18,9 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             public string ReturnUrl { get; set; }
         }
 
-        public class QueryHandler : RequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
-            protected override Command HandleCore(Query query)
+            public async Task<Command> Handle(Query query, CancellationToken cancellationToken)
             {
                 return new Command
                 {
@@ -59,7 +60,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command, SignInStatus>
+        public class CommandHandler : IRequestHandler<Command, SignInStatus>
         {
             private readonly SignInManager _signInManager;
 
@@ -68,7 +69,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            protected override async Task<SignInStatus> HandleCore(Command command)
+            public async Task<SignInStatus> Handle(Command command, System.Threading.CancellationToken token)
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, change to shouldLockout: true

@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Manage
 {
@@ -55,7 +56,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly UserManager _userManager;
             private readonly SignInManager _signInManager;
@@ -66,7 +67,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
                 _signInManager = signInManager;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
                 var addPasswordResult = await _userManager.AddPasswordAsync(HttpContext.Current.User.Identity.GetUserId(), command.NewPassword);
                 if (!addPasswordResult.Succeeded)
@@ -79,6 +80,8 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
+
+                return Unit.Value;
             }
         }
     }

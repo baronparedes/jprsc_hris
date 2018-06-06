@@ -26,7 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -35,7 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var client = new Client
                 {
@@ -48,6 +48,8 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
 
                 _db.Clients.Add(client);
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

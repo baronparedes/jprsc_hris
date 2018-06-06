@@ -25,7 +25,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -34,7 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var earningDeduction = new EarningDeduction
                 {
@@ -46,6 +46,8 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
 
                 _db.EarningDeductions.Add(earningDeduction);
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

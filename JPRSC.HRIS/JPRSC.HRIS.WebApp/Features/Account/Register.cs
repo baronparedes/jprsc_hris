@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using JPRSC.HRIS.Infrastructure.Email;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Account
 {
@@ -55,7 +56,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
             private readonly UserManager _userManager;
@@ -68,7 +69,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var user = new User { Email = command.Email, UserName = command.Email, };
                 var createUserResult = await _userManager.CreateAsync(user, command.Password);
@@ -83,6 +84,8 @@ namespace JPRSC.HRIS.WebApp.Features.Account
 
                 // No await means fire and forget
                 _userManager.SendEmailAsync(user.Id, postRegistrationEmailMessage);
+
+                return Unit.Value;
             }
 
             private async Task<EmailMessage> GetPostRegistrationEmailMessage(User user)

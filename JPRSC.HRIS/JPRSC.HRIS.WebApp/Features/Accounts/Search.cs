@@ -39,7 +39,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, QueryResult>
+        public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -48,7 +48,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            protected override async Task<QueryResult> HandleCore(Query query)
+            public async Task<QueryResult> Handle(Query query, System.Threading.CancellationToken token)
             {
                 var dbQuery = _db
                     .Users

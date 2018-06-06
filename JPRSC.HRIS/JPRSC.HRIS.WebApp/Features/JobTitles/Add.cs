@@ -23,7 +23,7 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -32,7 +32,7 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var jobTitle = new JobTitle
                 {
@@ -42,6 +42,8 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
 
                 _db.JobTitles.Add(jobTitle);
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

@@ -19,7 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
             public string Name { get; set; }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command, CommandResult>
+        public class CommandHandler : IRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -28,7 +28,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
                 _db = db;
             }
 
-            protected override async Task<CommandResult> HandleCore(Command command)
+            public async Task<CommandResult> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var customRole = await _db.CustomRoles.SingleAsync(cr => cr.Id == command.CustomRoleId);
                 customRole.DeletedOn = DateTime.UtcNow;

@@ -13,9 +13,9 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
         {
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, QueryResult>
+        public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
-            protected override async Task<QueryResult> HandleCore(Query query)
+            public async Task<QueryResult> Handle(Query query, System.Threading.CancellationToken token)
             {
                 return new QueryResult();
             }

@@ -26,7 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly UserManager _userManager;
 
@@ -35,13 +35,15 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var confirmEmailResult = await _userManager.ConfirmEmailAsync(command.UserId, command.Code);
                 if (!confirmEmailResult.Succeeded)
                 {
                     throw new Exception($"Unable to confirm email. Errors: {confirmEmailResult.Errors.Join(",")}");
                 }
+
+                return Unit.Value;
             }
         }
     }

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Threading;
+using System.Text;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
 {
@@ -77,9 +78,16 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             var assemblies = new[] { assemblyOfMediatRClasses };
             container.RegisterSingleton<IMediator, Mediator>();
             container.Register(typeof(IRequestHandler<,>), assemblies);
-            container.Register(typeof(IRequestHandler<>), assemblies);
-            container.Collection.Register(typeof(INotificationHandler<>), assemblies);
-            container.RegisterInstance(Console.Out);
+
+            // we have to do this because by default, generic type definitions (such as the Constrained Notification Handler) won't be registered
+            var notificationHandlerTypes = container.GetTypesToRegister(typeof(INotificationHandler<>), assemblies, new TypesToRegisterOptions
+            {
+                IncludeGenericTypeDefinitions = true,
+                IncludeComposites = false,
+            });
+            container.Register(typeof(INotificationHandler<>), notificationHandlerTypes);
+
+            container.Register(() => (TextWriter)(new WrappingWriter(Console.Out)), Lifestyle.Singleton);
 
             //Pipeline
             container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
@@ -88,12 +96,10 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
                 typeof(RequestPostProcessorBehavior<,>),
                 typeof(GenericPipelineBehavior<,>)
             });
-
             container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(GenericRequestPreProcessor<>) });
             container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(GenericRequestPostProcessor<,>) });
 
-            container.RegisterInstance(new SingleInstanceFactory(container.GetInstance));
-            container.RegisterInstance(new MultiInstanceFactory(container.GetAllInstances));
+            container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
         }
 
         private static void RegisterValidators(Container container)
@@ -154,5 +160,33 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             _writer.WriteLine("- Starting Up");
             return Task.FromResult(0);
         }
+    }
+
+    // https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples/Runner.cs
+    public class WrappingWriter : TextWriter
+    {
+        private readonly TextWriter _innerWriter;
+        private readonly StringBuilder _stringWriter = new StringBuilder();
+
+        public WrappingWriter(TextWriter innerWriter)
+        {
+            _innerWriter = innerWriter;
+        }
+
+        public override void Write(char value)
+        {
+            _stringWriter.Append(value);
+            _innerWriter.Write(value);
+        }
+
+        public override Task WriteLineAsync(string value)
+        {
+            _stringWriter.AppendLine(value);
+            return _innerWriter.WriteLineAsync(value);
+        }
+
+        public override Encoding Encoding => _innerWriter.Encoding;
+
+        public string Contents => _stringWriter.ToString();
     }
 }

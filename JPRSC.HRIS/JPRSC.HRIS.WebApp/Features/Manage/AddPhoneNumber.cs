@@ -26,7 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly UserManager _userManager;
 
@@ -35,7 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
                 _userManager = userManager;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 // Generate the token and send it
                 var code = await _userManager.GenerateChangePhoneNumberTokenAsync(HttpContext.Current.User.Identity.GetUserId(), command.Number);
@@ -49,6 +49,8 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
 
                     await _userManager.SmsService.SendAsync(message);
                 }
+
+                return Unit.Value;
             }
         }
     }

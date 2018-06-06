@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Employees
@@ -41,7 +42,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, QueryResult>
+        public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -50,7 +51,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 _db = db;
             }
 
-            protected override async Task<QueryResult> HandleCore(Query query)
+            public async Task<QueryResult> Handle(Query query, System.Threading.CancellationToken token)
             {
                 var dbQuery = _db
                     .Employees

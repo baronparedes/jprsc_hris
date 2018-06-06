@@ -19,7 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
             public string Code { get; set; }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command, CommandResult>
+        public class CommandHandler : IRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -28,7 +28,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
                 _db = db;
             }
 
-            protected override async Task<CommandResult> HandleCore(Command command)
+            public async Task<CommandResult> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var religion = await _db.Religions.SingleAsync(r => r.Id == command.ReligionId);
                 religion.DeletedOn = DateTime.UtcNow;

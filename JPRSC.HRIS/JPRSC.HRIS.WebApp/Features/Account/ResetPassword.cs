@@ -5,6 +5,7 @@ using JPRSC.HRIS.Infrastructure.Identity;
 using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using System;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Account
 {
@@ -24,9 +25,9 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class QueryHandler : RequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
-            protected override Command HandleCore(Query query)
+            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
             {
                 return new Command
                 {
@@ -74,7 +75,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly UserManager _userManager;
 
@@ -83,7 +84,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var user = await _userManager.FindByNameAsync(command.Email);
                 if (user == null)
@@ -98,6 +99,8 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                         throw new Exception("Unable to reset password. The link may have expired.");
                     }
                 }
+
+                return Unit.Value;
             }
         }
     }

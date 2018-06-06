@@ -26,7 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             public string Name { get; set; }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -35,7 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 _db = db;
             }
 
-            protected override async Task<Command> HandleCore(Query query)
+            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
             {
                 return await _db.Clients.Where(c => c.Id == query.ClientId && !c.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
@@ -50,7 +50,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -59,7 +59,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var client = await _db.Clients.SingleAsync(c => c.Id == command.Id);
 
@@ -70,6 +70,8 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 client.Name = command.Name;
 
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

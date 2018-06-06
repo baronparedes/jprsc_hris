@@ -19,7 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             public string Name { get; set; }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command, CommandResult>
+        public class CommandHandler : IRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -28,7 +28,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            protected override async Task<CommandResult> HandleCore(Command command)
+            public async Task<CommandResult> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var user = await _db.Users.SingleAsync(u => u.Id == command.UserId);
                 user.DeletedOn = DateTime.UtcNow;

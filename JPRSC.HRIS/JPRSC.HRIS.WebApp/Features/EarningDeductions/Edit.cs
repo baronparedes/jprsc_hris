@@ -25,7 +25,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
             public EarningDeductionType? EarningDeductionType { get; set; }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -34,7 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
                 _db = db;
             }
 
-            protected override async Task<Command> HandleCore(Query query)
+            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
             {
                 return await _db.EarningDeductions.Where(r => r.Id == query.EarningDeductionId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
@@ -49,7 +49,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -58,7 +58,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var earningDeduction = await _db.EarningDeductions.SingleAsync(r => r.Id == command.Id);
 
@@ -68,6 +68,8 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
                 earningDeduction.ModifiedOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using JPRSC.HRIS.Infrastructure.Email;
 using JPRSC.HRIS.Models;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Account
 {
@@ -29,7 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly UserManager _userManager;
 
@@ -38,9 +39,9 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            protected override async Task HandleCore(Command model)
+            public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByNameAsync(model.Email);
+                var user = await _userManager.FindByNameAsync(command.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Do nothing: Don't reveal that the user does not exist or is not confirmed
@@ -52,6 +53,8 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                     // No await means fire and forget
                     _userManager.SendEmailAsync(user.Id, forgotPasswordEmail);
                 }
+
+                return Unit.Value;
             }
 
             private async Task<EmailMessage> GetForgotPasswordEmail(User user)

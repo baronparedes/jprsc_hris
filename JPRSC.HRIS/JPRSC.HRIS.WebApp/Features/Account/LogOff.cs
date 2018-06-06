@@ -11,7 +11,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
         {
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly IAuthenticationManager _authenticationManager;
 
@@ -20,12 +20,14 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _authenticationManager = authenticationManager;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 await Task.Factory.StartNew(() =>
                 {
                     _authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                 });
+
+                return Unit.Value;
             }
         }
     }

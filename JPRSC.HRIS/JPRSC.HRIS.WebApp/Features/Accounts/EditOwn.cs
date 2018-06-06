@@ -24,7 +24,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             public string UserName { get; set; }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -33,7 +33,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            protected override async Task<Command> HandleCore(Query query)
+            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
             {
                 var currentUserId = HttpContext.Current.User.Identity.GetUserId();
 
@@ -68,7 +68,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -77,7 +77,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var currentUserId = HttpContext.Current.User.Identity.GetUserId();
 
@@ -87,6 +87,8 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 user.UserName = command.UserName;
 
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

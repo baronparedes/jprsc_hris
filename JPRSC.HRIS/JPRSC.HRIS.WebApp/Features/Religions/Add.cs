@@ -24,7 +24,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -33,7 +33,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var religion = new Religion
                 {
@@ -44,6 +44,8 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
 
                 _db.Religions.Add(religion);
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

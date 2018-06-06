@@ -37,7 +37,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             public string ZipCode { get; set; }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -46,7 +46,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 _db = db;
             }
 
-            protected override async Task<Command> HandleCore(Query query)
+            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
             {
                 return await _db.Companies.Where(cp => cp.Id == query.CompanyId && !cp.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
@@ -146,7 +146,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -155,7 +155,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var Company = await _db.Companies.SingleAsync(cp => cp.Id == command.Id);
 
@@ -178,6 +178,8 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 Company.ZipCode = command.ZipCode;
 
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

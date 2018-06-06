@@ -68,7 +68,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly SignInManager _signInManager;
             private readonly UserManager _userManager;
@@ -79,7 +79,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
                 _signInManager = signInManager;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var currentUser = _userManager.FindByName(HttpContext.Current.User.Identity.Name);
                 var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser.Id, command.OldPassword, command.NewPassword);
@@ -93,6 +93,8 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
+
+                return Unit.Value;
             }
         }
     }

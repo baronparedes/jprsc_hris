@@ -27,7 +27,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
             public string UserId { get; set; }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -36,7 +36,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
                 _db = db;
             }
 
-            protected override async Task<Command> HandleCore(Query query)
+            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
             {
                 var command = await _db.ApprovalLevels.Where(r => r.Id == query.ApprovalLevelId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
 
@@ -73,7 +73,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -82,7 +82,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var approvalLevel = await _db.ApprovalLevels.SingleAsync(r => r.Id == command.Id);
                 
@@ -91,6 +91,8 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
                 approvalLevel.UserId = command.UserId;
 
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

@@ -16,7 +16,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             public string ReturnUrl { get; set; }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SignInManager _signInManager;
             private readonly UserManager _userManager;
@@ -27,7 +27,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            protected override async Task<Command> HandleCore(Query query)
+            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
             {
                 var userId = await _signInManager.GetVerifiedUserIdAsync();
                 if (userId == null)
@@ -55,7 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
             public string SelectedProvider { get; set; }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command, VerifyCode.Query>
+        public class CommandHandler : IRequestHandler<Command, VerifyCode.Query>
         {
             private readonly SignInManager _signInManager;
 
@@ -64,7 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            protected override async Task<VerifyCode.Query> HandleCore(Command command)
+            public async Task<VerifyCode.Query> Handle(Command command, System.Threading.CancellationToken token)
             {
                 // Generate the token and send it
                 if (!await _signInManager.SendTwoFactorCodeAsync(command.SelectedProvider))

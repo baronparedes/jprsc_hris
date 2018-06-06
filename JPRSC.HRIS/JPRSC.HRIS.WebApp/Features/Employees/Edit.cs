@@ -63,7 +63,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string ATMAccountNumber { get; set; }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -72,7 +72,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 _db = db;
             }
 
-            protected override async Task<Command> HandleCore(Query query)
+            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
             {
                 var command = await _db.Employees.Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
 
@@ -164,7 +164,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -173,7 +173,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var employee = await _db.Employees.SingleAsync(r => r.Id == command.Id);
 
@@ -208,6 +208,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.ZipCode = command.ZipCode;
 
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }

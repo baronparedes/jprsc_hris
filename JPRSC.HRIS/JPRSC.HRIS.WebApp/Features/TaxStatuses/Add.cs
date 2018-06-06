@@ -23,7 +23,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
             }
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly ApplicationDbContext _db;
 
@@ -32,7 +32,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
                 _db = db;
             }
 
-            protected override async Task HandleCore(Command command)
+            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
             {
                 var taxStatus = new TaxStatus
                 {
@@ -42,6 +42,8 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
 
                 _db.TaxStatuses.Add(taxStatus);
                 await _db.SaveChangesAsync();
+
+                return Unit.Value;
             }
         }
     }
