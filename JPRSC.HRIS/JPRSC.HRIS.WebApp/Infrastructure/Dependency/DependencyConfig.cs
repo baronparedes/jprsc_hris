@@ -78,22 +78,22 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             container.RegisterSingleton<IMediator, Mediator>();
             container.Register(typeof(IRequestHandler<,>), assemblies);
             container.Register(typeof(IRequestHandler<>), assemblies);
-            container.RegisterCollection(typeof(INotificationHandler<>), assemblies);
-            container.RegisterSingleton(Console.Out);
+            container.Collection.Register(typeof(INotificationHandler<>), assemblies);
+            container.RegisterInstance(Console.Out);
 
             //Pipeline
-            container.RegisterCollection(typeof(IPipelineBehavior<,>), new[]
+            container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
             {
                 typeof(RequestPreProcessorBehavior<,>),
                 typeof(RequestPostProcessorBehavior<,>),
                 typeof(GenericPipelineBehavior<,>)
             });
 
-            container.RegisterCollection(typeof(IRequestPreProcessor<>), new[] { typeof(GenericRequestPreProcessor<>) });
-            container.RegisterCollection(typeof(IRequestPostProcessor<,>), new[] { typeof(GenericRequestPostProcessor<,>) });
+            container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(GenericRequestPreProcessor<>) });
+            container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(GenericRequestPostProcessor<,>) });
 
-            container.RegisterSingleton(new SingleInstanceFactory(container.GetInstance));
-            container.RegisterSingleton(new MultiInstanceFactory(container.GetAllInstances));
+            container.RegisterInstance(new SingleInstanceFactory(container.GetInstance));
+            container.RegisterInstance(new MultiInstanceFactory(container.GetAllInstances));
         }
 
         private static void RegisterValidators(Container container)
