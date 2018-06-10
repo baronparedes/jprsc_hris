@@ -66,11 +66,14 @@
                                         <td>{{taxRecord.code}}</td>
                                         <td>{{taxRecord.name}}</td>
                                         <td>{{taxRecord.exemption}}</td>
-                                        <th>
-                                            <div ng-repeat="taxRange in taxRecord.taxRanges track by taxRange.id">
-                                                {{taxRange.id}}
-                                            </div>
-                                        </th>
+                                        <td>
+                                            <ul>
+                                                <li ng-repeat="taxRange in taxRecord.taxRanges track by taxRange.id">
+                                                    {{vm.currencySymbol}}{{taxRange.from}} to {{vm.currencySymbol}}{{taxRange.to}}:
+                                                    {{taxRange.percentage}}% plus {{vm.currencySymbol}}{{taxRange.plus}}
+                                                </li>
+                                            </ul>
+                                        </td>
                                         <td>
                                             <a href="{{'/TaxRecords/Edit?taxRecordId=' + taxRecord.id}}" class="btn btn-primary btn-sm">Edit</a>
                                             <form action="/TaxRecords/Delete" method="post" style="display: inline-block;">

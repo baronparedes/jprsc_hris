@@ -21,9 +21,10 @@ namespace JPRSC.HRIS.WebApp.Features.TaxRecords
 
             public class TaxRange
             {
+                public decimal? From { get; set; }
                 public double? Percentage { get; set; }
                 public decimal? Plus { get; set; }
-                public decimal? Range { get; set; }
+                public decimal? To { get; set; }
             }
         }
 
@@ -58,9 +59,10 @@ namespace JPRSC.HRIS.WebApp.Features.TaxRecords
                     TaxRanges = command.TaxRanges.Select(tr => new TaxRange
                     {
                         AddedOn = now,
+                        From = tr.From,
                         Percentage = tr.Percentage,
                         Plus = tr.Plus,
-                        Range = tr.Range
+                        To = tr.To
                     }).ToList()
                 };
 

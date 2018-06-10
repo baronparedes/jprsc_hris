@@ -29,10 +29,11 @@ namespace JPRSC.HRIS.WebApp.Features.TaxRecords
 
             public class TaxRange
             {
+                public decimal? From { get; set; }
                 public int Id { get; set; }
                 public double? Percentage { get; set; }
                 public decimal? Plus { get; set; }
-                public decimal? Range { get; set; }
+                public decimal? To { get; set; }
             }
         }
 
@@ -99,10 +100,11 @@ namespace JPRSC.HRIS.WebApp.Features.TaxRecords
                     _db.TaxRanges.Add(new TaxRange
                     {
                         AddedOn = addedOrModifiedOn,
+                        From = newTaxRange.From,
                         Percentage = newTaxRange.Percentage,
                         Plus = newTaxRange.Plus,
-                        Range = newTaxRange.Range,
-                        TaxRecordId = command.Id
+                        TaxRecordId = command.Id,
+                        To = newTaxRange.To
                     });
                 }
 
@@ -111,10 +113,11 @@ namespace JPRSC.HRIS.WebApp.Features.TaxRecords
                 foreach (var taxRangeForUpdating in taxRangesForUpdating)
                 {
                     var updatedTaxRange = command.TaxRanges.Single(tr => tr.Id == taxRangeForUpdating.Id);
+                    taxRangeForUpdating.From = updatedTaxRange.From;
                     taxRangeForUpdating.ModifiedOn = addedOrModifiedOn;
                     taxRangeForUpdating.Percentage = updatedTaxRange.Percentage;
                     taxRangeForUpdating.Plus = updatedTaxRange.Plus;
-                    taxRangeForUpdating.Range = updatedTaxRange.Range;
+                    taxRangeForUpdating.To = updatedTaxRange.To;
                 }
 
                 var deletedTaxRangeIds = existingTaxRangeIds.Except(inputTaxRangeIds);

@@ -46,10 +46,11 @@ namespace JPRSC.HRIS.WebApp.Features.TaxRecords
             {
                 [JsonIgnore]
                 public DateTime? DeletedOn { get; set; }
+                public decimal? From { get; set; }
                 public int Id { get; set; }
                 public double? Percentage { get; set; }
                 public decimal? Plus { get; set; }
-                public decimal? Range { get; set; }
+                public decimal? To { get; set; }
             }
         }
 

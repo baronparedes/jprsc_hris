@@ -112,6 +112,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806100403485_MoveTaxRecordRelationship.Designer.cs">
       <DependentUpon>201806100403485_MoveTaxRecordRelationship.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806100557520_AddFromToAddSystemSettings.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806100557520_AddFromToAddSystemSettings.Designer.cs">
+      <DependentUpon>201806100557520_AddFromToAddSystemSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\ClientSeed.cs" />
@@ -147,6 +151,7 @@
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\JobTitle.cs" />
     <Compile Include="Models\Religion.cs" />
+    <Compile Include="Models\SystemSettings.cs" />
     <Compile Include="Models\TaxRange.cs" />
     <Compile Include="Models\TaxRecord.cs" />
     <Compile Include="Models\TaxStatus.cs" />
@@ -169,6 +174,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806100403485_MoveTaxRecordRelationship.resx">
       <DependentUpon>201806100403485_MoveTaxRecordRelationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806100557520_AddFromToAddSystemSettings.resx">
+      <DependentUpon>201806100557520_AddFromToAddSystemSettings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

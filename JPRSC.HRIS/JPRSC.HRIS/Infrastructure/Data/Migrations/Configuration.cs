@@ -6,6 +6,7 @@
     using JPRSC.HRIS.Models;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -32,6 +33,7 @@
             SeedClients(context);
             SeedCustomRoles(context);
             SeedEarningDeductions(context);
+            SeedSystemSettings(context);
             context.SaveChanges();
 
             SeedUsers(context);
@@ -39,6 +41,20 @@
             SeedUserCustomRoles(context);
             SeedAllowedUserCompanies(context);
             SeedEmployees(context);
+        }
+
+        private void SeedSystemSettings(ApplicationDbContext context)
+        {
+            if (!context.SystemSettings.Any())
+            {
+                var systemSettings = new SystemSettings
+                {
+                    PHICRate = 2.75,
+                    SSSRate = 2.75
+                };
+
+                context.SystemSettings.Add(systemSettings);
+            }
         }
 
         private static void SeedAllowedUserCompanies(ApplicationDbContext context)
