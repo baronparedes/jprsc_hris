@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -33,7 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 var currentUserId = HttpContext.Current.User.Identity.GetUserId();
 
@@ -77,7 +78,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var currentUserId = HttpContext.Current.User.Identity.GetUserId();
 

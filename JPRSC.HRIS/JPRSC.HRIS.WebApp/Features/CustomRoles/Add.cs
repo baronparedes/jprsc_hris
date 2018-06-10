@@ -5,6 +5,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -37,7 +38,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var customRole = new CustomRole
                 {

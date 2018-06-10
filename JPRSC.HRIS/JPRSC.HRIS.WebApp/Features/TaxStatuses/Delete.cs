@@ -3,6 +3,7 @@ using MediatR;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
@@ -28,7 +29,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
                 _db = db;
             }
 
-            public async Task<CommandResult> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
                 var taxStatus = await _db.TaxStatuses.SingleAsync(r => r.Id == command.TaxStatusId);
                 taxStatus.DeletedOn = DateTime.UtcNow;

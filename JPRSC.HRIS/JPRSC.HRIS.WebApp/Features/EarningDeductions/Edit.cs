@@ -6,6 +6,7 @@ using MediatR;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
@@ -34,7 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 return await _db.EarningDeductions.Where(r => r.Id == query.EarningDeductionId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
@@ -58,7 +59,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var earningDeduction = await _db.EarningDeductions.SingleAsync(r => r.Id == command.Id);
 

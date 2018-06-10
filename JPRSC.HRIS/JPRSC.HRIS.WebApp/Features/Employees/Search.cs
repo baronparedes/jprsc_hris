@@ -51,7 +51,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 _db = db;
             }
 
-            public async Task<QueryResult> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var dbQuery = _db
                     .Employees

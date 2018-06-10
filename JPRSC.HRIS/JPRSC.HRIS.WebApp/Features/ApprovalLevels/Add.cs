@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -33,7 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 var command = new Command();
 
@@ -70,7 +71,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
                 _db = db;
             }
 
-            public async Task<CommandResult> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
                 var approvalLevel = new ApprovalLevel
                 {

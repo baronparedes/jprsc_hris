@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
@@ -48,7 +49,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
                 _db = db;
             }
 
-            public async Task<QueryResult> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var dbQuery = _db
                     .ApprovalLevels

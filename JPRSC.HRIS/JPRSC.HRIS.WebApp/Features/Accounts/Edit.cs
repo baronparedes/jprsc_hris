@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -40,7 +41,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 var command = await _db
                     .Users
@@ -129,7 +130,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var user = await _db
                     .Users

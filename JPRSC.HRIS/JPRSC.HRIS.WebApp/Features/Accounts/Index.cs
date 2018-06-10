@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Accounts
@@ -15,7 +16,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
-            public async Task<QueryResult> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 return new QueryResult();
             }

@@ -7,6 +7,7 @@ using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Manage
 {
@@ -79,7 +80,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
                 _signInManager = signInManager;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var currentUser = _userManager.FindByName(HttpContext.Current.User.Identity.Name);
                 var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser.Id, command.OldPassword, command.NewPassword);

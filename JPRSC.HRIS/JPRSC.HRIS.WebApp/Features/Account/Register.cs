@@ -69,7 +69,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var user = new User { Email = command.Email, UserName = command.Email, };
                 var createUserResult = await _userManager.CreateAsync(user, command.Password);

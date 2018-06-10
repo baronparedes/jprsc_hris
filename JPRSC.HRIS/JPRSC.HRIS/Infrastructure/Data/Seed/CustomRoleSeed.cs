@@ -30,9 +30,10 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
                 Permission.EarningDeductionDefault,
                 Permission.JobTitleDefault,
                 Permission.DepartmentDefault,
-                Permission.TaxStatusDefault,
+                Permission.TaxRecordDefault,
                 Permission.EmployeeDefault,
-                Permission.ApprovalLevelDefault
+                Permission.ApprovalLevelDefault,
+                Permission.TaxRecordDefault
             });
 
             var defaultRole = new CustomRole

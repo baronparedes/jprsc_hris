@@ -3,6 +3,7 @@ using MediatR;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.JobTitles
@@ -28,7 +29,7 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
                 _db = db;
             }
 
-            public async Task<CommandResult> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
                 var jobTitle = await _db.JobTitles.SingleAsync(r => r.Id == command.JobTitleId);
                 jobTitle.DeletedOn = DateTime.UtcNow;

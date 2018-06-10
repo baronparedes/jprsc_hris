@@ -27,7 +27,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
 
         public class QueryHandler : IRequestHandler<Query, Command>
         {
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 return new Command
                 {
@@ -84,7 +84,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var user = await _userManager.FindByNameAsync(command.Email);
                 if (user == null)

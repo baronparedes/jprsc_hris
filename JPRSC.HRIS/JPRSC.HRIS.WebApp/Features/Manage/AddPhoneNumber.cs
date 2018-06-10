@@ -5,6 +5,7 @@ using JPRSC.HRIS.Infrastructure.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Web;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Manage
 {
@@ -35,7 +36,7 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
                 _userManager = userManager;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 // Generate the token and send it
                 var code = await _userManager.GenerateChangePhoneNumberTokenAsync(HttpContext.Current.User.Identity.GetUserId(), command.Number);

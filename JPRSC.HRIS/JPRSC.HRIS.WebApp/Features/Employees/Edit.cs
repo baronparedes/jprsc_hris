@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -72,7 +73,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 var command = await _db.Employees.Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
 
@@ -173,7 +174,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var employee = await _db.Employees.SingleAsync(r => r.Id == command.Id);
 

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.JobTitles
@@ -47,7 +48,7 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
                 _db = db;
             }
 
-            public async Task<QueryResult> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var dbQuery = _db
                     .JobTitles

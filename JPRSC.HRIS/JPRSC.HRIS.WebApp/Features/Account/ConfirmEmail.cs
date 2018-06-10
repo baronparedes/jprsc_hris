@@ -3,6 +3,7 @@ using MediatR;
 using JPRSC.HRIS.Infrastructure.Identity;
 using System;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Account
 {
@@ -35,7 +36,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var confirmEmailResult = await _userManager.ConfirmEmailAsync(command.UserId, command.Code);
                 if (!confirmEmailResult.Succeeded)

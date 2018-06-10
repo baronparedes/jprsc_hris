@@ -5,6 +5,7 @@ using JPRSC.HRIS.Infrastructure.Identity;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Account
 {
@@ -26,7 +27,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 // Require that the user has already logged in via username/password or external login
                 if (!await _signInManager.HasBeenVerifiedAsync())
@@ -74,7 +75,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task<SignInStatus> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<SignInStatus> Handle(Command command, CancellationToken token)
             {
                 // The following code protects for brute force attacks against the two factor codes.
                 // If a user enters incorrect codes for a specified amount of time then the user account

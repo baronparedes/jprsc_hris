@@ -104,6 +104,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201712190413596_Initial.Designer.cs">
       <DependentUpon>201712190413596_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806100339282_AddTaxRecord.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806100339282_AddTaxRecord.Designer.cs">
+      <DependentUpon>201806100339282_AddTaxRecord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\ClientSeed.cs" />
@@ -139,6 +143,8 @@
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\JobTitle.cs" />
     <Compile Include="Models\Religion.cs" />
+    <Compile Include="Models\TaxRange.cs" />
+    <Compile Include="Models\TaxRecord.cs" />
     <Compile Include="Models\TaxStatus.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\LogEntry.cs" />
@@ -153,6 +159,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201712190413596_Initial.resx">
       <DependentUpon>201712190413596_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806100339282_AddTaxRecord.resx">
+      <DependentUpon>201806100339282_AddTaxRecord.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

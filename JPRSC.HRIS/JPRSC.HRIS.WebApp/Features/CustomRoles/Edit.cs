@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -36,7 +37,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 var command = await _db
                     .CustomRoles
@@ -77,7 +78,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var customRole = await _db.CustomRoles.SingleAsync(cr => cr.Id == command.Id);
 

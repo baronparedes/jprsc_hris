@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Account
@@ -20,7 +21,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _authenticationManager = authenticationManager;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 await Task.Factory.StartNew(() =>
                 {

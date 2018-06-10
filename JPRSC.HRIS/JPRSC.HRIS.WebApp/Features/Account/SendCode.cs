@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Threading;
 
 namespace JPRSC.HRIS.WebApp.Features.Account
 {
@@ -27,7 +28,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _userManager = userManager;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 var userId = await _signInManager.GetVerifiedUserIdAsync();
                 if (userId == null)
@@ -64,7 +65,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task<VerifyCode.Query> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<VerifyCode.Query> Handle(Command command, CancellationToken token)
             {
                 // Generate the token and send it
                 if (!await _signInManager.SendTwoFactorCodeAsync(command.SelectedProvider))

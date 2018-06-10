@@ -6,6 +6,7 @@ using MediatR;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Accounts
@@ -35,7 +36,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 return await _db.Users.Where(u => u.Id == query.UserId).ProjectToSingleAsync<Command>();
             }
@@ -80,7 +81,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                 _signInManager = signInManager;
             }
 
-            public async Task<CommandResult> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
                 var changePasswordResult = await _userManager.ChangePasswordAsync(command.Id, command.OldPassword, command.NewPassword);
                 if (!changePasswordResult.Succeeded)

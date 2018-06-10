@@ -69,7 +69,7 @@ namespace JPRSC.HRIS.WebApp.Features.Account
                 _signInManager = signInManager;
             }
 
-            public async Task<SignInStatus> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<SignInStatus> Handle(Command command, CancellationToken token)
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, change to shouldLockout: true

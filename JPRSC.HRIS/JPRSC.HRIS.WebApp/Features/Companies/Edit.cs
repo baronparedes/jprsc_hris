@@ -5,6 +5,7 @@ using MediatR;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Companies
@@ -46,7 +47,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 return await _db.Companies.Where(cp => cp.Id == query.CompanyId && !cp.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
@@ -155,7 +156,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var Company = await _db.Companies.SingleAsync(cp => cp.Id == command.Id);
 

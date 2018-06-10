@@ -5,6 +5,7 @@ using MediatR;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Religions
@@ -32,7 +33,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
                 _db = db;
             }
 
-            public async Task<Command> Handle(Query query, System.Threading.CancellationToken token)
+            public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 return await _db.Religions.Where(r => r.Id == query.ReligionId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
             }
@@ -56,7 +57,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command command, System.Threading.CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var religion = await _db.Religions.SingleAsync(r => r.Id == command.Id);
 
