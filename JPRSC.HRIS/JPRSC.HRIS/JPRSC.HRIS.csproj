@@ -124,6 +124,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806100931081_AddBank.Designer.cs">
       <DependentUpon>201806100931081_AddBank.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806101257322_AddPayPercentage.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806101257322_AddPayPercentage.Designer.cs">
+      <DependentUpon>201806101257322_AddPayPercentage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -135,6 +139,7 @@
     <Compile Include="Infrastructure\Data\Seed\EmployeeSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\JobTitleSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\PagIbigRecordSeed.cs" />
+    <Compile Include="Infrastructure\Data\Seed\PayPercentageSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\ReligionSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\TaxStatusSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
@@ -162,6 +167,7 @@
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\JobTitle.cs" />
     <Compile Include="Models\PagIbigRecord.cs" />
+    <Compile Include="Models\PayPercentage.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\SystemSettings.cs" />
     <Compile Include="Models\TaxRange.cs" />
@@ -195,6 +201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806100931081_AddBank.resx">
       <DependentUpon>201806100931081_AddBank.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806101257322_AddPayPercentage.resx">
+      <DependentUpon>201806101257322_AddPayPercentage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

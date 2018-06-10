@@ -36,6 +36,7 @@
             SeedPagIbigRecords(context);
             SeedSystemSettings(context);
             SeedBanks(context);
+            SeedPayPercentages(context);
             context.SaveChanges();
 
             SeedUsers(context);
@@ -112,6 +113,14 @@
             context.PagIbigRecords.AddOrUpdate(pir => pir.Id, PagIbigRecordSeed.PagIbigRecords);
         }
 
+        private void SeedPayPercentages(ApplicationDbContext context)
+        {
+            var existingPayPercentages = context.PayPercentages.ToList();
+            if (existingPayPercentages.Any()) return;
+
+            context.PayPercentages.AddRange(PayPercentageSeed.PayPercentages);
+        }
+
         private static void SeedReligions(ApplicationDbContext context)
         {
             context.Religions.AddOrUpdate(r => r.Id, ReligionSeed.Religions);
@@ -119,16 +128,16 @@
 
         private void SeedSystemSettings(ApplicationDbContext context)
         {
-            if (!context.SystemSettings.Any())
-            {
-                var systemSettings = new SystemSettings
-                {
-                    PHICRate = 2.75,
-                    SSSRate = 2.75
-                };
+            var existingSystemSettings = context.SystemSettings.ToList();
+            if (existingSystemSettings.Any()) return;
 
-                context.SystemSettings.Add(systemSettings);
-            }
+            var systemSettings = new SystemSettings
+            {
+                PHICRate = 2.75,
+                SSSRate = 2.75
+            };
+
+            context.SystemSettings.Add(systemSettings);
         }
 
         private static void SeedTaxStatuses(ApplicationDbContext context)

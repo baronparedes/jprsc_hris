@@ -63,6 +63,9 @@ namespace JPRSC.HRIS.Models
 
         // Bank
         [Display(Name = "Banks")]
-        BankDefault = 1500
+        BankDefault = 1500,
+
+        [Display(Name = "Pay Percentages")]
+        PayPercentageDefault = 1600
     }
 }

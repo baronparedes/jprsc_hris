@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "Pay Percentages";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Pay Percentages</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Pay Percentages
+        </h1>
+        @Html.RenderSuccessNotification()
+        <div class="row" ng-controller="PayPercentageIndexCtrl as vm">
+            <div class="col-sm-12">
+                <div class="note note-info" ng-show="!vm.payPercentages.length">
+                    <p>No pay percentages found.</p>
+                </div>
+                <div class="portlet light bordered" ng-show="vm.payPercentages.length">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-user font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Pay Percentages</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Percentage</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="payPercentage in vm.payPercentages track by payPercentage.id">
+                                        <td>
+                                            <span ng-show="!payPercentage.isEditing">{{payPercentage.name}}</span>
+                                            <input ng-show="payPercentage.isEditing" class="form-control input-sm" ng-model="payPercentage.copy.name" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!payPercentage.isEditing">{{payPercentage.percentage}}</span>
+                                            <input ng-show="payPercentage.isEditing" class="form-control input-sm" ng-model="payPercentage.copy.percentage" />
+                                        </td>
+                                        <td>
+                                            <a ng-show="!payPercentage.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.editPayPercentageClicked(payPercentage)">Edit</a>
+                                            <a ng-show="payPercentage.isEditing" href="" class="btn btn-default btn-sm" ng-click="vm.cancelEditPayPercentageClicked(payPercentage)">Cancel</a>
+                                            <a ng-show="payPercentage.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.saveEditPayPercentageClicked(payPercentage)">Save</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/payPercentages")
+}

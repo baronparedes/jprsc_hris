@@ -20,6 +20,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddJobTitleBundles(bundles);
             AddLoginBundles(bundles);
             AddPagIbigRecordBundles(bundles);
+            AddPayPercentageBundles(bundles);
             AddReligionBundles(bundles);
             AddTaxRecordBundles(bundles);
             AddTaxStatusBundles(bundles);
@@ -170,6 +171,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/pagIbigRecords/add.js",
                 "~/wwwroot/scripts/pagIbigRecords/edit.js",
                 "~/wwwroot/scripts/pagIbigRecords/index.js");
+        }
+
+        private static void AddPayPercentageBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/payPercentages",
+                "~/wwwroot/scripts/payPercentages/add.js",
+                "~/wwwroot/scripts/payPercentages/edit.js",
+                "~/wwwroot/scripts/payPercentages/index.js");
         }
 
         private static void AddReligionBundles(BundleCollection bundles)

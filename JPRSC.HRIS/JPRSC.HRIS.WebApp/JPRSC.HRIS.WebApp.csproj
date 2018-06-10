@@ -306,6 +306,13 @@
     <Compile Include="Features\PagIbigRecords\Search.cs" />
     <Compile Include="Features\PagIbigRecords\_Controller.cs" />
     <Compile Include="Features\PagIbigRecords\_MappingProfile.cs" />
+    <Compile Include="Features\PayPercentages\Add.cs" />
+    <Compile Include="Features\PayPercentages\Delete.cs" />
+    <Compile Include="Features\PayPercentages\Edit.cs" />
+    <Compile Include="Features\PayPercentages\Index.cs" />
+    <Compile Include="Features\PayPercentages\Search.cs" />
+    <Compile Include="Features\PayPercentages\_Controller.cs" />
+    <Compile Include="Features\PayPercentages\_MappingProfile.cs" />
     <Compile Include="Features\Religions\Add.cs" />
     <Compile Include="Features\Religions\Delete.cs" />
     <Compile Include="Features\Religions\Edit.cs" />
@@ -5877,6 +5884,9 @@
     <Content Include="wwwroot\scripts\pagIbigRecords\add.js" />
     <Content Include="wwwroot\scripts\pagIbigRecords\edit.js" />
     <Content Include="wwwroot\scripts\pagIbigRecords\index.js" />
+    <Content Include="wwwroot\scripts\payPercentages\add.js" />
+    <Content Include="wwwroot\scripts\payPercentages\edit.js" />
+    <Content Include="wwwroot\scripts\payPercentages\index.js" />
     <Content Include="wwwroot\scripts\religions\add.js" />
     <Content Include="wwwroot\scripts\religions\edit.js" />
     <Content Include="wwwroot\scripts\religions\index.js" />
@@ -6802,6 +6812,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Banks\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PayPercentages\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PayPercentages\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PayPercentages\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
