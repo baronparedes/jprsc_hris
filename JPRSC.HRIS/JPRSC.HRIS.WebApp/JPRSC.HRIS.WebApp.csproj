@@ -241,6 +241,13 @@
     <Compile Include="Features\ApprovalLevels\Search.cs" />
     <Compile Include="Features\ApprovalLevels\_Controller.cs" />
     <Compile Include="Features\ApprovalLevels\_MappingProfile.cs" />
+    <Compile Include="Features\Banks\Add.cs" />
+    <Compile Include="Features\Banks\Delete.cs" />
+    <Compile Include="Features\Banks\Edit.cs" />
+    <Compile Include="Features\Banks\Index.cs" />
+    <Compile Include="Features\Banks\Search.cs" />
+    <Compile Include="Features\Banks\_Controller.cs" />
+    <Compile Include="Features\Banks\_MappingProfile.cs" />
     <Compile Include="Features\Clients\Add.cs" />
     <Compile Include="Features\Clients\Delete.cs" />
     <Compile Include="Features\Clients\Edit.cs" />
@@ -5843,6 +5850,9 @@
     <Content Include="wwwroot\scripts\approvalLevels\add.js" />
     <Content Include="wwwroot\scripts\approvalLevels\edit.js" />
     <Content Include="wwwroot\scripts\approvalLevels\index.js" />
+    <Content Include="wwwroot\scripts\banks\add.js" />
+    <Content Include="wwwroot\scripts\banks\edit.js" />
+    <Content Include="wwwroot\scripts\banks\index.js" />
     <Content Include="wwwroot\scripts\clients\add.js" />
     <Content Include="wwwroot\scripts\clients\edit.js" />
     <Content Include="wwwroot\scripts\clients\index.js" />
@@ -6783,6 +6793,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PagIbigRecords\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Banks\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Banks\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Banks\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

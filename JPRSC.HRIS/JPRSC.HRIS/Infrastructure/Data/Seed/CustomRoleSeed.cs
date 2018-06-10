@@ -34,7 +34,8 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
                 Permission.EmployeeDefault,
                 Permission.ApprovalLevelDefault,
                 Permission.TaxRecordDefault,
-                Permission.PagIbigRecordDefault
+                Permission.PagIbigRecordDefault,
+                Permission.BankDefault
             });
 
             var defaultRole = new CustomRole

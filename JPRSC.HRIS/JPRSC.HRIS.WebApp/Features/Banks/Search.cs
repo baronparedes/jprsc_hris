@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JPRSC.HRIS.WebApp.Features.PagIbigRecords
+namespace JPRSC.HRIS.WebApp.Features.Banks
 {
     public class Search
     {
@@ -30,9 +30,9 @@ namespace JPRSC.HRIS.WebApp.Features.PagIbigRecords
 
         public class QueryResult
         {
-            public IEnumerable<PagIbigRecord> PagIbigRecords { get; set; } = new List<PagIbigRecord>();
+            public IEnumerable<Bank> Banks { get; set; } = new List<Bank>();
 
-            public class PagIbigRecord
+            public class Bank
             {
                 public string Code { get; set; }
                 public string Description { get; set; }
@@ -53,25 +53,25 @@ namespace JPRSC.HRIS.WebApp.Features.PagIbigRecords
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var dbQuery = _db
-                    .PagIbigRecords
-                    .Where(pir => !pir.DeletedOn.HasValue);
+                    .Banks
+                    .Where(b => !b.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(pir => DbFunctions.Like(pir.Code, query.SearchLikeTerm) ||
-                            DbFunctions.Like(pir.Description, query.SearchLikeTerm) ||
-                            DbFunctions.Like(pir.Name, query.SearchLikeTerm));
+                        .Where(b => DbFunctions.Like(b.Code, query.SearchLikeTerm) ||
+                            DbFunctions.Like(b.Description, query.SearchLikeTerm) ||
+                            DbFunctions.Like(b.Name, query.SearchLikeTerm));
                 }
 
-                var pagIbigRecords = await dbQuery
+                var banks = await dbQuery
                     .OrderBy(r => r.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
-                    .ProjectToListAsync<QueryResult.PagIbigRecord>();
+                    .ProjectToListAsync<QueryResult.Bank>();
 
                 return new QueryResult
                 {
-                    PagIbigRecords = pagIbigRecords
+                    Banks = banks
                 };
             }
         }

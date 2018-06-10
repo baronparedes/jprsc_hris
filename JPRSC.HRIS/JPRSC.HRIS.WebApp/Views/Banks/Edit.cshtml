@@ -1,0 +1,63 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Banks.Edit.Command
+
+@{
+    ViewBag.Title = "Edit Bank " + Model.Code;
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Edit Bank</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Edit Bank @Model.Code
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-user font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Edit Bank @Model.Code</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form" ng-controller="EditBankCtrl as vm">
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.editBankSubmit($event)">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("Code")
+                                @Html.TextBoxHorizontalFormGroup("Name")
+                                @Html.TextBoxHorizontalFormGroup("Description")
+                                @Html.TextBoxHorizontalFormGroup("Address1", "Address")
+                                @Html.TextBoxHorizontalFormGroup("Address2", ">>")
+                                @Html.TextBoxHorizontalFormGroup("ContactPerson")
+                                @Html.TextBoxHorizontalFormGroup("Position")
+                                @Html.TextBoxHorizontalFormGroup("AccountNumber", "Account No.")
+                                @Html.TextBoxHorizontalFormGroup("BranchCode")
+                                @Html.TextBoxHorizontalFormGroup("CompanyCode")
+                                @Html.TextBoxHorizontalFormGroup("BatchNumber", "Batch No.")
+                                @Html.TextBoxHorizontalFormGroup("OtherBankInfo")
+                            </div>
+                            <div class="form-actions right">
+                                <a href="@Url.Action("Index", "Banks")" class="btn default">Cancel</a>
+                                <button type="submit" class="btn green">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/banks")
+}

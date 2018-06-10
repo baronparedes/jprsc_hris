@@ -68,13 +68,13 @@ namespace JPRSC.HRIS.WebApp.Features.TaxRecords
                 var dbQuery = _db
                     .TaxRecords
                     .Include(tr => tr.TaxRanges)
-                    .Where(r => !r.DeletedOn.HasValue);
+                    .Where(tr => !tr.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(r => DbFunctions.Like(r.Name, query.SearchLikeTerm) ||
-                            DbFunctions.Like(r.Code, query.SearchLikeTerm));
+                        .Where(tr => DbFunctions.Like(tr.Name, query.SearchLikeTerm) ||
+                            DbFunctions.Like(tr.Code, query.SearchLikeTerm));
                 }
 
                 var taxRecords = await dbQuery

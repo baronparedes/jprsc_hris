@@ -59,6 +59,10 @@ namespace JPRSC.HRIS.Models
 
         // Pag Ibig Record
         [Display(Name = "Pag Ibig Records")]
-        PagIbigRecordDefault = 1400
+        PagIbigRecordDefault = 1400,
+
+        // Bank
+        [Display(Name = "Banks")]
+        BankDefault = 1500
     }
 }

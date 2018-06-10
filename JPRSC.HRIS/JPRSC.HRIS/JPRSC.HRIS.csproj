@@ -120,8 +120,13 @@
     <Compile Include="Infrastructure\Data\Migrations\201806100834346_AddPagIbigRecord.Designer.cs">
       <DependentUpon>201806100834346_AddPagIbigRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806100931081_AddBank.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806100931081_AddBank.Designer.cs">
+      <DependentUpon>201806100931081_AddBank.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
+    <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\ClientSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\CompanySeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\CustomRoleSeed.cs" />
@@ -144,6 +149,7 @@
     <Compile Include="Infrastructure\Sms\NoopSmsService.cs" />
     <Compile Include="Models\AccountType.cs" />
     <Compile Include="Models\ApprovalLevel.cs" />
+    <Compile Include="Models\Bank.cs" />
     <Compile Include="Models\Citizenship.cs" />
     <Compile Include="Models\CivilStatus.cs" />
     <Compile Include="Models\Client.cs" />
@@ -186,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806100834346_AddPagIbigRecord.resx">
       <DependentUpon>201806100834346_AddPagIbigRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806100931081_AddBank.resx">
+      <DependentUpon>201806100931081_AddBank.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
