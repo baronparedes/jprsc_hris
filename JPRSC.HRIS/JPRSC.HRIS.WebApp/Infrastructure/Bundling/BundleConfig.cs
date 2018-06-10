@@ -18,6 +18,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddEmployeeBundles(bundles);
             AddJobTitleBundles(bundles);
             AddLoginBundles(bundles);
+            AddPagIbigRecordBundles(bundles);
             AddReligionBundles(bundles);
             AddTaxRecordBundles(bundles);
             AddTaxStatusBundles(bundles);
@@ -152,6 +153,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             bundles.AddScriptBundle("~/scriptbundles/account-login",
                 "~/wwwroot/metronic/pages/scripts/login.min.js",
                 "~/wwwroot/scripts/account/login.js");
+        }
+
+        private static void AddPagIbigRecordBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/pagIbigRecords",
+                "~/wwwroot/scripts/pagIbigRecords/add.js",
+                "~/wwwroot/scripts/pagIbigRecords/edit.js",
+                "~/wwwroot/scripts/pagIbigRecords/index.js");
         }
 
         private static void AddReligionBundles(BundleCollection bundles)

@@ -33,6 +33,7 @@
             SeedClients(context);
             SeedCustomRoles(context);
             SeedEarningDeductions(context);
+            SeedPagIbigRecords(context);
             SeedSystemSettings(context);
             context.SaveChanges();
 
@@ -112,6 +113,11 @@
         private static void SeedJobTitles(ApplicationDbContext context)
         {
             context.JobTitles.AddOrUpdate(jt => jt.Id, JobTitleSeed.JobTitles);
+        }
+
+        private void SeedPagIbigRecords(ApplicationDbContext context)
+        {
+            context.PagIbigRecords.AddOrUpdate(pir => pir.Id, PagIbigRecordSeed.PagIbigRecords);
         }
 
         private static void SeedReligions(ApplicationDbContext context)

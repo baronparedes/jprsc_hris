@@ -1,0 +1,58 @@
+﻿@model JPRSC.HRIS.WebApp.Features.PagIbigRecords.Add.Command
+
+@{
+    ViewBag.Title = "Add a Pag Ibig Record";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Add Pag Ibig Record</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Add Pag Ibig Record
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-plus font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Add Pag Ibig Record</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form" ng-controller="AddPagIbigRecordCtrl as vm">
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.addPagIbigRecordSubmit($event)">
+                            @Html.AntiForgeryToken()
+                            <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("Code")
+                                @Html.TextBoxHorizontalFormGroup("Name")
+                                @Html.TextBoxHorizontalFormGroup("Description")
+                                @Html.TextBoxHorizontalFormGroup("EmployeePercentage")
+                                @Html.TextBoxHorizontalFormGroup("EmployerPercentage")
+                                @Html.TextBoxHorizontalFormGroup("EmployeeAmount")
+                                @Html.TextBoxHorizontalFormGroup("EmployerAmount")
+                                @Html.CheckboxHorizontalFormGroup("ApplyToSalary")
+                            </div>
+                            <div class="form-actions right">
+                                <a href="@Url.Action("Index", "PagIbigRecords")" class="btn default">Cancel</a>
+                                <button type="submit" class="btn green">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/pagIbigRecords")    
+}

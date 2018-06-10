@@ -292,6 +292,13 @@
     <Compile Include="Features\JobTitles\_MappingProfile.cs" />
     <Compile Include="Features\Manage\AddPhoneNumber.cs" />
     <Compile Include="Features\Manage\SettPassword.cs" />
+    <Compile Include="Features\PagIbigRecords\Add.cs" />
+    <Compile Include="Features\PagIbigRecords\Delete.cs" />
+    <Compile Include="Features\PagIbigRecords\Edit.cs" />
+    <Compile Include="Features\PagIbigRecords\Index.cs" />
+    <Compile Include="Features\PagIbigRecords\Search.cs" />
+    <Compile Include="Features\PagIbigRecords\_Controller.cs" />
+    <Compile Include="Features\PagIbigRecords\_MappingProfile.cs" />
     <Compile Include="Features\Religions\Add.cs" />
     <Compile Include="Features\Religions\Delete.cs" />
     <Compile Include="Features\Religions\Edit.cs" />
@@ -5857,6 +5864,9 @@
     <Content Include="wwwroot\scripts\jobTitles\add.js" />
     <Content Include="wwwroot\scripts\jobTitles\edit.js" />
     <Content Include="wwwroot\scripts\jobTitles\index.js" />
+    <Content Include="wwwroot\scripts\pagIbigRecords\add.js" />
+    <Content Include="wwwroot\scripts\pagIbigRecords\edit.js" />
+    <Content Include="wwwroot\scripts\pagIbigRecords\index.js" />
     <Content Include="wwwroot\scripts\religions\add.js" />
     <Content Include="wwwroot\scripts\religions\edit.js" />
     <Content Include="wwwroot\scripts\religions\index.js" />
@@ -6764,6 +6774,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TaxRecords\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PagIbigRecords\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PagIbigRecords\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PagIbigRecords\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
