@@ -53,9 +53,9 @@ namespace JPRSC.HRIS.Models
         [Display(Name = "Approval Levels")]
         ApprovalLevelDefault = 1200,
 
-        // Tax Record
-        [Display(Name = "Tax Records")]
-        TaxRecordDefault = 1300,
+        //// Tax Record
+        //[Display(Name = "Tax Records")]
+        //TaxRecordDefault = 1300,
 
         // Pag Ibig Record
         [Display(Name = "Pag Ibig Records")]

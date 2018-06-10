@@ -11,8 +11,8 @@ namespace JPRSC.HRIS.Models
         public DateTime? ModifiedOn { get; set; }
         public double? Percentage { get; set; }
         public decimal? Plus { get; set; }
-        public TaxRecord TaxRecord { get; set; }
-        public int? TaxRecordId { get; set; }
+        public TaxStatus TaxStatus { get; set; }
+        public int? TaxStatusId { get; set; }
         public decimal? To { get; set; }
     }
 }

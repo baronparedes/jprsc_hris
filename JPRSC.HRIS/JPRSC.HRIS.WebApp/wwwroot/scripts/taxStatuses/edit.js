@@ -1,12 +1,29 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('EditTaxStatusCtrl', ['$http', '$window', EditTaxStatusCtrl]);
+        .controller('EditTaxStatusCtrl', ['$http', '$timeout', '$window', EditTaxStatusCtrl]);
 
-    function EditTaxStatusCtrl($http, $window) {
+    function EditTaxStatusCtrl($http, $timeout, $window) {
         var vm = this;
+        vm.addTaxRangeClicked = addTaxRangeClicked;
+        vm.deleteTaxRangeClicked = deleteTaxRangeClicked;
         vm.editTaxStatusSubmit = editTaxStatusSubmit;
+        vm.getTaxRangeFieldName = getTaxRangeFieldName;
+        vm.taxRanges = [];
         vm.validationErrors = {};
+
+        $timeout(function () {
+            var taxStatus = vm.serverModel;
+            vm.taxRanges = taxStatus.taxRanges;
+        });
+
+        function addTaxRangeClicked() {
+            vm.taxRanges.push({});
+        };
+
+        function deleteTaxRangeClicked(index) {
+            vm.taxRanges.splice(index, 1);
+        };
 
         function editTaxStatusSubmit(e) {
             var action = '/TaxStatuses/Edit';
@@ -20,6 +37,10 @@
                     vm.validationErrors = response.data;
                 }
             });
+        };
+
+        function getTaxRangeFieldName(index, fieldName) {
+            return `TaxRanges[${index}].${fieldName}`;
         };
     };
 }());

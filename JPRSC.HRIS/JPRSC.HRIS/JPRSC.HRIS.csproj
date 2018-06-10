@@ -128,6 +128,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806101257322_AddPayPercentage.Designer.cs">
       <DependentUpon>201806101257322_AddPayPercentage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806101607315_MergeTaxRecordIntoTaxStatus.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806101607315_MergeTaxRecordIntoTaxStatus.Designer.cs">
+      <DependentUpon>201806101607315_MergeTaxRecordIntoTaxStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -171,7 +175,6 @@
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\SystemSettings.cs" />
     <Compile Include="Models\TaxRange.cs" />
-    <Compile Include="Models\TaxRecord.cs" />
     <Compile Include="Models\TaxStatus.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\LogEntry.cs" />
@@ -204,6 +207,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806101257322_AddPayPercentage.resx">
       <DependentUpon>201806101257322_AddPayPercentage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806101607315_MergeTaxRecordIntoTaxStatus.resx">
+      <DependentUpon>201806101607315_MergeTaxRecordIntoTaxStatus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

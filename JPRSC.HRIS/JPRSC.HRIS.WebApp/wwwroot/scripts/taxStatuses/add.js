@@ -5,8 +5,16 @@
 
     function AddTaxStatusCtrl($http, $window) {
         var vm = this;
+        vm.addTaxRangeClicked = addTaxRangeClicked;
         vm.addTaxStatusSubmit = addTaxStatusSubmit;
+        vm.deleteTaxRangeClicked = deleteTaxRangeClicked;
+        vm.getTaxRangeFieldName = getTaxRangeFieldName;
+        vm.taxRanges = [];
         vm.validationErrors = {};
+
+        function addTaxRangeClicked() {
+            vm.taxRanges.push({});
+        };
 
         function addTaxStatusSubmit(e) {
             var action = '/TaxStatuses/Add';
@@ -20,6 +28,14 @@
                     vm.validationErrors = response.data;
                 }
             });
+        };
+
+        function deleteTaxRangeClicked(index) {
+            vm.taxRanges.splice(index, 1);
+        };
+
+        function getTaxRangeFieldName(index, fieldName) {
+            return `TaxRanges[${index}].${fieldName}`;
         };
     };
 }());

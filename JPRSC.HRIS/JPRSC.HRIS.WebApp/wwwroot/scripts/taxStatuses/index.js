@@ -5,6 +5,7 @@
 
     function TaxStatusIndexCtrl($http, $scope) {
         var vm = this;
+        vm.currencySymbol = 'P';
         vm.taxStatuses = [];
         vm.searchClicked = searchClicked;
         vm.searchModel = {};

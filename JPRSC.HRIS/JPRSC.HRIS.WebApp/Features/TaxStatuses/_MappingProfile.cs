@@ -9,6 +9,8 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
         {
             CreateMap<TaxStatus, Search.QueryResult.TaxStatus>();
             CreateMap<TaxStatus, Edit.Command>();
+            CreateMap<TaxRange, Edit.Command.TaxRange>();
+            CreateMap<TaxRange, Search.QueryResult.TaxRange>();
         }
     }
 }

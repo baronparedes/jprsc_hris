@@ -26,7 +26,6 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public IList<SelectListItem> ClientsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
-            public IList<SelectListItem> TaxRecordsList { get; set; } = new List<SelectListItem>();
 
             public string EmployeeCode { get; set; }
             public int Id { get; set; }
@@ -56,8 +55,6 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string Position { get; set; }
             public Department Department { get; set; }
             public int? DepartmentId { get; set; }
-            public TaxRecord TaxRecord { get; set; }
-            public int? TaxRecordId { get; set; }
             public TaxStatus TaxStatus { get; set; }
             public int? TaxStatusId { get; set; }
             public string EmployeeStatus { get; set; }
@@ -84,7 +81,6 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 command.ClientsList = await GetClientsList(query);
                 command.DepartmentsList = await GetDepartmentsList(query);
                 command.TaxStatusesList = await GetTaxStatusesList(query);
-                command.TaxRecordsList = await GetTaxRecordsList(query);
 
                 return command;
             }
@@ -142,24 +138,9 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 return taxStatuses
                     .Select(ts => new SelectListItem
                     {
-                        Text = ts.Name,
+                        Text = ts.Code,
                         Value = ts.Id.ToString(),
                         Selected = employee.TaxStatusId == ts.Id
-                    })
-                    .ToList();
-            }
-
-            private async Task<IList<SelectListItem>> GetTaxRecordsList(Query query)
-            {
-                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
-                var taxRecords = await _db.TaxRecords.Where(ts => !ts.DeletedOn.HasValue).ToListAsync();
-
-                return taxRecords
-                    .Select(tr => new SelectListItem
-                    {
-                        Text = tr.Code,
-                        Value = tr.Id.ToString(),
-                        Selected = employee.TaxRecordId == tr.Id
                     })
                     .ToList();
             }

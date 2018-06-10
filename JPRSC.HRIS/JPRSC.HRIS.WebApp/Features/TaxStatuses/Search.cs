@@ -2,6 +2,7 @@
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -34,8 +35,22 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
 
             public class TaxStatus
             {
+                public string Code { get; set; }
+                public double? Exemption { get; set; }
                 public string Name { get; set; }
                 public int Id { get; set; }
+                public IList<TaxRange> TaxRanges { get; set; } = new List<TaxRange>();
+            }
+
+            public class TaxRange
+            {
+                [JsonIgnore]
+                public DateTime? DeletedOn { get; set; }
+                public decimal? From { get; set; }
+                public int Id { get; set; }
+                public double? Percentage { get; set; }
+                public decimal? Plus { get; set; }
+                public decimal? To { get; set; }
             }
         }
 
@@ -52,18 +67,25 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
             {
                 var dbQuery = _db
                     .TaxStatuses
-                    .Where(r => !r.DeletedOn.HasValue);
+                    .Include(tr => tr.TaxRanges)
+                    .Where(tr => !tr.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(r => DbFunctions.Like(r.Name, query.SearchLikeTerm));
+                        .Where(tr => DbFunctions.Like(tr.Name, query.SearchLikeTerm) ||
+                            DbFunctions.Like(tr.Code, query.SearchLikeTerm));
                 }
 
                 var taxStatuses = await dbQuery
                     .OrderBy(r => r.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.TaxStatus>();
+
+                foreach (var taxStatus in taxStatuses)
+                {
+                    taxStatus.TaxRanges = taxStatus.TaxRanges.Where(tr => !tr.DeletedOn.HasValue).ToList();
+                }
 
                 return new QueryResult
                 {

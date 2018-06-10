@@ -320,13 +320,6 @@
     <Compile Include="Features\Religions\Search.cs" />
     <Compile Include="Features\Religions\_Controller.cs" />
     <Compile Include="Features\Religions\_MappingProfile.cs" />
-    <Compile Include="Features\TaxRecords\Add.cs" />
-    <Compile Include="Features\TaxRecords\Delete.cs" />
-    <Compile Include="Features\TaxRecords\Edit.cs" />
-    <Compile Include="Features\TaxRecords\Index.cs" />
-    <Compile Include="Features\TaxRecords\Search.cs" />
-    <Compile Include="Features\TaxRecords\_Controller.cs" />
-    <Compile Include="Features\TaxRecords\_MappingProfile.cs" />
     <Compile Include="Features\TaxStatuses\Add.cs" />
     <Compile Include="Features\TaxStatuses\Delete.cs" />
     <Compile Include="Features\TaxStatuses\Edit.cs" />
@@ -5890,9 +5883,6 @@
     <Content Include="wwwroot\scripts\religions\add.js" />
     <Content Include="wwwroot\scripts\religions\edit.js" />
     <Content Include="wwwroot\scripts\religions\index.js" />
-    <Content Include="wwwroot\scripts\taxRecords\add.js" />
-    <Content Include="wwwroot\scripts\taxRecords\edit.js" />
-    <Content Include="wwwroot\scripts\taxRecords\index.js" />
     <Content Include="wwwroot\scripts\taxStatuses\add.js" />
     <Content Include="wwwroot\scripts\taxStatuses\edit.js" />
     <Content Include="wwwroot\scripts\taxStatuses\index.js" />
@@ -6785,15 +6775,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ApprovalLevels\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\TaxRecords\Add.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\TaxRecords\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\TaxRecords\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PagIbigRecords\Add.cshtml" />
