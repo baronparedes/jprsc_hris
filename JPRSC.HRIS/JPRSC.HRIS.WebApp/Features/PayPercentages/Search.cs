@@ -58,6 +58,8 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
+                    dbQuery = dbQuery
+                        .Where(tr => DbFunctions.Like(tr.Name, query.SearchLikeTerm));
                 }
 
                 var payPercentages = await dbQuery

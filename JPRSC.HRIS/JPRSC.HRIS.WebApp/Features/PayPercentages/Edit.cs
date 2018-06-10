@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
-using JPRSC.HRIS.Models;
 using MediatR;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading;
@@ -46,6 +44,9 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
             public CommandValidator()
             {
                 RuleFor(c => c.Name)
+                    .NotEmpty();
+
+                RuleFor(c => c.Percentage)
                     .NotEmpty();
             }
         }

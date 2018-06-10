@@ -5,16 +5,8 @@
 
     function AddPayPercentageCtrl($http, $window) {
         var vm = this;
-        vm.addTaxRangeClicked = addTaxRangeClicked;
         vm.addPayPercentageSubmit = addPayPercentageSubmit;
-        vm.deleteTaxRangeClicked = deleteTaxRangeClicked;
-        vm.getTaxRangeFieldName = getTaxRangeFieldName;
-        vm.taxRanges = [];
         vm.validationErrors = {};
-
-        function addTaxRangeClicked() {
-            vm.taxRanges.push({});
-        };
 
         function addPayPercentageSubmit(e) {
             var action = '/PayPercentages/Add';
@@ -28,14 +20,6 @@
                     vm.validationErrors = response.data;
                 }
             });
-        };
-
-        function deleteTaxRangeClicked(index) {
-            vm.taxRanges.splice(index, 1);
-        };
-
-        function getTaxRangeFieldName(index, fieldName) {
-            return `TaxRanges[${index}].${fieldName}`;
         };
     };
 }());

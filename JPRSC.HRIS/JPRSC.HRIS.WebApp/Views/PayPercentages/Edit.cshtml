@@ -23,11 +23,11 @@
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
-                            <i class="fa fa-user font-red-sunglo"></i>
+                            <i class="fa fa-percent font-red-sunglo"></i>
                             <span class="caption-subject font-red-sunglo bold uppercase">Edit Pay Percentage @Model.Name</span>
                         </div>
                     </div>
-                    <div class="portlet-body form" ng-controller="EditPayPercentageCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
+                    <div class="portlet-body form" ng-controller="EditPayPercentageCtrl as vm">
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.editPayPercentageSubmit($event)">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(m => m.Id)

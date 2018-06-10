@@ -1,30 +1,12 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('EditPayPercentageCtrl', ['$http', '$timeout', '$window', EditPayPercentageCtrl]);
+        .controller('EditPayPercentageCtrl', ['$http', '$window', EditPayPercentageCtrl]);
 
-    function EditPayPercentageCtrl($http, $timeout, $window) {
+    function EditPayPercentageCtrl($http, $window) {
         var vm = this;
-        vm.addTaxRangeClicked = addTaxRangeClicked;
-        vm.deleteTaxRangeClicked = deleteTaxRangeClicked;
         vm.editPayPercentageSubmit = editPayPercentageSubmit;
-        vm.getTaxRangeFieldName = getTaxRangeFieldName;
-        vm.taxRanges = [];
         vm.validationErrors = {};
-
-        $timeout(function () {
-            var payPercentage = vm.serverModel;
-            vm.taxRanges = payPercentage.taxRanges;
-            console.log(vm.taxRanges);
-        });
-
-        function addTaxRangeClicked() {
-            vm.taxRanges.push({});
-        };
-
-        function deleteTaxRangeClicked(index) {
-            vm.taxRanges.splice(index, 1);
-        };
 
         function editPayPercentageSubmit(e) {
             var action = '/PayPercentages/Edit';
@@ -38,10 +20,6 @@
                     vm.validationErrors = response.data;
                 }
             });
-        };
-
-        function getTaxRangeFieldName(index, fieldName) {
-            return `TaxRanges[${index}].${fieldName}`;
         };
     };
 }());

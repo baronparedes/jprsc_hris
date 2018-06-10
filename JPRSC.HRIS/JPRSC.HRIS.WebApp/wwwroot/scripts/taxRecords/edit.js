@@ -15,7 +15,6 @@
         $timeout(function () {
             var taxRecord = vm.serverModel;
             vm.taxRanges = taxRecord.taxRanges;
-            console.log(vm.taxRanges);
         });
 
         function addTaxRangeClicked() {

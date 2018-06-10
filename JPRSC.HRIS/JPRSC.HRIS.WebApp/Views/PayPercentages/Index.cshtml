@@ -19,13 +19,26 @@
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="PayPercentageIndexCtrl as vm">
             <div class="col-sm-12">
+                <form role="form">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                    <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                </span>
+                                <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <div class="note note-info" ng-show="!vm.payPercentages.length">
                     <p>No pay percentages found.</p>
                 </div>
                 <div class="portlet light bordered" ng-show="vm.payPercentages.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
-                            <i class="fa fa-user font-red-sunglo"></i>
+                            <i class="fa fa-percent font-red-sunglo"></i>
                             <span class="caption-subject font-red-sunglo bold uppercase">Pay Percentages</span>
                         </div>
                     </div>
