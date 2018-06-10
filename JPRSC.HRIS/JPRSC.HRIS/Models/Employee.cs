@@ -37,6 +37,8 @@ namespace JPRSC.HRIS.Models
         public Religion Religion { get; set; }
         public int? ReligionId { get; set; }
         public string SSS { get; set; }
+        public TaxRecord TaxRecord { get; set; }
+        public int? TaxRecordId { get; set; }
         public TaxStatus TaxStatus { get; set; }
         public int? TaxStatusId { get; set; }
         public string TelNo { get; set; }

@@ -26,6 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public IList<SelectListItem> ClientsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> TaxRecordsList { get; set; } = new List<SelectListItem>();
 
             public string FirstName { get; set; }
             public string MiddleName { get; set; }
@@ -55,6 +56,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public int? DepartmentId { get; set; }
             public TaxStatus TaxStatus { get; set; }
             public int? TaxStatusId { get; set; }
+            public TaxRecord TaxRecord { get; set; }
+            public int? TaxRecordId { get; set; }
             public string EmployeeStatus { get; set; }
             public string PagIbig { get; set; }
             public string PhilHealth { get; set; }
@@ -79,6 +82,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 command.ClientsList = await GetClientsList();
                 command.DepartmentsList = await GetDepartmentsList();
                 command.TaxStatusesList = await GetTaxStatusesList();
+                command.TaxRecordsList = await GetTaxRecordsList();
 
                 return command;
             }
@@ -131,6 +135,19 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     {
                         Text = ts.Name,
                         Value = ts.Id.ToString()
+                    })
+                    .ToList();
+            }
+
+            private async Task<IList<SelectListItem>> GetTaxRecordsList()
+            {
+                var taxRecords = await _db.TaxRecords.Where(tr => !tr.DeletedOn.HasValue).ToListAsync();
+
+                return taxRecords
+                    .Select(tr => new SelectListItem
+                    {
+                        Text = tr.Code,
+                        Value = tr.Id.ToString()
                     })
                     .ToList();
             }
@@ -197,6 +214,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     Position = command.Position,
                     ReligionId = command.ReligionId,
                     SSS = command.SSS,
+                    TaxRecordId = command.TaxRecordId,
                     TaxStatusId = command.TaxStatusId,
                     TelNo = command.TelNo,
                     TIN = command.TIN,

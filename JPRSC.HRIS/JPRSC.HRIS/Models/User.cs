@@ -19,8 +19,6 @@ namespace JPRSC.HRIS.Models
         public int? JobTitleId { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string Name { get; set; }
-        public TaxRecord TaxRecord { get; set; }
-        public int? TaxRecordId { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
         {
