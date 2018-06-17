@@ -34,7 +34,6 @@
             SeedCustomRoles(context);
             SeedEarningDeductions(context);
             SeedPagIbigRecords(context);
-            SeedSystemSettings(context);
             SeedBanks(context);
             SeedPayPercentages(context);
             context.SaveChanges();
@@ -124,20 +123,6 @@
         private static void SeedReligions(ApplicationDbContext context)
         {
             context.Religions.AddOrUpdate(r => r.Id, ReligionSeed.Religions);
-        }
-
-        private void SeedSystemSettings(ApplicationDbContext context)
-        {
-            var existingSystemSettings = context.SystemSettings.ToList();
-            if (existingSystemSettings.Any()) return;
-
-            var systemSettings = new SystemSettings
-            {
-                PHICRate = 2.75,
-                SSSRate = 2.75
-            };
-
-            context.SystemSettings.Add(systemSettings);
         }
 
         private static void SeedTaxStatuses(ApplicationDbContext context)
