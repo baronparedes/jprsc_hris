@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Pay Percentages";
+    ViewBag.Title = "Pay Rates";
 }
 
 <div class="page-content-wrapper">
@@ -10,11 +10,11 @@
                     <a href="@Url.Action("Index", "Home")">Home</a>
                     <i class="fa fa-circle"></i>
                 </li>
-                <li>Pay Percentages</li>
+                <li>Pay Rates</li>
             </ul>
         </div>
         <h1 class="page-title">
-            Pay Percentages
+            Pay Rates
         </h1>
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="PayPercentageIndexCtrl as vm">
@@ -33,13 +33,13 @@
                     </div>
                 </form>
                 <div class="note note-info" ng-show="!vm.payPercentages.length">
-                    <p>No pay percentages found.</p>
+                    <p>No pay rates found.</p>
                 </div>
                 <div class="portlet light bordered" ng-show="vm.payPercentages.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-percent font-red-sunglo"></i>
-                            <span class="caption-subject font-red-sunglo bold uppercase">Pay Percentages</span>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Pay Rates</span>
                         </div>
                     </div>
                     <div class="portlet-body">

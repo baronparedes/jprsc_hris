@@ -35,7 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
 
             await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully added pay percentage.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully added pay rate.");
 
             return Json("success");
         }
@@ -46,7 +46,7 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
         {
             var commandResult = await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted pay percentage.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted pay rate.");
 
             return RedirectToAction(nameof(Index));
         }
@@ -70,7 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
 
             await _mediator.Send(command);
 
-            //NotificationHelper.CreateSuccessNotification(this, $"Successfully edited pay percentage {command.Name}.");
+            //NotificationHelper.CreateSuccessNotification(this, $"Successfully edited pay rate {command.Name}.");
 
             return Json("success");
         }
