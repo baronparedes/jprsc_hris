@@ -37,6 +37,7 @@
             SeedPHICRecords(context);
             SeedBanks(context);
             SeedPayPercentages(context);
+            SeedSSSRecords(context);
             context.SaveChanges();
 
             SeedUsers(context);
@@ -132,6 +133,24 @@
         private static void SeedReligions(ApplicationDbContext context)
         {
             context.Religions.AddOrUpdate(r => r.Id, ReligionSeed.Religions);
+        }
+
+        private void SeedSSSRecords(ApplicationDbContext context)
+        {
+            if (context.SSSRecords.Any()) return;
+
+            var sssRecords = new List<SSSRecord>();
+            for (var i = 0; i < 60; i++)
+            {
+                sssRecords.Add(new SSSRecord
+                {
+                    AddedOn = new DateTime(2017, 9, 1),
+                    Id = i + 1,
+                    Number = i + 1
+                });
+            }
+
+            context.SSSRecords.AddRange(sssRecords);
         }
 
         private static void SeedTaxStatuses(ApplicationDbContext context)

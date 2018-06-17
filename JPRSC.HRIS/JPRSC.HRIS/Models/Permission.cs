@@ -67,6 +67,10 @@ namespace JPRSC.HRIS.Models
 
         // Pay Percentage
         [Display(Name = "Pay Percentages")]
-        PayPercentageDefault = 1600
+        PayPercentageDefault = 1600,
+
+        // SSS Record
+        [Display(Name = "SSS Records")]
+        SSSRecordDefault = 1700
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Web.Optimization;
+﻿using System;
+using System.Web.Optimization;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
 {
@@ -22,6 +23,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddPayPercentageBundles(bundles);
             AddPhicRecordBundles(bundles);
             AddReligionBundles(bundles);
+            AddSSSRecordBundles(bundles);
             AddTaxStatusBundles(bundles);
         }
 
@@ -194,6 +196,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/religions/add.js",
                 "~/wwwroot/scripts/religions/edit.js",
                 "~/wwwroot/scripts/religions/index.js");
+        }
+
+        private static void AddSSSRecordBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/sssRecords",
+                "~/wwwroot/scripts/sssRecords/add.js",
+                "~/wwwroot/scripts/sssRecords/edit.js",
+                "~/wwwroot/scripts/sssRecords/index.js");
         }
 
         private static void AddTaxStatusBundles(BundleCollection bundles)

@@ -327,6 +327,13 @@
     <Compile Include="Features\Religions\Search.cs" />
     <Compile Include="Features\Religions\_Controller.cs" />
     <Compile Include="Features\Religions\_MappingProfile.cs" />
+    <Compile Include="Features\SSSRecords\Add.cs" />
+    <Compile Include="Features\SSSRecords\Delete.cs" />
+    <Compile Include="Features\SSSRecords\Edit.cs" />
+    <Compile Include="Features\SSSRecords\Index.cs" />
+    <Compile Include="Features\SSSRecords\Search.cs" />
+    <Compile Include="Features\SSSRecords\_Controller.cs" />
+    <Compile Include="Features\SSSRecords\_MappingProfile.cs" />
     <Compile Include="Features\TaxStatuses\Add.cs" />
     <Compile Include="Features\TaxStatuses\Delete.cs" />
     <Compile Include="Features\TaxStatuses\Edit.cs" />
@@ -5893,6 +5900,9 @@
     <Content Include="wwwroot\scripts\religions\add.js" />
     <Content Include="wwwroot\scripts\religions\edit.js" />
     <Content Include="wwwroot\scripts\religions\index.js" />
+    <Content Include="wwwroot\scripts\sssRecords\add.js" />
+    <Content Include="wwwroot\scripts\sssRecords\edit.js" />
+    <Content Include="wwwroot\scripts\sssRecords\index.js" />
     <Content Include="wwwroot\scripts\taxStatuses\add.js" />
     <Content Include="wwwroot\scripts\taxStatuses\edit.js" />
     <Content Include="wwwroot\scripts\taxStatuses\index.js" />
@@ -6821,6 +6831,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PhicRecords\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SSSRecords\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SSSRecords\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SSSRecords\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

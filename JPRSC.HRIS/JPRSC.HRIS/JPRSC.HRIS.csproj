@@ -140,6 +140,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806170822153_AddPHICRecord.Designer.cs">
       <DependentUpon>201806170822153_AddPHICRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806170905308_AddSSSRecord.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806170905308_AddSSSRecord.Designer.cs">
+      <DependentUpon>201806170905308_AddSSSRecord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -183,6 +187,7 @@
     <Compile Include="Models\PayPercentage.cs" />
     <Compile Include="Models\PhicRecord.cs" />
     <Compile Include="Models\Religion.cs" />
+    <Compile Include="Models\SSSRecord.cs" />
     <Compile Include="Models\TaxRange.cs" />
     <Compile Include="Models\TaxStatus.cs" />
     <Compile Include="Models\User.cs" />
@@ -225,6 +230,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806170822153_AddPHICRecord.resx">
       <DependentUpon>201806170822153_AddPHICRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806170905308_AddSSSRecord.resx">
+      <DependentUpon>201806170905308_AddSSSRecord.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
