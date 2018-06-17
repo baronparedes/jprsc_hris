@@ -34,6 +34,7 @@
             SeedCustomRoles(context);
             SeedEarningDeductions(context);
             SeedPagIbigRecords(context);
+            SeedPHICRecords(context);
             SeedBanks(context);
             SeedPayPercentages(context);
             context.SaveChanges();
@@ -118,6 +119,14 @@
             if (existingPayPercentages.Any()) return;
 
             context.PayPercentages.AddRange(PayPercentageSeed.PayPercentages);
+        }
+
+        private void SeedPHICRecords(ApplicationDbContext context)
+        {
+            var existingPhicRecords = context.PhicRecords.ToList();
+            if (existingPhicRecords.Any()) return;
+
+            context.PhicRecords.AddRange(PHICRecordSeed.PHICRecords);
         }
 
         private static void SeedReligions(ApplicationDbContext context)

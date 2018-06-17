@@ -53,9 +53,9 @@ namespace JPRSC.HRIS.Models
         [Display(Name = "Approval Levels")]
         ApprovalLevelDefault = 1200,
 
-        //// Tax Record
-        //[Display(Name = "Tax Records")]
-        //TaxRecordDefault = 1300,
+        // PHIC Record
+        [Display(Name = "PHIC Records")]
+        PhicRecordDefault = 1300,
 
         // Pag Ibig Record
         [Display(Name = "Pag Ibig Records")]
@@ -65,6 +65,7 @@ namespace JPRSC.HRIS.Models
         [Display(Name = "Banks")]
         BankDefault = 1500,
 
+        // Pay Percentage
         [Display(Name = "Pay Percentages")]
         PayPercentageDefault = 1600
     }

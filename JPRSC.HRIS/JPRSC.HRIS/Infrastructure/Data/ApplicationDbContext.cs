@@ -22,6 +22,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<PagIbigRecord> PagIbigRecords { get; set; }
         public DbSet<PayPercentage> PayPercentages { get; set; }
+        public DbSet<PhicRecord> PhicRecords { get; set; }
         public DbSet<Religion> Religions { get; set; }
         public DbSet<TaxRange> TaxRanges { get; set; }
         public DbSet<TaxStatus> TaxStatuses { get; set; }

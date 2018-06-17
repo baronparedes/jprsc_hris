@@ -136,6 +136,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806170813327_RemoveSystemSettings.Designer.cs">
       <DependentUpon>201806170813327_RemoveSystemSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806170822153_AddPHICRecord.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806170822153_AddPHICRecord.Designer.cs">
+      <DependentUpon>201806170822153_AddPHICRecord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -148,6 +152,7 @@
     <Compile Include="Infrastructure\Data\Seed\JobTitleSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\PagIbigRecordSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\PayPercentageSeed.cs" />
+    <Compile Include="Infrastructure\Data\Seed\PHICRecordSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\ReligionSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\TaxStatusSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
@@ -176,6 +181,7 @@
     <Compile Include="Models\JobTitle.cs" />
     <Compile Include="Models\PagIbigRecord.cs" />
     <Compile Include="Models\PayPercentage.cs" />
+    <Compile Include="Models\PhicRecord.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\TaxRange.cs" />
     <Compile Include="Models\TaxStatus.cs" />
@@ -216,6 +222,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806170813327_RemoveSystemSettings.resx">
       <DependentUpon>201806170813327_RemoveSystemSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806170822153_AddPHICRecord.resx">
+      <DependentUpon>201806170822153_AddPHICRecord.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -313,6 +313,13 @@
     <Compile Include="Features\PayPercentages\Search.cs" />
     <Compile Include="Features\PayPercentages\_Controller.cs" />
     <Compile Include="Features\PayPercentages\_MappingProfile.cs" />
+    <Compile Include="Features\PhicRecords\Add.cs" />
+    <Compile Include="Features\PhicRecords\Delete.cs" />
+    <Compile Include="Features\PhicRecords\Edit.cs" />
+    <Compile Include="Features\PhicRecords\Index.cs" />
+    <Compile Include="Features\PhicRecords\Search.cs" />
+    <Compile Include="Features\PhicRecords\_Controller.cs" />
+    <Compile Include="Features\PhicRecords\_MappingProfile.cs" />
     <Compile Include="Features\Religions\Add.cs" />
     <Compile Include="Features\Religions\Delete.cs" />
     <Compile Include="Features\Religions\Edit.cs" />
@@ -5880,6 +5887,9 @@
     <Content Include="wwwroot\scripts\payPercentages\add.js" />
     <Content Include="wwwroot\scripts\payPercentages\edit.js" />
     <Content Include="wwwroot\scripts\payPercentages\index.js" />
+    <Content Include="wwwroot\scripts\phicRecords\add.js" />
+    <Content Include="wwwroot\scripts\phicRecords\edit.js" />
+    <Content Include="wwwroot\scripts\phicRecords\index.js" />
     <Content Include="wwwroot\scripts\religions\add.js" />
     <Content Include="wwwroot\scripts\religions\edit.js" />
     <Content Include="wwwroot\scripts\religions\index.js" />
@@ -6802,6 +6812,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PayPercentages\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhicRecords\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhicRecords\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhicRecords\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
 {
@@ -21,6 +20,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddLoginBundles(bundles);
             AddPagIbigRecordBundles(bundles);
             AddPayPercentageBundles(bundles);
+            AddPhicRecordBundles(bundles);
             AddReligionBundles(bundles);
             AddTaxStatusBundles(bundles);
         }
@@ -178,6 +178,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/payPercentages/add.js",
                 "~/wwwroot/scripts/payPercentages/edit.js",
                 "~/wwwroot/scripts/payPercentages/index.js");
+        }
+
+        private static void AddPhicRecordBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/phicRecords",
+                "~/wwwroot/scripts/phicRecords/add.js",
+                "~/wwwroot/scripts/phicRecords/edit.js",
+                "~/wwwroot/scripts/phicRecords/index.js");
         }
 
         private static void AddReligionBundles(BundleCollection bundles)

@@ -33,6 +33,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
                 Permission.TaxStatusDefault,
                 Permission.EmployeeDefault,
                 Permission.ApprovalLevelDefault,
+                Permission.PhicRecordDefault,
                 Permission.PagIbigRecordDefault,
                 Permission.BankDefault,
                 Permission.PayPercentageDefault
