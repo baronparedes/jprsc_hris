@@ -1,1 +1,7 @@
-﻿
+﻿div.logo > a:hover, div.logo > a:focus {
+    text-decoration: none;
+}
+
+div.page-logo > a:hover, div.page-logo > a:focus {
+    text-decoration: none;
+}

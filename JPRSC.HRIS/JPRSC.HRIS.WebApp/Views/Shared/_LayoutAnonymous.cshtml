@@ -15,13 +15,14 @@
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
     @Styles.Render("~/stylebundles/metronic-global")
     @Styles.Render("~/stylebundles/metronic-theme")
+    @Styles.Render("~/stylebundles/site")
     @RenderSection("styles", required: false)
     <link rel="icon" href="@Url.Content("~/wwwroot/favicon.ico")" />
 </head>
 <body class="login">
     <div class="logo">
         <a href="@Url.Action("Home", "Index")">
-            <img src="~/wwwroot/metronic/pages/img/logo-big.png" alt="" />
+            <span style="text-transform: uppercase; font-family: 'Segoe UI Symbol', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #FFFFFF; font-size: 22px;">JPRSC: <span style="color: #44af6d;">HRIS-PAYROLL</span></span>
         </a>
     </div>
     <div class="content">
