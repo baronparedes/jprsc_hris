@@ -35,9 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
 
             public class Client
             {
-                public CutOffPeriod? CutOffPeriod { get; set; }
-                public int? DaysPerWeek { get; set; }
-                public int? HoursPerDay { get; set; }
+                public string Code { get; set; }
                 public int Id { get; set; }
                 public string Name { get; set; }
             }
@@ -61,7 +59,8 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(c => DbFunctions.Like(c.Name, query.SearchLikeTerm));
+                        .Where(c => DbFunctions.Like(c.Name, query.SearchLikeTerm) ||
+                            DbFunctions.Like(c.Code, query.SearchLikeTerm));
                 }
 
                 var clients = await dbQuery

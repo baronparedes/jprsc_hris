@@ -12,10 +12,22 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
     {
         public class Command : IRequest
         {
+            public string Code { get; set; }
+            public int? CurrentPayrollPeriod { get; set; }
             public CutOffPeriod? CutOffPeriod { get; set; }
             public int? DaysPerWeek { get; set; }
+            public string Description { get; set; }
             public int? HoursPerDay { get; set; }
             public string Name { get; set; }
+            public int? NumberOfHoursInADay { get; set; }
+            public int? NumberOfPayrollPeriodsAMonth { get; set; }
+            public int? NumberOfWorkingDaysForThisPayrollPeriod { get; set; }
+            public PayrollCode? PayrollCode { get; set; }
+            public DateTime? PayrollPeriodFrom { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
+            public DateTime? PayrollPeriodTo { get; set; }
+            public TaxTable? TaxTable { get; set; }
+            public bool? ZeroBasic { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -41,10 +53,22 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 var client = new Client
                 {
                     AddedOn = DateTime.UtcNow,
+                    Code = command.Code,
+                    CurrentPayrollPeriod = command.CurrentPayrollPeriod,
                     CutOffPeriod = command.CutOffPeriod,
                     DaysPerWeek = command.DaysPerWeek,
+                    Description = command.Description,
                     HoursPerDay = command.HoursPerDay,
-                    Name = command.Name
+                    Name = command.Name,
+                    NumberOfHoursInADay = command.NumberOfHoursInADay,
+                    NumberOfPayrollPeriodsAMonth = command.NumberOfPayrollPeriodsAMonth,
+                    NumberOfWorkingDaysForThisPayrollPeriod = command.NumberOfWorkingDaysForThisPayrollPeriod,
+                    PayrollCode = command.PayrollCode,
+                    PayrollPeriodFrom = command.PayrollPeriodFrom,
+                    PayrollPeriodMonth = command.PayrollPeriodMonth,
+                    PayrollPeriodTo = command.PayrollPeriodTo,
+                    TaxTable = command.TaxTable,
+                    ZeroBasic = command.ZeroBasic
                 };
 
                 _db.Clients.Add(client);

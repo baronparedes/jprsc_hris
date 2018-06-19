@@ -20,11 +20,23 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
 
         public class Command : IRequest
         {
+            public string Code { get; set; }
+            public int? CurrentPayrollPeriod { get; set; }
             public CutOffPeriod? CutOffPeriod { get; set; }
             public int? DaysPerWeek { get; set; }
+            public string Description { get; set; }
             public int? HoursPerDay { get; set; }
             public int Id { get; set; }
             public string Name { get; set; }
+            public int? NumberOfHoursInADay { get; set; }
+            public int? NumberOfPayrollPeriodsAMonth { get; set; }
+            public int? NumberOfWorkingDaysForThisPayrollPeriod { get; set; }
+            public PayrollCode? PayrollCode { get; set; }
+            public DateTime? PayrollPeriodFrom { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
+            public DateTime? PayrollPeriodTo { get; set; }
+            public TaxTable? TaxTable { get; set; }
+            public bool? ZeroBasic { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Command>
@@ -64,11 +76,23 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             {
                 var client = await _db.Clients.SingleAsync(c => c.Id == command.Id);
 
+                client.Code = command.Code;
+                client.CurrentPayrollPeriod = command.CurrentPayrollPeriod;
                 client.CutOffPeriod = command.CutOffPeriod;
                 client.DaysPerWeek = command.DaysPerWeek;
+                client.Description = command.Description;
                 client.HoursPerDay = command.HoursPerDay;
                 client.ModifiedOn = DateTime.UtcNow;
                 client.Name = command.Name;
+                client.NumberOfHoursInADay = command.NumberOfHoursInADay;
+                client.NumberOfPayrollPeriodsAMonth = command.NumberOfPayrollPeriodsAMonth;
+                client.NumberOfWorkingDaysForThisPayrollPeriod = command.NumberOfWorkingDaysForThisPayrollPeriod;
+                client.PayrollCode = command.PayrollCode;
+                client.PayrollPeriodFrom = command.PayrollPeriodFrom;
+                client.PayrollPeriodMonth = command.PayrollPeriodMonth;
+                client.PayrollPeriodTo = command.PayrollPeriodTo;
+                client.TaxTable = command.TaxTable;
+                client.ZeroBasic = command.ZeroBasic;
 
                 await _db.SaveChangesAsync();
 

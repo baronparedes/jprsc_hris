@@ -144,6 +144,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806170905308_AddSSSRecord.Designer.cs">
       <DependentUpon>201806170905308_AddSSSRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806190131397_AddClientFields.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806190131397_AddClientFields.Designer.cs">
+      <DependentUpon>201806190131397_AddClientFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -183,13 +187,16 @@
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\JobTitle.cs" />
+    <Compile Include="Models\Month.cs" />
     <Compile Include="Models\PagIbigRecord.cs" />
     <Compile Include="Models\PayPercentage.cs" />
+    <Compile Include="Models\PayrollCode.cs" />
     <Compile Include="Models\PhicRecord.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\SSSRecord.cs" />
     <Compile Include="Models\TaxRange.cs" />
     <Compile Include="Models\TaxStatus.cs" />
+    <Compile Include="Models\TaxTable.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Models\Permission.cs" />
@@ -233,6 +240,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806170905308_AddSSSRecord.resx">
       <DependentUpon>201806170905308_AddSSSRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806190131397_AddClientFields.resx">
+      <DependentUpon>201806190131397_AddClientFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

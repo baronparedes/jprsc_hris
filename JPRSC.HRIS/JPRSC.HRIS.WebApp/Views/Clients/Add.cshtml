@@ -31,10 +31,22 @@
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.addClientSubmit($event)">
                             @Html.AntiForgeryToken()
                             <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("Code")
                                 @Html.TextBoxHorizontalFormGroup("Name")
+                                @Html.TextBoxHorizontalFormGroup("Description")
                                 @Html.DropdownHorizontalFormGroup("cutOffPeriods", "CutOffPeriod", "CutOff Period")
                                 @Html.TextBoxHorizontalFormGroup("DaysPerWeek")
                                 @Html.TextBoxHorizontalFormGroup("HoursPerDay")
+                                @Html.DropdownHorizontalFormGroup("taxTables", "TaxTable")
+                                @Html.DropdownHorizontalFormGroup("payrollCodes", "PayrollCode")
+                                @Html.TextBoxHorizontalFormGroup("NumberOfWorkingDaysForThisPayrollPeriod")
+                                @Html.TextBoxHorizontalFormGroup("NumberOfHoursInADay")
+                                @Html.TextBoxHorizontalFormGroup("NumberOfPayrollPeriodsAMonth")
+                                @Html.TextBoxHorizontalFormGroup("PayrollPeriodFrom", placeholder: "MM/dd/yyyy")
+                                @Html.TextBoxHorizontalFormGroup("PayrollPeriodTo", placeholder: "MM/dd/yyyy")
+                                @Html.DropdownHorizontalFormGroup("months", "PayrollPeriodMonth")
+                                @Html.TextBoxHorizontalFormGroup("CurrentPayrollPeriod")
+                                @Html.CheckboxHorizontalFormGroup("ZeroBasic")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Clients")" class="btn default">Cancel</a>

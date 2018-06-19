@@ -54,12 +54,14 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
+                                        <th>Code</th>
                                         <th>Name</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="client in vm.clients track by client.id">
+                                        <td>{{client.code}}</td>
                                         <td>{{client.name}}</td>
                                         <td>
                                             <a href="{{'/Clients/Edit?clientId=' + client.id}}" class="btn btn-primary btn-sm">Edit</a>

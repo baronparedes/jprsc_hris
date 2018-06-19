@@ -64,6 +64,31 @@
                 genders: {
                     male: @Html.EnumLookup(Gender.Male),
                     female: @Html.EnumLookup(Gender.Female)
+                },
+                taxTables: {
+                    weeekly: @Html.EnumLookup(TaxTable.Weekly),
+                    semiMonthly: @Html.EnumLookup(TaxTable.SemiMonthly),
+                    monthly: @Html.EnumLookup(TaxTable.Monthly),
+                    yearly: @Html.EnumLookup(TaxTable.Yearly)
+                },
+                payrollCodes: {
+                    daily: @Html.EnumLookup(PayrollCode.Daily),
+                    semiMonthly: @Html.EnumLookup(PayrollCode.SemiMonthly),
+                    monthly: @Html.EnumLookup(PayrollCode.Monthly)
+                },
+                months: {
+                    january: @Html.EnumLookup(Month.January),
+                    february: @Html.EnumLookup(Month.February),
+                    march: @Html.EnumLookup(Month.March),
+                    april: @Html.EnumLookup(Month.April),
+                    may: @Html.EnumLookup(Month.May),
+                    june: @Html.EnumLookup(Month.June),
+                    july: @Html.EnumLookup(Month.July),
+                    august: @Html.EnumLookup(Month.August),
+                    september: @Html.EnumLookup(Month.September),
+                    october: @Html.EnumLookup(Month.October),
+                    november: @Html.EnumLookup(Month.November),
+                    december: @Html.EnumLookup(Month.December)
                 }
             };
         }());
