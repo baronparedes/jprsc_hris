@@ -27,7 +27,7 @@
                             <span class="caption-subject font-red-sunglo bold uppercase">Edit Employee @Model.FirstName @Model.LastName</span>
                         </div>
                     </div>
-                    <div class="portlet-body form" ng-controller="EditEmployeeCtrl as vm">
+                    <div class="portlet-body form" ng-controller="EditEmployeeCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.editEmployeeSubmit($event)">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(m => m.Id)
@@ -56,12 +56,16 @@
                                 @Html.TextBoxHorizontalFormGroup("Position")
                                 @Html.DropdownHorizontalFormGroup(Model.DepartmentsList, "DepartmentId", "Department")
                                 @Html.DropdownHorizontalFormGroup(Model.TaxStatusesList, "TaxStatusId", "Tax Status")
-                                @Html.DropdownHorizontalFormGroup(Model.TaxRecordsList, "TaxRecordId", "Tax Record")
                                 @Html.TextBoxHorizontalFormGroup("EmployeeStatus")
                                 @Html.TextBoxHorizontalFormGroup("PagIbig")
                                 @Html.TextBoxHorizontalFormGroup("PhilHealth")
                                 @Html.DropdownHorizontalFormGroup("accountTypes", "AccountType")
                                 @Html.TextBoxHorizontalFormGroup("ATMAccountNumber")
+
+                                @Html.TextBoxHorizontalFormGroup("HourlyRate")
+                                @Html.TextBoxHorizontalFormGroup("DailyRate")
+                                @Html.TextBoxHorizontalFormGroup("COLAHourly")
+                                @Html.TextBoxHorizontalFormGroup("COLADaily")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Employees")" class="btn default">Cancel</a>

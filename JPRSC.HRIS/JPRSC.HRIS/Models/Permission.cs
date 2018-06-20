@@ -71,6 +71,10 @@ namespace JPRSC.HRIS.Models
 
         // SSS Record
         [Display(Name = "SSS Records")]
-        SSSRecordDefault = 1700
+        SSSRecordDefault = 1700,
+
+        // Employee Rate
+        [Display(Name = "Employee Rates")]
+        EmployeeRateDefault = 1800
     }
 }

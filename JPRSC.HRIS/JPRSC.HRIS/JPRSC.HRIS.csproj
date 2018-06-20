@@ -148,6 +148,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806190131397_AddClientFields.Designer.cs">
       <DependentUpon>201806190131397_AddClientFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806200145165_AddEmployeeRateFields.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806200145165_AddEmployeeRateFields.Designer.cs">
+      <DependentUpon>201806200145165_AddEmployeeRateFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -243,6 +247,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806190131397_AddClientFields.resx">
       <DependentUpon>201806190131397_AddClientFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806200145165_AddEmployeeRateFields.resx">
+      <DependentUpon>201806200145165_AddEmployeeRateFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

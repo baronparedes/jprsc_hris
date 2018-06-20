@@ -17,6 +17,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddDepartmentBundles(bundles);
             AddEarningDeductionBundles(bundles);
             AddEmployeeBundles(bundles);
+            AddEmployeeRateBundles(bundles);
             AddJobTitleBundles(bundles);
             AddLoginBundles(bundles);
             AddPagIbigRecordBundles(bundles);
@@ -73,7 +74,6 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
         {
             bundles.AddStyleBundle("~/stylebundles/metronic-global",
                 "~/wwwroot/metronic/global/plugins/font-awesome/css/font-awesome.min.css",
-                "~/wwwroot/lib/simple-line-icons/css/simple-line-icons.css",
                 "~/wwwroot/metronic/global/plugins/simple-line-icons/simple-line-icons.min.css",
                 "~/wwwroot/metronic/global/plugins/bootstrap/css/bootstrap.min.css",
                 "~/wwwroot/metronic/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css");
@@ -144,6 +144,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/employees/add.js",
                 "~/wwwroot/scripts/employees/edit.js",
                 "~/wwwroot/scripts/employees/index.js");
+        }
+
+        private static void AddEmployeeRateBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/employeeRates",
+                "~/wwwroot/scripts/employeeRates/add.js",
+                "~/wwwroot/scripts/employeeRates/edit.js",
+                "~/wwwroot/scripts/employeeRates/index.js");
         }
 
         private static void AddJobTitleBundles(BundleCollection bundles)

@@ -1,0 +1,108 @@
+﻿@model JPRSC.HRIS.WebApp.Features.EmployeeRates.Add.Command
+
+@{
+                /**/
+
+                ViewBag.Title = "Add a Employee Rate";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Add Employee Rate</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Add Employee Rate
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-plus font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Add Employee Rate</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form" ng-controller="AddEmployeeRateCtrl as vm">
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.addEmployeeRateSubmit($event)">
+                            @Html.AntiForgeryToken()
+                            <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("Code")
+                                @Html.TextBoxHorizontalFormGroup("Name")
+                                @Html.TextBoxHorizontalFormGroup("Exemption")
+                                <div class="form-group" ng-show="vm.taxRanges.length">
+                                    <div class="col-md-3 col-lg-2 text-right">
+                                    </div>
+                                    <div class="col-md-9 col-lg-10">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                From
+                                            </div>
+                                            <div class="col-sm-2">
+                                                To
+                                            </div>
+                                            <div class="col-sm-2">
+                                                Percentage
+                                            </div>
+                                            <div class="col-sm-2">
+                                                Plus
+                                            </div>
+                                            <div class="col-sm-4">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-repeat="taxRange in vm.taxRanges track by $index">
+                                    <div class="col-md-3 col-lg-2 text-right">
+                                    </div>
+                                    <div class="col-md-9 col-lg-10">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control" name="{{vm.getTaxRangeFieldName($index, 'From')}}" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control" name="{{vm.getTaxRangeFieldName($index, 'To')}}" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control" name="{{vm.getTaxRangeFieldName($index, 'Percentage')}}" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control" name="{{vm.getTaxRangeFieldName($index, 'Plus')}}" />
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <a href="" class="btn btn-danger" ng-click="vm.deleteTaxRangeClicked($index)">Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3 col-lg-2 text-right">
+                                    </div>
+                                    <div class="col-md-9 col-lg-10">
+                                        <a href="" class="btn btn-primary" ng-click="vm.addTaxRangeClicked()">Add Tax Range</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions right">
+                                <a href="@Url.Action("Index", "EmployeeRates")" class="btn default">Cancel</a>
+                                <button type="submit" class="btn green">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/employeeRates")
+}

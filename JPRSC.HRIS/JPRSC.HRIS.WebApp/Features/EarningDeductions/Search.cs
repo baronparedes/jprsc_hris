@@ -57,13 +57,13 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
             {
                 var dbQuery = _db
                     .EarningDeductions
-                    .Where(r => !r.DeletedOn.HasValue);
+                    .Where(ed => !ed.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(r => DbFunctions.Like(r.Code, query.SearchLikeTerm) ||
-                            DbFunctions.Like(r.Description, query.SearchLikeTerm));
+                        .Where(ed => DbFunctions.Like(ed.Code, query.SearchLikeTerm) ||
+                            DbFunctions.Like(ed.Description, query.SearchLikeTerm));
                 }
 
                 var earningDeductions = await dbQuery

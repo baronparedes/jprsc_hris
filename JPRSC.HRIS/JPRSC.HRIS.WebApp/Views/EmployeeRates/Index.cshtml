@@ -1,0 +1,112 @@
+﻿@model JPRSC.HRIS.WebApp.Features.EmployeeRates.Index.QueryResult
+
+@{
+    ViewBag.Title = "Employee Rates";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Employee Rates</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Employee Rates
+        </h1>
+        @Html.RenderSuccessNotification()
+        <div class="row" ng-controller="EmployeeRateIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
+            <div class="col-sm-12">
+                <div class="row"></div>
+                <form role="form">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label">Client</label>
+                            <select class="form-control" ng-model="vm.client" ng-options="client.text for client in vm.clientsList track by client.value">
+                                <option value="?" selected="selected">Select client</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                    <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                </span>
+                                <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="note note-info" ng-show="!vm.client.value || !vm.client.value.length">
+                    <p>Please select a client.</p>
+                </div>
+                <div class="note note-info" ng-show="vm.client.value.length && !vm.employees.length">
+                    <p>No employees found.</p>
+                </div>
+                <div class="portlet light bordered" ng-show="vm.client.value.length && vm.employees.length">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-dollar font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Employee Rates</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Employee Code</th>
+                                        <th>Hourly Rate</th>
+                                        <th>Daily Rate</th>
+                                        <th>COLA Hourly</th>
+                                        <th>COLA Daily</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="employee in vm.employees track by employee.id">
+                                        <td>{{employee.firstName}}</td>
+                                        <td>{{employee.lastName}}</td>
+                                        <td>{{employee.employeeCode}}</td>
+                                        <td>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.hourlyRate | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.hourlyRate" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.dailyRate | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.dailyRate" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaHourly | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaHourly" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaDaily | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaDaily" />
+                                        </td>
+                                        <td>
+                                            <a ng-show="!employee.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.editEmployeeRateClicked(employee)">Edit</a>
+                                            <a ng-show="employee.isEditing" href="" class="btn btn-default btn-sm" ng-click="vm.cancelEditEmployeeRateClicked(employee)">Cancel</a>
+                                            <a ng-show="employee.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.saveEditEmployeeRateClicked(employee)">Save</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/employeeRates")
+}

@@ -52,12 +52,12 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
             {
                 var dbQuery = _db
                     .JobTitles
-                    .Where(r => !r.DeletedOn.HasValue);
+                    .Where(jt => !jt.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(r => DbFunctions.Like(r.Name, query.SearchLikeTerm));
+                        .Where(jt => DbFunctions.Like(jt.Name, query.SearchLikeTerm));
                 }
 
                 var jobTitles = await dbQuery

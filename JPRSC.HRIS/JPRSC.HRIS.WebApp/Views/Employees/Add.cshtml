@@ -54,12 +54,16 @@
                                 @Html.TextBoxHorizontalFormGroup("Position")
                                 @Html.DropdownHorizontalFormGroup(Model.DepartmentsList, "DepartmentId", "Department")
                                 @Html.DropdownHorizontalFormGroup(Model.TaxStatusesList, "TaxStatusId", "Tax Status")
-                                @Html.DropdownHorizontalFormGroup(Model.TaxRecordsList, "TaxRecordId", "Tax Record")
                                 @Html.TextBoxHorizontalFormGroup("EmployeeStatus")
                                 @Html.TextBoxHorizontalFormGroup("PagIbig")
                                 @Html.TextBoxHorizontalFormGroup("PhilHealth")
                                 @Html.DropdownHorizontalFormGroup("accountTypes", "AccountType")
                                 @Html.TextBoxHorizontalFormGroup("ATMAccountNumber")
+
+                                @Html.TextBoxHorizontalFormGroup("HourlyRate")
+                                @Html.TextBoxHorizontalFormGroup("DailyRate")
+                                @Html.TextBoxHorizontalFormGroup("COLAHourly")
+                                @Html.TextBoxHorizontalFormGroup("COLADaily")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Employees")" class="btn default">Cancel</a>

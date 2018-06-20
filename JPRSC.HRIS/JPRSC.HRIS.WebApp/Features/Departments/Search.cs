@@ -52,7 +52,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
             {
                 var dbQuery = _db
                     .Departments
-                    .Where(r => !r.DeletedOn.HasValue);
+                    .Where(d => !d.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {

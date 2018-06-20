@@ -9,14 +9,16 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
+namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
 {
     public class Search
     {
         public class Query : IRequest<QueryResult>
         {
             public string SearchTerm { get; set; }
+            public int? ClientId { get; set; }
 
             public string SearchLikeTerm
             {
@@ -31,26 +33,18 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
 
         public class QueryResult
         {
-            public IEnumerable<TaxStatus> TaxStatuses { get; set; } = new List<TaxStatus>();
+            public IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
 
-            public class TaxStatus
+            public class Employee
             {
-                public string Code { get; set; }
-                public double? Exemption { get; set; }
-                public string Name { get; set; }
+                public decimal? COLADaily { get; set; }
+                public decimal? COLAHourly { get; set; }
+                public decimal? DailyRate { get; set; }
+                public string EmployeeCode { get; set; }
+                public string FirstName { get; set; }
+                public decimal? HourlyRate { get; set; }
                 public int Id { get; set; }
-                public IList<TaxRange> TaxRanges { get; set; } = new List<TaxRange>();
-            }
-
-            public class TaxRange
-            {
-                [JsonIgnore]
-                public DateTime? DeletedOn { get; set; }
-                public decimal? From { get; set; }
-                public int Id { get; set; }
-                public double? Percentage { get; set; }
-                public decimal? Plus { get; set; }
-                public decimal? To { get; set; }
+                public string LastName { get; set; }
             }
         }
 
@@ -65,31 +59,27 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                if (!query.ClientId.HasValue) return new QueryResult();
+
                 var dbQuery = _db
-                    .TaxStatuses
-                    .Include(tr => tr.TaxRanges)
-                    .Where(ts => !ts.DeletedOn.HasValue);
+                    .Employees
+                    .Where(e => !e.DeletedOn.HasValue && e.ClientId == query.ClientId);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(ts => DbFunctions.Like(ts.Name, query.SearchLikeTerm) ||
-                            DbFunctions.Like(ts.Code, query.SearchLikeTerm));
+                        .Where(e => DbFunctions.Like(e.FirstName, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.LastName, query.SearchLikeTerm));
                 }
 
-                var taxStatuses = await dbQuery
+                var employees = await dbQuery
                     .OrderBy(r => r.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
-                    .ProjectToListAsync<QueryResult.TaxStatus>();
-
-                foreach (var taxStatus in taxStatuses)
-                {
-                    taxStatus.TaxRanges = taxStatus.TaxRanges.Where(tr => !tr.DeletedOn.HasValue).ToList();
-                }
+                    .ProjectToListAsync<QueryResult.Employee>();
 
                 return new QueryResult
                 {
-                    TaxStatuses = taxStatuses
+                    Employees = employees
                 };
             }
         }

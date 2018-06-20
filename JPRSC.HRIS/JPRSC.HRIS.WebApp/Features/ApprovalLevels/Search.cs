@@ -53,7 +53,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
             {
                 var dbQuery = _db
                     .ApprovalLevels
-                    .Where(r => !r.DeletedOn.HasValue);
+                    .Where(al => !al.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {

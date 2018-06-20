@@ -55,13 +55,13 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             {
                 var dbQuery = _db
                     .Employees
-                    .Where(r => !r.DeletedOn.HasValue);
+                    .Where(e => !e.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(r => DbFunctions.Like(r.FirstName, query.SearchLikeTerm) ||
-                            DbFunctions.Like(r.LastName, query.SearchLikeTerm));
+                        .Where(e => DbFunctions.Like(e.FirstName, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.LastName, query.SearchLikeTerm));
                 }
 
                 var employees = await dbQuery

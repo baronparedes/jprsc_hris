@@ -62,6 +62,12 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string PhilHealth { get; set; }
             public AccountType? AccountType { get; set; }
             public string ATMAccountNumber { get; set; }
+
+            // Employee Rate
+            public decimal? HourlyRate { get; set; }
+            public decimal? DailyRate { get; set; }
+            public decimal? COLAHourly { get; set; }
+            public decimal? COLADaily { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Command>
@@ -185,6 +191,9 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.CityAddress = command.CityAddress;
                 employee.CivilStatus = command.CivilStatus;
                 employee.ClientId = command.ClientId;
+                employee.COLADaily = command.COLADaily;
+                employee.COLAHourly = command.COLAHourly;
+                employee.DailyRate = command.DailyRate;
                 employee.DateHired = command.DateHired;
                 employee.DateOfBirth = command.DateOfBirth;
                 employee.DateResigned = command.DateResigned;
@@ -194,6 +203,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.EmployeeStatus = command.EmployeeStatus;
                 employee.FirstName = command.FirstName;
                 employee.Gender = command.Gender;
+                employee.HourlyRate = command.HourlyRate;
                 employee.LastName = command.LastName;
                 employee.MiddleName = command.MiddleName;
                 employee.ModifiedOn = DateTime.UtcNow;

@@ -42,5 +42,10 @@ namespace JPRSC.HRIS.Models
         public string TelNo { get; set; }
         public string TIN { get; set; }
         public string ZipCode { get; set; }
+
+        public decimal? HourlyRate { get; set; }
+        public decimal? DailyRate { get; set; }
+        public decimal? COLAHourly { get; set; }
+        public decimal? COLADaily { get; set; }
     }
 }

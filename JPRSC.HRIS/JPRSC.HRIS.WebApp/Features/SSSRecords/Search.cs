@@ -58,7 +58,7 @@ namespace JPRSC.HRIS.WebApp.Features.SSSRecords
             {
                 var dbQuery = _db
                     .SSSRecords
-                    .Where(r => !r.DeletedOn.HasValue);
+                    .Where(sr => !sr.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {

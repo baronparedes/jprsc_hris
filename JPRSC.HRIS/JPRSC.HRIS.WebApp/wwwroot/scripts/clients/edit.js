@@ -11,7 +11,6 @@
 
         $timeout(function () {
             var client = vm.serverModel;
-            console.log('client', client);
             vm.cutOffPeriod = { value: client.cutOffPeriod };
             vm.taxTable = { value: client.taxTable };
             vm.payrollCode = { value: client.payrollCode };

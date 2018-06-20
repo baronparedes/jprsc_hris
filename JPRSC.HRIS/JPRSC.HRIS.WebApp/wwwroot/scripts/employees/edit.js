@@ -1,13 +1,21 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('EditEmployeeCtrl', ['$http', '$window', 'lookups', EditEmployeeCtrl]);
+        .controller('EditEmployeeCtrl', ['$http', '$timeout', '$window', 'lookups', EditEmployeeCtrl]);
 
-    function EditEmployeeCtrl($http, $window, lookups) {
+    function EditEmployeeCtrl($http, $timeout, $window, lookups) {
         var vm = this;
         vm.editEmployeeSubmit = editEmployeeSubmit;
         vm.lookups = lookups;
         vm.validationErrors = {};
+
+        $timeout(function () {
+            var employee = vm.serverModel;
+            vm.gender = { value: employee.gender };
+            vm.citizenship = { value: employee.citizenship };
+            vm.civilStatus = { value: employee.civilStatus };
+            vm.accountType = { value: employee.accountType };
+        });
 
         function editEmployeeSubmit(e) {
             var action = '/Employees/Edit';

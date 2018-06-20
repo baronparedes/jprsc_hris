@@ -53,7 +53,7 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
             {
                 var dbQuery = _db
                     .PhicRecords
-                    .Where(r => !r.DeletedOn.HasValue);
+                    .Where(pr => !pr.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
