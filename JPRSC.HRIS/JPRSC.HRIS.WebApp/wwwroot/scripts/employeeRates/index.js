@@ -62,7 +62,6 @@
 
             $http.get('/EmployeeRates/Search', { params: vm.searchModel }).then(function (response) {
                 vm.employees = response.data.employees;
-                console.log(vm.employees);
                 vm.searchInProgress = false;
             });
         };
