@@ -19,6 +19,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddEmployeeBundles(bundles);
             AddEmployeeRateBundles(bundles);
             AddJobTitleBundles(bundles);
+            AddLoanTypeBundles(bundles);
             AddLoginBundles(bundles);
             AddPagIbigRecordBundles(bundles);
             AddPayPercentageBundles(bundles);
@@ -160,6 +161,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/jobTitles/add.js",
                 "~/wwwroot/scripts/jobTitles/edit.js",
                 "~/wwwroot/scripts/jobTitles/index.js");
+        }
+
+        private static void AddLoanTypeBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/loanTypes",
+                "~/wwwroot/scripts/loanTypes/add.js",
+                "~/wwwroot/scripts/loanTypes/edit.js",
+                "~/wwwroot/scripts/loanTypes/index.js");
         }
 
         private static void AddLoginBundles(BundleCollection bundles)

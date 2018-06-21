@@ -33,6 +33,7 @@
             SeedClients(context);
             SeedCustomRoles(context);
             SeedEarningDeductions(context);
+            SeedLoanTypes(context);
             SeedPagIbigRecords(context);
             SeedPHICRecords(context);
             SeedBanks(context);
@@ -97,6 +98,11 @@
         private static void SeedEarningDeductions(ApplicationDbContext context)
         {
             context.EarningDeductions.AddOrUpdate(ed => ed.Id, EarningDeductionSeed.EarningDeductions);
+        }
+
+        private void SeedLoanTypes(ApplicationDbContext context)
+        {
+            context.LoanTypes.AddOrUpdate(lt => lt.Id, LoanTypeSeed.LoanTypes);
         }
 
         private static void SeedEmployees(ApplicationDbContext context)

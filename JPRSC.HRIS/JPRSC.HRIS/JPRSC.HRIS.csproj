@@ -152,6 +152,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806200145165_AddEmployeeRateFields.Designer.cs">
       <DependentUpon>201806200145165_AddEmployeeRateFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806210132306_AddLoanType.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806210132306_AddLoanType.Designer.cs">
+      <DependentUpon>201806210132306_AddLoanType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -162,6 +166,7 @@
     <Compile Include="Infrastructure\Data\Seed\EarningDeductionSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\EmployeeSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\JobTitleSeed.cs" />
+    <Compile Include="Infrastructure\Data\Seed\LoanTypeSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\PagIbigRecordSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\PayPercentageSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\PHICRecordSeed.cs" />
@@ -191,6 +196,7 @@
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\JobTitle.cs" />
+    <Compile Include="Models\LoanType.cs" />
     <Compile Include="Models\Month.cs" />
     <Compile Include="Models\PagIbigRecord.cs" />
     <Compile Include="Models\PayPercentage.cs" />
@@ -250,6 +256,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806200145165_AddEmployeeRateFields.resx">
       <DependentUpon>201806200145165_AddEmployeeRateFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806210132306_AddLoanType.resx">
+      <DependentUpon>201806210132306_AddLoanType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

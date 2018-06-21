@@ -19,6 +19,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<EarningDeduction> EarningDeductions { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<JobTitle> JobTitles { get; set; }
+        public DbSet<LoanType> LoanTypes { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<PagIbigRecord> PagIbigRecords { get; set; }
         public DbSet<PayPercentage> PayPercentages { get; set; }

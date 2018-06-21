@@ -304,6 +304,13 @@
     <Compile Include="Features\JobTitles\Search.cs" />
     <Compile Include="Features\JobTitles\_Controller.cs" />
     <Compile Include="Features\JobTitles\_MappingProfile.cs" />
+    <Compile Include="Features\LoanTypes\Add.cs" />
+    <Compile Include="Features\LoanTypes\Delete.cs" />
+    <Compile Include="Features\LoanTypes\Edit.cs" />
+    <Compile Include="Features\LoanTypes\Index.cs" />
+    <Compile Include="Features\LoanTypes\Search.cs" />
+    <Compile Include="Features\LoanTypes\_Controller.cs" />
+    <Compile Include="Features\LoanTypes\_MappingProfile.cs" />
     <Compile Include="Features\Manage\AddPhoneNumber.cs" />
     <Compile Include="Features\Manage\SettPassword.cs" />
     <Compile Include="Features\PagIbigRecords\Add.cs" />
@@ -5898,6 +5905,9 @@
     <Content Include="wwwroot\scripts\jobTitles\add.js" />
     <Content Include="wwwroot\scripts\jobTitles\edit.js" />
     <Content Include="wwwroot\scripts\jobTitles\index.js" />
+    <Content Include="wwwroot\scripts\loanTypes\add.js" />
+    <Content Include="wwwroot\scripts\loanTypes\edit.js" />
+    <Content Include="wwwroot\scripts\loanTypes\index.js" />
     <Content Include="wwwroot\scripts\pagIbigRecords\add.js" />
     <Content Include="wwwroot\scripts\pagIbigRecords\edit.js" />
     <Content Include="wwwroot\scripts\pagIbigRecords\index.js" />
@@ -6859,6 +6869,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EmployeeRates\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LoanTypes\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LoanTypes\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LoanTypes\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

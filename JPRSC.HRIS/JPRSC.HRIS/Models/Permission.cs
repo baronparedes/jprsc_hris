@@ -75,6 +75,10 @@ namespace JPRSC.HRIS.Models
 
         // Employee Rate
         [Display(Name = "Employee Rates")]
-        EmployeeRateDefault = 1800
+        EmployeeRateDefault = 1800,
+
+        // Loan Type
+        [Display(Name = "Loan Types")]
+        LoanTypeDefault = 1900
     }
 }
