@@ -13,8 +13,11 @@ namespace JPRSC.HRIS.Models
         public CivilStatus? CivilStatus { get; set; }
         public Client Client { get; set; }
         public int? ClientId { get; set; }
+        public decimal? COLADaily { get; set; }
+        public decimal? COLAHourly { get; set; }
         public Company Company { get; set; }
         public int? CompanyId { get; set; }
+        public decimal? DailyRate { get; set; }
         public DateTime? DateHired { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public DateTime? DateResigned { get; set; }
@@ -26,6 +29,7 @@ namespace JPRSC.HRIS.Models
         public string EmployeeStatus { get; set; }
         public string FirstName { get; set; }
         public Gender? Gender { get; set; }
+        public decimal? HourlyRate { get; set; }
         public int Id { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
@@ -42,10 +46,5 @@ namespace JPRSC.HRIS.Models
         public string TelNo { get; set; }
         public string TIN { get; set; }
         public string ZipCode { get; set; }
-
-        public decimal? HourlyRate { get; set; }
-        public decimal? DailyRate { get; set; }
-        public decimal? COLAHourly { get; set; }
-        public decimal? COLADaily { get; set; }
     }
 }

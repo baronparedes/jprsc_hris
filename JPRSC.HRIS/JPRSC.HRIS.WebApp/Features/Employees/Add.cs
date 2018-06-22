@@ -233,7 +233,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     .ConvertAll(Convert.ToInt32)
                     .Max();
 
-                return (maxEmployeeCode + 1).ToString("D4");
+                return (maxEmployeeCode + 1).ToString(maxEmployeeCode + 1 < 1000 ? "D4" : null);
             }
         }
     }

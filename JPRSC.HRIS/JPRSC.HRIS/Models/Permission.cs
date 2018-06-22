@@ -79,6 +79,10 @@ namespace JPRSC.HRIS.Models
 
         // Loan Type
         [Display(Name = "Loan Types")]
-        LoanTypeDefault = 1900
+        LoanTypeDefault = 1900,
+
+        // Loan
+        [Display(Name = "Loans")]
+        LoanDefault = 2000
     }
 }

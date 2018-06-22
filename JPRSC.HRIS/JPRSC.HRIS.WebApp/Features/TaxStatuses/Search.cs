@@ -78,7 +78,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
                 }
 
                 var taxStatuses = await dbQuery
-                    .OrderBy(r => r.Id)
+                    .OrderBy(ts => ts.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.TaxStatus>();
 

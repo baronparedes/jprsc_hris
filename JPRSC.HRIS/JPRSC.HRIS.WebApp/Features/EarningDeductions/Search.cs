@@ -67,7 +67,7 @@ namespace JPRSC.HRIS.WebApp.Features.EarningDeductions
                 }
 
                 var earningDeductions = await dbQuery
-                    .OrderBy(r => r.Id)
+                    .OrderBy(ed => ed.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.EarningDeduction>();
 

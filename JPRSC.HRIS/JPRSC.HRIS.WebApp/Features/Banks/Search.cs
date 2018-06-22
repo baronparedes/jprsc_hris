@@ -65,7 +65,7 @@ namespace JPRSC.HRIS.WebApp.Features.Banks
                 }
 
                 var banks = await dbQuery
-                    .OrderBy(r => r.Id)
+                    .OrderBy(b => b.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.Bank>();
 

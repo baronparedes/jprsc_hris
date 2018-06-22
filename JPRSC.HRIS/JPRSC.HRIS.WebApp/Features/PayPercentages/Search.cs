@@ -59,11 +59,11 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(tr => DbFunctions.Like(tr.Name, query.SearchLikeTerm));
+                        .Where(pp => DbFunctions.Like(pp.Name, query.SearchLikeTerm));
                 }
 
                 var payPercentages = await dbQuery
-                    .OrderBy(r => r.Id)
+                    .OrderBy(pp => pp.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.PayPercentage>();
 

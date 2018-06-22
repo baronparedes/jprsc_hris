@@ -304,6 +304,13 @@
     <Compile Include="Features\JobTitles\Search.cs" />
     <Compile Include="Features\JobTitles\_Controller.cs" />
     <Compile Include="Features\JobTitles\_MappingProfile.cs" />
+    <Compile Include="Features\Loans\Add.cs" />
+    <Compile Include="Features\Loans\Delete.cs" />
+    <Compile Include="Features\Loans\Edit.cs" />
+    <Compile Include="Features\Loans\Index.cs" />
+    <Compile Include="Features\Loans\Search.cs" />
+    <Compile Include="Features\Loans\_Controller.cs" />
+    <Compile Include="Features\Loans\_MappingProfile.cs" />
     <Compile Include="Features\LoanTypes\Add.cs" />
     <Compile Include="Features\LoanTypes\Delete.cs" />
     <Compile Include="Features\LoanTypes\Edit.cs" />
@@ -5905,6 +5912,9 @@
     <Content Include="wwwroot\scripts\jobTitles\add.js" />
     <Content Include="wwwroot\scripts\jobTitles\edit.js" />
     <Content Include="wwwroot\scripts\jobTitles\index.js" />
+    <Content Include="wwwroot\scripts\loans\add.js" />
+    <Content Include="wwwroot\scripts\loans\edit.js" />
+    <Content Include="wwwroot\scripts\loans\index.js" />
     <Content Include="wwwroot\scripts\loanTypes\add.js" />
     <Content Include="wwwroot\scripts\loanTypes\edit.js" />
     <Content Include="wwwroot\scripts\loanTypes\index.js" />
@@ -6878,6 +6888,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\LoanTypes\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Loans\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Loans\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Loans\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

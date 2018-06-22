@@ -61,7 +61,7 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
                 }
 
                 var phicRecords = await dbQuery
-                    .OrderBy(r => r.Id)
+                    .OrderBy(pr => pr.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.PhicRecord>();
 

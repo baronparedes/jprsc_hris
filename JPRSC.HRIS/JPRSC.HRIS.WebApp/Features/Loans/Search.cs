@@ -9,13 +9,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
+namespace JPRSC.HRIS.WebApp.Features.Loans
 {
     public class Search
     {
         public class Query : IRequest<QueryResult>
         {
             public string SearchTerm { get; set; }
+            public int? ClientId { get; set; }
 
             public string SearchLikeTerm
             {
@@ -30,13 +31,11 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
 
         public class QueryResult
         {
-            public IEnumerable<ApprovalLevel> ApprovalLevels { get; set; } = new List<ApprovalLevel>();
+            public IEnumerable<Loan> Loans { get; set; } = new List<Loan>();
 
-            public class ApprovalLevel
+            public class Loan
             {
                 public int Id { get; set; }
-                public int? Level { get; set; }
-                public string UserName { get; set; }
             }
         }
 
@@ -51,23 +50,31 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                if (!query.ClientId.HasValue) return new QueryResult();
+
+                var clientEmployeeIds = await _db
+                    .Employees
+                    .Where(e => e.ClientId == query.ClientId)
+                    .Select(e => e.Id)
+                    .ToListAsync();
+
                 var dbQuery = _db
-                    .ApprovalLevels
-                    .Where(al => !al.DeletedOn.HasValue);
+                    .Loans
+                    .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value));
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
-                {
-                    
+                {                    
+
                 }
 
-                var approvalLevels = await dbQuery
-                    .OrderBy(al => al.Level)
+                var loans = await dbQuery
+                    .OrderBy(l => l.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
-                    .ProjectToListAsync<QueryResult.ApprovalLevel>();
+                    .ProjectToListAsync<QueryResult.Loan>();
 
                 return new QueryResult
                 {
-                    ApprovalLevels = approvalLevels
+                    Loans = loans
                 };
             }
         }

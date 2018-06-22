@@ -156,6 +156,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806210132306_AddLoanType.Designer.cs">
       <DependentUpon>201806210132306_AddLoanType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806220439175_AddLoan.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806220439175_AddLoan.Designer.cs">
+      <DependentUpon>201806220439175_AddLoan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -196,6 +200,7 @@
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\JobTitle.cs" />
+    <Compile Include="Models\Loan.cs" />
     <Compile Include="Models\LoanType.cs" />
     <Compile Include="Models\Month.cs" />
     <Compile Include="Models\PagIbigRecord.cs" />
@@ -259,6 +264,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806210132306_AddLoanType.resx">
       <DependentUpon>201806210132306_AddLoanType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806220439175_AddLoan.resx">
+      <DependentUpon>201806220439175_AddLoan.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

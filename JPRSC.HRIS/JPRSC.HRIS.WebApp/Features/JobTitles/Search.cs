@@ -61,7 +61,7 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
                 }
 
                 var jobTitles = await dbQuery
-                    .OrderBy(r => r.Id)
+                    .OrderBy(jt => jt.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.JobTitle>();
 
