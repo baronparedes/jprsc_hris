@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace JPRSC.HRIS.Models
 {
@@ -32,6 +33,7 @@ namespace JPRSC.HRIS.Models
         public decimal? HourlyRate { get; set; }
         public int Id { get; set; }
         public string LastName { get; set; }
+        public ICollection<Loan> Loans { get; set; } = new List<Loan>();
         public string MiddleName { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string Nickname { get; set; }

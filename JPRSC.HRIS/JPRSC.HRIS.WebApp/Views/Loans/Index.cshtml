@@ -1,4 +1,6 @@
-﻿@{
+﻿@model JPRSC.HRIS.WebApp.Features.Loans.Index.QueryResult
+
+@{
     ViewBag.Title = "Loans";
 }
 
@@ -17,17 +19,21 @@
             Loans
         </h1>
         @Html.RenderSuccessNotification()
-        <div class="row">
+        <div class="row" ng-controller="LoanIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
                 <div class="form-group">
-                    <a href="@Url.Action("Add", "Loans")" class="btn btn-primary">Add Loan</a>
+                    <button type="button" class="btn btn-primary" ng-disabled="!vm.client.id || vm.searchInProgress" ng-click="vm.addLoanClicked()">Add Loan</button>
                 </div>
             </div>
-        </div>
-        <div class="row" ng-controller="LoanIndexCtrl as vm">
             <div class="col-sm-12">
                 <form role="form">
                     <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label">Client</label>
+                            <select class="form-control" ng-model="vm.client" ng-options="client.code for client in vm.clients track by client.id">
+                                <option value="?" selected="selected">Select client</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -39,17 +45,20 @@
                         </div>
                     </div>
                 </form>
-                <div class="note note-info" ng-show="!vm.loans.length">
-                    <p>No loans found.</p>
+                <div class="note note-info" ng-show="!vm.client.id">
+                    <p>Please select a client.</p>
                 </div>
-                <div class="portlet light bordered" ng-show="vm.loans.length">
+                <div class="note note-info" ng-show="vm.client.id > 0 && !vm.employees.length">
+                    <p>No employees found.</p>
+                </div>
+                <div class="portlet light bordered" ng-show="vm.client.id > 0 && vm.employees.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-sun-o font-red-sunglo"></i>
                             <span class="caption-subject font-red-sunglo bold uppercase">Loans</span>
                         </div>
                     </div>
-                    <div class="portlet-body">                        
+                    <div class="portlet-body">
                         <div class="table-scrollable">
                             <table class="table table-hover">
                                 <thead>
@@ -58,15 +67,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="loan in vm.loans track by loan.id">
-                                        <td>
+                                    <tr ng-repeat="employee in vm.employees track by employee.id">
+                                        @*<td>
                                             <a href="{{'/Loans/Edit?loanId=' + loan.id}}" class="btn btn-primary btn-sm">Edit</a>
                                             <form action="/Loans/Delete" method="post" style="display: inline-block;">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="LoanId" value="{{loan.id}}" />
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                             </form>
-                                        </td>
+                                        </td>*@
                                     </tr>
                                 </tbody>
                             </table>
@@ -74,6 +83,76 @@
                     </div>
                 </div>
             </div>
+
+            <script type="text/ng-template" id="addLoanModal.html">
+                <form class="form-horizontal" role="form" method="post" ng-submit="vm.addLoanSubmit($event)">
+                    <div class="modal-header">
+                        <h3 class="modal-title">I'm a modal!</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-body">
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.transactionNumber }">
+                                <label class="col-md-4 col-lg-3 control-label">Transaction Number</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="TransactionNumber" ng-model="vm.transactionNumber" />
+                                    <span ng-show="vm.validationErrors.transactionNumber" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
+                                <label class="col-md-4 col-lg-3 control-label">Employee</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
+                                    <select class="form-control" ng-model="vm.employee" ng-options="employee.firstName for employee in vm.employees track by employee.id">
+                                        <option value="?" selected="selected">Select employee</option>
+                                    </select>
+                                    <span ng-show="vm.validationErrors.employeeId" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanDate }">
+                                <label class="col-md-4 col-lg-3 control-label">Loan Date</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="LoanDate" ng-model="vm.loanDate" placeholder="MM/dd/yyyy" />
+                                    <span ng-show="vm.validationErrors.loanDate" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanTypeId }">
+                                <label class="col-md-4 col-lg-3 control-label">Loan Type</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" ng-model="vm.loanTypeId" ng-options="loanType.text for loanType in vm.loanTypesList track by loanType.value">
+                                        <option value="?" selected="selected">Select loan type</option>
+                                    </select>
+                                    <span ng-show="vm.validationErrors.loanTypeId" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.principalAmount }">
+                                <label class="col-md-4 col-lg-3 control-label">Principal Amount</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="PrincipalAmount" ng-model="vm.principalAmount" />
+                                    <span ng-show="vm.validationErrors.principalAmount" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.monthsPayable }">
+                                <label class="col-md-4 col-lg-3 control-label">Months Payable</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="MonthsPayable" ng-model="vm.monthsPayable" />
+                                    <span ng-show="vm.validationErrors.monthsPayable" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.interestRate }">
+                                <label class="col-md-4 col-lg-3 control-label">Interest Rate</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="MonthsPayable" ng-model="vm.interestRate" />
+                                    <span ng-show="vm.validationErrors.interestRate" class="help-block"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn green">Add</button>
+                        <a href="" class="btn btn-default" ng-click="vm.cancel()">Cancel</a>
+                    </div>
+                </form>
+            </script>
         </div>
     </div>
 </div>

@@ -13,7 +13,7 @@
         vm.employeeRates = [];
         vm.saveEditEmployeeRateClicked = saveEditEmployeeRateClicked;
         vm.searchClicked = searchClicked;
-        vm.searchModel = { client: {} };
+        vm.searchModel = {};
         vm.searchInProgress = false;
 
         $timeout(function () {

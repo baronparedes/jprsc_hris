@@ -168,6 +168,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
         {
             bundles.AddScriptBundle("~/scriptbundles/loans",
                 "~/wwwroot/scripts/loans/add.js",
+                "~/wwwroot/scripts/loans/addModal.js",
                 "~/wwwroot/scripts/loans/edit.js",
                 "~/wwwroot/scripts/loans/index.js");
         }

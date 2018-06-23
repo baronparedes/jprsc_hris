@@ -5,3 +5,7 @@
 div.page-logo > a:hover, div.page-logo > a:focus {
     text-decoration: none;
 }
+
+.modal-dialog {
+    margin-top: 60px;
+}

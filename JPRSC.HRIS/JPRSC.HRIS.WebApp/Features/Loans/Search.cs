@@ -31,10 +31,40 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
         public class QueryResult
         {
-            public IEnumerable<Loan> Loans { get; set; } = new List<Loan>();
+            public IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
+
+            public class Employee
+            {
+                public decimal? COLADaily { get; set; }
+                public decimal? COLAHourly { get; set; }
+                public decimal? DailyRate { get; set; }
+                public string EmployeeCode { get; set; }
+                public string FirstName { get; set; }
+                public decimal? HourlyRate { get; set; }
+                public int Id { get; set; }
+                public string LastName { get; set; }
+                public ICollection<Loan> Loans { get; set; } = new List<Loan>();
+            }
 
             public class Loan
             {
+                public int? EmployeeId { get; set; }
+                public int Id { get; set; }
+                public double? InterestRate { get; set; }
+                public DateTime? LoanDate { get; set; }
+                public LoanType LoanType { get; set; }
+                public int? LoanTypeId { get; set; }
+                public int? MonthsPayable { get; set; }
+                public int? PayrollPeriod { get; set; }
+                public decimal? PrincipalAmount { get; set; }
+                public string TransactionNumber { get; set; }
+                public DateTime? ZeroedOutOn { get; set; }
+            }
+
+            public class LoanType
+            {
+                public string Code { get; set; }
+                public string Description { get; set; }
                 public int Id { get; set; }
             }
         }
@@ -52,29 +82,27 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             {
                 if (!query.ClientId.HasValue) return new QueryResult();
 
-                var clientEmployeeIds = await _db
-                    .Employees
-                    .Where(e => e.ClientId == query.ClientId)
-                    .Select(e => e.Id)
-                    .ToListAsync();
-
                 var dbQuery = _db
-                    .Loans
-                    .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value));
+                    .Employees
+                    .Include(e => e.Loans)
+                    .Include(e => e.Loans.Select(l => l.LoanType))
+                    .Where(e => !e.DeletedOn.HasValue && e.ClientId == query.ClientId);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
-                {                    
-
+                {
+                    dbQuery = dbQuery
+                        .Where(e => DbFunctions.Like(e.FirstName, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.LastName, query.SearchLikeTerm));
                 }
 
-                var loans = await dbQuery
-                    .OrderBy(l => l.Id)
+                var employees = await dbQuery
+                    .OrderBy(e => e.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
-                    .ProjectToListAsync<QueryResult.Loan>();
+                    .ProjectToListAsync<QueryResult.Employee>();
 
                 return new QueryResult
                 {
-                    Loans = loans
+                    Employees = employees
                 };
             }
         }
