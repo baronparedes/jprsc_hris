@@ -55,16 +55,16 @@
                                 <thead>
                                     <tr>
                                         <th>Code</th>
-                                        <th>Description</th>
                                         <th>Name</th>
+                                        <th>Description</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="pagIbigRecord in vm.pagIbigRecords track by pagIbigRecord.id">
                                         <td>{{pagIbigRecord.code}}</td>
-                                        <td>{{pagIbigRecord.description}}</td>
                                         <td>{{pagIbigRecord.name}}</td>
+                                        <td>{{pagIbigRecord.description}}</td>
                                         <td>
                                             <a href="{{'/PagIbigRecords/Edit?pagIbigRecordId=' + pagIbigRecord.id}}" class="btn btn-primary btn-sm">Edit</a>
                                             <form action="/PagIbigRecords/Delete" method="post" style="display: inline-block;">
