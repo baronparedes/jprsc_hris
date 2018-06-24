@@ -46,8 +46,6 @@ namespace JPRSC.HRIS.WebApp.Features.SSSRecords
                     Employee = command.Employee,
                     Employer = command.Employer,
                     Number = command.Number,
-                    PhilHealthEmployee = command.PhilHealthEmployee,
-                    PhilHealthEmployer = command.PhilHealthEmployer,
                     Range1 = command.Range1
                 };
 

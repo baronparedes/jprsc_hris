@@ -39,8 +39,6 @@ namespace JPRSC.HRIS.WebApp.Features.SSSRecords
                 public decimal? Employer { get; set; }
                 public int Id { get; set; }
                 public int? Number { get; set; }
-                public decimal? PhilHealthEmployee { get; set; }
-                public decimal? PhilHealthEmployer { get; set; }
                 public decimal? Range1 { get; set; }
             }
         }

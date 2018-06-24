@@ -24,8 +24,6 @@ namespace JPRSC.HRIS.WebApp.Features.SSSRecords
             public decimal? Employer { get; set; }
             public int Id { get; set; }
             public int? Number { get; set; }
-            public decimal? PhilHealthEmployee { get; set; }
-            public decimal? PhilHealthEmployer { get; set; }
             public decimal? Range1 { get; set; }
         }
 
@@ -69,8 +67,6 @@ namespace JPRSC.HRIS.WebApp.Features.SSSRecords
                 sssRecord.Employer = command.Employer;
                 sssRecord.ModifiedOn = DateTime.UtcNow;
                 sssRecord.Number = command.Number;
-                sssRecord.PhilHealthEmployee = command.PhilHealthEmployee;
-                sssRecord.PhilHealthEmployer = command.PhilHealthEmployer;
                 sssRecord.Range1 = command.Range1;
 
                 await _db.SaveChangesAsync();

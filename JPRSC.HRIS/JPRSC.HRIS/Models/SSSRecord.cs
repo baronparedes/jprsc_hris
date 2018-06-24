@@ -12,8 +12,6 @@ namespace JPRSC.HRIS.Models
         public int Id { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public int? Number { get; set; }
-        public decimal? PhilHealthEmployee { get; set; }
-        public decimal? PhilHealthEmployer { get; set; }
         public decimal? Range1 { get; set; }
         public decimal? Total => Employer + Employee;
     }

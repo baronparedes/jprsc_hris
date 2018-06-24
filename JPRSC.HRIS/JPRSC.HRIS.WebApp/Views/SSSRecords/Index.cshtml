@@ -17,13 +17,6 @@
             SSS Records
         </h1>
         @Html.RenderSuccessNotification()
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <a href="@Url.Action("Add", "SSSRecords")" class="btn btn-primary">Add SSS Record</a>
-                </div>
-            </div>
-        </div>
         <div class="row" ng-controller="SSSRecordIndexCtrl as vm">
             <div class="col-sm-12">
                 <form role="form">
@@ -58,8 +51,6 @@
                                         <th>Range1</th>
                                         <th>Employer</th>
                                         <th>Employee</th>
-                                        <th>PhilHealth Employer</th>
-                                        <th>PhilHealth Employee</th>
                                         <th>ECC</th>
                                         <th>Total</th>
                                         <th>&nbsp;</th>
@@ -82,14 +73,6 @@
                                         <td>
                                             <span ng-show="!sssRecord.isEditing">{{sssRecord.employee}}</span>
                                             <input ng-show="sssRecord.isEditing" class="form-control input-sm" ng-model="sssRecord.copy.employee" />
-                                        </td>
-                                        <td>
-                                            <span ng-show="!sssRecord.isEditing">{{sssRecord.philHealthEmployer}}</span>
-                                            <input ng-show="sssRecord.isEditing" class="form-control input-sm" ng-model="sssRecord.copy.philHealthEmployer" />
-                                        </td>
-                                        <td>
-                                            <span ng-show="!sssRecord.isEditing">{{sssRecord.philHealthEmployee}}</span>
-                                            <input ng-show="sssRecord.isEditing" class="form-control input-sm" ng-model="sssRecord.copy.philHealthEmployee" />
                                         </td>
                                         <td>
                                             <span ng-show="!sssRecord.isEditing">{{sssRecord.ecc}}</span>
