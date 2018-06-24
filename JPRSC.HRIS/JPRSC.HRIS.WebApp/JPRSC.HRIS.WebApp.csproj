@@ -377,6 +377,7 @@
     <Compile Include="Infrastructure\Security\Startup.Auth.cs" />
     <Compile Include="Infrastructure\Sidebar\SelectedSidebarItem.cs" />
     <Compile Include="Infrastructure\Sidebar\SidebarAttribute.cs" />
+    <Compile Include="Infrastructure\Sidebar\SidebarHeading.cs" />
     <Compile Include="Infrastructure\Sidebar\SidebarHtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Sidebar\SidebarMenuItem.cs" />
     <Compile Include="Infrastructure\Validation\FluentValidationExtensions.cs" />

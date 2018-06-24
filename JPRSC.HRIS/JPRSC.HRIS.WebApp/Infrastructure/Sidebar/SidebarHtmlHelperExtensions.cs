@@ -13,9 +13,9 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Sidebar
 {
     public static class SidebarHtmlHelperExtensions
     {
-        public static MvcHtmlString RenderSidebarMenu<T>(this HtmlHelper<T> helper, params SidebarMenuItem[] items)
+        public static MvcHtmlString RenderSidebarMenu<T>(this HtmlHelper<T> helper, params SidebarHeading[] headings)
         {
-            if (items == null) throw new ArgumentNullException(nameof(items));
+            if (headings == null) throw new ArgumentNullException(nameof(headings));
 
             var db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
             var currentUserId = HttpContext.Current.User.Identity.GetUserId();
@@ -26,70 +26,91 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Sidebar
 
             var itemsStringBuilder = new StringBuilder(128);
 
-            for (var i = 0; i < items.Count(); i++)
+            for (var i = 0; i < headings.Count(); i++)
             {
-                var item = items[i];
+                var heading = headings[i];
 
-                var userHasPermission = currentUser != null && currentUser.CustomRoles.Any(cr => cr.HasPermission(item.Permission));
-                if (!userHasPermission)
+                if (!String.IsNullOrWhiteSpace(heading.Text))
                 {
-                    continue;
+                    var headingListTag = new HtmlTag("li");
+                    headingListTag.AddClass("heading");
+
+                    var headingTag = new HtmlTag("h3");
+                    headingTag.AddClass("uppercase");
+                    headingTag.Text(heading.Text);
+
+                    headingListTag.Append(headingTag);
+
+                    itemsStringBuilder.AppendLine(headingListTag.ToHtmlString());
                 }
 
-                var itemTag = new HtmlTag("li");
-                itemTag.AddClasses("nav-item");
+                var items = heading.SubMenus;
 
-                if (i == 0)
+                for (var j = 0; j < items.Count(); j++)
                 {
-                    itemTag.AddClass("start");
-                }
+                    var item = items[j];
 
-                if (!item.SubMenus.Any())
-                {
-                    itemTag.AddClass($"{(HasSelectedMenu(helper, item.Controller, item.Action) ? "active" : String.Empty)}");
-                    var finalLevelLinkTag = GetFinalLevelLinkTag(helper, item);
-
-                    itemTag.Append(finalLevelLinkTag);
-                }
-                else
-                {
-                    itemTag.AddClass($"{(HasSelectedMenu(helper, item.Controller) ? "active" : String.Empty)}");
-
-                    var linkTag = new HtmlTag("a");
-                    linkTag.Attr("href", "javascript:;");
-                    linkTag.AddClasses("nav-link", "nav-toggle");
-
-                    var iconTag = new HtmlTag("i");
-                    iconTag.AddClass(item.IconClass);
-                    linkTag.Append(iconTag);
-
-                    var titleTag = new HtmlTag("span");
-                    titleTag.AddClass("title");
-                    titleTag.Text(item.Title);
-                    linkTag.Append(titleTag);
-
-                    var arrowTag = new HtmlTag("span");
-                    arrowTag.AddClass("arrow");
-                    linkTag.Append(arrowTag);
-
-                    itemTag.Append(linkTag);
-
-                    var subMenusTag = new HtmlTag("ul");
-
-                    for (var j = 0; j < item.SubMenus.Count; j++)
+                    var userHasPermission = currentUser != null && currentUser.CustomRoles.Any(cr => cr.HasPermission(item.Permission));
+                    if (!userHasPermission)
                     {
-                        var finalLevelLinkTag = GetFinalLevelLinkTag(helper, item.SubMenus[j]);
-
-                        if (j == 0)
-                        {
-                            finalLevelLinkTag.AddClass("start");
-                        }
-
-                        subMenusTag.Append(finalLevelLinkTag);
+                        continue;
                     }
-                }
 
-                itemsStringBuilder.AppendLine(itemTag.ToHtmlString());
+                    var itemTag = new HtmlTag("li");
+                    itemTag.AddClasses("nav-item");
+
+                    if (j == 0)
+                    {
+                        itemTag.AddClass("start");
+                    }
+
+                    if (!item.SubMenus.Any())
+                    {
+                        itemTag.AddClass($"{(HasSelectedMenu(helper, item.Controller, item.Action) ? "active" : String.Empty)}");
+                        var finalLevelLinkTag = GetFinalLevelLinkTag(helper, item);
+
+                        itemTag.Append(finalLevelLinkTag);
+                    }
+                    else
+                    {
+                        itemTag.AddClass($"{(HasSelectedMenu(helper, item.Controller) ? "active" : String.Empty)}");
+
+                        var linkTag = new HtmlTag("a");
+                        linkTag.Attr("href", "javascript:;");
+                        linkTag.AddClasses("nav-link", "nav-toggle");
+
+                        var iconTag = new HtmlTag("i");
+                        iconTag.AddClass(item.IconClass);
+                        linkTag.Append(iconTag);
+
+                        var titleTag = new HtmlTag("span");
+                        titleTag.AddClass("title");
+                        titleTag.Text(item.Title);
+                        linkTag.Append(titleTag);
+
+                        var arrowTag = new HtmlTag("span");
+                        arrowTag.AddClass("arrow");
+                        linkTag.Append(arrowTag);
+
+                        itemTag.Append(linkTag);
+
+                        var subMenusTag = new HtmlTag("ul");
+
+                        for (var k = 0; k < item.SubMenus.Count; k++)
+                        {
+                            var finalLevelLinkTag = GetFinalLevelLinkTag(helper, item.SubMenus[k]);
+
+                            if (k == 0)
+                            {
+                                finalLevelLinkTag.AddClass("start");
+                            }
+
+                            subMenusTag.Append(finalLevelLinkTag);
+                        }
+                    }
+
+                    itemsStringBuilder.AppendLine(itemTag.ToHtmlString());
+                }
             }
 
             return new MvcHtmlString(itemsStringBuilder.ToString());

@@ -34,27 +34,32 @@
                     </form>
                 </li>*@
             @Html.RenderSidebarMenu(
-                new SidebarMenuItem("Home", "Index", "Home", "fa fa-home", Permission.HomeDefault),
-                new SidebarMenuItem("Companies", "Index", "Companies", "fa fa-building", Permission.CompanyDefault),
-                new SidebarMenuItem("Accounts", "Index", "Accounts", "fa fa-user", Permission.AccountDefault),
-                new SidebarMenuItem("Edit Account", "EditOwn", "Accounts", "fa fa-user", Permission.AccountEditOwn),
-                new SidebarMenuItem("Religions", "Index", "Religions", "fa fa-sun-o", Permission.ReligionDefault),
-                new SidebarMenuItem("Clients", "Index", "Clients", "fa fa-book", Permission.ClientDefault),
-                new SidebarMenuItem("Roles", "Index", "CustomRoles", "fa fa-lock", Permission.CustomRoleDefault),
-                new SidebarMenuItem("Earnings and Deductions", "Index", "EarningDeductions", "fa fa-dollar", Permission.EarningDeductionDefault),
-                new SidebarMenuItem("Job Titles", "Index", "JobTitles", "fa fa-id-card", Permission.JobTitleDefault),
-                new SidebarMenuItem("Departments", "Index", "Departments", "fa fa-building", Permission.DepartmentDefault),
-                new SidebarMenuItem("Tax Statuses", "Index", "TaxStatuses", "fa fa-dollar", Permission.TaxStatusDefault),
-                new SidebarMenuItem("Employees", "Index", "Employees", "fa fa-users", Permission.EmployeeDefault),
-                new SidebarMenuItem("Approval Levels", "Index", "ApprovalLevels", "fa fa-check", Permission.ApprovalLevelDefault),
-                new SidebarMenuItem("Pag Ibig Records", "Index", "PagIbigRecords", "fa fa-heart", Permission.PagIbigRecordDefault),
-                new SidebarMenuItem("Banks", "Index", "Banks", "fa fa-money", Permission.BankDefault),
-                new SidebarMenuItem("Pay Rates", "Index", "PayPercentages", "fa fa-percent", Permission.PayPercentageDefault),
-                new SidebarMenuItem("PHIC", "Edit", "PhicRecords", "fa fa-percent", Permission.PhicRecordDefault),
-                new SidebarMenuItem("SSS", "Index", "SSSRecords", "fa fa-percent", Permission.SSSRecordDefault),
-                new SidebarMenuItem("Employee Rates", "Index", "EmployeeRates", "fa fa-dollar", Permission.EmployeeRateDefault),
-                new SidebarMenuItem("Loan Types", "Index", "LoanTypes", "fa fa-dollar", Permission.LoanTypeDefault),
-                new SidebarMenuItem("Loans", "Index", "Loans", "fa fa-dollar", Permission.LoanDefault)
+                new SidebarHeading(null,
+                    new SidebarMenuItem("Home", "Index", "Home", "fa fa-home", Permission.HomeDefault)),
+                new SidebarHeading("Setup",
+                    new SidebarMenuItem("Companies", "Index", "Companies", "fa fa-building", Permission.CompanyDefault),
+                    new SidebarMenuItem("Accounts", "Index", "Accounts", "fa fa-user", Permission.AccountDefault),
+                    new SidebarMenuItem("Edit Account", "EditOwn", "Accounts", "fa fa-user", Permission.AccountEditOwn),
+                    new SidebarMenuItem("Religions", "Index", "Religions", "fa fa-sun-o", Permission.ReligionDefault),
+                    new SidebarMenuItem("Clients", "Index", "Clients", "fa fa-book", Permission.ClientDefault),
+                    new SidebarMenuItem("Roles", "Index", "CustomRoles", "fa fa-lock", Permission.CustomRoleDefault),
+                    new SidebarMenuItem("Earnings and Deductions", "Index", "EarningDeductions", "fa fa-dollar", Permission.EarningDeductionDefault),
+                    new SidebarMenuItem("Job Titles", "Index", "JobTitles", "fa fa-id-card", Permission.JobTitleDefault),
+                    new SidebarMenuItem("Departments", "Index", "Departments", "fa fa-building", Permission.DepartmentDefault),
+                    new SidebarMenuItem("Tax Statuses", "Index", "TaxStatuses", "fa fa-dollar", Permission.TaxStatusDefault)),
+                new SidebarHeading("HR",
+                    new SidebarMenuItem("Employees", "Index", "Employees", "fa fa-users", Permission.EmployeeDefault),
+                    new SidebarMenuItem("Approval Levels", "Index", "ApprovalLevels", "fa fa-check", Permission.ApprovalLevelDefault)
+                ),
+                new SidebarHeading("Payroll",
+                    new SidebarMenuItem("Pag Ibig Records", "Index", "PagIbigRecords", "fa fa-heart", Permission.PagIbigRecordDefault),
+                    new SidebarMenuItem("Banks", "Index", "Banks", "fa fa-money", Permission.BankDefault),
+                    new SidebarMenuItem("Pay Rates", "Index", "PayPercentages", "fa fa-percent", Permission.PayPercentageDefault),
+                    new SidebarMenuItem("PHIC", "Edit", "PhicRecords", "fa fa-percent", Permission.PhicRecordDefault),
+                    new SidebarMenuItem("SSS", "Index", "SSSRecords", "fa fa-percent", Permission.SSSRecordDefault),
+                    new SidebarMenuItem("Employee Rates", "Index", "EmployeeRates", "fa fa-dollar", Permission.EmployeeRateDefault),
+                    new SidebarMenuItem("Loan Types", "Index", "LoanTypes", "fa fa-dollar", Permission.LoanTypeDefault),
+                    new SidebarMenuItem("Loans", "Index", "Loans", "fa fa-dollar", Permission.LoanDefault))
             )
         </ul>
     </div>
