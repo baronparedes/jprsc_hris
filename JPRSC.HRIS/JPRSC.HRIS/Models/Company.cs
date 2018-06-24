@@ -8,6 +8,7 @@ namespace JPRSC.HRIS.Models
         public DateTime AddedOn { get; set; }
         public string Address { get; set; }
         public string BOI { get; set; }
+        public string Code { get; set; }
         public DateTime? DateIssued { get; set; }
         public DateTime? DeletedOn { get; set; }
         public string DTI { get; set; }

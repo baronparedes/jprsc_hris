@@ -35,6 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             public class Company
             {
                 public string Address { get; set; }
+                public string Code { get; set; }
                 public string Email { get; set; }
                 public int Id { get; set; }
                 public string Name { get; set; }
@@ -61,6 +62,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                 {
                     dbQuery = dbQuery
                         .Where(cp => DbFunctions.Like(cp.Name, query.SearchLikeTerm) ||
+                            DbFunctions.Like(cp.Code, query.SearchLikeTerm) ||
                             DbFunctions.Like(cp.Address, query.SearchLikeTerm) ||
                             DbFunctions.Like(cp.Email, query.SearchLikeTerm) ||
                             DbFunctions.Like(cp.Phone, query.SearchLikeTerm));

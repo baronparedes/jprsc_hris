@@ -164,6 +164,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806240600197_AddDeductionAmount.Designer.cs">
       <DependentUpon>201806240600197_AddDeductionAmount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806240652011_AddCompanyCode.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806240652011_AddCompanyCode.Designer.cs">
+      <DependentUpon>201806240652011_AddCompanyCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -274,6 +278,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806240600197_AddDeductionAmount.resx">
       <DependentUpon>201806240600197_AddDeductionAmount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806240652011_AddCompanyCode.resx">
+      <DependentUpon>201806240652011_AddCompanyCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

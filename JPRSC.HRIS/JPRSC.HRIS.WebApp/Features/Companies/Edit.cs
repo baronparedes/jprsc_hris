@@ -21,6 +21,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         {
             public string Address { get; set; }
             public string BOI { get; set; }
+            public string Code { get; set; }
             public DateTime? DateIssued { get; set; }
             public string DTI { get; set; }
             public string Email { get; set; }
@@ -57,93 +58,29 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         {
             public CommandValidator()
             {
-                RuleFor(c => c.Address)
+                RuleFor(c => c.Code)
                     .NotEmpty();
 
-                RuleFor(c => c.BOI)
-                    .MustBeANumber();
+                When(c => !String.IsNullOrWhiteSpace(c.Email), () =>
+                {
+                    RuleFor(c => c.Email)
+                        .EmailAddress();
+                });
 
-                RuleFor(c => c.DateIssued)
-                    .NotEmpty();
-
-                RuleFor(c => c.DTI)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.DTI)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.Email)
-                    .EmailAddress();
-
-                RuleFor(c => c.Name)
+                RuleFor(c => c.Id)
                     .NotEmpty();
 
                 RuleFor(c => c.PagIbig)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.PagIbig)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.PhilHealth)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.PhilHealth)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.PERAA)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.PERAA)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.Phone)
-                    .MustBeANumber();
-
-                RuleFor(c => c.PlaceIssued)
                     .NotEmpty();
 
-                RuleFor(c => c.Registration)
-                    .MustBeANumber();
-
-                RuleFor(c => c.SEC)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.SEC)
-                            .MustBeANumber();
-                    });
+                RuleFor(c => c.PhilHealth)
+                    .NotEmpty();
 
                 RuleFor(c => c.SSS)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.SSS)
-                            .MustBeANumber();
-                    });
+                    .NotEmpty();
 
                 RuleFor(c => c.VAT)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.VAT)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.ZipCode)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.ZipCode)
-                            .MustBeANumber();
-                    });
+                    .NotEmpty();
             }
         }
 
@@ -158,25 +95,26 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
             public async Task<Unit> Handle(Command command, CancellationToken token)
             {
-                var Company = await _db.Companies.SingleAsync(cp => cp.Id == command.Id);
+                var company = await _db.Companies.SingleAsync(cp => cp.Id == command.Id);
 
-                Company.Address = command.Address;
-                Company.BOI = command.BOI;
-                Company.DateIssued = command.DateIssued;
-                Company.DTI = command.DTI;
-                Company.Email = command.Email;
-                Company.ModifiedOn = DateTime.UtcNow;
-                Company.Name = command.Name;
-                Company.PagIbig = command.PagIbig;
-                Company.PERAA = command.PERAA;
-                Company.PhilHealth = command.PhilHealth;
-                Company.Phone = command.Phone;
-                Company.PlaceIssued = command.PlaceIssued;
-                Company.Registration = command.Registration;
-                Company.SEC = command.SEC;
-                Company.SSS = command.SSS;
-                Company.VAT = command.VAT;
-                Company.ZipCode = command.ZipCode;
+                company.Address = command.Address;
+                company.BOI = command.BOI;
+                company.Code = command.Code;
+                company.DateIssued = command.DateIssued;
+                company.DTI = command.DTI;
+                company.Email = command.Email;
+                company.ModifiedOn = DateTime.UtcNow;
+                company.Name = command.Name;
+                company.PagIbig = command.PagIbig;
+                company.PERAA = command.PERAA;
+                company.PhilHealth = command.PhilHealth;
+                company.Phone = command.Phone;
+                company.PlaceIssued = command.PlaceIssued;
+                company.Registration = command.Registration;
+                company.SEC = command.SEC;
+                company.SSS = command.SSS;
+                company.VAT = command.VAT;
+                company.ZipCode = command.ZipCode;
 
                 await _db.SaveChangesAsync();
 

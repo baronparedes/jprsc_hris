@@ -31,6 +31,7 @@
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.addCompanySubmit($event)">
                             @Html.AntiForgeryToken()
                             <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("Code")
                                 @Html.TextBoxHorizontalFormGroup("Name")
                                 @Html.TextBoxHorizontalFormGroup("Address")
                                 @Html.TextBoxHorizontalFormGroup("Email")

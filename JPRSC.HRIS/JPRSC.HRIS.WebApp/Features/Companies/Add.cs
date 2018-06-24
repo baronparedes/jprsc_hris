@@ -13,6 +13,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         public class Command : IRequest
         {
             public string Address { get; set; }
+            public string Code { get; set; }
             public string BOI { get; set; }
             public DateTime? DateIssued { get; set; }
             public string DTI { get; set; }
@@ -34,93 +35,26 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         {
             public CommandValidator()
             {
-                RuleFor(c => c.Address)
+                RuleFor(c => c.Code)
                     .NotEmpty();
 
-                RuleFor(c => c.BOI)
-                    .MustBeANumber();
-
-                RuleFor(c => c.DateIssued)
-                    .NotEmpty();
-
-                RuleFor(c => c.DTI)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.DTI)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.Email)
-                    .EmailAddress();
-
-                RuleFor(c => c.Name)
-                    .NotEmpty();
+                When(c => !String.IsNullOrWhiteSpace(c.Email), () =>
+                {
+                    RuleFor(c => c.Email)
+                        .EmailAddress();
+                });
 
                 RuleFor(c => c.PagIbig)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.PagIbig)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.PhilHealth)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.PhilHealth)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.PERAA)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.PERAA)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.Phone)
-                    .MustBeANumber();
-
-                RuleFor(c => c.PlaceIssued)
                     .NotEmpty();
 
-                RuleFor(c => c.Registration)
-                    .MustBeANumber();
-
-                RuleFor(c => c.SEC)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.SEC)
-                            .MustBeANumber();
-                    });
+                RuleFor(c => c.PhilHealth)
+                    .NotEmpty();
 
                 RuleFor(c => c.SSS)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.SSS)
-                            .MustBeANumber();
-                    });
+                    .NotEmpty();
 
                 RuleFor(c => c.VAT)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.VAT)
-                            .MustBeANumber();
-                    });
-
-                RuleFor(c => c.ZipCode)
-                    .NotEmpty()
-                    .DependentRules(d =>
-                    {
-                        d.RuleFor(c => c.ZipCode)
-                            .MustBeANumber();
-                    });
+                    .NotEmpty();
             }
         }
 
@@ -140,6 +74,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
                     AddedOn = DateTime.UtcNow,
                     Address = command.Address,
                     BOI = command.BOI,
+                    Code = command.Code,
                     DateIssued = command.DateIssued,
                     DTI = command.DTI,
                     Email = command.Email,

@@ -32,6 +32,7 @@
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(m => m.Id)
                             <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("Code")
                                 @Html.TextBoxHorizontalFormGroup("Name")
                                 @Html.TextBoxHorizontalFormGroup("Address")
                                 @Html.TextBoxHorizontalFormGroup("Email")
