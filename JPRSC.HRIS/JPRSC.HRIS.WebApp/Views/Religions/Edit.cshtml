@@ -33,7 +33,7 @@
                             @Html.HiddenFor(m => m.Id)
                             <div class="form-body">
                                 @Html.TextBoxHorizontalFormGroup("Code")
-                                @Html.TextBoxHorizontalFormGroup("Description")
+                                @Html.TextBoxHorizontalFormGroup("Description", "Name")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Religions")" class="btn default">Cancel</a>
