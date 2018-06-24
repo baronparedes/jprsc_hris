@@ -21,32 +21,41 @@
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="LoanIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary" ng-disabled="!vm.client.id || vm.searchInProgress" ng-click="vm.addLoanClicked()">Add Loan</button>
-                </div>
-            </div>
-            <div class="col-sm-12">
                 <form role="form">
                     <div class="form-body">
-                        <div class="form-group">
-                            <label class="control-label">Client</label>
-                            <select class="form-control" ng-model="vm.client" ng-options="client.code for client in vm.clients track by client.id">
-                                <option value="?" selected="selected">Select client</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
-                                    <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
-                                </span>
-                                <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.client" ng-options="client.code for client in vm.clients track by client.id">
+                                        <option value="?" selected="selected">Select client</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Search Employees</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                            <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                        </span>
+                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </form>
                 <div class="note note-info" ng-show="!vm.client.id">
                     <p>Please select a client.</p>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" ng-disabled="!vm.client.id || vm.searchInProgress" ng-click="vm.addLoanClicked()">Add Loan</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="note note-info" ng-show="vm.client.id > 0 && !vm.employees.length">
                     <p>No employees found.</p>
@@ -63,19 +72,22 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
+                                        <td></td>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="employee in vm.employees track by employee.id">
+                                        <td>{{employee | json}}</td>
+                                        <td></td>
                                         @*<td>
-                                            <a href="{{'/Loans/Edit?loanId=' + loan.id}}" class="btn btn-primary btn-sm">Edit</a>
-                                            <form action="/Loans/Delete" method="post" style="display: inline-block;">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="LoanId" value="{{loan.id}}" />
-                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
-                                        </td>*@
+                                    <a href="{{'/Loans/Edit?loanId=' + loan.id}}" class="btn btn-primary btn-sm">Edit</a>
+                                    <form action="/Loans/Delete" method="post" style="display: inline-block;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="LoanId" value="{{loan.id}}" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>*@
                                     </tr>
                                 </tbody>
                             </table>
@@ -87,7 +99,7 @@
             <script type="text/ng-template" id="addLoanModal.html">
                 <form class="form-horizontal" role="form" method="post" ng-submit="vm.addLoanSubmit($event)">
                     <div class="modal-header">
-                        <h3 class="modal-title">I'm a modal!</h3>
+                        <h3 class="modal-title">Add Loan</h3>
                     </div>
                     <div class="modal-body">
                         <div class="form-body">
@@ -118,7 +130,7 @@
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanTypeId }">
                                 <label class="col-md-4 col-lg-3 control-label">Loan Type</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <select class="form-control" ng-model="vm.loanTypeId" ng-options="loanType.text for loanType in vm.loanTypesList track by loanType.value">
+                                    <select class="form-control" name="LoanTypeId" ng-model="vm.loanTypeId" ng-options="loanType.text for loanType in vm.loanTypesList track by loanType.value">
                                         <option value="?" selected="selected">Select loan type</option>
                                     </select>
                                     <span ng-show="vm.validationErrors.loanTypeId" class="help-block"></span>
@@ -131,6 +143,15 @@
                                     <span ng-show="vm.validationErrors.principalAmount" class="help-block"></span>
                                 </div>
                             </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriod }">
+                                <label class="col-md-4 col-lg-3 control-label">Payroll Period</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="PayrollPeriod" ng-model="vm.payrollPeriod" ng-options="payrollPeriod for payrollPeriod in vm.payrollPeriods track by payrollPeriod">
+                                        <option value="?" selected="selected">Select payroll period</option>
+                                    </select>
+                                    <span ng-show="vm.validationErrors.payrollPeriod" class="help-block"></span>
+                                </div>
+                            </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.monthsPayable }">
                                 <label class="col-md-4 col-lg-3 control-label">Months Payable</label>
                                 <div class="col-md-8 col-lg-9">
@@ -141,8 +162,20 @@
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.interestRate }">
                                 <label class="col-md-4 col-lg-3 control-label">Interest Rate</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" name="MonthsPayable" ng-model="vm.interestRate" />
+                                    <input type="text" class="form-control" name="InterestRate" ng-model="vm.interestRate" />
                                     <span ng-show="vm.validationErrors.interestRate" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Interest Amount</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <p class="form-control-static">{{vm.currencySymbol}}{{vm.getInterestAmount() | number:2 }}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Deduction Amount</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <p class="form-control-static">{{vm.currencySymbol}}{{vm.getDeductionAmount() | number:2 }}</p>
                                 </div>
                             </div>
                         </div>

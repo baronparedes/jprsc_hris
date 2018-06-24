@@ -43,6 +43,10 @@
                     }
                 }
             });
+
+            modalInstance.result.then(function (result) {
+                searchClicked();
+            });
         };
 
         function editLoanClicked(loan) {

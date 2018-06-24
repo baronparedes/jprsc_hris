@@ -21,22 +21,28 @@
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="EmployeeRateIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
-                <div class="row"></div>
                 <form role="form">
                     <div class="form-body">
-                        <div class="form-group">
-                            <label class="control-label">Client</label>
-                            <select class="form-control" ng-model="vm.client" ng-options="client.text for client in vm.clientsList track by client.value">
-                                <option value="?" selected="selected">Select client</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
-                                    <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
-                                </span>
-                                <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.client" ng-options="client.text for client in vm.clientsList track by client.value">
+                                        <option value="?" selected="selected">Select client</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Search Employees</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                            <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                        </span>
+                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

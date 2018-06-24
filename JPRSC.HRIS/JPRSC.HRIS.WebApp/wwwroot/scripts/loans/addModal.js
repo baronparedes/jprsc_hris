@@ -8,6 +8,9 @@
         vm.addLoanSubmit = addLoanSubmit;
         vm.cancel = cancel;
         vm.client = params.client;
+        vm.currencySymbol = 'P';
+        vm.getDeductionAmount = getDeductionAmount;
+        vm.getInterestAmount = getInterestAmount;
         vm.payrollPeriods = [];
         vm.employees = params.employees;
         vm.loanTypesList = params.loanTypesList;
@@ -23,7 +26,7 @@
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
 
             $http.post(action, data, config).then(function (response) {
-                $window.location = '/Loans/Index';
+                $uibModalInstance.close();
             }, function (response) {
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
@@ -35,16 +38,23 @@
             $uibModalInstance.dismiss('cancel');
         };
 
-        function init() {
-            console.log('init');
+        function getDeductionAmount() {
+            if (vm.getInterestAmount() == 0 || !vm.monthsPayable || vm.monthsPayable <= 0) return 0;
 
+            return vm.getInterestAmount() / vm.monthsPayable;
+        };
+
+        function getInterestAmount() {
+            if (!vm.principalAmount || vm.principalAmount <= 0 || !vm.interestRate || vm.interestRate <= 0) return 0;
+
+            return vm.principalAmount * (vm.interestRate / 100)
+        };
+
+        function init() {
             populatePayrollPeriods();
         };
 
         function populatePayrollPeriods() {
-            console.log('vm.lookups', vm.lookups);
-            console.log('vm.client', vm.client);
-
             // TODO
             //o	Payroll period values option should auto populate depending on the client’s cutoff period setting.
             //	Weekly – Options should be: 1, 2, 3, 4
@@ -54,6 +64,9 @@
             if (vm.client.cutOffPeriod === vm.lookups.cutOffPeriods.daily.value) {
 
             }
+
+            vm.payrollPeriods = [1, 2, 3, 4];
+
         };
     };
 }());

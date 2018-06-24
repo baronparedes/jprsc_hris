@@ -25,7 +25,6 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(Add.Command command)
         {
             if (!ModelState.IsValid)
@@ -34,8 +33,6 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             }
 
             await _mediator.Send(command);
-
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully added loan.");
 
             return Json("success");
         }
