@@ -7,7 +7,6 @@ namespace JPRSC.HRIS.Models
         public DateTime AddedOn { get; set; }
         public string Code { get; set; }
         public int? CurrentPayrollPeriod { get; set; }
-        public CutOffPeriod? CutOffPeriod { get; set; }
         public int? DaysPerWeek { get; set; }
         public DateTime? DeletedOn { get; set; }
         public string Description { get; set; }
@@ -15,7 +14,6 @@ namespace JPRSC.HRIS.Models
         public int Id { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string Name { get; set; }
-        public int? NumberOfHoursInADay { get; set; }
         public int? NumberOfPayrollPeriodsAMonth { get; set; }
         public int? NumberOfWorkingDaysForThisPayrollPeriod { get; set; }
         public PayrollCode? PayrollCode { get; set; }

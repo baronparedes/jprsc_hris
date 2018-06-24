@@ -14,12 +14,10 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
         {
             public string Code { get; set; }
             public int? CurrentPayrollPeriod { get; set; }
-            public CutOffPeriod? CutOffPeriod { get; set; }
             public int? DaysPerWeek { get; set; }
             public string Description { get; set; }
             public int? HoursPerDay { get; set; }
             public string Name { get; set; }
-            public int? NumberOfHoursInADay { get; set; }
             public int? NumberOfPayrollPeriodsAMonth { get; set; }
             public int? NumberOfWorkingDaysForThisPayrollPeriod { get; set; }
             public PayrollCode? PayrollCode { get; set; }
@@ -55,12 +53,10 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                     AddedOn = DateTime.UtcNow,
                     Code = command.Code,
                     CurrentPayrollPeriod = command.CurrentPayrollPeriod,
-                    CutOffPeriod = command.CutOffPeriod,
                     DaysPerWeek = command.DaysPerWeek,
                     Description = command.Description,
                     HoursPerDay = command.HoursPerDay,
                     Name = command.Name,
-                    NumberOfHoursInADay = command.NumberOfHoursInADay,
                     NumberOfPayrollPeriodsAMonth = command.NumberOfPayrollPeriodsAMonth,
                     NumberOfWorkingDaysForThisPayrollPeriod = command.NumberOfWorkingDaysForThisPayrollPeriod,
                     PayrollCode = command.PayrollCode,

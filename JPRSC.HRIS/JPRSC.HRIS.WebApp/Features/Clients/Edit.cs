@@ -22,13 +22,11 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
         {
             public string Code { get; set; }
             public int? CurrentPayrollPeriod { get; set; }
-            public CutOffPeriod? CutOffPeriod { get; set; }
             public int? DaysPerWeek { get; set; }
             public string Description { get; set; }
             public int? HoursPerDay { get; set; }
             public int Id { get; set; }
             public string Name { get; set; }
-            public int? NumberOfHoursInADay { get; set; }
             public int? NumberOfPayrollPeriodsAMonth { get; set; }
             public int? NumberOfWorkingDaysForThisPayrollPeriod { get; set; }
             public PayrollCode? PayrollCode { get; set; }
@@ -78,13 +76,11 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
 
                 client.Code = command.Code;
                 client.CurrentPayrollPeriod = command.CurrentPayrollPeriod;
-                client.CutOffPeriod = command.CutOffPeriod;
                 client.DaysPerWeek = command.DaysPerWeek;
                 client.Description = command.Description;
                 client.HoursPerDay = command.HoursPerDay;
                 client.ModifiedOn = DateTime.UtcNow;
                 client.Name = command.Name;
-                client.NumberOfHoursInADay = command.NumberOfHoursInADay;
                 client.NumberOfPayrollPeriodsAMonth = command.NumberOfPayrollPeriodsAMonth;
                 client.NumberOfWorkingDaysForThisPayrollPeriod = command.NumberOfWorkingDaysForThisPayrollPeriod;
                 client.PayrollCode = command.PayrollCode;
