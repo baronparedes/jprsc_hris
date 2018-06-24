@@ -1,24 +1,27 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('AddLoanModalCtrl', ['$http', '$uibModalInstance', 'lookups', 'params', AddLoanModalCtrl]);
+        .controller('AddLoanModalCtrl', ['$http', '$scope', '$uibModalInstance', 'lookups', 'params', AddLoanModalCtrl]);
 
-    function AddLoanModalCtrl($http, $uibModalInstance, lookups, params, $window) {
+    function AddLoanModalCtrl($http, $scope, $uibModalInstance, lookups, params, $window) {
         var vm = this;
         vm.addLoanSubmit = addLoanSubmit;
         vm.cancel = cancel;
         vm.client = params.client;
         vm.currencySymbol = 'P';
-        vm.getDeductionAmount = getDeductionAmount;
         vm.getInterestAmount = getInterestAmount;
         vm.payrollPeriods = [];
-        vm.employees = params.employees;
+
         vm.loanTypesList = params.loanTypesList;
         vm.lookups = lookups;
         vm.transactionNumber = params.nextTransactionNumber;
         vm.validationErrors = {};
 
         init();
+
+        $scope.$watch('vm.principalAmount', updateDeductionAmount);
+        $scope.$watch('vm.interestRate', updateDeductionAmount);
+        $scope.$watch('vm.monthsPayable', updateDeductionAmount);
 
         function addLoanSubmit(e) {
             var action = '/Loans/Add';
@@ -38,12 +41,6 @@
             $uibModalInstance.dismiss('cancel');
         };
 
-        function getDeductionAmount() {
-            if (vm.getInterestAmount() == 0 || !vm.monthsPayable || vm.monthsPayable <= 0) return 0;
-
-            return vm.getInterestAmount() / vm.monthsPayable;
-        };
-
         function getInterestAmount() {
             if (!vm.principalAmount || vm.principalAmount <= 0 || !vm.interestRate || vm.interestRate <= 0) return 0;
 
@@ -51,7 +48,17 @@
         };
 
         function init() {
+            populateEmployees();
             populatePayrollPeriods();
+        };
+
+        function populateEmployees() {
+            vm.searchInProgress = true;
+
+            $http.get('/Employees/GetByClientId', { params: { clientId: vm.client.id } }).then(function (response) {
+                vm.employees = response.data.employees;
+                vm.searchInProgress = false;
+            });
         };
 
         function populatePayrollPeriods() {
@@ -67,6 +74,12 @@
 
             vm.payrollPeriods = [1, 2, 3, 4];
 
+        };
+
+        function updateDeductionAmount() {
+            if (vm.getInterestAmount() == 0 || !vm.monthsPayable || vm.monthsPayable <= 0) return 0;
+
+            vm.deductionAmount = vm.getInterestAmount() / vm.monthsPayable;
         };
     };
 }());

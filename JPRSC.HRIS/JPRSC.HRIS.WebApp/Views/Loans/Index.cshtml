@@ -109,7 +109,7 @@
                                         <td>{{loan.monthsPayable}}</td>
                                         <td>{{loan.interestRate | number:2 }}%</td>
                                         <td>{{vm.currencySymbol}}{{vm.getInterestAmount(loan) | number:2 }}</td>
-                                        <td>{{vm.currencySymbol}}{{vm.getDeductionAmount(loan) | number:2 }}</td>
+                                        <td>{{vm.currencySymbol}}{{loan.deductionAmount | number:2 }}</td>
                                         <td></td>
                                         @*<td>
                                     <a href="{{'/Loans/Edit?loanId=' + loan.id}}" class="btn btn-primary btn-sm">Edit</a>
@@ -142,7 +142,7 @@
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
-                                <label class="col-md-4 col-lg-3 control-label">Employee</label>
+                                <label class="col-md-4 col-lg-3 control-label">Employee <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
                                     <select class="form-control" ng-model="vm.employee" ng-options="employee.firstName for employee in vm.employees track by employee.id">
@@ -206,7 +206,7 @@
                             <div class="form-group">
                                 <label class="col-md-4 col-lg-3 control-label">Deduction Amount</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <p class="form-control-static">{{vm.currencySymbol}}{{vm.getDeductionAmount() | number:2 }}</p>
+                                    <input type="text" class="form-control" name="DeductionAmount" ng-model="vm.deductionAmount" />
                                 </div>
                             </div>
                         </div>

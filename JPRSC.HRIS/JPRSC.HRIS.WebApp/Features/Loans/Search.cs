@@ -48,6 +48,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
             public class Loan
             {
+                public decimal? DeductionAmount { get; set; }
                 public Employee Employee { get; set; }
                 public int? EmployeeId { get; set; }
                 public int Id { get; set; }

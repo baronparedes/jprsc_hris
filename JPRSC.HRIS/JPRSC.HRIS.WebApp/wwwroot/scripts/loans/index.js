@@ -7,7 +7,6 @@
         var vm = this;
         vm.addLoanClicked = addLoanClicked;
         vm.currencySymbol = 'P';
-        vm.getDeductionAmount = getDeductionAmount;
         vm.getInterestAmount = getInterestAmount;
         vm.editLoanClicked = editLoanClicked;
         vm.loans = [];
@@ -36,7 +35,6 @@
                     params: function () {
                         return {
                             client: vm.searchModel.client,
-                            employees: vm.employees,
                             loanTypesList: vm.loanTypesList,
                             nextTransactionNumber: vm.nextTransactionNumber
                         }
@@ -51,12 +49,6 @@
 
         function editLoanClicked(loan) {
 
-        };
-
-        function getDeductionAmount(loan) {
-            if (vm.getInterestAmount(loan) == 0 || !loan.monthsPayable || loan.monthsPayable <= 0) return 0;
-
-            return vm.getInterestAmount(loan) / loan.monthsPayable;
         };
 
         function getInterestAmount(loan) {

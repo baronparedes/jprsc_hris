@@ -78,6 +78,14 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetByClientId(GetByClientId.Query query)
+        {
+            var queryResult = await _mediator.Send(query);
+
+            return JsonCamelCase(queryResult);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)
         {
             var result = await _mediator.Send(query);

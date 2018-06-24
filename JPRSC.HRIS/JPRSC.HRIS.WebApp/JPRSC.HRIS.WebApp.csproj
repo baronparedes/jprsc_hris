@@ -293,6 +293,7 @@
     <Compile Include="Features\Employees\Add.cs" />
     <Compile Include="Features\Employees\Delete.cs" />
     <Compile Include="Features\Employees\Edit.cs" />
+    <Compile Include="Features\Employees\GetByClientId.cs" />
     <Compile Include="Features\Employees\Index.cs" />
     <Compile Include="Features\Employees\Search.cs" />
     <Compile Include="Features\Employees\_Controller.cs" />

@@ -12,6 +12,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
     {
         public class Command : IRequest
         {
+            public decimal? DeductionAmount { get; set; }
             public int? EmployeeId { get; set; }
             public double? InterestRate { get; set; }
             public DateTime? LoanDate { get; set; }
@@ -45,6 +46,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 var loan = new Loan
                 {
                     AddedOn = DateTime.UtcNow,
+                    DeductionAmount = command.DeductionAmount,
                     EmployeeId = command.EmployeeId,
                     InterestRate = command.InterestRate,
                     LoanDate = command.LoanDate,
