@@ -6,7 +6,6 @@
     function EmployeeRateIndexCtrl($http, $timeout, $scope) {
         var vm = this;
         vm.cancelEditEmployeeRateClicked = cancelEditEmployeeRateClicked;
-        vm.client = {};
         vm.clientsList = [];
         vm.currencySymbol = 'P';
         vm.editEmployeeRateClicked = editEmployeeRateClicked;
@@ -21,7 +20,6 @@
         });
 
         $scope.$watch('vm.searchModel', onSearchModelChange, true);
-        $scope.$watch('vm.client', onSearchModelChange, true);
 
         function cancelEditEmployeeRateClicked(employee) {
             employee.isEditing = false;
@@ -34,7 +32,7 @@
         };
 
         function onSearchModelChange(newValue, oldValue) {
-            if (!vm.client.value || !vm.client.value.length) return;
+            if (!vm.searchModel.client || !vm.searchModel.client.value || !vm.searchModel.client.value.length) return;
 
             searchClicked();
         };
@@ -57,7 +55,7 @@
         };
 
         function searchClicked() {
-            vm.searchModel.clientId = parseInt(vm.client.value);
+            vm.searchModel.clientId = parseInt(vm.searchModel.client.value);
             vm.searchInProgress = true;
 
             $http.get('/EmployeeRates/Search', { params: vm.searchModel }).then(function (response) {

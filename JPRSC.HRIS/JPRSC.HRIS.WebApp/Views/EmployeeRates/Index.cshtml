@@ -21,13 +21,16 @@
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="EmployeeRateIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
+                <div class="note note-info" ng-show="!vm.searchModel.client.value || !vm.searchModel.client.value.length">
+                    <p>Please select a client.</p>
+                </div>
                 <form role="form">
                     <div class="form-body">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="control-label">Client</label>
-                                    <select class="form-control" ng-model="vm.client" ng-options="client.text for client in vm.clientsList track by client.value">
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.text for client in vm.clientsList track by client.value">
                                         <option value="?" selected="selected">Select client</option>
                                     </select>
                                 </div>
@@ -47,13 +50,10 @@
                         </div>
                     </div>
                 </form>
-                <div class="note note-info" ng-show="!vm.client.value || !vm.client.value.length">
-                    <p>Please select a client.</p>
-                </div>
-                <div class="note note-info" ng-show="vm.client.value.length && !vm.employees.length">
+                <div class="note note-info" ng-show="vm.searchModel.client.value.length && !vm.employees.length">
                     <p>No employees found.</p>
                 </div>
-                <div class="portlet light bordered" ng-show="vm.client.value.length && vm.employees.length">
+                <div class="portlet light bordered" ng-show="vm.searchModel.client.value.length && vm.employees.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-dollar font-red-sunglo"></i>

@@ -16,6 +16,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
         public class Query : IRequest<QueryResult>
         {
             public string SearchTerm { get; set; }
+            public DateTime? LoanEndDate { get; set; }
             public int? ClientId { get; set; }
 
             public string SearchLikeTerm
@@ -31,7 +32,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
         public class QueryResult
         {
-            public IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
+            public IEnumerable<Loan> Loans { get; set; } = new List<Loan>();
 
             public class Employee
             {
@@ -43,11 +44,11 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 public decimal? HourlyRate { get; set; }
                 public int Id { get; set; }
                 public string LastName { get; set; }
-                public ICollection<Loan> Loans { get; set; } = new List<Loan>();
             }
 
             public class Loan
             {
+                public Employee Employee { get; set; }
                 public int? EmployeeId { get; set; }
                 public int Id { get; set; }
                 public double? InterestRate { get; set; }
@@ -82,27 +83,42 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             {
                 if (!query.ClientId.HasValue) return new QueryResult();
 
-                var dbQuery = _db
+                var clientEmployeeIds = await _db
                     .Employees
-                    .Include(e => e.Loans)
-                    .Include(e => e.Loans.Select(l => l.LoanType))
-                    .Where(e => !e.DeletedOn.HasValue && e.ClientId == query.ClientId);
+                    .Where(e => e.ClientId == query.ClientId.Value && !e.DeletedOn.HasValue)
+                    .Select(e => e.Id)
+                    .ToListAsync();
+
+                var dbQuery = _db
+                    .Loans
+                    .Include(l => l.Employee)
+                    .Include(l => l.LoanType)
+                    .Where(l => l.EmployeeId.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(e => DbFunctions.Like(e.FirstName, query.SearchLikeTerm) ||
-                            DbFunctions.Like(e.LastName, query.SearchLikeTerm));
+                        .Where(l => DbFunctions.Like(l.Employee.EmployeeCode, query.SearchLikeTerm) ||
+                            DbFunctions.Like(l.LoanType.Description, query.SearchLikeTerm));
                 }
 
-                var employees = await dbQuery
-                    .OrderBy(e => e.Id)
+                var loans = await dbQuery
+                    .OrderBy(l => l.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
-                    .ProjectToListAsync<QueryResult.Employee>();
+                    .ProjectToListAsync<QueryResult.Loan>();
+
+                if (query.LoanEndDate.HasValue)
+                {
+                    var phTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
+
+                    loans = loans
+                        .Where(l => l.LoanDate.HasValue && l.MonthsPayable.HasValue && TimeZoneInfo.ConvertTimeFromUtc(l.LoanDate.Value, phTimeZoneInfo).AddMonths(l.MonthsPayable.Value).Date == query.LoanEndDate.Value.Date)
+                        .ToList();
+                }
 
                 return new QueryResult
                 {
-                    Employees = employees
+                    Loans = loans
                 };
             }
         }

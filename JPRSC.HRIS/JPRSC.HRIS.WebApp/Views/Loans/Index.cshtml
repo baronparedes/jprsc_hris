@@ -21,46 +21,58 @@
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="LoanIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
+                <div class="note note-info" ng-show="!vm.searchModel.client.id">
+                    <p>Please select a client.</p>
+                </div>
                 <form role="form">
                     <div class="form-body">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label">Client</label>
-                                    <select class="form-control" ng-model="vm.client" ng-options="client.code for client in vm.clients track by client.id">
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id">
                                         <option value="?" selected="selected">Select client</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label class="control-label">Search Employees</label>
+                                    <label class="control-label">Filter Loans by Employee Code or Loan Type</label>
                                     <div class="input-group">
                                         <span class="input-group-addon">
                                             <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
                                             <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
                                         </span>
-                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                        <input type="text" class="form-control" ng-disabled="!vm.searchModel.client.id" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Filter Loans by Loan End Date</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                            <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                        </span>
+                                        <input type="text" class="form-control" ng-disabled="!vm.searchModel.client.id" ng-model="vm.searchModel.loanEndDate" ng-model-options="{ debounce: 500 }" placeholder="MM/dd/yyyy" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
-                <div class="note note-info" ng-show="!vm.client.id">
-                    <p>Please select a client.</p>
-                </div>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <button type="button" class="btn btn-primary" ng-disabled="!vm.client.id || vm.searchInProgress" ng-click="vm.addLoanClicked()">Add Loan</button>
+                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.client.id || vm.searchInProgress" ng-click="vm.addLoanClicked()">Add Loan</button>
                         </div>
                     </div>
                 </div>
-                <div class="note note-info" ng-show="vm.client.id > 0 && !vm.employees.length">
-                    <p>No employees found.</p>
+                <div class="note note-info" ng-show="vm.searchModel.client.id > 0 && !vm.loans.length">
+                    <p>No loans found.</p>
                 </div>
-                <div class="portlet light bordered" ng-show="vm.client.id > 0 && vm.employees.length">
+                <div class="portlet light bordered" ng-show="vm.searchModel.client.id > 0 && vm.loans.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-sun-o font-red-sunglo"></i>
@@ -72,13 +84,32 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <td></td>
+                                        <td>First Name</td>
+                                        <td>Last Name</td>
+                                        <td>Employee Code</td>
+                                        <td>Loan Type</td>
+                                        <td>Loan Date</td>
+                                        <td>Principal Amount</td>
+                                        <td>Months Payable</td>
+                                        <td>Interest Rate</td>
+                                        <td>Interest Amount</td>
+                                        <td>Deduction Amount</td>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="employee in vm.employees track by employee.id">
-                                        <td>{{employee | json}}</td>
+                                    <tr ng-repeat="loan in vm.loans track by loan.id">
+                                        @*<td>{{employee | json}}</td>*@
+                                        <td>{{loan.employee.firstName}}</td>
+                                        <td>{{loan.employee.lastName}}</td>
+                                        <td>{{loan.employee.employeeCode}}</td>
+                                        <td>{{loan.loanType.code}}</td>
+                                        <td>{{loan.loanDate | date:'mediumDate' }}</td>
+                                        <td>{{vm.currencySymbol}}{{loan.principalAmount | number:2 }}</td>
+                                        <td>{{loan.monthsPayable}}</td>
+                                        <td>{{loan.interestRate | number:2 }}%</td>
+                                        <td>{{vm.currencySymbol}}{{vm.getInterestAmount(loan) | number:2 }}</td>
+                                        <td>{{vm.currencySymbol}}{{vm.getDeductionAmount(loan) | number:2 }}</td>
                                         <td></td>
                                         @*<td>
                                     <a href="{{'/Loans/Edit?loanId=' + loan.id}}" class="btn btn-primary btn-sm">Edit</a>

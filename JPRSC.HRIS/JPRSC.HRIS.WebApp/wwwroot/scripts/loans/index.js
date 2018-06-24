@@ -6,8 +6,9 @@
     function LoanIndexCtrl($http, $timeout, $uibModal, $scope) {
         var vm = this;
         vm.addLoanClicked = addLoanClicked;
-        vm.client = {};
-        vm.clientsList = [];
+        vm.currencySymbol = 'P';
+        vm.getDeductionAmount = getDeductionAmount;
+        vm.getInterestAmount = getInterestAmount;
         vm.editLoanClicked = editLoanClicked;
         vm.loans = [];
         vm.nextTransactionNumber = '';
@@ -16,7 +17,6 @@
         vm.searchInProgress = false;
 
         $scope.$watch('vm.searchModel', onSearchModelChange, true);
-        $scope.$watch('vm.client', onSearchModelChange, true);
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
@@ -35,7 +35,7 @@
                 resolve: {
                     params: function () {
                         return {
-                            client: vm.client,
+                            client: vm.searchModel.client,
                             employees: vm.employees,
                             loanTypesList: vm.loanTypesList,
                             nextTransactionNumber: vm.nextTransactionNumber
@@ -53,18 +53,30 @@
 
         };
 
+        function getDeductionAmount(loan) {
+            if (vm.getInterestAmount(loan) == 0 || !loan.monthsPayable || loan.monthsPayable <= 0) return 0;
+
+            return vm.getInterestAmount(loan) / loan.monthsPayable;
+        };
+
+        function getInterestAmount(loan) {
+            if (!loan.principalAmount || loan.principalAmount <= 0 || !loan.interestRate || loan.interestRate <= 0) return 0;
+
+            return loan.principalAmount * (loan.interestRate / 100)
+        };
+
         function onSearchModelChange(newValue, oldValue) {
-            if (vm.client.id <= 0) return;
+            if (!vm.searchModel.client || vm.searchModel.client.id <= 0) return;
 
             searchClicked();
         };
 
         function searchClicked() {
-            vm.searchModel.clientId = vm.client.id;
+            vm.searchModel.clientId = vm.searchModel.client.id;
             vm.searchInProgress = true;
 
             $http.get('/Loans/Search', { params: vm.searchModel }).then(function (response) {
-                vm.employees = response.data.employees;
+                vm.loans = response.data.loans;
                 vm.searchInProgress = false;
             });
         };
