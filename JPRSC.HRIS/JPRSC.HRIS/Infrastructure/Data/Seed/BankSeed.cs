@@ -15,8 +15,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
             {
                 AddedOn = new DateTime(2017, 9, 1),
                 AccountNumber = "Account Number 01",
-                Address1 = "Address 1 01",
-                Address2 = "Address 2 01",
+                Address1 = "Address 01",
                 BatchNumber = "Batch Number 01",
                 BranchCode = "Branch Code 01",
                 Code = "Code 01",
@@ -32,8 +31,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
             {
                 AddedOn = new DateTime(2027, 9, 1),
                 AccountNumber = "Account Number 02",
-                Address1 = "Address 1 02",
-                Address2 = "Address 2 02",
+                Address1 = "Address 02",
                 BatchNumber = "Batch Number 02",
                 BranchCode = "Branch Code 02",
                 Code = "Code 02",
@@ -49,8 +47,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
             {
                 AddedOn = new DateTime(2037, 9, 1),
                 AccountNumber = "Account Number 03",
-                Address1 = "Address 1 03",
-                Address2 = "Address 2 03",
+                Address1 = "Address 03",
                 BatchNumber = "Batch Number 03",
                 BranchCode = "Branch Code 03",
                 Code = "Code 03",
@@ -66,8 +63,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
             {
                 AddedOn = new DateTime(2047, 9, 1),
                 AccountNumber = "Account Number 04",
-                Address1 = "Address 1 04",
-                Address2 = "Address 2 04",
+                Address1 = "Address 04",
                 BatchNumber = "Batch Number 04",
                 BranchCode = "Branch Code 04",
                 Code = "Code 04",
@@ -83,8 +79,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
             {
                 AddedOn = new DateTime(2057, 9, 1),
                 AccountNumber = "Account Number 05",
-                Address1 = "Address 1 05",
-                Address2 = "Address 2 05",
+                Address1 = "Address 05",
                 BatchNumber = "Batch Number 05",
                 BranchCode = "Branch Code 05",
                 Code = "Code 05",

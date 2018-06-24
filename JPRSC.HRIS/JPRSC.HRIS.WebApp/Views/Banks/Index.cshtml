@@ -55,16 +55,16 @@
                                 <thead>
                                     <tr>
                                         <th>Code</th>
-                                        <th>Description</th>
                                         <th>Name</th>
+                                        <th>Description</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="bank in vm.banks track by bank.id">
                                         <td>{{bank.code}}</td>
-                                        <td>{{bank.description}}</td>
                                         <td>{{bank.name}}</td>
+                                        <td>{{bank.description}}</td>
                                         <td>
                                             <a href="{{'/Banks/Edit?bankId=' + bank.id}}" class="btn btn-primary btn-sm">Edit</a>
                                             <form action="/Banks/Delete" method="post" style="display: inline-block;">

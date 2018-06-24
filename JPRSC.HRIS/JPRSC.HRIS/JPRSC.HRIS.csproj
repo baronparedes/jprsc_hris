@@ -172,6 +172,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806240723521_RemoveClientCutOffPeriodNumberOfHoursInADay.Designer.cs">
       <DependentUpon>201806240723521_RemoveClientCutOffPeriodNumberOfHoursInADay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806240739045_RemoveBankAddress2.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806240739045_RemoveBankAddress2.Designer.cs">
+      <DependentUpon>201806240739045_RemoveBankAddress2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -288,6 +292,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806240723521_RemoveClientCutOffPeriodNumberOfHoursInADay.resx">
       <DependentUpon>201806240723521_RemoveClientCutOffPeriodNumberOfHoursInADay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806240739045_RemoveBankAddress2.resx">
+      <DependentUpon>201806240739045_RemoveBankAddress2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -7,7 +7,6 @@ namespace JPRSC.HRIS.Models
         public string AccountNumber { get; set; }
         public DateTime AddedOn { get; set; }
         public string Address1 { get; set; }
-        public string Address2 { get; set; }
         public string BatchNumber { get; set; }
         public string BranchCode { get; set; }
         public string Code { get; set; }

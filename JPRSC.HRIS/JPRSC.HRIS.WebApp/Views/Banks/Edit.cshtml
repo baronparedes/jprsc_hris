@@ -35,8 +35,13 @@
                                 @Html.TextBoxHorizontalFormGroup("Code")
                                 @Html.TextBoxHorizontalFormGroup("Name")
                                 @Html.TextBoxHorizontalFormGroup("Description")
-                                @Html.TextBoxHorizontalFormGroup("Address1", "Address")
-                                @Html.TextBoxHorizontalFormGroup("Address2", ">>")
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.address1 }">
+                                    <label class="col-md-3 col-lg-2 control-label">Address</label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <textarea class="form-control" name="Address1" rows="4">@Model.Address1</textarea>
+                                        <span ng-show="vm.validationErrors.address1" class="help-block ng-binding ng-hide"></span>
+                                    </div>
+                                </div>
                                 @Html.TextBoxHorizontalFormGroup("ContactPerson")
                                 @Html.TextBoxHorizontalFormGroup("Position")
                                 @Html.TextBoxHorizontalFormGroup("AccountNumber", "Account No.")

@@ -14,7 +14,6 @@ namespace JPRSC.HRIS.WebApp.Features.Banks
         {
             public string AccountNumber { get; set; }
             public string Address1 { get; set; }
-            public string Address2 { get; set; }
             public string BatchNumber { get; set; }
             public string BranchCode { get; set; }
             public string Code { get; set; }
@@ -51,7 +50,6 @@ namespace JPRSC.HRIS.WebApp.Features.Banks
                     AccountNumber = command.AccountNumber,
                     AddedOn = DateTime.UtcNow,
                     Address1 = command.Address1,
-                    Address2 = command.Address2,
                     BatchNumber = command.BatchNumber,
                     BranchCode = command.BranchCode,
                     Code = command.Code,
