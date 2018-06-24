@@ -57,7 +57,6 @@
                                         <th>Code</th>
                                         <th>Name</th>
                                         <th>Exemption</th>
-                                        <th>Tax Ranges</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -66,14 +65,6 @@
                                         <td>{{taxStatus.code}}</td>
                                         <td>{{taxStatus.name}}</td>
                                         <td>{{taxStatus.exemption}}</td>
-                                        <td>
-                                            <ul>
-                                                <li ng-repeat="taxRange in taxStatus.taxRanges track by taxRange.id">
-                                                    {{vm.currencySymbol}}{{taxRange.from}} to {{vm.currencySymbol}}{{taxRange.to}}:
-                                                    {{taxRange.percentage}}% plus {{vm.currencySymbol}}{{taxRange.plus}}
-                                                </li>
-                                            </ul>
-                                        </td>
                                         <td>
                                             <a href="{{'/TaxStatuses/Edit?taxStatusId=' + taxStatus.id}}" class="btn btn-primary btn-sm">Edit</a>
                                             <form action="/TaxStatuses/Delete" method="post" style="display: inline-block;">
