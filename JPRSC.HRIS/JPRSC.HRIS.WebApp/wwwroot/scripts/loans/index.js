@@ -8,7 +8,6 @@
         vm.addLoanClicked = addLoanClicked;
         vm.currencySymbol = 'P';
         vm.getInterestAmount = getInterestAmount;
-        vm.editLoanClicked = editLoanClicked;
         vm.loans = [];
         vm.nextTransactionNumber = '';
         vm.searchClicked = searchClicked;
@@ -45,10 +44,6 @@
             modalInstance.result.then(function (result) {
                 searchClicked();
             });
-        };
-
-        function editLoanClicked(loan) {
-
         };
 
         function getInterestAmount(loan) {

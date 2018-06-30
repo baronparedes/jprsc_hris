@@ -12,7 +12,17 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
     {
         public class Command : IRequest
         {
-
+            public double? DaysWorked { get; set; }
+            public decimal? DaysWorkedValue { get; set; }
+            public int? EmployeeId { get; set; }
+            public double? HoursLate { get; set; }
+            public decimal? HoursLateValue { get; set; }
+            public double? HoursUndertime { get; set; }
+            public decimal? HoursUndertimeValue { get; set; }
+            public double? HoursWorked { get; set; }
+            public decimal? HoursWorkedValue { get; set; }
+            public DateTime? PayrollPeriodFrom { get; set; }
+            public DateTime? PayrollPeriodTo { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>

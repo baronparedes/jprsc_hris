@@ -5907,6 +5907,7 @@
     <Content Include="wwwroot\scripts\customRoles\edit.js" />
     <Content Include="wwwroot\scripts\customRoles\index.js" />
     <Content Include="wwwroot\scripts\dailyTimeRecords\add.js" />
+    <Content Include="wwwroot\scripts\dailyTimeRecords\addModal.js" />
     <Content Include="wwwroot\scripts\dailyTimeRecords\edit.js" />
     <Content Include="wwwroot\scripts\dailyTimeRecords\index.js" />
     <Content Include="wwwroot\scripts\departments\add.js" />

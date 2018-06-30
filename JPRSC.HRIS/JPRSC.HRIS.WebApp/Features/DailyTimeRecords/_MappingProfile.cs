@@ -7,8 +7,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
     {
         public MappingProfile()
         {
-            CreateMap<DailyTimeRecord, Search.QueryResult.DailyTimeRecord>();
+            CreateMap<Employee, Search.QueryResult.Employee>();
             CreateMap<DailyTimeRecord, Edit.Command>();
+            CreateMap<Client, Index.QueryResult.Client>();
         }
     }
 }

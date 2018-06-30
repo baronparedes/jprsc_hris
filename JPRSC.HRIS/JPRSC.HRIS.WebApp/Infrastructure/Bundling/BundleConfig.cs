@@ -129,6 +129,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
         {
             bundles.AddScriptBundle("~/scriptbundles/dailyTimeRecords",
                 "~/wwwroot/scripts/dailyTimeRecords/add.js",
+                "~/wwwroot/scripts/dailyTimeRecords/addModal.js",
                 "~/wwwroot/scripts/dailyTimeRecords/edit.js",
                 "~/wwwroot/scripts/dailyTimeRecords/index.js");
         }

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model JPRSC.HRIS.WebApp.Features.DailyTimeRecords.Index.QueryResult
+
+@{
     ViewBag.Title = "Daily Time Records";
 }
 
@@ -17,63 +19,263 @@
             Daily Time Records
         </h1>
         @Html.RenderSuccessNotification()
-        <div class="row">
+        <div class="row" ng-controller="DailyTimeRecordIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
-                <div class="form-group">
-                    <a href="@Url.Action("Add", "DailyTimeRecords")" class="btn btn-primary">Add Daily Time Record</a>
+                <div class="note note-info" ng-show="!vm.searchModel.client.value || !vm.searchModel.client.value.length">
+                    <p>Please select a client.</p>
                 </div>
-            </div>
-        </div>
-        <div class="row" ng-controller="DailyTimeRecordIndexCtrl as vm">
-            <div class="col-sm-12">
                 <form role="form">
                     <div class="form-body">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
-                                    <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
-                                </span>
-                                <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id">
+                                        <option value="?" selected="selected">Select client</option>
+                                    </select>
+                                </div>
                             </div>
+                            @*<div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Search Employees</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                            <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                        </span>
+                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                    </div>
+                                </div>
+                            </div>*@
                         </div>
                     </div>
                 </form>
-                <div class="note note-info" ng-show="!vm.dailyTimeRecords.length">
-                    <p>No daily time records found.</p>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.client.id || vm.searchInProgress" ng-click="vm.addDailyTimeRecordClicked()">Add Daily Time Record</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="portlet light bordered" ng-show="vm.dailyTimeRecords.length">
+                @*<div class="note note-info" ng-show="vm.searchModel.client.value.length && !vm.employees.length">
+                    <p>No employees found.</p>
+                </div>
+                <div class="portlet light bordered" ng-show="vm.searchModel.client.value.length && vm.employees.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-dollar font-red-sunglo"></i>
                             <span class="caption-subject font-red-sunglo bold uppercase">Daily Time Records</span>
                         </div>
                     </div>
-                    <div class="portlet-body">                        
+                    <div class="portlet-body">
                         <div class="table-scrollable">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Employee Code</th>
+                                        <th>Hourly Rate</th>
+                                        <th>Daily Rate</th>
+                                        <th>COLA Hourly</th>
+                                        <th>COLA Daily</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="dailyTimeRecord in vm.dailyTimeRecords track by dailyTimeRecord.id">
+                                    <tr ng-repeat="employee in vm.employees track by employee.id">
+                                        <td>{{employee.firstName}}</td>
+                                        <td>{{employee.lastName}}</td>
+                                        <td>{{employee.employeeCode}}</td>
                                         <td>
-                                            <a href="{{'/DailyTimeRecords/Edit?dailyTimeRecordId=' + dailyTimeRecord.id}}" class="btn btn-primary btn-sm">Edit</a>
-                                            <form action="/DailyTimeRecords/Delete" method="post" style="display: inline-block;">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="DailyTimeRecordId" value="{{dailyTimeRecord.id}}" />
-                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.hourlyRate | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.hourlyRate" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.dailyRate | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.dailyRate" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaHourly | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaHourly" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaDaily | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaDaily" />
+                                        </td>
+                                        <td>
+                                            <a ng-show="!employee.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.editDailyTimeRecordClicked(employee)">Edit</a>
+                                            <a ng-show="employee.isEditing" href="" class="btn btn-default btn-sm" ng-click="vm.cancelEditDailyTimeRecordClicked(employee)">Cancel</a>
+                                            <a ng-show="employee.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.saveEditDailyTimeRecordClicked(employee)">Save</a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
+                </div>*@
             </div>
+
+            <script type="text/ng-template" id="addDailyTimeRecordModal.html">
+                <form class="form-horizontal" role="form" method="post" ng-submit="vm.addDailyTimeRecordSubmit($event)">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Add Daily Time Record for {{vm.client.name}}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-md-3 col-lg-2 control-label">Employee</label>
+                                <div class="col-md-9 col-lg-10">
+                                    <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
+                                    <select class="form-control" ng-model="vm.employee" ng-options="employee.name for employee in vm.employees track by employee.id"></select>
+                                    <span ng-show="vm.validationErrors.employeeId" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.daysWorked }">
+                                        <label class="col-md-8 col-lg-9 control-label">No. of Days</label>
+                                        <div class="col-md-4 col-lg-3">
+                                            <input type="text" class="form-control" name="DaysWorked" ng-model="vm.daysWorked" />
+                                            <span ng-show="vm.validationErrors.daysWorked" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursWorked }">
+                                        <label class="col-md-8 col-lg-9 control-label">No. of Hours</label>
+                                        <div class="col-md-4 col-lg-3">
+                                            <input type="text" class="form-control" name="Hours Worked" ng-model="vm.hoursWorked" />
+                                            <span ng-show="vm.validationErrors.hoursWorked" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursLate }">
+                                        <label class="col-md-8 col-lg-9 control-label">Total Hours Late</label>
+                                        <div class="col-md-4 col-lg-3">
+                                            <input type="text" class="form-control" name="HoursLate" ng-model="vm.hoursLate" />
+                                            <span ng-show="vm.validationErrors.hoursLate" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursUndertime }">
+                                        <label class="col-md-8 col-lg-9 control-label">Total Hours Undertime</label>
+                                        <div class="col-md-4 col-lg-3">
+                                            <input type="text" class="form-control" name="HoursUnderTime" ng-model="vm.hoursUndertime" />
+                                            <span ng-show="vm.validationErrors.hoursUndertime" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-lg-3 control-label">Amount:</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="hidden" value="{{vm.daysWorkedValue}}" />
+                                            <p class="form-control-static">{{vm.currencySymbol}}{{vm.daysWorkedValue | number:2}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-lg-3 control-label">Amount:</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="hidden" value="{{vm.hoursWorkedValue}}" />
+                                            <p class="form-control-static">{{vm.currencySymbol}}{{vm.hoursWorkedValue | number:2}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-lg-3 control-label">Amount:</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="hidden" value="{{vm.hoursLateValue}}" />
+                                            <p class="form-control-static">{{vm.currencySymbol}}{{vm.hoursLateValue | number:2}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-lg-3 control-label">Amount:</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="hidden" value="{{vm.hoursUndertimeValue}}" />
+                                            <p class="form-control-static">{{vm.currencySymbol}}{{vm.hoursUndertimeValue | number:2}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="form-group" ng-class="{ 'has-error': vm.validationErrors.transactionNumber }">
+                                <label class="col-md-4 col-lg-3 control-label">Transaction Number</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="TransactionNumber" ng-model="vm.transactionNumber" />
+                                    <span ng-show="vm.validationErrors.transactionNumber" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
+                                <label class="col-md-4 col-lg-3 control-label">Employee <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
+                                    <select class="form-control" ng-model="vm.employee" ng-options="employee.firstName for employee in vm.employees track by employee.id">
+                                        <option value="?" selected="selected">Select employee</option>
+                                    </select>
+                                    <span ng-show="vm.validationErrors.employeeId" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanDate }">
+                                <label class="col-md-4 col-lg-3 control-label">Loan Date</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="LoanDate" ng-model="vm.loanDate" placeholder="MM/dd/yyyy" />
+                                    <span ng-show="vm.validationErrors.loanDate" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanTypeId }">
+                                <label class="col-md-4 col-lg-3 control-label">Loan Type</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="LoanTypeId" ng-model="vm.loanTypeId" ng-options="loanType.text for loanType in vm.loanTypesList track by loanType.value">
+                                        <option value="?" selected="selected">Select loan type</option>
+                                    </select>
+                                    <span ng-show="vm.validationErrors.loanTypeId" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.principalAmount }">
+                                <label class="col-md-4 col-lg-3 control-label">Principal Amount</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="PrincipalAmount" ng-model="vm.principalAmount" />
+                                    <span ng-show="vm.validationErrors.principalAmount" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriod }">
+                                <label class="col-md-4 col-lg-3 control-label">Payroll Period</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="PayrollPeriod" ng-model="vm.payrollPeriod" ng-options="payrollPeriod for payrollPeriod in vm.payrollPeriods track by payrollPeriod">
+                                        <option value="?" selected="selected">Select payroll period</option>
+                                    </select>
+                                    <span ng-show="vm.validationErrors.payrollPeriod" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.monthsPayable }">
+                                <label class="col-md-4 col-lg-3 control-label">Months Payable</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="MonthsPayable" ng-model="vm.monthsPayable" />
+                                    <span ng-show="vm.validationErrors.monthsPayable" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.interestRate }">
+                                <label class="col-md-4 col-lg-3 control-label">Interest Rate</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="InterestRate" ng-model="vm.interestRate" />
+                                    <span ng-show="vm.validationErrors.interestRate" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Interest Amount</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <p class="form-control-static">{{vm.currencySymbol}}{{vm.getInterestAmount() | number:2 }}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Deduction Amount</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="DeductionAmount" ng-model="vm.deductionAmount" />
+                                </div>
+                            </div>*@
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn green">Add</button>
+                        <a href="" class="btn btn-default" ng-click="vm.cancel()">Cancel</a>
+                    </div>
+                </form>
+            </script>
         </div>
     </div>
 </div>
