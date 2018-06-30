@@ -99,7 +99,6 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="loan in vm.loans track by loan.id">
-                                        @*<td>{{employee | json}}</td>*@
                                         <td>{{loan.employee.firstName}}</td>
                                         <td>{{loan.employee.lastName}}</td>
                                         <td>{{loan.employee.employeeCode}}</td>
@@ -111,14 +110,6 @@
                                         <td>{{vm.currencySymbol}}{{vm.getInterestAmount(loan) | number:2 }}</td>
                                         <td>{{vm.currencySymbol}}{{loan.deductionAmount | number:2 }}</td>
                                         <td></td>
-                                        @*<td>
-                                    <a href="{{'/Loans/Edit?loanId=' + loan.id}}" class="btn btn-primary btn-sm">Edit</a>
-                                    <form action="/Loans/Delete" method="post" style="display: inline-block;">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="LoanId" value="{{loan.id}}" />
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
-                                </td>*@
                                     </tr>
                                 </tbody>
                             </table>

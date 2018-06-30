@@ -40,7 +40,8 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
                 Permission.SSSRecordDefault,
                 Permission.EmployeeRateDefault,
                 Permission.LoanTypeDefault,
-                Permission.LoanDefault
+                Permission.LoanDefault,
+                Permission.DailyTimeRecordDefault
             });
 
             var defaultRole = new CustomRole

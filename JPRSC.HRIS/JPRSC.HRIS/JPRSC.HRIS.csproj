@@ -180,6 +180,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806240747093_RemoveSSSPhilHealthEmployeeEmployerShare.Designer.cs">
       <DependentUpon>201806240747093_RemoveSSSPhilHealthEmployeeEmployerShare.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201806300355452_AddDailyTimeRecord.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201806300355452_AddDailyTimeRecord.Designer.cs">
+      <DependentUpon>201806300355452_AddDailyTimeRecord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -214,6 +218,7 @@
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\CutOffPeriod.cs" />
+    <Compile Include="Models\DailyTimeRecord.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\EarningDeduction.cs" />
     <Compile Include="Models\EarningDeductionType.cs" />
@@ -302,6 +307,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806240747093_RemoveSSSPhilHealthEmployeeEmployerShare.resx">
       <DependentUpon>201806240747093_RemoveSSSPhilHealthEmployeeEmployerShare.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201806300355452_AddDailyTimeRecord.resx">
+      <DependentUpon>201806300355452_AddDailyTimeRecord.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

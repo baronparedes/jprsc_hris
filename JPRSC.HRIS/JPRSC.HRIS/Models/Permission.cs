@@ -83,6 +83,10 @@ namespace JPRSC.HRIS.Models
 
         // Loan
         [Display(Name = "Loans")]
-        LoanDefault = 2000
+        LoanDefault = 2000,
+
+        // Daily Time Record
+        [Display(Name = "Daily Time Records")]
+        DailyTimeRecordDefault = 2100
     }
 }

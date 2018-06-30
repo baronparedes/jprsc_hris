@@ -269,6 +269,13 @@
     <Compile Include="Features\CustomRoles\Search.cs" />
     <Compile Include="Features\CustomRoles\_Controller.cs" />
     <Compile Include="Features\CustomRoles\_MappingProfile.cs" />
+    <Compile Include="Features\DailyTimeRecords\Add.cs" />
+    <Compile Include="Features\DailyTimeRecords\Delete.cs" />
+    <Compile Include="Features\DailyTimeRecords\Edit.cs" />
+    <Compile Include="Features\DailyTimeRecords\Index.cs" />
+    <Compile Include="Features\DailyTimeRecords\Search.cs" />
+    <Compile Include="Features\DailyTimeRecords\_Controller.cs" />
+    <Compile Include="Features\DailyTimeRecords\_MappingProfile.cs" />
     <Compile Include="Features\Departments\Add.cs" />
     <Compile Include="Features\Departments\Delete.cs" />
     <Compile Include="Features\Departments\Edit.cs" />
@@ -5899,6 +5906,9 @@
     <Content Include="wwwroot\scripts\customRoles\add.js" />
     <Content Include="wwwroot\scripts\customRoles\edit.js" />
     <Content Include="wwwroot\scripts\customRoles\index.js" />
+    <Content Include="wwwroot\scripts\dailyTimeRecords\add.js" />
+    <Content Include="wwwroot\scripts\dailyTimeRecords\edit.js" />
+    <Content Include="wwwroot\scripts\dailyTimeRecords\index.js" />
     <Content Include="wwwroot\scripts\departments\add.js" />
     <Content Include="wwwroot\scripts\departments\edit.js" />
     <Content Include="wwwroot\scripts\departments\index.js" />
@@ -6900,6 +6910,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Loans\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DailyTimeRecords\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DailyTimeRecords\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DailyTimeRecords\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

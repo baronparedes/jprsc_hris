@@ -14,6 +14,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddCompanyBundles(bundles);
             AddCoreBundles(bundles);
             AddCustomRolesBundles(bundles);
+            AddDailyTimeRecordBundles(bundles);
             AddDepartmentBundles(bundles);
             AddEarningDeductionBundles(bundles);
             AddEmployeeBundles(bundles);
@@ -122,6 +123,14 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/customRoles/add.js",
                 "~/wwwroot/scripts/customRoles/edit.js",
                 "~/wwwroot/scripts/customRoles/index.js");
+        }
+
+        private static void AddDailyTimeRecordBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/dailyTimeRecords",
+                "~/wwwroot/scripts/dailyTimeRecords/add.js",
+                "~/wwwroot/scripts/dailyTimeRecords/edit.js",
+                "~/wwwroot/scripts/dailyTimeRecords/index.js");
         }
 
         private static void AddDepartmentBundles(BundleCollection bundles)

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JPRSC.HRIS.WebApp.Features.LoanTypes
+namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 {
     public class Search
     {
@@ -32,12 +32,10 @@ namespace JPRSC.HRIS.WebApp.Features.LoanTypes
 
         public class QueryResult
         {
-            public IEnumerable<LoanType> LoanTypes { get; set; } = new List<LoanType>();
+            public IEnumerable<DailyTimeRecord> DailyTimeRecords { get; set; } = new List<DailyTimeRecord>();
 
-            public class LoanType
+            public class DailyTimeRecord
             {
-                public string Code { get; set; }
-                public string Description { get; set; }
                 public int Id { get; set; }
             }
         }
@@ -54,24 +52,22 @@ namespace JPRSC.HRIS.WebApp.Features.LoanTypes
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var dbQuery = _db
-                    .LoanTypes
-                    .Where(lt => !lt.DeletedOn.HasValue);
+                    .DailyTimeRecords
+                    .Where(dtr => !dtr.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
-                    dbQuery = dbQuery
-                        .Where(ed => DbFunctions.Like(ed.Code, query.SearchLikeTerm) ||
-                            DbFunctions.Like(ed.Description, query.SearchLikeTerm));
+
                 }
 
-                var loanTypes = await dbQuery
-                    .OrderBy(lt => lt.Id)
+                var DailyTimeRecords = await dbQuery
+                    .OrderBy(dtr => dtr.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
-                    .ProjectToListAsync<QueryResult.LoanType>();
+                    .ProjectToListAsync<QueryResult.DailyTimeRecord>();
 
                 return new QueryResult
                 {
-                    LoanTypes = loanTypes
+                    DailyTimeRecords = DailyTimeRecords
                 };
             }
         }
