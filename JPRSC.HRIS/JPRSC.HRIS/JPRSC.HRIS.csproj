@@ -189,6 +189,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807010814320_AddRatesToDailyTimeRecord.Designer.cs">
       <DependentUpon>201807010814320_AddRatesToDailyTimeRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807010834423_AddCOLAValuesToDailyTimeRecord.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807010834423_AddCOLAValuesToDailyTimeRecord.Designer.cs">
+      <DependentUpon>201807010834423_AddCOLAValuesToDailyTimeRecord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -318,6 +322,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807010814320_AddRatesToDailyTimeRecord.resx">
       <DependentUpon>201807010814320_AddRatesToDailyTimeRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807010834423_AddCOLAValuesToDailyTimeRecord.resx">
+      <DependentUpon>201807010834423_AddCOLAValuesToDailyTimeRecord.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

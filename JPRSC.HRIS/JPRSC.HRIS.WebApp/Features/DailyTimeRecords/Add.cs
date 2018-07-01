@@ -77,6 +77,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var dailyTimeRecord = new DailyTimeRecord
                 {
                     AddedOn = DateTime.UtcNow,
+                    COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily),
                     DailyRate = employee.DailyRate,
                     DaysWorked = command.DaysWorked,
                     DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate),
