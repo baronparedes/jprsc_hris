@@ -27,7 +27,6 @@
                 templateUrl: 'addDailyTimeRecordModal.html',
                 controller: 'AddDailyTimeRecordModalCtrl',
                 controllerAs: 'vm',
-                //size: 'lg',
                 resolve: {
                     params: function () {
                         return {
@@ -39,6 +38,8 @@
             });
 
             modalInstance.result.then(function (result) {
+                searchClicked();
+            }, function () {
                 searchClicked();
             });
         };

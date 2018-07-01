@@ -25,7 +25,6 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(Add.Command command)
         {
             if (!ModelState.IsValid)
@@ -34,8 +33,6 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             }
 
             await _mediator.Send(command);
-
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully added daily time record.");
 
             return Json("success");
         }

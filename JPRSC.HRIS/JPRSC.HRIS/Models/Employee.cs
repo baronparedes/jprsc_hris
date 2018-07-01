@@ -19,6 +19,7 @@ namespace JPRSC.HRIS.Models
         public Company Company { get; set; }
         public int? CompanyId { get; set; }
         public decimal? DailyRate { get; set; }
+        public ICollection<DailyTimeRecord> DailyTimeRecords { get; set; } = new List<DailyTimeRecord>();
         public DateTime? DateHired { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public DateTime? DateResigned { get; set; }

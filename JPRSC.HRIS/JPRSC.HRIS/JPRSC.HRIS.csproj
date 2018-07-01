@@ -97,6 +97,7 @@
     <Compile Include="Infrastructure\.NET\IEnumerableExtensions.cs" />
     <Compile Include="Infrastructure\.NET\StringExtensions.cs" />
     <Compile Include="Infrastructure\Configuration\AppSettings.cs" />
+    <Compile Include="Infrastructure\Configuration\ConnectionStrings.cs" />
     <Compile Include="Infrastructure\Data\ApplicationDbContext.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CompanyProfileConfiguration.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CustomRoleConfiguration.cs" />
@@ -183,6 +184,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201806300355452_AddDailyTimeRecord.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201806300355452_AddDailyTimeRecord.Designer.cs">
       <DependentUpon>201806300355452_AddDailyTimeRecord.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807010814320_AddRatesToDailyTimeRecord.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807010814320_AddRatesToDailyTimeRecord.Designer.cs">
+      <DependentUpon>201807010814320_AddRatesToDailyTimeRecord.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
@@ -310,6 +315,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201806300355452_AddDailyTimeRecord.resx">
       <DependentUpon>201806300355452_AddDailyTimeRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807010814320_AddRatesToDailyTimeRecord.resx">
+      <DependentUpon>201807010814320_AddRatesToDailyTimeRecord.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -40,12 +40,31 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public decimal? COLADaily { get; set; }
                 public decimal? COLAHourly { get; set; }
                 public decimal? DailyRate { get; set; }
+                public IEnumerable<DailyTimeRecord> DailyTimeRecords { get; set; } = new List<DailyTimeRecord>();
+                public DailyTimeRecord LatestDailyTimeRecord => DailyTimeRecords.OrderByDescending(dtr => dtr.AddedOn).FirstOrDefault();
                 public string EmployeeCode { get; set; }
                 public string FirstName { get; set; }
                 public decimal? HourlyRate { get; set; }
                 public int Id { get; set; }
                 public string LastName { get; set; }
                 public string Name => $"{LastName}, {FirstName}";
+            }
+
+            public class DailyTimeRecord
+            {
+                [JsonIgnore]
+                public DateTime AddedOn { get; set; }
+                public decimal? DailyRate { get; set; }
+                public double? DaysWorked { get; set; }
+                public decimal? DaysWorkedValue { get; set; }
+                public decimal? HourlyRate { get; set; }
+                public double? HoursLate { get; set; }
+                public decimal? HoursLateValue { get; set; }
+                public double? HoursUndertime { get; set; }
+                public decimal? HoursUndertimeValue { get; set; }
+                public double? HoursWorked { get; set; }
+                public decimal? HoursWorkedValue { get; set; }
+                public int Id { get; set; }
             }
         }
 
@@ -64,6 +83,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                 var dbQuery = _db
                     .Employees
+                    .Include(e => e.DailyTimeRecords)
                     .Where(e => !e.DeletedOn.HasValue && e.ClientId == query.ClientId);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))

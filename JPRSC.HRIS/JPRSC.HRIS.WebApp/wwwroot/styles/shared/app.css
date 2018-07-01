@@ -9,3 +9,7 @@ div.page-logo > a:hover, div.page-logo > a:focus {
 .modal-dialog {
     margin-top: 60px;
 }
+
+.margin-right-10 {
+    margin-right: 10px;
+}
