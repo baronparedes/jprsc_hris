@@ -11,6 +11,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             CreateMap<DailyTimeRecord, Search.QueryResult.DailyTimeRecord>();
             CreateMap<DailyTimeRecord, Edit.Command>();
             CreateMap<Client, Index.QueryResult.Client>();
+            CreateMap<PayPercentage, Index.QueryResult.PayPercentage>();
         }
     }
 }

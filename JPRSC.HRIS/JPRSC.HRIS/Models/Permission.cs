@@ -87,6 +87,10 @@ namespace JPRSC.HRIS.Models
 
         // Daily Time Record
         [Display(Name = "Daily Time Records")]
-        DailyTimeRecordDefault = 2100
+        DailyTimeRecordDefault = 2100,
+
+        // Overtime
+        [Display(Name = "Overtimes")]
+        OvertimeDefault = 2200
     }
 }

@@ -38,6 +38,7 @@ namespace JPRSC.HRIS.Models
         public string MiddleName { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public string Nickname { get; set; }
+        public ICollection<Overtime> Overtimes { get; set; } = new List<Overtime>();
         public string PagIbig { get; set; }
         public string PhilHealth { get; set; }
         public string Position { get; set; }

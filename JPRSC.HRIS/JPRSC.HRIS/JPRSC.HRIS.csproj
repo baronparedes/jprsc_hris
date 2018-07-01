@@ -193,6 +193,14 @@
     <Compile Include="Infrastructure\Data\Migrations\201807010834423_AddCOLAValuesToDailyTimeRecord.Designer.cs">
       <DependentUpon>201807010834423_AddCOLAValuesToDailyTimeRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807011507165_AddOvertime.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807011507165_AddOvertime.Designer.cs">
+      <DependentUpon>201807011507165_AddOvertime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807011516139_AddOvertimeNumberOfHoursValue.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807011516139_AddOvertimeNumberOfHoursValue.Designer.cs">
+      <DependentUpon>201807011516139_AddOvertimeNumberOfHoursValue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -237,6 +245,7 @@
     <Compile Include="Models\Loan.cs" />
     <Compile Include="Models\LoanType.cs" />
     <Compile Include="Models\Month.cs" />
+    <Compile Include="Models\Overtime.cs" />
     <Compile Include="Models\PagIbigRecord.cs" />
     <Compile Include="Models\PayPercentage.cs" />
     <Compile Include="Models\PayrollCode.cs" />
@@ -325,6 +334,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807010834423_AddCOLAValuesToDailyTimeRecord.resx">
       <DependentUpon>201807010834423_AddCOLAValuesToDailyTimeRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807011507165_AddOvertime.resx">
+      <DependentUpon>201807011507165_AddOvertime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807011516139_AddOvertimeNumberOfHoursValue.resx">
+      <DependentUpon>201807011516139_AddOvertimeNumberOfHoursValue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

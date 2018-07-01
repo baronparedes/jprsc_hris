@@ -15,6 +15,7 @@
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
+            vm.payRates = vm.serverModel.payRates;
         });
 
         $scope.$watch('vm.searchModel', onSearchModelChange, true);
@@ -27,11 +28,13 @@
                 templateUrl: 'addDailyTimeRecordModal.html',
                 controller: 'AddDailyTimeRecordModalCtrl',
                 controllerAs: 'vm',
+                size: 'lg',
                 resolve: {
                     params: function () {
                         return {
                             client: vm.searchModel.client,
-                            employees: vm.employees
+                            employees: vm.employees,
+                            payRates: vm.payRates
                         }
                     }
                 }

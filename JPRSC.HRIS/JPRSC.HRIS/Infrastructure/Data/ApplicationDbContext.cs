@@ -23,6 +23,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<Loan> Loans { get; set; }
         public DbSet<LoanType> LoanTypes { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<Overtime> Overtimes { get; set; }
         public DbSet<PagIbigRecord> PagIbigRecords { get; set; }
         public DbSet<PayPercentage> PayPercentages { get; set; }
         public DbSet<PhicRecord> PhicRecords { get; set; }

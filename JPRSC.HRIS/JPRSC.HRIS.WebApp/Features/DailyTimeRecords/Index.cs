@@ -21,6 +21,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         public class QueryResult
         {
             public IList<Client> Clients { get; set; } = new List<Client>();
+            public IList<PayPercentage> PayRates { get; set; } = new List<PayPercentage>();
 
             public class Client
             {
@@ -42,6 +43,13 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public TaxTable? TaxTable { get; set; }
                 public bool? ZeroBasic { get; set; }
             }
+
+            public class PayPercentage
+            {
+                public int Id { get; set; }
+                public string Name { get; set; }
+                public double? Percentage { get; set; }
+            }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
@@ -59,9 +67,13 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     .Where(c => !c.DeletedOn.HasValue)
                     .ProjectToListAsync<QueryResult.Client>();
 
+                var payRates = await _db.PayPercentages
+                    .ProjectToListAsync<QueryResult.PayPercentage>();
+
                 return new QueryResult
                 {
-                    Clients = clients
+                    Clients = clients,
+                    PayRates = payRates
                 };
             }
         }

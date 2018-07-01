@@ -5,8 +5,10 @@ using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +23,18 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public double? HoursLate { get; set; }
             public double? HoursUndertime { get; set; }
             public double? HoursWorked { get; set; }
+            public IEnumerable<Overtime> Overtimes { get; set; } = new List<Overtime>();
+
+            public class Overtime
+            {
+                public DateTime? From { get; set; }
+                public double? NumberOfHours { get; set; }
+                public decimal? NumberOfHoursValue { get; set; }
+                public string PayPercentageName { get; set; }
+                public double? PayPercentagePercentage { get; set; }
+                public string Reference { get; set; }
+                public DateTime? To { get; set; }
+            }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -72,11 +86,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 // TODO: Remove
                 await RemoveExistingDailyTimeRecordsOfEmployee(command);
 
+                var now = DateTime.UtcNow;
                 var employee = await _db.Employees.SingleOrDefaultAsync(e => e.Id == command.EmployeeId);
 
                 var dailyTimeRecord = new DailyTimeRecord
                 {
-                    AddedOn = DateTime.UtcNow,
+                    AddedOn = now,
                     COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily),
                     DailyRate = employee.DailyRate,
                     DaysWorked = command.DaysWorked,
@@ -90,8 +105,23 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     HoursWorked = command.HoursWorked,
                     HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate)
                 };
-
                 _db.DailyTimeRecords.Add(dailyTimeRecord);
+
+                var overtimes = command
+                    .Overtimes
+                    .Select(o => new Overtime
+                    {
+                        AddedOn = now,
+                        EmployeeId = command.EmployeeId,
+                        From = o.From,
+                        NumberOfHours = o.NumberOfHours,
+                        PayPercentageName = o.PayPercentageName,
+                        PayPercentagePercentage = o.PayPercentagePercentage,
+                        Reference = o.Reference,
+                        To = o.To
+                    });
+                _db.Overtimes.AddRange(overtimes);
+
                 await _db.SaveChangesAsync();
 
                 return Unit.Value;

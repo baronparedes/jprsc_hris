@@ -187,6 +187,63 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <h4>Overtimes</h4>
+                                    <div ng-show="!vm.overtimes.length">No overtimes.</div>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="vm.overtimes.length">
+                                <div class="col-sm-12">
+                                    <div class="table-scrollable">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>From</th>
+                                                    <th>To</th>
+                                                    <th>OT Code</th>
+                                                    <th>Number <br />of Hours</th>
+                                                    <th>Amount</th>
+                                                    <th>Reference</th>
+                                                    <th>&nbsp;</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="overtime in vm.overtimes track by $index">
+                                                    <td>
+                                                        <input type="text" class="form-control" name="{{vm.getOvertimeFieldName($index, 'From')}}" placeholder="MM/dd/yyyy" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="{{vm.getOvertimeFieldName($index, 'To')}}" placeholder="MM/dd/yyyy" />
+                                                    </td>
+                                                    <td style="min-width: 140px;">
+                                                        <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'PayPercentageName')}}" value="{{overtime.payRate.name}}" />
+                                                        <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'PayPercentagePercentage')}}" value="{{overtime.payRate.percentage}}" />
+                                                        <select class="form-control" ng-model="overtime.payRate" ng-options="payRate.name for payRate in vm.payRates track by payRate.name" ng-change="vm.otRateChanged(overtime)">
+                                                            <option value="?" selected="selected">Select pay rate</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" ng-model="overtime.numberOfHours" ng-change="vm.numberOfHoursChanged(overtime)" name="{{vm.getOvertimeFieldName($index, 'NumberOfHours')}}" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'NumberOfHoursValue')}}" value="{{overtime.numberOfHoursValue}}" />
+                                                        <p class="form-control-static">{{vm.currencySymbol}}{{overtime.numberOfHoursValue | number:2}}</p>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="{{vm.getOvertimeFieldName($index, 'Reference')}}" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <a href="" class="btn btn-primary" ng-click="vm.addOvertimeClicked()">Add Overtime</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
