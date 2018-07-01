@@ -115,6 +115,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         EmployeeId = command.EmployeeId,
                         From = o.From,
                         NumberOfHours = o.NumberOfHours,
+                        NumberOfHoursValue = o.NumberOfHoursValue,
                         PayPercentageName = o.PayPercentageName,
                         PayPercentagePercentage = o.PayPercentagePercentage,
                         Reference = o.Reference,
