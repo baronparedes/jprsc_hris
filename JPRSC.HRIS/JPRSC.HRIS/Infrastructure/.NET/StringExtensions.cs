@@ -20,5 +20,12 @@ namespace System
                 return s;
             }
         }
+
+        public static double? ToNullableDouble(this string value)
+        {
+            if (String.IsNullOrWhiteSpace(value)) return null;
+
+            return double.Parse(value);
+        }
     }
 }

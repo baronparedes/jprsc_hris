@@ -54,6 +54,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.client.id || vm.searchInProgress" ng-click="vm.addDailyTimeRecordClicked()">Add Daily Time Record</button>
+                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.client.id || vm.searchInProgress" ng-click="vm.bulkUploadClicked()">Bulk Upload</button>
                         </div>
                     </div>
                 </div>
@@ -257,6 +258,50 @@
                         <button type="button" class="btn green" ng-click="vm.addDailyTimeRecordAndAddAnother()" ng-disabled="vm.currentEmployeeIndex >= vm.employees.length - 1 || vm.addInProgress">Save and Add Next</button>
                         <button type="button" class="btn green" ng-click="vm.addDailyTimeRecordAndExit()" ng-disabled="vm.addInProgress">Save and Exit</button>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.addInProgress">Exit</a>
+                    </div>
+                </form>
+            </script>
+            
+            <script type="text/ng-template" id="bulkUploadModal.html">
+                <form class="form-horizontal" role="form" method="post" id="bulkUploadForm" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Bulk Upload for {{vm.client.name}}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-body">
+                            <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodFrom }">
+                                <label class="col-md-3 col-lg-2 control-label">Payroll Period From</label>
+                                <div class="col-md-9 col-lg-10">
+                                    <input type="text" class="form-control" ng-model="vm.payrollPeriodFrom" 
+                                           uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                           is-open="vm.payrollPeriodFromIsOpen" ng-click="vm.payrollPeriodFromIsOpen = true">
+                                    <input type="hidden" id="PayrollPeriodFrom" name="PayrollPeriodFrom" value="{{vm.payrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                    <span class="help-block" ng-show="vm.validationErrors.payrollPeriodFrom">{{vm.validationErrors.payrollPeriodFrom.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodTo }">
+                                <label class="col-md-3 col-lg-2 control-label">Payroll Period To</label>
+                                <div class="col-md-9 col-lg-10">
+                                    <input type="text" class="form-control" ng-model="vm.payrollPeriodTo" 
+                                           uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                           is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
+                                    <input type="hidden" id="PayrollPeriodTo" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                    <span class="help-block" ng-show="vm.validationErrors.payrollPeriodTo">{{vm.validationErrors.payrollPeriodTo.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.file }">
+                                <label class="col-md-3 col-lg-2 control-label">CSV File</label>
+                                <div class="col-md-9 col-lg-10">
+                                    <input type="file" name="File" id="File" />
+                                    <span class="help-block" ng-show="vm.validationErrors.file">{{vm.validationErrors.file.join(' ')}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn green" value="Upload" />
+                        <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.uploadInProgress">Exit</a>
                     </div>
                 </form>
             </script>

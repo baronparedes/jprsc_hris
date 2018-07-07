@@ -55,8 +55,7 @@
                                 <tbody>
                                     <tr ng-repeat="payPercentage in vm.payPercentages track by payPercentage.id">
                                         <td>
-                                            <span ng-show="!payPercentage.isEditing">{{payPercentage.name}}</span>
-                                            <input ng-show="payPercentage.isEditing" class="form-control input-sm" ng-model="payPercentage.copy.name" />
+                                            {{payPercentage.name}}
                                         </td>
                                         <td>
                                             <span ng-show="!payPercentage.isEditing">{{payPercentage.percentage}}</span>
