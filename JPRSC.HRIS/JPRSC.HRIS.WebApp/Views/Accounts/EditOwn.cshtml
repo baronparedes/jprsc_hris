@@ -33,6 +33,11 @@
                             <div class="form-body">
                                 @Html.TextBoxHorizontalFormGroup("Name")
                                 @Html.TextBoxHorizontalFormGroup("UserName")
+                                @Html.DropdownHorizontalFormGroup(Model.CompaniesList, "CompanyId", "Default Company")
+                                <br />
+                                @Html.PasswordBoxHorizontalFormGroup("OldPassword")
+                                @Html.PasswordBoxHorizontalFormGroup("NewPassword")
+                                @Html.PasswordBoxHorizontalFormGroup("RepeatNewPassword")
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Accounts")" class="btn default">Cancel</a>

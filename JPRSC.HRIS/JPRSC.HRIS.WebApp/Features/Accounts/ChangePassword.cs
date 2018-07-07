@@ -71,14 +71,12 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         public class CommandHandler : IRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
-            private readonly SignInManager _signInManager;
             private readonly UserManager _userManager;
 
-            public CommandHandler(ApplicationDbContext db, UserManager userManager, SignInManager signInManager)
+            public CommandHandler(ApplicationDbContext db, UserManager userManager)
             {
                 _db = db;
                 _userManager = userManager;
-                _signInManager = signInManager;
             }
 
             public async Task<CommandResult> Handle(Command command, CancellationToken token)
