@@ -1,11 +1,12 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('AddCompanyCtrl', ['$http', '$window', AddCompanyCtrl]);
+        .controller('AddCompanyCtrl', ['$http', '$window', 'globalSettings', AddCompanyCtrl]);
 
-    function AddCompanyCtrl($http, $window) {
+    function AddCompanyCtrl($http, $window, globalSettings) {
         var vm = this;
-        vm.addCompanySubmit = addCompanySubmit;
+        vm.addCompanySubmit = addCompanySubmit;;
+        vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.validationErrors = {};
 
         function addCompanySubmit(e) {

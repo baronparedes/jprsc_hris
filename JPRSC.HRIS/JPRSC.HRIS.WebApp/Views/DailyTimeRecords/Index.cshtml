@@ -211,10 +211,16 @@
                                             <tbody>
                                                 <tr ng-repeat="overtime in vm.overtimes track by $index">
                                                     <td>
-                                                        <input type="text" class="form-control" name="{{vm.getOvertimeFieldName($index, 'From')}}" placeholder="MM/dd/yyyy" />
+                                                        <input type="text" class="form-control" ng-model="vm.overtime.from"
+                                                               uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                                               is-open="vm.overtime.fromIsOpen" ng-click="vm.overtime.fromIsOpen = true">
+                                                        <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'From')}}" value="{{vm.overtime.from | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" name="{{vm.getOvertimeFieldName($index, 'To')}}" placeholder="MM/dd/yyyy" />
+                                                        <input type="text" class="form-control" ng-model="vm.overtime.to"
+                                                               uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                                               is-open="vm.overtime.toIsOpen" ng-click="vm.overtime.toIsOpen = true">
+                                                        <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'To')}}" value="{{vm.overtime.to | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                                     </td>
                                                     <td style="min-width: 140px;">
                                                         <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'PayPercentageName')}}" value="{{overtime.payRate.name}}" />

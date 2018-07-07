@@ -1,14 +1,15 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('DailyTimeRecordIndexCtrl', ['$http', '$scope', '$timeout', '$uibModal', DailyTimeRecordIndexCtrl]);
+        .controller('DailyTimeRecordIndexCtrl', ['$http', '$scope', '$timeout', '$uibModal', 'globalSettings', DailyTimeRecordIndexCtrl]);
 
-    function DailyTimeRecordIndexCtrl($http, $scope, $timeout, $uibModal) {
+    function DailyTimeRecordIndexCtrl($http, $scope, $timeout, $uibModal, globalSettings) {
         var vm = this;
         vm.addDailyTimeRecordClicked = addDailyTimeRecordClicked;
         vm.clientsList = [];
         vm.currencySymbol = 'P';
         vm.dailyTimeRecords = [];
+        vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.searchClicked = searchClicked;
         vm.searchModel = {};
         vm.searchInProgress = false;

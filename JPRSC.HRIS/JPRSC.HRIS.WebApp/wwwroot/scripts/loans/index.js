@@ -1,12 +1,13 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('LoanIndexCtrl', ['$http', '$timeout', '$uibModal', '$scope', LoanIndexCtrl]);
+        .controller('LoanIndexCtrl', ['$http', '$timeout', '$uibModal', '$scope', 'globalSettings', LoanIndexCtrl]);
 
-    function LoanIndexCtrl($http, $timeout, $uibModal, $scope) {
+    function LoanIndexCtrl($http, $timeout, $uibModal, $scope, globalSettings) {
         var vm = this;
         vm.addLoanClicked = addLoanClicked;
         vm.currencySymbol = 'P';
+        vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.getInterestAmount = getInterestAmount;
         vm.loans = [];
         vm.nextTransactionNumber = '';

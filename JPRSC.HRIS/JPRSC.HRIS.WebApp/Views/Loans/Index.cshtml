@@ -55,7 +55,9 @@
                                             <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
                                             <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
                                         </span>
-                                        <input type="text" class="form-control" ng-disabled="!vm.searchModel.client.id" ng-model="vm.searchModel.loanEndDate" ng-model-options="{ debounce: 500 }" placeholder="MM/dd/yyyy" />
+                                        <input type="text" class="form-control" ng-disabled="!vm.searchModel.client.id" ng-model="vm.searchModel.loanEndDate"
+                                               uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                               is-open="vm.searchModel.loanEndDateIsOpen" ng-click="vm.searchModel.loanEndDateIsOpen = true">
                                     </div>
                                 </div>
                             </div>
@@ -143,10 +145,13 @@
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanDate }">
-                                <label class="col-md-4 col-lg-3 control-label">Loan Date</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" name="LoanDate" ng-model="vm.loanDate" placeholder="MM/dd/yyyy" />
-                                    <span ng-show="vm.validationErrors.loanDate" class="help-block"></span>
+                                <label class="col-md-3 col-lg-2 control-label">Loan Date</label>
+                                <div class="col-md-9 col-lg-10">
+                                    <input type="text" class="form-control" ng-model="vm.loanDate"
+                                           uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                           is-open="vm.loanDateIsOpen" ng-click="vm.loanDateIsOpen = true">
+                                    <input type="hidden" name="LoanDate" value="{{vm.loanDate | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                    <span class="help-block" ng-show="vm.validationErrors.loanDate"></span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanTypeId }">

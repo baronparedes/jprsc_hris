@@ -91,6 +91,13 @@
                     december: @Html.EnumLookup(Month.December)
                 }
             };
+
+            window.globalSettings = {
+                datepickerOptions: {
+                    showWeeks: false,
+                    maxMode: 'day'
+                }
+            };
         }());
     </script>
     <script src="~/wwwroot/scripts/shared/app.js"></script>

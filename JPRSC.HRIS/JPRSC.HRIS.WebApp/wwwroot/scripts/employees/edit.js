@@ -1,10 +1,11 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('EditEmployeeCtrl', ['$http', '$timeout', '$window', 'lookups', EditEmployeeCtrl]);
+        .controller('EditEmployeeCtrl', ['$http', '$timeout', '$window', 'globalSettings', 'lookups', EditEmployeeCtrl]);
 
-    function EditEmployeeCtrl($http, $timeout, $window, lookups) {
+    function EditEmployeeCtrl($http, $timeout, $window, globalSettings, lookups) {
         var vm = this;
+        vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.editEmployeeSubmit = editEmployeeSubmit;
         vm.lookups = lookups;
         vm.validationErrors = {};

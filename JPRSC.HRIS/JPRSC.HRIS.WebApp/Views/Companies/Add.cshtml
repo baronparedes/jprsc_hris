@@ -40,7 +40,16 @@
                                 @Html.TextBoxHorizontalFormGroup("PagIbig", "Pag-ibig")
                                 @Html.TextBoxHorizontalFormGroup("Registration", "Registration no.")
                                 @Html.TextBoxHorizontalFormGroup("BOI")
-                                @Html.TextBoxHorizontalFormGroup("DateIssued", "Date issued", "MM/dd/yyyy")
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.dateIssued }">
+                                    <label class="col-md-3 col-lg-2 control-label">Date issued</label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <input type="text" class="form-control" ng-model="vm.dateIssued"
+                                               uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                               is-open="vm.dateIssuedIsOpen" ng-click="vm.dateIssuedIsOpen = true">
+                                        <input type="hidden" name="DateIssued" value="{{vm.dateIssued | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                        <span class="help-block" ng-show="vm.validationErrors.dateIssued"></span>
+                                    </div>
+                                </div>
                                 @Html.TextBoxHorizontalFormGroup("DTI", "DTI No")
                                 @Html.TextBoxHorizontalFormGroup("PERAA", "PERAA Code No.")
                                 @Html.TextBoxHorizontalFormGroup("VAT", "Vat No.")

@@ -41,8 +41,26 @@
                                 @Html.DropdownHorizontalFormGroup("payrollCodes", "PayrollCode")
                                 @Html.TextBoxHorizontalFormGroup("NumberOfWorkingDaysForThisPayrollPeriod")
                                 @Html.TextBoxHorizontalFormGroup("NumberOfPayrollPeriodsAMonth")
-                                @Html.TextBoxHorizontalFormGroup("PayrollPeriodFrom", placeholder: "MM/dd/yyyy")
-                                @Html.TextBoxHorizontalFormGroup("PayrollPeriodTo", placeholder: "MM/dd/yyyy")
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodFrom }">
+                                    <label class="col-md-3 col-lg-2 control-label">Payroll Period From</label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <input type="text" class="form-control" ng-model="vm.payrollPeriodFrom"
+                                               uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                               is-open="vm.payrollPeriodFromIsOpen" ng-click="vm.payrollPeriodFromIsOpen = true">
+                                        <input type="hidden" name="PayrollPeriodFrom" value="{{vm.payrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                        <span class="help-block" ng-show="vm.validationErrors.payrollPeriodFrom"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodTo }">
+                                    <label class="col-md-3 col-lg-2 control-label">Payroll Period To</label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <input type="text" class="form-control" ng-model="vm.payrollPeriodTo"
+                                               uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                               is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
+                                        <input type="hidden" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                        <span class="help-block" ng-show="vm.validationErrors.payrollPeriodTo"></span>
+                                    </div>
+                                </div>
                                 @Html.DropdownHorizontalFormGroup("months", "PayrollPeriodMonth")
                                 @Html.TextBoxHorizontalFormGroup("CurrentPayrollPeriod")
                                 @Html.CheckboxHorizontalFormGroup("ZeroBasic")

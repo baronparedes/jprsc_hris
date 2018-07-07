@@ -1,11 +1,12 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('AddClientCtrl', ['$http', '$window', 'lookups', AddClientCtrl]);
+        .controller('AddClientCtrl', ['$http', '$window', 'globalSettings', 'lookups', AddClientCtrl]);
 
-    function AddClientCtrl($http, $window, lookups) {
+    function AddClientCtrl($http, $window, globalSettings, lookups) {
         var vm = this;
         vm.addClientSubmit = addClientSubmit;
+        vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.lookups = lookups;
         vm.validationErrors = {};
 

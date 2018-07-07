@@ -1,10 +1,11 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('EditClientCtrl', ['$http', '$timeout', '$window', 'lookups', EditClientCtrl]);
+        .controller('EditClientCtrl', ['$http', '$timeout', '$window', 'globalSettings', 'lookups', EditClientCtrl]);
 
-    function EditClientCtrl($http, $timeout, $window) {
+    function EditClientCtrl($http, $timeout, $window, globalSettings, lookups) {
         var vm = this;
+        vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.editClientSubmit = editClientSubmit;
         vm.lookups = lookups;
         vm.validationErrors = {};

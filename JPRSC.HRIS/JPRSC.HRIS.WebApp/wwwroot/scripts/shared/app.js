@@ -2,6 +2,7 @@
     var app = angular.module('app', ['ui.bootstrap']);
 
     app.constant('lookups', window.lookups);
+    app.constant('globalSettings', window.globalSettings);
 
     // This has to be done before document.ready.
     configureJQueryValidator();
