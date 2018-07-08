@@ -66,6 +66,12 @@
                     }
                 }
             });
+
+            modalInstance.result.then(function (result) {
+                searchClicked();
+            }, function () {
+                searchClicked();
+            });
         };
 
         function onSearchModelChange(newValue, oldValue) {

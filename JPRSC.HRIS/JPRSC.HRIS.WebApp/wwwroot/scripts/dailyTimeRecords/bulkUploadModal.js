@@ -12,25 +12,38 @@
         vm.validationErrors = {};
 
         $timeout(function () {
+            // Selecting the same file twice, even if the file was modified in between,
+            // does not reset the file input, resulting in the original file being
+            // uploaded the second time around. To remedy this, we reset the file input
+            // every time it is clicked.
+            $('input[type=file]').click(function () {
+                $(this).attr('value', '');
+            });
+
             $("form#bulkUploadForm").submit(function (e) {
                 e.preventDefault();
                 var formData = new FormData($('#bulkUploadForm')[0]);
 
                 $.ajax({
-                    url: 'DailyTimeRecords/BulkUpload',
+                    url: '/DailyTimeRecords/BulkUpload',
                     type: 'POST',
                     data: formData,
                     success: function (data) {
                         $scope.$apply(function () {
-                            console.log('success');
-                            console.log(data);
-
                             vm.validationErrors = {};
+                            vm.unprocessedItems = data.unprocessedItems;
+
+                            if (!vm.unprocessedItems.length) {
+                                var successMessage = `Successfully processed ${data.processedItemsCount} employee record/s.`
+                                alert(successMessage);
+
+                                $uibModalInstance.close();
+                            }
                         });
                     },
                     error: function (data) {
                         $scope.$apply(function () {
-                            vm.validationErrors = data.responseJSON;
+                            vm.validationErrors = {};
 
                             if (data.status === 400) {
                                 vm.validationErrors = data.responseJSON;
