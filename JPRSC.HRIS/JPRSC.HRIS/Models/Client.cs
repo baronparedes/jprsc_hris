@@ -18,35 +18,31 @@ namespace JPRSC.HRIS.Models
         public string Name { get; set; }
         public int? NumberOfPayrollPeriodsAMonth { get; set; }
         public int? NumberOfWorkingDaysForThisPayrollPeriod { get; set; }
+        public bool? PagIbigBasic { get; set; }
+        public bool? PagIbigCola { get; set; }
+        public bool? PagIbigOvertime { get; set; }
+        public string PagIbigPayrollPeriod { get; set; }
+        public IEnumerable<int> PagIbigPayrollPeriods => PagIbigPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
         public PayrollCode? PayrollCode { get; set; }
         public DateTime? PayrollPeriodFrom { get; set; }
         public Month? PayrollPeriodMonth { get; set; }
         public DateTime? PayrollPeriodTo { get; set; }
-        public TaxTable? TaxTable { get; set; }
-        public bool? ZeroBasic { get; set; }
-
-        public string SSSPayrollPeriod { get; set; }
-        public IEnumerable<int> SSSPayrollPeriods => SSSPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
-        public bool? SSSBasic { get; set; }
-        public bool? SSSOvertime { get; set; }
-        public bool? SSSCola { get; set; }
-
+        public bool? PHICBasic { get; set; }
+        public bool? PHICCola { get; set; }
+        public bool? PHICOvertime { get; set; }
         public string PHICPayrollPeriod { get; set; }
         public IEnumerable<int> PHICPayrollPeriods => PHICPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
-        public bool? PHICBasic { get; set; }
-        public bool? PHICOvertime { get; set; }
-        public bool? PHICCola { get; set; }
-
-        public string PagIbigPayrollPeriod { get; set; }
-        public IEnumerable<int> PagIbigPayrollPeriods => PagIbigPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
-        public bool? PagIbigBasic { get; set; }
-        public bool? PagIbigOvertime { get; set; }
-        public bool? PagIbigCola { get; set; }
-
+        public bool? SSSBasic { get; set; }
+        public bool? SSSCola { get; set; }
+        public bool? SSSOvertime { get; set; }
+        public string SSSPayrollPeriod { get; set; }
+        public IEnumerable<int> SSSPayrollPeriods => SSSPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
+        public bool? TaxBasic { get; set; }
+        public bool? TaxCola { get; set; }
+        public bool? TaxOvertime { get; set; }
         public string TaxPayrollPeriod { get; set; }
         public IEnumerable<int> TaxPayrollPeriods => TaxPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
-        public bool? TaxBasic { get; set; }
-        public bool? TaxOvertime { get; set; }
-        public bool? TaxCola { get; set; }
+        public TaxTable? TaxTable { get; set; }
+        public bool? ZeroBasic { get; set; }
     }
 }

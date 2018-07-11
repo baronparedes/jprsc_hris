@@ -27,10 +27,12 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
 
+            // Employee Info
             public string FirstName { get; set; }
             public string MiddleName { get; set; }
             public string LastName { get; set; }
             public string Nickname { get; set; }
+            public string Email { get; set; }
             public string CityAddress { get; set; }
             public DateTime? DateOfBirth { get; set; }
             public string ZipCode { get; set; }
@@ -43,29 +45,34 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public CivilStatus? CivilStatus { get; set; }
             public string SSS { get; set; }
             public string TIN { get; set; }
-            public string Email { get; set; }
+            public string PagIbig { get; set; }
+            public string PhilHealth { get; set; }
 
-            // Company Information
-            public DateTime? DateHired { get; set; }
-            public DateTime? DateResigned { get; set; }
+            // Company Info
             public Client Client { get; set; }
             public int? ClientId { get; set; }
+            public DateTime? DateHired { get; set; }
+            public DateTime? DateResigned { get; set; }
             public string Position { get; set; }
             public Department Department { get; set; }
             public int? DepartmentId { get; set; }
+            public string EmployeeStatus { get; set; }
+            public string ResignStatus { get; set; }
+
+            // Pay Info
+            public string ATMAccountNumber { get; set; }
+            public AccountType? AccountType { get; set; }
             public TaxStatus TaxStatus { get; set; }
             public int? TaxStatusId { get; set; }
-            public string EmployeeStatus { get; set; }
-            public string PagIbig { get; set; }
-            public string PhilHealth { get; set; }
-            public AccountType? AccountType { get; set; }
-            public string ATMAccountNumber { get; set; }
-
-            // Employee Rate
             public decimal? HourlyRate { get; set; }
             public decimal? DailyRate { get; set; }
             public decimal? COLAHourly { get; set; }
             public decimal? COLADaily { get; set; }
+            public bool? TaxExempt { get; set; }
+            public bool? PagIbigExempt { get; set; }
+            public bool? ThirteenthMonthExempt { get; set; }
+            public bool? PhilHealthExempt { get; set; }
+            public string SalaryStatus { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Command>
@@ -203,12 +210,18 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     MiddleName = command.MiddleName,
                     Nickname = command.Nickname,
                     PagIbig = command.PagIbig,
+                    PagIbigExempt = command.PagIbigExempt,
                     PhilHealth = command.PhilHealth,
+                    PhilHealthExempt = command.PhilHealthExempt,
                     Position = command.Position,
                     ReligionId = command.ReligionId,
+                    ResignStatus = command.ResignStatus,
+                    SalaryStatus = command.SalaryStatus,
                     SSS = command.SSS,
+                    TaxExempt = command.TaxExempt,
                     TaxStatusId = command.TaxStatusId,
                     TelNo = command.TelNo,
+                    ThirteenthMonthExempt = command.ThirteenthMonthExempt,
                     TIN = command.TIN,
                     ZipCode = command.ZipCode
                 };

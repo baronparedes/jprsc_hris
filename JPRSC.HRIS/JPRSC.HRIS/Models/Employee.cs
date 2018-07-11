@@ -40,14 +40,20 @@ namespace JPRSC.HRIS.Models
         public string Nickname { get; set; }
         public ICollection<Overtime> Overtimes { get; set; } = new List<Overtime>();
         public string PagIbig { get; set; }
+        public bool? PagIbigExempt { get; set; }
         public string PhilHealth { get; set; }
+        public bool? PhilHealthExempt { get; set; }
         public string Position { get; set; }
         public Religion Religion { get; set; }
         public int? ReligionId { get; set; }
+        public string ResignStatus { get; set; }
+        public string SalaryStatus { get; set; }
         public string SSS { get; set; }
+        public bool? TaxExempt { get; set; }
         public TaxStatus TaxStatus { get; set; }
         public int? TaxStatusId { get; set; }
         public string TelNo { get; set; }
+        public bool? ThirteenthMonthExempt { get; set; }
         public string TIN { get; set; }
         public string ZipCode { get; set; }
     }

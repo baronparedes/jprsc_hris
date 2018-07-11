@@ -34,6 +34,7 @@
                             <div class="form-body">
                                 <uib-tabset active="active">
                                     <uib-tab index="0" heading="Employee Info">
+                                        @Html.TextBoxHorizontalFormGroup("EmployeeCode")
                                         @Html.TextBoxHorizontalFormGroup("FirstName")
                                         @Html.TextBoxHorizontalFormGroup("MiddleName")
                                         @Html.TextBoxHorizontalFormGroup("LastName")
@@ -63,6 +64,7 @@
                                         @Html.TextBoxHorizontalFormGroup("PhilHealth")
                                     </uib-tab>
                                     <uib-tab index="1" heading="Company Info">
+                                        @Html.DropdownHorizontalFormGroup(Model.ClientsList, "ClientId", "Client")
                                         <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.dateHired }">
                                             <label class="col-md-3 col-lg-2 control-label">Date Hired</label>
                                             <div class="col-md-9 col-lg-10">
@@ -83,10 +85,28 @@
                                                 <span class="help-block" ng-show="vm.validationErrors.dateResigned"></span>
                                             </div>
                                         </div>
-                                        @Html.DropdownHorizontalFormGroup(Model.ClientsList, "ClientId", "Client")
                                         @Html.TextBoxHorizontalFormGroup("Position")
                                         @Html.DropdownHorizontalFormGroup(Model.DepartmentsList, "DepartmentId", "Department")
                                         @Html.TextBoxHorizontalFormGroup("EmployeeStatus")
+                                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.resignStatus }">
+                                            <label class="col-md-3 col-lg-2 control-label">Resign Status</label>
+                                            <div class="col-md-9 col-lg-10">
+                                                <div class="mt-radio-list">
+                                                    <label class="mt-radio mt-radio-outline">
+                                                        <input type="radio" name="ResignStatus" value="@ResignStatus.Resigned" checked="@(Model.ResignStatus == ResignStatus.Resigned ? "checked" : null)"> @ResignStatus.Resigned
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio mt-radio-outline">
+                                                        <input type="radio" name="ResignStatus" value="@ResignStatus.AWOL" checked="@(Model.ResignStatus == ResignStatus.AWOL ? "checked" : null)"> @ResignStatus.AWOL
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio mt-radio-outline">
+                                                        <input type="radio" name="ResignStatus" value="@ResignStatus.Absorbed" checked="@(Model.ResignStatus == ResignStatus.Absorbed ? "checked" : null)"> @ResignStatus.Absorbed
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </uib-tab>
                                     <uib-tab index="2" heading="Pay Info">
                                         @Html.TextBoxHorizontalFormGroup("ATMAccountNumber")
@@ -96,6 +116,25 @@
                                         @Html.TextBoxHorizontalFormGroup("DailyRate")
                                         @Html.TextBoxHorizontalFormGroup("COLAHourly")
                                         @Html.TextBoxHorizontalFormGroup("COLADaily")
+                                        @Html.CheckboxHorizontalFormGroup("TaxExempt")
+                                        @Html.CheckboxHorizontalFormGroup("PagIbigExempt")
+                                        @Html.CheckboxHorizontalFormGroup("ThirteenthMonthExempt")
+                                        @Html.CheckboxHorizontalFormGroup("PhilHealthExempt")
+                                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.salaryStatus }">
+                                            <label class="col-md-3 col-lg-2 control-label">Salary Status</label>
+                                            <div class="col-md-9 col-lg-10">
+                                                <div class="mt-radio-list">
+                                                    <label class="mt-radio mt-radio-outline">
+                                                        <input type="radio" name="SalaryStatus" value="@SalaryStatus.OnHold" checked="@(Model.SalaryStatus == SalaryStatus.OnHold ? "checked" : null)"> @SalaryStatus.OnHold
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio mt-radio-outline">
+                                                        <input type="radio" name="SalaryStatus" value="@SalaryStatus.ForCheck" checked="@(Model.SalaryStatus == SalaryStatus.ForCheck ? "checked" : null)"> @SalaryStatus.ForCheck
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </uib-tab>
                                 </uib-tabset>
                             </div>

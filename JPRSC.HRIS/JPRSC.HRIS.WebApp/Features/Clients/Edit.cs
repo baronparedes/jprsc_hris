@@ -37,29 +37,21 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             public bool? ZeroBasic { get; set; }
 
             public string SSSPayrollPeriod { get; set; }
-            //public IEnumerable<int> SSSPayrollPeriods => SSSPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
-            //public string SSSPayrollPeriodInput { get; set; }
             public bool? SSSBasic { get; set; }
             public bool? SSSOvertime { get; set; }
             public bool? SSSCola { get; set; }
 
             public string PHICPayrollPeriod { get; set; }
-            //public IEnumerable<int> PHICPayrollPeriods => PHICPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
-            //public string PHICPayrollPeriodInput { get; set; }
             public bool? PHICBasic { get; set; }
             public bool? PHICOvertime { get; set; }
             public bool? PHICCola { get; set; }
 
             public string PagIbigPayrollPeriod { get; set; }
-            //public IEnumerable<int> PagIbigPayrollPeriods => PagIbigPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
-            //public string PagIbigPayrollPeriodInput { get; set; }
             public bool? PagIbigBasic { get; set; }
             public bool? PagIbigOvertime { get; set; }
             public bool? PagIbigCola { get; set; }
 
             public string TaxPayrollPeriod { get; set; }
-            //public IEnumerable<int> TaxPayrollPeriods => TaxPayrollPeriod?.Split(',').Select(p => Convert.ToInt32(p));
-            //public string TaxPayrollPeriodInput { get; set; }
             public bool? TaxBasic { get; set; }
             public bool? TaxOvertime { get; set; }
             public bool? TaxCola { get; set; }
@@ -110,32 +102,28 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 client.ModifiedOn = DateTime.UtcNow;
                 client.Name = command.Name;
                 client.NumberOfWorkingDaysForThisPayrollPeriod = command.NumberOfWorkingDaysForThisPayrollPeriod;
+                client.PagIbigBasic = command.PagIbigBasic.HasValue ? command.PagIbigBasic.Value : false;
+                client.PagIbigCola = command.PagIbigCola.HasValue ? command.PagIbigCola.Value : false;
+                client.PagIbigOvertime = command.PagIbigOvertime.HasValue ? command.PagIbigOvertime.Value : false;
+                client.PagIbigPayrollPeriod = command.PagIbigPayrollPeriod;
                 client.PayrollCode = command.PayrollCode;
                 client.PayrollPeriodFrom = command.PayrollPeriodFrom;
                 client.PayrollPeriodMonth = command.PayrollPeriodMonth;
                 client.PayrollPeriodTo = command.PayrollPeriodTo;
+                client.PHICBasic = command.PHICBasic.HasValue ? command.PHICBasic.Value : false;
+                client.PHICCola = command.PHICCola.HasValue ? command.PHICCola.Value : false;
+                client.PHICOvertime = command.PHICOvertime.HasValue ? command.PHICOvertime.Value : false;
+                client.PHICPayrollPeriod = command.PHICPayrollPeriod;
+                client.SSSBasic = command.SSSBasic.HasValue ? command.SSSBasic.Value : false;
+                client.SSSCola = command.SSSCola.HasValue ? command.SSSCola.Value : false;
+                client.SSSOvertime = command.SSSOvertime.HasValue ? command.SSSOvertime.Value : false;
+                client.SSSPayrollPeriod = command.SSSPayrollPeriod;
+                client.TaxBasic = command.TaxBasic.HasValue ? command.TaxBasic.Value : false;
+                client.TaxCola = command.TaxCola.HasValue ? command.TaxCola.Value : false;
+                client.TaxOvertime = command.TaxOvertime.HasValue ? command.TaxOvertime.Value : false;
+                client.TaxPayrollPeriod = command.TaxPayrollPeriod;
                 client.TaxTable = command.TaxTable;
                 client.ZeroBasic = command.ZeroBasic;
-
-                client.SSSPayrollPeriod = command.SSSPayrollPeriod;
-                client.SSSBasic = command.SSSBasic;
-                client.SSSOvertime = command.SSSOvertime;
-                client.SSSCola = command.SSSCola;
-
-                client.PHICPayrollPeriod = command.PHICPayrollPeriod;
-                client.PHICBasic = command.PHICBasic;
-                client.PHICOvertime = command.PHICOvertime;
-                client.PHICCola = command.PHICCola;
-
-                client.PagIbigPayrollPeriod = command.PagIbigPayrollPeriod;
-                client.PagIbigBasic = command.PagIbigBasic;
-                client.PagIbigOvertime = command.PagIbigOvertime;
-                client.PagIbigCola = command.PagIbigCola;
-
-                client.TaxPayrollPeriod = command.TaxPayrollPeriod;
-                client.TaxBasic = command.TaxBasic;
-                client.TaxOvertime = command.TaxOvertime;
-                client.TaxCola = command.TaxCola;
 
                 await _db.SaveChangesAsync();
 
