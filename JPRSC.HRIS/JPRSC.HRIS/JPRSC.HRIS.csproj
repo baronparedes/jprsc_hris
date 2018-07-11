@@ -201,6 +201,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807011516139_AddOvertimeNumberOfHoursValue.Designer.cs">
       <DependentUpon>201807011516139_AddOvertimeNumberOfHoursValue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807100521514_AddClientPayrollFields.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807100521514_AddClientPayrollFields.Designer.cs">
+      <DependentUpon>201807100521514_AddClientPayrollFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -340,6 +344,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807011516139_AddOvertimeNumberOfHoursValue.resx">
       <DependentUpon>201807011516139_AddOvertimeNumberOfHoursValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807100521514_AddClientPayrollFields.resx">
+      <DependentUpon>201807100521514_AddClientPayrollFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

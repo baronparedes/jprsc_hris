@@ -31,38 +31,121 @@
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.addClientSubmit($event)">
                             @Html.AntiForgeryToken()
                             <div class="form-body">
-                                @Html.TextBoxHorizontalFormGroup("Code")
-                                @Html.TextBoxHorizontalFormGroup("Name")
-                                @Html.TextBoxHorizontalFormGroup("Description")
-                                @Html.TextBoxHorizontalFormGroup("DaysPerWeek")
-                                @Html.TextBoxHorizontalFormGroup("HoursPerDay")
-                                @Html.DropdownHorizontalFormGroup("taxTables", "TaxTable")
-                                @Html.DropdownHorizontalFormGroup("payrollCodes", "PayrollCode")
-                                @Html.TextBoxHorizontalFormGroup("NumberOfWorkingDaysForThisPayrollPeriod")
-                                @Html.TextBoxHorizontalFormGroup("NumberOfPayrollPeriodsAMonth")
-                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodFrom }">
-                                    <label class="col-md-3 col-lg-2 control-label">Payroll Period From</label>
-                                    <div class="col-md-9 col-lg-10">
-                                        <input type="text" class="form-control" ng-model="vm.payrollPeriodFrom"
-                                               uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
-                                               is-open="vm.payrollPeriodFromIsOpen" ng-click="vm.payrollPeriodFromIsOpen = true">
-                                        <input type="hidden" name="PayrollPeriodFrom" value="{{vm.payrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
-                                        <span class="help-block" ng-show="vm.validationErrors.payrollPeriodFrom"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodTo }">
-                                    <label class="col-md-3 col-lg-2 control-label">Payroll Period To</label>
-                                    <div class="col-md-9 col-lg-10">
-                                        <input type="text" class="form-control" ng-model="vm.payrollPeriodTo"
-                                               uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
-                                               is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
-                                        <input type="hidden" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
-                                        <span class="help-block" ng-show="vm.validationErrors.payrollPeriodTo"></span>
-                                    </div>
-                                </div>
-                                @Html.DropdownHorizontalFormGroup("months", "PayrollPeriodMonth")
-                                @Html.TextBoxHorizontalFormGroup("CurrentPayrollPeriod")
-                                @Html.CheckboxHorizontalFormGroup("ZeroBasic")
+                                <uib-tabset active="active">
+                                    <uib-tab index="0" heading="Summary">
+                                        @Html.TextBoxHorizontalFormGroup("Code")
+                                        @Html.TextBoxHorizontalFormGroup("Name")
+                                        @Html.TextBoxHorizontalFormGroup("Description")
+                                        @Html.TextBoxHorizontalFormGroup("DaysPerWeek")
+                                        @Html.TextBoxHorizontalFormGroup("HoursPerDay")
+                                        @Html.DropdownHorizontalFormGroup("taxTables", "TaxTable")
+                                        @Html.DropdownHorizontalFormGroup("payrollCodes", "PayrollCode")
+                                        @Html.TextBoxHorizontalFormGroup("NumberOfWorkingDaysForThisPayrollPeriod")
+                                        @Html.TextBoxHorizontalFormGroup("NumberOfPayrollPeriodsAMonth")
+                                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.numberOfPayrollPeriodsAMonth }">
+                                            <label class="col-md-3 col-lg-2 control-label">Number Of Payroll Periods A Month</label>
+                                            <div class="col-md-9 col-lg-10">
+                                                <input type="text" name="NumberOfPayrollPeriodsAMonth" ng-model="vm.numberOfPayrollPeriodsAMonth" ng-change="vm.numberOfPayrollPeriodsAMonthChanged()" class="form-control">
+                                                <span class="help-block" ng-show="vm.validationErrors.numberOfPayrollPeriodsAMonth">{{vm.validationErrors.numberOfPayrollPeriodsAMonth.join(' ')}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodFrom }">
+                                            <label class="col-md-3 col-lg-2 control-label">Payroll Period From</label>
+                                            <div class="col-md-9 col-lg-10">
+                                                <input type="text" class="form-control" ng-model="vm.payrollPeriodFrom"
+                                                       uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                                       is-open="vm.payrollPeriodFromIsOpen" ng-click="vm.payrollPeriodFromIsOpen = true">
+                                                <input type="hidden" name="PayrollPeriodFrom" value="{{vm.payrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                                <span class="help-block" ng-show="vm.validationErrors.payrollPeriodFrom">{{vm.validationErrors.payrollPeriodFrom.join(' ')}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodTo }">
+                                            <label class="col-md-3 col-lg-2 control-label">Payroll Period To</label>
+                                            <div class="col-md-9 col-lg-10">
+                                                <input type="text" class="form-control" ng-model="vm.payrollPeriodTo"
+                                                       uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                                       is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
+                                                <input type="hidden" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                                <span class="help-block" ng-show="vm.validationErrors.payrollPeriodTo">{{vm.validationErrors.payrollPeriodTo.join(' ')}}</span>
+                                            </div>
+                                        </div>
+                                        @Html.DropdownHorizontalFormGroup("months", "PayrollPeriodMonth")
+                                        @Html.TextBoxHorizontalFormGroup("CurrentPayrollPeriod")
+                                        @Html.CheckboxHorizontalFormGroup("ZeroBasic")
+                                    </uib-tab>
+                                    <uib-tab index="1" heading="SSS">
+                                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.sssPayrollPeriod }">
+                                            <label class="col-md-3 col-lg-2 control-label">Payroll Periods</label>
+                                            <div class="col-md-9 col-lg-10">
+                                                <input type="hidden" name="SSSPayrollPeriod" value="{{vm.getPayrollPeriodInput(vm.sssPayrollPeriods)}}" />
+                                                <div class="mt-checkbox-list">
+                                                    <label class="mt-checkbox mt-checkbox-outline" ng-repeat="payrollPeriod in vm.sssPayrollPeriods">
+                                                        <input type="checkbox" ng-model="payrollPeriod.selected" value="{{payrollPeriod.payrollPeriod}}"> {{payrollPeriod.payrollPeriod}}
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <span class="help-block" ng-show="vm.validationErrors.sssPayrollPeriod">{{vm.validationErrors.sssPayrollPeriod.join(' ')}}</span>
+                                            </div>
+                                        </div>
+                                        @Html.CheckboxHorizontalFormGroup("SSSBasic", "Basic")
+                                        @Html.CheckboxHorizontalFormGroup("SSSOvertime", "Overtime")
+                                        @Html.CheckboxHorizontalFormGroup("SSSCola", "COLA")
+                                    </uib-tab>
+                                    <uib-tab index="2" heading="PHIC">
+                                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.phicPayrollPeriod }">
+                                            <label class="col-md-3 col-lg-2 control-label">Payroll Periods</label>
+                                            <div class="col-md-9 col-lg-10">
+                                                <input type="hidden" name="PHICPayrollPeriod" value="{{vm.getPayrollPeriodInput(vm.phicPayrollPeriods)}}" />
+                                                <div class="mt-checkbox-list">
+                                                    <label class="mt-checkbox mt-checkbox-outline" ng-repeat="payrollPeriod in vm.phicPayrollPeriods">
+                                                        <input type="checkbox" ng-model="payrollPeriod.selected" value="{{payrollPeriod.payrollPeriod}}"> {{payrollPeriod.payrollPeriod}}
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <span class="help-block" ng-show="vm.validationErrors.phicPayrollPeriod">{{vm.validationErrors.phicPayrollPeriod.join(' ')}}</span>
+                                            </div>
+                                        </div>
+                                        @Html.CheckboxHorizontalFormGroup("PHICBasic", "Basic")
+                                        @Html.CheckboxHorizontalFormGroup("PHICOvertime", "Overtime")
+                                        @Html.CheckboxHorizontalFormGroup("PHICCola", "COLA")
+                                    </uib-tab>
+                                    <uib-tab index="3" heading="Pag Ibig">
+                                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.pagIbigPayrollPeriod }">
+                                            <label class="col-md-3 col-lg-2 control-label">Payroll Periods</label>
+                                            <div class="col-md-9 col-lg-10">
+                                                <input type="hidden" name="PagIbigPayrollPeriod" value="{{vm.getPayrollPeriodInput(vm.pagIbigPayrollPeriods)}}" />
+                                                <div class="mt-checkbox-list">
+                                                    <label class="mt-checkbox mt-checkbox-outline" ng-repeat="payrollPeriod in vm.pagIbigPayrollPeriods">
+                                                        <input type="checkbox" ng-model="payrollPeriod.selected" value="{{payrollPeriod.payrollPeriod}}"> {{payrollPeriod.payrollPeriod}}
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <span class="help-block" ng-show="vm.validationErrors.pagIbigPayrollPeriod">{{vm.validationErrors.pagIbigPayrollPeriod.join(' ')}}</span>
+                                            </div>
+                                        </div>
+                                        @Html.CheckboxHorizontalFormGroup("PagIbigBasic", "Basic")
+                                        @Html.CheckboxHorizontalFormGroup("PagIbigOvertime", "Overtime")
+                                        @Html.CheckboxHorizontalFormGroup("PagIbigCola", "COLA")
+                                    </uib-tab>
+                                    <uib-tab index="4" heading="Tax">
+                                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.taxPayrollPeriod }">
+                                            <label class="col-md-3 col-lg-2 control-label">Payroll Periods</label>
+                                            <div class="col-md-9 col-lg-10">
+                                                <input type="hidden" name="TaxPayrollPeriod" value="{{vm.getPayrollPeriodInput(vm.taxPayrollPeriods)}}" />
+                                                <div class="mt-checkbox-list">
+                                                    <label class="mt-checkbox mt-checkbox-outline" ng-repeat="payrollPeriod in vm.taxPayrollPeriods">
+                                                        <input type="checkbox" ng-model="payrollPeriod.selected" value="{{payrollPeriod.payrollPeriod}}"> {{payrollPeriod.payrollPeriod}}
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <span class="help-block" ng-show="vm.validationErrors.taxPayrollPeriod">{{vm.validationErrors.taxPayrollPeriod.join(' ')}}</span>
+                                            </div>
+                                        </div>
+                                        @Html.CheckboxHorizontalFormGroup("TaxBasic", "Basic")
+                                        @Html.CheckboxHorizontalFormGroup("TaxOvertime", "Overtime")
+                                        @Html.CheckboxHorizontalFormGroup("TaxCola", "COLA")
+                                    </uib-tab>
+                                </uib-tabset>
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Clients")" class="btn default">Cancel</a>
