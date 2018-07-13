@@ -8,6 +8,7 @@
         vm.addDailyTimeRecordAndAddAnother = addDailyTimeRecordAndAddAnother;
         vm.addDailyTimeRecordAndExit = addDailyTimeRecordAndExit;
         vm.addDailyTimeRecordSubmit = addDailyTimeRecordSubmit;
+        vm.addEarningDeductionRecordClicked = addEarningDeductionRecordClicked;
         vm.addInProgress = false;
         vm.addOvertimeClicked = addOvertimeClicked;
         vm.cancel = cancel;
@@ -15,7 +16,10 @@
         vm.currencySymbol = 'P';
         vm.daysWorkedValue = 0;
         vm.deleteOvertimeClicked = deleteOvertimeClicked;
+        vm.earningDeductionRecords = [];
+        vm.earningDeductions = params.earningDeductions;
         vm.employees = params.employees;
+        vm.getEarningDeductionRecordFieldName = getEarningDeductionRecordFieldName;
         vm.getOvertimeFieldName = getOvertimeFieldName;
         vm.hoursLateValue = 0;
         vm.hoursUndertimeValue = 0;
@@ -79,6 +83,10 @@
             });
         };
 
+        function addEarningDeductionRecordClicked() {
+            vm.earningDeductionRecords.push({});
+        };
+
         function addOvertimeClicked() {
             vm.overtimes.push({ numberOfHours: 0 });
         };
@@ -89,6 +97,10 @@
 
         function deleteOvertimeClicked(index) {
             vm.overtimes.splice(index, 1);
+        };
+
+        function getEarningDeductionRecordFieldName(index, fieldName) {
+            return `EarningDeductionRecords[${index}].${fieldName}`;
         };
 
         function getOvertimeFieldName(index, fieldName) {

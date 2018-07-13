@@ -19,11 +19,14 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         public class Command : IRequest
         {
             public double? DaysWorked { get; set; }
+            public IEnumerable<EarningDeductionRecord> EarningDeductionRecords { get; set; } = new List<EarningDeductionRecord>();
             public int? EmployeeId { get; set; }
             public double? HoursLate { get; set; }
             public double? HoursUndertime { get; set; }
             public double? HoursWorked { get; set; }
             public IEnumerable<Overtime> Overtimes { get; set; } = new List<Overtime>();
+            public DateTime? PayrollPeriodFrom { get; set; }
+            public DateTime? PayrollPeriodTo { get; set; }
 
             public class Overtime
             {
@@ -34,6 +37,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public double? PayPercentagePercentage { get; set; }
                 public string Reference { get; set; }
                 public DateTime? To { get; set; }
+            }
+
+            public class EarningDeductionRecord
+            {
+                public decimal? Amount { get; set; }
+                public int? EarningDeductionId { get; set; }
             }
         }
 
@@ -83,9 +92,6 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
             public async Task<Unit> Handle(Command command, CancellationToken token)
             {
-                // TODO: Remove
-                await RemoveExistingDailyTimeRecordsOfEmployee(command);
-
                 var now = DateTime.UtcNow;
                 var employee = await _db.Employees.SingleOrDefaultAsync(e => e.Id == command.EmployeeId);
 
@@ -103,7 +109,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     HoursUndertime = command.HoursUndertime,
                     HoursUndertimeValue = GetValue(command.HoursUndertime, employee.HourlyRate),
                     HoursWorked = command.HoursWorked,
-                    HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate)
+                    HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate),
+                    PayrollPeriodFrom = command.PayrollPeriodFrom,
+                    PayrollPeriodTo = command.PayrollPeriodTo
                 };
                 _db.DailyTimeRecords.Add(dailyTimeRecord);
 
@@ -118,10 +126,25 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         NumberOfHoursValue = o.NumberOfHoursValue,
                         PayPercentageName = o.PayPercentageName,
                         PayPercentagePercentage = o.PayPercentagePercentage,
+                        PayrollPeriodFrom = command.PayrollPeriodFrom,
+                        PayrollPeriodTo = command.PayrollPeriodTo,
                         Reference = o.Reference,
                         To = o.To
                     });
                 _db.Overtimes.AddRange(overtimes);
+
+                var earningDeductionRecords = command
+                    .EarningDeductionRecords
+                    .Select(edr => new EarningDeductionRecord
+                    {
+                        AddedOn = now,
+                        Amount = edr.Amount,
+                        EarningDeductionId = edr.EarningDeductionId,
+                        EmployeeId = command.EmployeeId,
+                        PayrollPeriodFrom = command.PayrollPeriodFrom,
+                        PayrollPeriodTo = command.PayrollPeriodTo,
+                    });
+                _db.EarningDeductionRecords.AddRange(earningDeductionRecords);
 
                 await _db.SaveChangesAsync();
 

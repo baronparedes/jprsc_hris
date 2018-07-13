@@ -7,7 +7,6 @@
         var vm = this;
         vm.addDailyTimeRecordClicked = addDailyTimeRecordClicked;
         vm.bulkUploadClicked = bulkUploadClicked;
-        vm.clientsList = [];
         vm.currencySymbol = 'P';
         vm.dailyTimeRecords = [];
         vm.datepickerOptions = globalSettings.datepickerOptions;
@@ -17,6 +16,7 @@
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
+            vm.earningDeductions = vm.serverModel.earningDeductions;
             vm.payRates = vm.serverModel.payRates;
         });
 
@@ -36,6 +36,7 @@
                         return {
                             client: vm.searchModel.client,
                             employees: vm.employees,
+                            earningDeductions: vm.earningDeductions,
                             payRates: vm.payRates
                         }
                     }

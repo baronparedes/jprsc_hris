@@ -126,6 +126,24 @@
                                     <span ng-show="vm.validationErrors.employeeId" class="help-block"></span>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-lg-2 control-label">Payroll Period From</label>
+                                <div class="col-md-9 col-lg-10">
+                                    <input type="text" class="form-control" ng-model="vm.payrollPeriodFrom"
+                                           uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                           is-open="vm.payrollPeriodFromIsOpen" ng-click="vm.payrollPeriodFromIsOpen = true">
+                                    <input type="hidden" name="PayrollPeriodFrom" value="{{vm.payrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-lg-2 control-label">Payroll Period To</label>
+                                <div class="col-md-9 col-lg-10">
+                                    <input type="text" class="form-control" ng-model="vm.payrollPeriodTo"
+                                           uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                           is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
+                                    <input type="hidden" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.daysWorked }">
@@ -206,7 +224,6 @@
                                                     <th>Number <br />of Hours</th>
                                                     <th>Amount</th>
                                                     <th>Reference</th>
-                                                    <th>&nbsp;</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -249,6 +266,42 @@
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <a href="" class="btn btn-primary" ng-click="vm.addOvertimeClicked()">Add Overtime</a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <h4>Earning and Deduction Records</h4>
+                                    <div ng-show="!vm.earningDeductionRecords.length">No earning / deduction records.</div>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="vm.earningDeductionRecords.length">
+                                <div class="col-sm-12">
+                                    <div class="table-scrollable">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Earning Deduction</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="earningDeductionRecord in vm.earningDeductionRecords track by $index">
+                                                    <td>
+                                                        <input type="hidden" name="{{vm.getEarningDeductionRecordFieldName($index, 'EarningDeductionId')}}" value="{{earningDeductionRecord.earningDeduction.id}}" />
+                                                        <select class="form-control" ng-model="earningDeductionRecord.earningDeduction" ng-options="earningDeduction.code for earningDeduction in vm.earningDeductions track by earningDeduction.id"></select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="{{vm.getEarningDeductionRecordFieldName($index, 'Amount')}}" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <a href="" class="btn btn-primary" ng-click="vm.addEarningDeductionRecordClicked()">Add Earning / Deduction Record</a>
                                 </div>
                             </div>
                         </div>

@@ -209,6 +209,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807110353078_AddEmployeePayrollFields.Designer.cs">
       <DependentUpon>201807110353078_AddEmployeePayrollFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807130300304_AddEarningDeductionRecord.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807130300304_AddEarningDeductionRecord.Designer.cs">
+      <DependentUpon>201807130300304_AddEarningDeductionRecord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -246,6 +250,7 @@
     <Compile Include="Models\DailyTimeRecord.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\EarningDeduction.cs" />
+    <Compile Include="Models\EarningDeductionRecord.cs" />
     <Compile Include="Models\EarningDeductionType.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Gender.cs" />
@@ -356,6 +361,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807110353078_AddEmployeePayrollFields.resx">
       <DependentUpon>201807110353078_AddEmployeePayrollFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807130300304_AddEarningDeductionRecord.resx">
+      <DependentUpon>201807130300304_AddEarningDeductionRecord.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
