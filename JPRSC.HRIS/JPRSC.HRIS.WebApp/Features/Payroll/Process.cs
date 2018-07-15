@@ -133,8 +133,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     _db.PayrollRecords.Add(payrollRecord);
                 }
 
-                UpdateClientPayrollPeriod(command, client);
-
                 await _db.SaveChangesAsync();
 
                 return new CommandResult();
@@ -210,18 +208,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             private decimal? ComputeTax(Employee employee, Client client)
             {
                 return null;
-            }
-
-            private void UpdateClientPayrollPeriod(Command command, Client client)
-            {
-                if (command.PayrollPeriod == client.NumberOfPayrollPeriodsAMonth)
-                {
-                    client.CurrentPayrollPeriod = 1;
-                }
-                else
-                {
-                    client.CurrentPayrollPeriod += 1;
-                }
             }
         }
     }
