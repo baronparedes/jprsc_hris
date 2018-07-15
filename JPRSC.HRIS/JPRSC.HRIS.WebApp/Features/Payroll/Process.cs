@@ -80,6 +80,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Include(edr => edr.EarningDeduction)
                     .ToListAsync();
 
+                var sssRecords = await _db.SSSRecords
+                    .ToListAsync();
+
                 var shouldDeductSSS = client.SSSPayrollPeriods.Contains(command.PayrollPeriod.Value);
                 var shouldDeductPHIC = client.PHICPayrollPeriods.Contains(command.PayrollPeriod.Value);
                 var shouldDeductPagIbig = client.PagIbigPayrollPeriods.Contains(command.PayrollPeriod.Value);
@@ -107,45 +110,94 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         HoursUndertimeValue = employeeDtrs.Sum(dtr => dtr.HoursUndertimeValue),
                         HoursWorkedValue = employeeDtrs.Sum(dtr => dtr.HoursWorkedValue),
                         OvertimeValue = employeeOts.Sum(ot => ot.NumberOfHoursValue),
+                        PayrollPeriod = command.PayrollPeriod,
                         PayrollPeriodFrom = command.PayrollPeriodFrom,
                         PayrollPeriodTo = command.PayrollPeriodTo
                     };
 
                     if (shouldDeductSSS)
                     {
-                        payrollRecord.SSSValueEmployee = ComputeSSSEmployee(employee, client, employeeDtrs);
-                        payrollRecord.SSSValueEmployer = ComputeSSSEmployer(employee, client, employeeDtrs);
+                        payrollRecord.SSSValueEmployee = ComputeSSSEmployee(employee, sssRecords);
+                        payrollRecord.SSSValueEmployer = ComputeSSSEmployer(employee, sssRecords);
                     }
 
-                    if (shouldDeductPHIC) payrollRecord.PHICValueEmployee = ComputePHIC(employee, client);
+                    if (shouldDeductPHIC)
+                    {
+                        payrollRecord.PHICValueEmployee = ComputePHICEmployee(employee);
+                        payrollRecord.PHICValueEmployer = ComputePHICEmployer(employee);
+                    }
+
                     if (shouldDeductPagIbig) payrollRecord.PagIbigValue = ComputePagIbig(employee, client);
                     if (shouldDeductTax) payrollRecord.TaxValue = ComputeTax(employee, client);
 
                     _db.PayrollRecords.Add(payrollRecord);
                 }
 
+                UpdateClientPayrollPeriod(command, client);
+
                 await _db.SaveChangesAsync();
 
                 return new CommandResult();
             }
 
-            private decimal? ComputeSSSEmployee(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs)
+            private decimal? ComputeSSSEmployee(Employee employee, IEnumerable<SSSRecord> sssRecords)
             {
-                decimal? sss = null;
+                var basicSalary = employee.DailyRate * 20;
 
-                return sss;
+                SSSRecord matchingRange = null;
+
+                try
+                {
+                    matchingRange = sssRecords
+                        .OrderBy(s => s.Range1)
+                        .First(s => s.Range1 > basicSalary);
+                }
+                catch
+                {
+                    throw new Exception($"Matching SSS range not found for salary {basicSalary}");
+                }
+
+                return matchingRange.Employee;
             }
 
-            private decimal? ComputeSSSEmployer(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs)
+            private decimal? ComputeSSSEmployer(Employee employee, IEnumerable<SSSRecord> sssRecords)
             {
-                decimal? sss = null;
+                var basicSalary = employee.DailyRate * 20;
 
-                return sss;
+                SSSRecord matchingRange = null;
+
+                try
+                {
+                    matchingRange = sssRecords
+                        .OrderBy(s => s.Range1)
+                        .First(s => s.Range1 > basicSalary);
+                }
+                catch
+                {
+                    throw new Exception($"Matching SSS range not found for salary {basicSalary}");
+                }
+
+                return matchingRange.Employer;
             }
 
-            private decimal? ComputePHIC(Employee employee, Client client)
+            private decimal? ComputePHICEmployee(Employee employee)
             {
                 decimal? phic = null;
+
+                var basicSalary = employee.DailyRate * 20;
+
+                phic = (decimal)(0.0275 / 2) * basicSalary;
+
+                return phic;
+            }
+
+            private decimal? ComputePHICEmployer(Employee employee)
+            {
+                decimal? phic = null;
+
+                var basicSalary = employee.DailyRate * 20;
+
+                phic = (decimal)(0.0275 / 2) * basicSalary;
 
                 return phic;
             }
@@ -158,6 +210,18 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             private decimal? ComputeTax(Employee employee, Client client)
             {
                 return null;
+            }
+
+            private void UpdateClientPayrollPeriod(Command command, Client client)
+            {
+                if (command.PayrollPeriod == client.NumberOfPayrollPeriodsAMonth)
+                {
+                    client.CurrentPayrollPeriod = 1;
+                }
+                else
+                {
+                    client.CurrentPayrollPeriod += 1;
+                }
             }
         }
     }

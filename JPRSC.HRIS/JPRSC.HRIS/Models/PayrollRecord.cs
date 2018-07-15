@@ -17,6 +17,7 @@ namespace JPRSC.HRIS.Models
         public int? EmployeeId { get; set; }
         public DateTime? PayrollPeriodFrom { get; set; }
         public DateTime? PayrollPeriodTo { get; set; }
+        public int? PayrollPeriod { get; set; }
 
         public decimal? DaysWorkedValue { get; set; }
         public decimal? HoursWorkedValue { get; set; }
