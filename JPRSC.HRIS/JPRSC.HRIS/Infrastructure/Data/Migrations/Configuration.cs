@@ -123,9 +123,9 @@
         private void SeedPayPercentages(ApplicationDbContext context)
         {
             var existingPayPercentages = context.PayPercentages.ToList();
-            if (existingPayPercentages.Any()) return;
+            if (existingPayPercentages.Any() && existingPayPercentages.Count >= 45) return;
 
-            context.PayPercentages.AddRange(PayPercentageSeed.PayPercentages);
+            context.PayPercentages.AddOrUpdate(pp => pp.Id, PayPercentageSeed.PayPercentages);
         }
 
         private void SeedPHICRecords(ApplicationDbContext context)

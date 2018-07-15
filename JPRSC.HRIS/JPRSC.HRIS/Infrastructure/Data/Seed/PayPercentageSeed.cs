@@ -76,7 +76,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
             {
                 Id = 12,
                 Name = "DOD",
-                Percentage = 130
+                Percentage = 30
             },
             new PayPercentage
             {
@@ -108,6 +108,174 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
                 Name = "LHDODOT",
                 Percentage = 338
             },
+            new PayPercentage
+            {
+                Id = 18,
+                Name = "ADJ_PAY",
+                Percentage = 100
+            },
+            new PayPercentage
+            {
+                Id = 19,
+                Name = "EXC_DOD",
+                Percentage = 169
+            },
+            new PayPercentage
+            {
+                Id = 20,
+                Name = "HOLIDAY",
+                Percentage = 100
+            },
+            new PayPercentage
+            {
+                Id = 21,
+                Name = "ND_LHX8",
+                Percentage = 286
+            },
+            new PayPercentage
+            {
+                Id = 22,
+                Name = "ND_LHRDX8",
+                Percentage = 371
+            },
+            new PayPercentage
+            {
+                Id = 23,
+                Name = "ND_LHRDF8",
+                Percentage = 286
+            },
+            new PayPercentage
+            {
+                Id = 24,
+                Name = "ND_LHF8",
+                Percentage = 20
+            },
+            new PayPercentage
+            {
+                Id = 25,
+                Name = "NDX8",
+                Percentage = 137
+            },
+            new PayPercentage
+            {
+                Id = 26,
+                Name = "NDF8",
+                Percentage = 10
+            },
+            new PayPercentage
+            {
+                Id = 27,
+                Name = "ND_RDX8",
+                Percentage = 185
+            },
+            new PayPercentage
+            {
+                Id = 28,
+                Name = "ND_RDF8",
+                Percentage = 143
+            },
+            new PayPercentage
+            {
+                Id = 29,
+                Name = "ND_SHX8",
+                Percentage = 185
+            },
+            new PayPercentage
+            {
+                Id = 30,
+                Name = "ND_SHRDX8",
+                Percentage = 214
+            },
+            new PayPercentage
+            {
+                Id = 31,
+                Name = "ND_SHRDF8",
+                Percentage = 165
+            },
+            new PayPercentage
+            {
+                Id = 32,
+                Name = "ND_SHF8",
+                Percentage = 13
+            },
+            new PayPercentage
+            {
+                Id = 33,
+                Name = "ND_B2020",
+                Percentage = 15
+            },
+            new PayPercentage
+            {
+                Id = 34,
+                Name = "OT_LHX8",
+                Percentage = 260
+            },
+            new PayPercentage
+            {
+                Id = 35,
+                Name = "OT_LHRDX8",
+                Percentage = 338
+            },
+            new PayPercentage
+            {
+                Id = 36,
+                Name = "OT_LHRDF8",
+                Percentage = 260
+            },
+            new PayPercentage
+            {
+                Id = 37,
+                Name = "OT_LHF8",
+                Percentage = 200
+            },
+            new PayPercentage
+            {
+                Id = 38,
+                Name = "OT_RDX8",
+                Percentage = 169
+            },
+            new PayPercentage
+            {
+                Id = 39,
+                Name = "OT_RDF8",
+                Percentage = 130
+            },
+            new PayPercentage
+            {
+                Id = 40,
+                Name = "OT_SHF8M",
+                Percentage = 30
+            },
+            new PayPercentage
+            {
+                Id = 41,
+                Name = "OT_SHX8",
+                Percentage = 169
+            },
+            new PayPercentage
+            {
+                Id = 42,
+                Name = "OT_SHRDX8",
+                Percentage = 195
+            },
+            new PayPercentage
+            {
+                Id = 43,
+                Name = "OT_SHRDF8",
+                Percentage = 150
+            },
+            new PayPercentage
+            {
+                Id = 44,
+                Name = "OT_SHF8",
+                Percentage = 130
+            },
+            new PayPercentage
+            {
+                Id = 45,
+                Name = "UWLH_B2020",
+                Percentage = 100
+            }
         };
     }
 }
