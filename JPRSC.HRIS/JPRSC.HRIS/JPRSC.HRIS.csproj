@@ -217,6 +217,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807151333495_AddPayrollRecord.Designer.cs">
       <DependentUpon>201807151333495_AddPayrollRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807151645168_AddPHICValueEmployerField.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807151645168_AddPHICValueEmployerField.Designer.cs">
+      <DependentUpon>201807151645168_AddPHICValueEmployerField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -372,6 +376,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807151333495_AddPayrollRecord.resx">
       <DependentUpon>201807151333495_AddPayrollRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807151645168_AddPHICValueEmployerField.resx">
+      <DependentUpon>201807151645168_AddPHICValueEmployerField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

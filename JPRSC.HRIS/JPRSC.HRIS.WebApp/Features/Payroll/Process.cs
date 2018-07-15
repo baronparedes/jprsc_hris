@@ -117,7 +117,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         payrollRecord.SSSValueEmployer = ComputeSSSEmployer(employee, client, employeeDtrs);
                     }
 
-                    if (shouldDeductPHIC) payrollRecord.PHICValue = ComputePHIC(employee, client);
+                    if (shouldDeductPHIC) payrollRecord.PHICValueEmployee = ComputePHIC(employee, client);
                     if (shouldDeductPagIbig) payrollRecord.PagIbigValue = ComputePagIbig(employee, client);
                     if (shouldDeductTax) payrollRecord.TaxValue = ComputeTax(employee, client);
 

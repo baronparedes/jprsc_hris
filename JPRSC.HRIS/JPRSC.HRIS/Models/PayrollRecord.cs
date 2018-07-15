@@ -34,7 +34,8 @@ namespace JPRSC.HRIS.Models
 
         public decimal? SSSValueEmployee { get; set; }
         public decimal? SSSValueEmployer { get; set; }
-        public decimal? PHICValue { get; set; }
+        public decimal? PHICValueEmployee { get; set; }
+        public decimal? PHICValueEmployer { get; set; }
         public decimal? PagIbigValue { get; set; }
         public decimal? TaxValue { get; set; }
     }
