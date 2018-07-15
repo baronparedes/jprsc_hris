@@ -91,6 +91,10 @@ namespace JPRSC.HRIS.Models
 
         // Overtime
         [Display(Name = "Overtimes")]
-        OvertimeDefault = 2200
+        OvertimeDefault = 2200,
+
+        // Payroll
+        [Display(Name = "Payroll")]
+        PayrollDefault = 2300
     }
 }

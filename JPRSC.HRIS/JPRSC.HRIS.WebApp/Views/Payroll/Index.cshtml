@@ -1,0 +1,106 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Payroll.Index.QueryResult
+
+@{
+    ViewBag.Title = "Payroll";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Process Payroll</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Process Payroll
+        </h1>
+        @Html.RenderSuccessNotification()
+        <div class="row" ng-controller="PayrollIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
+            <div class="col-sm-12">
+                @*<div class="note note-info" ng-show="!vm.searchModel.client.value || !vm.searchModel.client.value.length">
+                    <p>Please select a client.</p>
+                </div>
+                <form role="form">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id">
+                                        <option value="?" selected="selected">Select client</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>*@
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" ng-disabled="vm.searchInProgress" ng-click="vm.processClicked()">Process</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/ng-template" id="addPayrollModal.html">
+                <form class="form-horizontal" role="form" method="post" id="processForm">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Process Payroll</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Client</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
+                                    <select class="form-control" ng-model="vm.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
+                                    <span ng-show="vm.validationErrors.clientId" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Payroll Period From</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" ng-model="vm.payrollPeriodFrom"
+                                           uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                           is-open="vm.payrollPeriodFromIsOpen" ng-click="vm.payrollPeriodFromIsOpen = true">
+                                    <input type="hidden" name="PayrollPeriodFrom" value="{{vm.payrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Payroll Period To</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" ng-model="vm.payrollPeriodTo"
+                                           uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                           is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
+                                    <input type="hidden" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriod }">
+                                <label class="col-md-4 col-lg-3 control-label">Payroll Period</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="PayrollPeriod" ng-model="vm.payrollPeriod" />
+                                    <span ng-show="vm.validationErrors.payrollPeriod" class="help-block"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.processInProgress"></i>
+                        <button type="button" class="btn green" ng-click="vm.processSubmit()" ng-disabled="vm.processInProgress">Process</button>
+                        <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.processInProgress">Exit</a>
+                    </div>
+                </form>
+            </script>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/payroll")
+}
