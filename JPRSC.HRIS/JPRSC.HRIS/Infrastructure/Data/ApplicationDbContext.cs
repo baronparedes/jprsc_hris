@@ -27,6 +27,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<Overtime> Overtimes { get; set; }
         public DbSet<PagIbigRecord> PagIbigRecords { get; set; }
         public DbSet<PayPercentage> PayPercentages { get; set; }
+        public DbSet<PayrollRecord> PayrollRecords { get; set; }
         public DbSet<PhicRecord> PhicRecords { get; set; }
         public DbSet<Religion> Religions { get; set; }
         public DbSet<SSSRecord> SSSRecords { get; set; }
