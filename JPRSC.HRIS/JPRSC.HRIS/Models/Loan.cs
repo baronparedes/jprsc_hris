@@ -18,6 +18,7 @@ namespace JPRSC.HRIS.Models
         public int? MonthsPayable { get; set; }
         public int? PayrollPeriod { get; set; }
         public decimal? PrincipalAmount { get; set; }
+        public decimal? RemainingBalance { get; set; }
         public string TransactionNumber { get; set; }
         public DateTime? ZeroedOutOn { get; set; }
     }

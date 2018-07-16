@@ -11,7 +11,6 @@
         vm.currencySymbol = 'P';
         vm.getInterestAmount = getInterestAmount;
         vm.payrollPeriods = [];
-
         vm.loanTypesList = params.loanTypesList;
         vm.lookups = lookups;
         vm.transactionNumber = params.nextTransactionNumber;
@@ -19,7 +18,7 @@
 
         init();
 
-        $scope.$watch('vm.principalAmount', updateDeductionAmount);
+        $scope.$watch('vm.remainingBalance', updateDeductionAmount);
         $scope.$watch('vm.interestRate', updateDeductionAmount);
         $scope.$watch('vm.monthsPayable', updateDeductionAmount);
 
@@ -42,9 +41,9 @@
         };
 
         function getInterestAmount() {
-            if (!vm.principalAmount || vm.principalAmount <= 0 || !vm.interestRate || vm.interestRate <= 0) return 0;
+            if (!vm.remainingBalance || vm.remainingBalance <= 0 || !vm.interestRate || vm.interestRate <= 0) return 0;
 
-            return vm.principalAmount * (vm.interestRate / 100)
+            return vm.remainingBalance * (vm.interestRate / 100)
         };
 
         function init() {
@@ -68,18 +67,25 @@
             //	Bi - monthly – Options should be: 1 and 2
             //	Monthly – Options should be: 1
 
+            console.log('vm.client', vm.client);
+
             if (vm.client.cutOffPeriod === vm.lookups.cutOffPeriods.daily.value) {
 
             }
 
-            vm.payrollPeriods = [1, 2, 3, 4];
+            var payrollPeriods = [];
 
+            for (var i = 0; i < vm.client.numberOfPayrollPeriodsAMonth; i++) {
+                payrollPeriods.push(i + 1);
+            }
+
+            vm.payrollPeriods = payrollPeriods;
         };
 
         function updateDeductionAmount() {
             if (vm.getInterestAmount() == 0 || !vm.monthsPayable || vm.monthsPayable <= 0) return 0;
 
-            vm.deductionAmount = vm.getInterestAmount() / vm.monthsPayable;
+            vm.deductionAmount = Math.round(vm.getInterestAmount() / vm.monthsPayable * 100) / 100;
         };
     };
 }());

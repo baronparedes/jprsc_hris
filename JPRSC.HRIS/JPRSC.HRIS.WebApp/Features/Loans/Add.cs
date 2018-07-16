@@ -20,6 +20,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             public int? MonthsPayable { get; set; }
             public int? PayrollPeriod { get; set; }
             public decimal? PrincipalAmount { get; set; }
+            public decimal? RemainingBalance { get; set; }
             public string TransactionNumber { get; set; }
         }
 
@@ -54,6 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                     MonthsPayable = command.MonthsPayable,
                     PayrollPeriod = command.PayrollPeriod,
                     PrincipalAmount = command.PrincipalAmount,
+                    RemainingBalance = command.RemainingBalance,
                     TransactionNumber = command.TransactionNumber
                 };
 
