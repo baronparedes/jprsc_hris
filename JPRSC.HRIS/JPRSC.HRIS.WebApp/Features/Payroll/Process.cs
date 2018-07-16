@@ -81,7 +81,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .ToListAsync();
 
                 var loans = await _db.Loans
-                    .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && l.PayrollPeriod == command.PayrollPeriod)
+                    .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && l.PayrollPeriod == command.PayrollPeriod && l.RemainingBalance > 0)
                     .ToListAsync();
 
                 var sssRecords = await _db.SSSRecords
