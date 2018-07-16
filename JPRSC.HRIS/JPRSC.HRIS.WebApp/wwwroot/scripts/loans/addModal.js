@@ -61,18 +61,6 @@
         };
 
         function populatePayrollPeriods() {
-            // TODO
-            //o	Payroll period values option should auto populate depending on the client’s cutoff period setting.
-            //	Weekly – Options should be: 1, 2, 3, 4
-            //	Bi - monthly – Options should be: 1 and 2
-            //	Monthly – Options should be: 1
-
-            console.log('vm.client', vm.client);
-
-            if (vm.client.cutOffPeriod === vm.lookups.cutOffPeriods.daily.value) {
-
-            }
-
             var payrollPeriods = [];
 
             for (var i = 0; i < vm.client.numberOfPayrollPeriodsAMonth; i++) {

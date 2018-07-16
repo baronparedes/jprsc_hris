@@ -229,6 +229,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807160200030_AddLoanRemainingBalance.Designer.cs">
       <DependentUpon>201807160200030_AddLoanRemainingBalance.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807160221450_AddPayrollRecordLoanPaymentValue.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807160221450_AddPayrollRecordLoanPaymentValue.Designer.cs">
+      <DependentUpon>201807160221450_AddPayrollRecordLoanPaymentValue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -393,6 +397,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807160200030_AddLoanRemainingBalance.resx">
       <DependentUpon>201807160200030_AddLoanRemainingBalance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807160221450_AddPayrollRecordLoanPaymentValue.resx">
+      <DependentUpon>201807160221450_AddPayrollRecordLoanPaymentValue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

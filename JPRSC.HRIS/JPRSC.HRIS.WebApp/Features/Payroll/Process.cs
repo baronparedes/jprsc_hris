@@ -80,6 +80,10 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Include(edr => edr.EarningDeduction)
                     .ToListAsync();
 
+                var loans = await _db.Loans
+                    .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && l.PayrollPeriod == command.PayrollPeriod)
+                    .ToListAsync();
+
                 var sssRecords = await _db.SSSRecords
                     .ToListAsync();
 
@@ -93,6 +97,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     var employeeDtrs = dailyTimeRecords.Where(dtr => dtr.EmployeeId == employee.Id);
                     var employeeOts = overtimes.Where(ot => ot.EmployeeId == employee.Id);
                     var employeeEds = earningDeductions.Where(ed => ed.EmployeeId == employee.Id);
+                    var employeeLoans = loans.Where(l => l.EmployeeId == employee.Id);
 
                     var payrollRecord = new PayrollRecord
                     {
@@ -109,6 +114,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         HoursLateValue = employeeDtrs.Sum(dtr => dtr.HoursLateValue),
                         HoursUndertimeValue = employeeDtrs.Sum(dtr => dtr.HoursUndertimeValue),
                         HoursWorkedValue = employeeDtrs.Sum(dtr => dtr.HoursWorkedValue),
+                        LoanPaymentValue = employeeLoans.Any() ? loans.Sum(l => l.DeductionAmount) : null,
                         OvertimeValue = employeeOts.Sum(ot => ot.NumberOfHoursValue),
                         PayrollPeriod = command.PayrollPeriod,
                         PayrollPeriodFrom = command.PayrollPeriodFrom,
@@ -131,6 +137,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     if (shouldDeductTax) payrollRecord.TaxValue = ComputeTax(employee, client);
 
                     _db.PayrollRecords.Add(payrollRecord);
+                }
+
+                foreach (var loan in loans)
+                {
+                    loan.RemainingBalance -= loan.DeductionAmount;
                 }
 
                 await _db.SaveChangesAsync();
