@@ -114,7 +114,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         HoursLateValue = employeeDtrs.Sum(dtr => dtr.HoursLateValue),
                         HoursUndertimeValue = employeeDtrs.Sum(dtr => dtr.HoursUndertimeValue),
                         HoursWorkedValue = employeeDtrs.Sum(dtr => dtr.HoursWorkedValue),
-                        LoanPaymentValue = employeeLoans.Any() ? loans.Sum(l => l.DeductionAmount) : null,
+                        LoanPaymentValue = employeeLoans.Any() ? loans.Sum(l => l.RemainingBalance > l.DeductionAmount ? l.DeductionAmount : l.RemainingBalance) : null,
                         OvertimeValue = employeeOts.Sum(ot => ot.NumberOfHoursValue),
                         PayrollPeriod = command.PayrollPeriod,
                         PayrollPeriodFrom = command.PayrollPeriodFrom,
@@ -141,7 +141,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 foreach (var loan in loans)
                 {
-                    loan.RemainingBalance -= loan.DeductionAmount;
+                    loan.RemainingBalance -= loan.RemainingBalance > loan.DeductionAmount ? loan.DeductionAmount : loan.RemainingBalance;
                 }
 
                 await _db.SaveChangesAsync();
