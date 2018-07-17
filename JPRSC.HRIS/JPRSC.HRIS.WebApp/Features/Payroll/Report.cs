@@ -65,21 +65,21 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public string EmployeeCode => $"{Employee.EmployeeCode}";
                 public string EmployeeName => $"{Employee.LastName}, {Employee.FirstName}";
                 public string TaxableIncome => String.Empty;
-                public string RegularPay => $"{DaysWorkedValue + HoursWorkedValue:0.00}";
-                public string OverTime => $"{OvertimeValue:0.00}";
-                public string UTTardy => $"({HoursUndertimeValue + HoursLateValue:0.00})";
-                public string COLA => $"{COLADailyValue:0.00}";
-                public string Adjust => String.Empty;
+                public string RegularPay => $"{DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault():0.00}";
+                public string OverTime => $"{OvertimeValue.GetValueOrDefault():0.00}";
+                public string UTTardy => $"({HoursUndertimeValue.GetValueOrDefault() + HoursLateValue.GetValueOrDefault():0.00})";
+                public string COLA => $"{COLADailyValue.GetValueOrDefault():0.00}";
+                public string Adjust => $"{EarningsValue.GetValueOrDefault():0.00}";
                 public string TotalEarnings => $"{TotalEarningsValue:0.00}";
-                public string SSS => $"{SSSValueEmployee:0.00}";
-                public string PagIbig => $"{PagIbigValue:0.00}";
-                public string CashAdv => String.Empty;
-                public string PHIC => $"{PHICValueEmployee:0.00}";
-                public string TotalDeductions => $"{(TotalDeductionsValue > 0 ? String.Format("{0:0.00}", TotalDeductionsValue) : "0.00")}";
+                public string SSS => $"{SSSValueEmployee.GetValueOrDefault():0.00}";
+                public string PagIbig => $"{PagIbigValue.GetValueOrDefault():0.00}";
+                public string CashAdv => $"{DeductionsValue.GetValueOrDefault():0.00}";
+                public string PHIC => $"{PHICValueEmployee.GetValueOrDefault():0.00}";
+                public string TotalDeductions => $"{TotalDeductionsValue:0.00}";
                 public string NetPay => $"{TotalEarningsValue - TotalDeductionsValue:0.00}";
 
-                public decimal TotalEarningsValue => DaysWorkedValue + HoursWorkedValue + OvertimeValue - HoursUndertimeValue - HoursLateValue + COLADailyValue ?? 0;
-                public decimal TotalDeductionsValue => SSSValueEmployee + PagIbigValue + PHICValueEmployee ?? 0;
+                public decimal TotalEarningsValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
+                public decimal TotalDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + DeductionsValue.GetValueOrDefault();
             }
 
             public class Employee
