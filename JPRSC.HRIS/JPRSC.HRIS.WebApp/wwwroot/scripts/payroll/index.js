@@ -5,6 +5,7 @@
 
     function PayrollIndexCtrl($http, $scope, $timeout, $uibModal, globalSettings) {
         var vm = this;
+        vm.payrollProcessBatches = [];
         vm.processClicked = processClicked;
         vm.searchClicked = searchClicked;
         vm.searchModel = {};
@@ -12,7 +13,6 @@
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
-            console.log(vm.clients);
         });
 
         searchClicked();
@@ -44,10 +44,10 @@
         function searchClicked() {
             vm.searchInProgress = true;
 
-            //$http.get('/Payroll/Search', { params: vm.searchModel }).then(function (response) {
-            //    vm.employees = response.data.employees;
+            $http.get('/Payroll/Search', { params: vm.searchModel }).then(function (response) {
+                vm.payrollProcessBatches = response.data.payrollProcessBatches;
                 vm.searchInProgress = false;
-            //});
+            });
         };
     };
 }());

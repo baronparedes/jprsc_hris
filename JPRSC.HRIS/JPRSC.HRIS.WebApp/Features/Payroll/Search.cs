@@ -36,10 +36,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public DateTime? ModifiedOn { get; set; }
                 public Client Client { get; set; }
                 public int? ClientId { get; set; }
+                public int? PayrollPeriod { get; set; }
                 public DateTime? PayrollPeriodFrom { get; set; }
                 public DateTime? PayrollPeriodTo { get; set; }
-
-                //public ICollection<PayrollRecord> PayrollRecords { get; set; } = new List<PayrollRecord>();
             }
 
             public class Client
@@ -63,9 +62,16 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
             public async Task<QueryResult> Handle(Query query, CancellationToken cancellationToken)
             {
+                var payrollProcessBatches = await _db
+                    .PayrollProcessBatches
+                    .Where(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue)
+                    .OrderByDescending(ppb => ppb.AddedOn)
+                    .ProjectToListAsync<QueryResult.PayrollProcessBatch>();
 
-
-                return new QueryResult();
+                return new QueryResult
+                {
+                    PayrollProcessBatches = payrollProcessBatches
+                };
             }
         }
     }

@@ -39,11 +39,19 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         }
 
         [HttpGet]
-        public async Task<ActionResult> Search(Search.Query query)
+        public async Task<ActionResult> Report(Report.Query query)
         {
             var result = await _mediator.Send(query);
 
             return View(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Search(Search.Query query)
+        {
+            var queryResult = await _mediator.Send(query);
+
+            return JsonCamelCase(queryResult);
         }
     }
 }

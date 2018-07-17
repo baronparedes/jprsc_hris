@@ -20,6 +20,8 @@ namespace JPRSC.HRIS.Models
         public DateTime? PayrollPeriodFrom { get; set; }
         public DateTime? PayrollPeriodTo { get; set; }
 
+        public DateTime? DateOverwritten { get; set; }
+
         public ICollection<PayrollRecord> PayrollRecords { get; set; } = new List<PayrollRecord>();
     }
 }

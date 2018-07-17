@@ -348,8 +348,10 @@
     <Compile Include="Features\PayPercentages\_MappingProfile.cs" />
     <Compile Include="Features\Payroll\Index.cs" />
     <Compile Include="Features\Payroll\Process.cs" />
+    <Compile Include="Features\Payroll\Report.cs" />
     <Compile Include="Features\Payroll\Search.cs" />
     <Compile Include="Features\Payroll\_Controller.cs" />
+    <Compile Include="Features\Payroll\_MappingProfile.cs" />
     <Compile Include="Features\PhicRecords\Add.cs" />
     <Compile Include="Features\PhicRecords\Delete.cs" />
     <Compile Include="Features\PhicRecords\Edit.cs" />
@@ -6934,6 +6936,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Payroll\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payroll\Report.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

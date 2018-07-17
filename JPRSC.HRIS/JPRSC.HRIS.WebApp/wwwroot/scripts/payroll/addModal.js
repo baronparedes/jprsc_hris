@@ -19,16 +19,13 @@
         });
 
         function processSubmit() {
-            console.log('processSubmit');
-            console.log('vm', vm);
-
             vm.processInProgress = true;
             var action = '/Payroll/Process';
             var data = $('#processForm').serialize();
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
 
             $http.post(action, data, config).then(function (response) {
-                
+                $uibModalInstance.close();
 
                 vm.processInProgress = false;
             }, function (response) {

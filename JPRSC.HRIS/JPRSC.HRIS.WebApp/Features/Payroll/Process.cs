@@ -92,6 +92,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var shouldDeductPagIbig = client.PagIbigPayrollPeriods.Contains(command.PayrollPeriod.Value);
                 var shouldDeductTax = client.TaxPayrollPeriods.Contains(command.PayrollPeriod.Value);
 
+                var existingPayrollProcessBatch = await _db.PayrollProcessBatches
+                    .FirstOrDefaultAsync(ppb => ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
+
+                if (existingPayrollProcessBatch != null)
+                {
+                    existingPayrollProcessBatch.DateOverwritten = now;
+                }
+
                 var payrollProcessBatch = new PayrollProcessBatch
                 {
                     AddedOn = now,
