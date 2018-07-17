@@ -348,6 +348,7 @@
     <Compile Include="Features\PayPercentages\_MappingProfile.cs" />
     <Compile Include="Features\Payroll\Index.cs" />
     <Compile Include="Features\Payroll\Process.cs" />
+    <Compile Include="Features\Payroll\Search.cs" />
     <Compile Include="Features\Payroll\_Controller.cs" />
     <Compile Include="Features\PhicRecords\Add.cs" />
     <Compile Include="Features\PhicRecords\Delete.cs" />

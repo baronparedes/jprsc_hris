@@ -37,5 +37,13 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
             return Json("success");
         }
+
+        [HttpGet]
+        public async Task<ActionResult> Search(Search.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
     }
 }

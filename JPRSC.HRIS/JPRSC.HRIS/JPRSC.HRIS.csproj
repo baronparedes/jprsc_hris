@@ -233,6 +233,18 @@
     <Compile Include="Infrastructure\Data\Migrations\201807160221450_AddPayrollRecordLoanPaymentValue.Designer.cs">
       <DependentUpon>201807160221450_AddPayrollRecordLoanPaymentValue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807170209515_AddPayrollProcessBatch.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807170209515_AddPayrollProcessBatch.Designer.cs">
+      <DependentUpon>201807170209515_AddPayrollProcessBatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807170215168_AddPayrollProcessBatchPayrollPeriod.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807170215168_AddPayrollProcessBatchPayrollPeriod.Designer.cs">
+      <DependentUpon>201807170215168_AddPayrollProcessBatchPayrollPeriod.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807170219331_MoveMoreFieldsToPayrollPeriodBatch.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807170219331_MoveMoreFieldsToPayrollPeriodBatch.Designer.cs">
+      <DependentUpon>201807170219331_MoveMoreFieldsToPayrollPeriodBatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -282,6 +294,7 @@
     <Compile Include="Models\PagIbigRecord.cs" />
     <Compile Include="Models\PayPercentage.cs" />
     <Compile Include="Models\PayrollCode.cs" />
+    <Compile Include="Models\PayrollProcessBatch.cs" />
     <Compile Include="Models\PayrollRecord.cs" />
     <Compile Include="Models\PhicRecord.cs" />
     <Compile Include="Models\Religion.cs" />
@@ -400,6 +413,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807160221450_AddPayrollRecordLoanPaymentValue.resx">
       <DependentUpon>201807160221450_AddPayrollRecordLoanPaymentValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807170209515_AddPayrollProcessBatch.resx">
+      <DependentUpon>201807170209515_AddPayrollProcessBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807170215168_AddPayrollProcessBatchPayrollPeriod.resx">
+      <DependentUpon>201807170215168_AddPayrollProcessBatchPayrollPeriod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807170219331_MoveMoreFieldsToPayrollPeriodBatch.resx">
+      <DependentUpon>201807170219331_MoveMoreFieldsToPayrollPeriodBatch.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

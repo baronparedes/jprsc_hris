@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.Models
 {
@@ -15,9 +11,8 @@ namespace JPRSC.HRIS.Models
 
         public Employee Employee { get; set; }
         public int? EmployeeId { get; set; }
-        public DateTime? PayrollPeriodFrom { get; set; }
-        public DateTime? PayrollPeriodTo { get; set; }
-        public int? PayrollPeriod { get; set; }
+        public PayrollProcessBatch PayrollProcessBatch { get; set; }
+        public int? PayrollProcessBatchId { get; set; }
 
         public decimal? DaysWorkedValue { get; set; }
         public decimal? HoursWorkedValue { get; set; }
@@ -27,11 +22,6 @@ namespace JPRSC.HRIS.Models
         public decimal? COLADailyValue { get; set; }
         public decimal? EarningsValue { get; set; }
         public decimal? DeductionsValue { get; set; }
-
-        public bool? DeductedSSS { get; set; }
-        public bool? DeductedPHIC { get; set; }
-        public bool? DeductedPagIbig { get; set; }
-        public bool? DeductedTax { get; set; }
 
         public decimal? SSSValueEmployee { get; set; }
         public decimal? SSSValueEmployer { get; set; }

@@ -92,6 +92,19 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var shouldDeductPagIbig = client.PagIbigPayrollPeriods.Contains(command.PayrollPeriod.Value);
                 var shouldDeductTax = client.TaxPayrollPeriods.Contains(command.PayrollPeriod.Value);
 
+                var payrollProcessBatch = new PayrollProcessBatch
+                {
+                    AddedOn = now,
+                    ClientId = command.ClientId,
+                    DeductedPagIbig = shouldDeductPagIbig,
+                    DeductedPHIC = shouldDeductPHIC,
+                    DeductedSSS = shouldDeductSSS,
+                    DeductedTax = shouldDeductTax,
+                    PayrollPeriod = command.PayrollPeriod,
+                    PayrollPeriodFrom = command.PayrollPeriodFrom,
+                    PayrollPeriodTo = command.PayrollPeriodTo
+                };
+
                 foreach (var employee in clientEmployees)
                 {
                     var employeeDtrs = dailyTimeRecords.Where(dtr => dtr.EmployeeId == employee.Id);
@@ -104,10 +117,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         AddedOn = now,
                         COLADailyValue = employeeDtrs.Sum(dtr => dtr.COLADailyValue),
                         DaysWorkedValue = employeeDtrs.Sum(dtr => dtr.DaysWorkedValue),
-                        DeductedPagIbig = shouldDeductPagIbig,
-                        DeductedPHIC = shouldDeductPHIC,
-                        DeductedSSS = shouldDeductSSS,
-                        DeductedTax = shouldDeductTax,
+                        
                         DeductionsValue = employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount),
                         EarningsValue = employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount),
                         EmployeeId = employee.Id,
@@ -115,10 +125,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         HoursUndertimeValue = employeeDtrs.Sum(dtr => dtr.HoursUndertimeValue),
                         HoursWorkedValue = employeeDtrs.Sum(dtr => dtr.HoursWorkedValue),
                         LoanPaymentValue = employeeLoans.Any() ? loans.Sum(l => l.RemainingBalance > l.DeductionAmount ? l.DeductionAmount : l.RemainingBalance) : null,
-                        OvertimeValue = employeeOts.Sum(ot => ot.NumberOfHoursValue),
-                        PayrollPeriod = command.PayrollPeriod,
-                        PayrollPeriodFrom = command.PayrollPeriodFrom,
-                        PayrollPeriodTo = command.PayrollPeriodTo
+                        OvertimeValue = employeeOts.Sum(ot => ot.NumberOfHoursValue)
                     };
 
                     if (shouldDeductSSS)
@@ -136,13 +143,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     if (shouldDeductPagIbig) payrollRecord.PagIbigValue = ComputePagIbig(employee, client);
                     if (shouldDeductTax) payrollRecord.TaxValue = ComputeTax(employee, client);
 
-                    _db.PayrollRecords.Add(payrollRecord);
+                    payrollProcessBatch.PayrollRecords.Add(payrollRecord);
                 }
 
                 foreach (var loan in loans)
                 {
                     loan.RemainingBalance -= loan.RemainingBalance > loan.DeductionAmount ? loan.DeductionAmount : loan.RemainingBalance;
                 }
+
+                _db.PayrollProcessBatches.Add(payrollProcessBatch);
 
                 await _db.SaveChangesAsync();
 
