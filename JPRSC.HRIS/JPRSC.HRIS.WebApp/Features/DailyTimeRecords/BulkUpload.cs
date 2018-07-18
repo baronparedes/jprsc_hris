@@ -43,15 +43,16 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 When(c => c.File != null, () =>
                 {
                     RuleFor(c => c.File)
-                        .Must(Have51Columns)
-                        .WithMessage("Unrecognized number of columns. Please use these 51 columns: Last Name, First Name, Days Worked, Hours Worked, Hours Late, Hours Undertime, ROT, ND, NDOT, SH, NDSH, SHOT, NDSHOT, LH, NDLH, LHOT, NDLHOT, DOD, DODOT, SHDOD, SHDODOT, LHDOD, LHDODOT, ADJ_PAY, EXC_DOD, HOLIDAY, ND_LHX8, ND_LHRDX8, ND_LHRDF8, ND_LHF8, NDX8, NDF8, ND_RDX8, ND_RDF8, ND_SHX8, ND_SHRDX8, ND_SHRDF8, ND_SHF8, ND_B2020, OT_LHX8, OT_LHRDX8, OT_LHRDF8, OT_LHF8, OT_RDX8, OT_RDF8, OT_SHF8M, OT_SHX8, OT_SHRDX8, OT_SHRDF8, OT_SHF8, UWLH_B2020");
+                        .Must(HaveValidNumberOfColumns)
+                        .WithMessage("Unrecognized number of columns. Please use these columns: Employee Code, Last Name, First Name, Days Worked, Hours Worked, Hours Late, Hours Undertime, ROT, ND, NDOT, SH, NDSH, SHOT, NDSHOT, LH, NDLH, LHOT, NDLHOT, DOD, DODOT, SHDOD, SHDODOT, LHDOD, LHDODOT, ADJ_PAY, EXC_DOD, HOLIDAY, ND_LHX8, ND_LHRDX8, ND_LHRDF8, ND_LHF8, NDX8, NDF8, ND_RDX8, ND_RDF8, ND_SHX8, ND_SHRDX8, ND_SHRDF8, ND_SHF8, ND_B2020, OT_LHX8, OT_LHRDX8, OT_LHRDF8, OT_LHF8, OT_RDX8, OT_RDF8, OT_SHF8M, OT_SHX8, OT_SHRDX8, OT_SHRDF8, OT_SHF8, UWLH_B2020");
                 });
             }
 
-            private bool Have51Columns(Command command, HttpPostedFileBase file)
+            private bool HaveValidNumberOfColumns(Command command, HttpPostedFileBase file)
             {
                 // Set the lines here so we don't have to deal with the stream later on
-                var has51Columns = false;
+                var hasValidNumberOfColumns = false;
+                var numberOfColumns = 52;
 
                 using (var csvreader = new StreamReader(file.InputStream))
                 {
@@ -61,14 +62,14 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         var lineAsColumns = line.Split(',');
                         command.Lines.Add(lineAsColumns);
 
-                        if (lineAsColumns.Count() == 51)
+                        if (lineAsColumns.Count() == numberOfColumns)
                         {
-                            has51Columns = true;
+                            hasValidNumberOfColumns = true;
                         }
                     }
                 }
 
-                return has51Columns;
+                return hasValidNumberOfColumns;
             }
         }
 
@@ -105,7 +106,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 // Upload behavior: all-or-nothing
                 foreach (var uploadItem in uploadItems)
                 {
-                    var employee = allEmployeesOfClient.SingleOrDefault(e => String.Equals(e.FirstName.Trim(), uploadItem.FirstName, StringComparison.CurrentCultureIgnoreCase) && String.Equals(e.LastName.Trim(), uploadItem.LastName, StringComparison.CurrentCultureIgnoreCase));
+                    var employee = allEmployeesOfClient.SingleOrDefault(e => !e.DeletedOn.HasValue && String.Equals(e.EmployeeCode.Trim(), uploadItem.EmployeeCode, StringComparison.CurrentCultureIgnoreCase));
                     if (employee == null)
                     {
                         unprocessedItems.Add(new CommandResult.UnprocessedItem
@@ -604,70 +605,72 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         {
             public UploadItem(IList<string> items)
             {
-                LastName = String.IsNullOrWhiteSpace(items[0]) ? null : items[0].Trim();
-                FirstName = String.IsNullOrWhiteSpace(items[1]) ? null : items[1].Trim();
+                EmployeeCode = String.IsNullOrWhiteSpace(items[0]) ? null : items[0].Trim();
+                LastName = String.IsNullOrWhiteSpace(items[1]) ? null : items[1].Trim();
+                FirstName = String.IsNullOrWhiteSpace(items[2]) ? null : items[2].Trim();
 
-                DaysWorked = items[2].ToNullableDouble();
-                HoursWorked = items[3].ToNullableDouble();
-                HoursLate = items[4].ToNullableDouble();
-                HoursUndertime = items[5].ToNullableDouble();
+                DaysWorked = items[3].ToNullableDouble();
+                HoursWorked = items[4].ToNullableDouble();
+                HoursLate = items[5].ToNullableDouble();
+                HoursUndertime = items[6].ToNullableDouble();
 
-                HoursROT = items[6].ToNullableDouble();
+                HoursROT = items[7].ToNullableDouble();
 
-                HoursND = items[7].ToNullableDouble();
-                HoursNDOT = items[8].ToNullableDouble();
+                HoursND = items[8].ToNullableDouble();
+                HoursNDOT = items[9].ToNullableDouble();
 
-                HoursSH = items[9].ToNullableDouble();
-                HoursNDSH = items[10].ToNullableDouble();
+                HoursSH = items[10].ToNullableDouble();
+                HoursNDSH = items[11].ToNullableDouble();
 
-                HoursSHOT = items[11].ToNullableDouble();
-                HoursNDSHOT = items[12].ToNullableDouble();
+                HoursSHOT = items[12].ToNullableDouble();
+                HoursNDSHOT = items[13].ToNullableDouble();
 
-                HoursLH = items[13].ToNullableDouble();
-                HoursNDLH = items[14].ToNullableDouble();
+                HoursLH = items[14].ToNullableDouble();
+                HoursNDLH = items[15].ToNullableDouble();
 
-                HoursLHOT = items[15].ToNullableDouble();
-                HoursNDLHOT = items[16].ToNullableDouble();
+                HoursLHOT = items[16].ToNullableDouble();
+                HoursNDLHOT = items[17].ToNullableDouble();
 
-                HoursDOD = items[17].ToNullableDouble();
-                HoursDODOT = items[18].ToNullableDouble();
+                HoursDOD = items[18].ToNullableDouble();
+                HoursDODOT = items[19].ToNullableDouble();
 
-                HoursSHDOD = items[19].ToNullableDouble();
-                HoursSHDODOT = items[20].ToNullableDouble();
+                HoursSHDOD = items[20].ToNullableDouble();
+                HoursSHDODOT = items[21].ToNullableDouble();
 
-                HoursLHDOD = items[21].ToNullableDouble();
-                HoursLHDODOT = items[22].ToNullableDouble();
+                HoursLHDOD = items[22].ToNullableDouble();
+                HoursLHDODOT = items[23].ToNullableDouble();
 
-                HoursADJ_PAY = items[23].ToNullableDouble();
-                HoursEXC_DOD = items[24].ToNullableDouble();
-                HoursHOLIDAY = items[25].ToNullableDouble();
-                HoursND_LHX8 = items[26].ToNullableDouble();
-                HoursND_LHRDX8 = items[27].ToNullableDouble();
-                HoursND_LHRDF8 = items[28].ToNullableDouble();
-                HoursND_LHF8 = items[29].ToNullableDouble();
-                HoursNDX8 = items[30].ToNullableDouble();
-                HoursNDF8 = items[31].ToNullableDouble();
-                HoursND_RDX8 = items[32].ToNullableDouble();
-                HoursND_RDF8 = items[33].ToNullableDouble();
-                HoursND_SHX8 = items[34].ToNullableDouble();
-                HoursND_SHRDX8 = items[35].ToNullableDouble();
-                HoursND_SHRDF8 = items[36].ToNullableDouble();
-                HoursND_SHF8 = items[37].ToNullableDouble();
-                HoursND_B2020 = items[38].ToNullableDouble();
-                HoursOT_LHX8 = items[39].ToNullableDouble();
-                HoursOT_LHRDX8 = items[40].ToNullableDouble();
-                HoursOT_LHRDF8 = items[41].ToNullableDouble();
-                HoursOT_LHF8 = items[42].ToNullableDouble();
-                HoursOT_RDX8 = items[43].ToNullableDouble();
-                HoursOT_RDF8 = items[44].ToNullableDouble();
-                HoursOT_SHF8M = items[45].ToNullableDouble();
-                HoursOT_SHX8 = items[46].ToNullableDouble();
-                HoursOT_SHRDX8 = items[47].ToNullableDouble();
-                HoursOT_SHRDF8 = items[48].ToNullableDouble();
-                HoursOT_SHF8 = items[49].ToNullableDouble();
-                HoursUWLH_B2020 = items[50].ToNullableDouble();
+                HoursADJ_PAY = items[24].ToNullableDouble();
+                HoursEXC_DOD = items[25].ToNullableDouble();
+                HoursHOLIDAY = items[26].ToNullableDouble();
+                HoursND_LHX8 = items[27].ToNullableDouble();
+                HoursND_LHRDX8 = items[28].ToNullableDouble();
+                HoursND_LHRDF8 = items[29].ToNullableDouble();
+                HoursND_LHF8 = items[30].ToNullableDouble();
+                HoursNDX8 = items[31].ToNullableDouble();
+                HoursNDF8 = items[32].ToNullableDouble();
+                HoursND_RDX8 = items[33].ToNullableDouble();
+                HoursND_RDF8 = items[34].ToNullableDouble();
+                HoursND_SHX8 = items[35].ToNullableDouble();
+                HoursND_SHRDX8 = items[36].ToNullableDouble();
+                HoursND_SHRDF8 = items[37].ToNullableDouble();
+                HoursND_SHF8 = items[38].ToNullableDouble();
+                HoursND_B2020 = items[39].ToNullableDouble();
+                HoursOT_LHX8 = items[40].ToNullableDouble();
+                HoursOT_LHRDX8 = items[41].ToNullableDouble();
+                HoursOT_LHRDF8 = items[42].ToNullableDouble();
+                HoursOT_LHF8 = items[43].ToNullableDouble();
+                HoursOT_RDX8 = items[44].ToNullableDouble();
+                HoursOT_RDF8 = items[45].ToNullableDouble();
+                HoursOT_SHF8M = items[46].ToNullableDouble();
+                HoursOT_SHX8 = items[47].ToNullableDouble();
+                HoursOT_SHRDX8 = items[48].ToNullableDouble();
+                HoursOT_SHRDF8 = items[49].ToNullableDouble();
+                HoursOT_SHF8 = items[50].ToNullableDouble();
+                HoursUWLH_B2020 = items[51].ToNullableDouble();
             }
 
+            public string EmployeeCode { get; set; }
             public string LastName { get; }
             public string FirstName { get; }
             public double? DaysWorked { get; }
