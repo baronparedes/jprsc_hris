@@ -62,7 +62,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .SingleAsync(c => c.Id == command.ClientId);
 
                 var clientEmployees = await _db.Employees
-                    .Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId)
+                    .Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId && e.DailyRate.HasValue)
                     .ToListAsync();
 
                 var clientEmployeeIds = clientEmployees.Select(e => e.Id).ToList();
