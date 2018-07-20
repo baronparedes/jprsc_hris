@@ -346,6 +346,7 @@
     <Compile Include="Features\PayPercentages\Search.cs" />
     <Compile Include="Features\PayPercentages\_Controller.cs" />
     <Compile Include="Features\PayPercentages\_MappingProfile.cs" />
+    <Compile Include="Features\Payroll\EndProcess.cs" />
     <Compile Include="Features\Payroll\Index.cs" />
     <Compile Include="Features\Payroll\Process.cs" />
     <Compile Include="Features\Payroll\Report.cs" />
@@ -5949,7 +5950,9 @@
     <Content Include="wwwroot\scripts\payPercentages\add.js" />
     <Content Include="wwwroot\scripts\payPercentages\edit.js" />
     <Content Include="wwwroot\scripts\payPercentages\index.js" />
+    <Content Include="wwwroot\scripts\payroll\endProcessModal.js" />
     <Content Include="wwwroot\scripts\payroll\addModal.js" />
+    <Content Include="wwwroot\scripts\payroll\endProcess.js" />
     <Content Include="wwwroot\scripts\payroll\index.js" />
     <Content Include="wwwroot\scripts\phicRecords\add.js" />
     <Content Include="wwwroot\scripts\phicRecords\edit.js" />
@@ -6939,6 +6942,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Payroll\Report.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payroll\EndProcess.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

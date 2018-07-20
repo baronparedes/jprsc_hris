@@ -14,6 +14,10 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             CreateMap<PayrollRecord, Report.QueryResult.PayrollRecord>();
             CreateMap<Employee, Report.QueryResult.Employee>();
             CreateMap<Client, Report.QueryResult.Client>();
+
+            CreateMap<PayrollProcessBatch, EndProcess.QueryResult.PayrollProcessBatch>();
+
+            CreateMap<PayrollProcessBatch, EndProcess.EndProcessQueryResult.PayrollProcessBatch>();
         }
     }
 }

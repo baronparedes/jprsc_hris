@@ -249,6 +249,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807170241551_AddDateOverwritten.Designer.cs">
       <DependentUpon>201807170241551_AddDateOverwritten.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807200804423_AddPayrollProcessBatchFieldsForEndProcess.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807200804423_AddPayrollProcessBatchFieldsForEndProcess.Designer.cs">
+      <DependentUpon>201807200804423_AddPayrollProcessBatchFieldsForEndProcess.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -429,6 +433,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807170241551_AddDateOverwritten.resx">
       <DependentUpon>201807170241551_AddDateOverwritten.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807200804423_AddPayrollProcessBatchFieldsForEndProcess.resx">
+      <DependentUpon>201807200804423_AddPayrollProcessBatchFieldsForEndProcess.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using FluentValidation;
+﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace JPRSC.HRIS.WebApp.Features.Payroll
 {
@@ -25,6 +24,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         public class CommandValidator : AbstractValidator<Command>
         {
+            private readonly ApplicationDbContext _db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
+
             public CommandValidator()
             {
                 RuleFor(c => c.ClientId)
@@ -38,6 +39,21 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 RuleFor(c => c.PayrollPeriod)
                     .NotEmpty();
+
+                When(c => c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue && c.PayrollPeriod.HasValue, () =>
+                {
+                    RuleFor(c => c.ClientId)
+                        .MustAsync(NotHavePendingRecordsForEndProcess)
+                        .WithMessage("There are pending records for end process for this client.");
+                });
+            }
+
+            private async Task<bool> NotHavePendingRecordsForEndProcess(Command commnad, int? clientId, CancellationToken token)
+            {
+                return await _db
+                    .PayrollProcessBatches
+                    .AnyAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue &&
+                                     ppb.PayrollPeriodFrom == commnad.PayrollPeriodFrom && ppb.PayrollPeriodTo == commnad.PayrollPeriodTo && ppb.PayrollPeriod == commnad.PayrollPeriod);
             }
         }
 
@@ -93,7 +109,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var shouldDeductTax = client.TaxPayrollPeriods.Contains(command.PayrollPeriod.Value);
 
                 var existingPayrollProcessBatch = await _db.PayrollProcessBatches
-                    .FirstOrDefaultAsync(ppb => ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
+                    .FirstOrDefaultAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue && ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
 
                 if (existingPayrollProcessBatch != null)
                 {
@@ -108,6 +124,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     DeductedPHIC = shouldDeductPHIC,
                     DeductedSSS = shouldDeductSSS,
                     DeductedTax = shouldDeductTax,
+                    PayrollPeriodMonth = client.PayrollPeriodMonth,
                     PayrollPeriod = command.PayrollPeriod,
                     PayrollPeriodFrom = command.PayrollPeriodFrom,
                     PayrollPeriodTo = command.PayrollPeriodTo
@@ -125,7 +142,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         AddedOn = now,
                         COLADailyValue = employeeDtrs.Sum(dtr => dtr.COLADailyValue),
                         DaysWorkedValue = employeeDtrs.Sum(dtr => dtr.DaysWorkedValue),
-                        
                         DeductionsValue = employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount),
                         EarningsValue = employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount),
                         EmployeeId = employee.Id,

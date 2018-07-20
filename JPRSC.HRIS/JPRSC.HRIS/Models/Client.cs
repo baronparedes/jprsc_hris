@@ -44,5 +44,7 @@ namespace JPRSC.HRIS.Models
         public IEnumerable<int> TaxPayrollPeriods => String.IsNullOrWhiteSpace(TaxPayrollPeriod) ? new List<int>() : TaxPayrollPeriod.Split(',').Select(p => Convert.ToInt32(p));
         public TaxTable? TaxTable { get; set; }
         public bool? ZeroBasic { get; set; }
+
+        public ICollection<PayrollProcessBatch> PayrollProcessBatches { get; set; } = new List<PayrollProcessBatch>();
     }
 }

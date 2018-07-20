@@ -1,0 +1,169 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Payroll.EndProcess.QueryResult
+
+@{
+    ViewBag.Title = "Payroll End Process";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Payroll End Process</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Payroll End Process
+        </h1>
+        @Html.RenderSuccessNotification()
+        <div class="row" ng-controller="PayrollEndProcessCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
+            <div class="col-sm-12">
+                @*<div class="note note-info" ng-show="!vm.searchModel.client.value || !vm.searchModel.client.value.length">
+                    <p>Please select a client.</p>
+                </div>
+                <form role="form">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id">
+                                        <option value="?" selected="selected">Select client</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>*@
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" ng-disabled="vm.searchInProgress" ng-click="vm.endProcessClicked()">End Process</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="note note-info" ng-show="!vm.payrollProcessBatches.length">
+                    <p>No end process records found.</p>
+                </div>
+                <div class="portlet light bordered" ng-show="vm.payrollProcessBatches.length">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-dollar font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">End Process Records</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Client</th>
+                                        <th>Payroll Period</th>
+                                        <th>Payroll Period From</th>
+                                        <th>Payroll Period To</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="payrollProcessBatch in vm.payrollProcessBatches track by payrollProcessBatch.id">
+                                        <td>{{payrollProcessBatch.client.name}}</td>
+                                        <td>{{payrollProcessBatch.payrollPeriod}}</td>
+                                        <td>{{payrollProcessBatch.payrollPeriodFrom | date: 'mediumDate'}}</td>
+                                        <td>{{payrollProcessBatch.payrollPeriodTo | date: 'mediumDate'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/ng-template" id="endProcessModal.html">
+                <form class="form-horizontal" role="form" method="post" id="endProcessForm">
+                    <div class="modal-header">
+                        <h3 class="modal-title">End Process Payroll</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-body">
+                            <input type="hidden" name="PayrollProcessBatchId" value="{{vm.client.payrollProcessBatchForEndProcess.id}}" />
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Client</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
+                                    <select class="form-control" ng-model="vm.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
+                                    <span ng-show="vm.validationErrors.clientId" class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Payroll Period</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <p class="form-control-static">{{vm.client.currentPayrollPeriod}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Payroll Period From</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <p class="form-control-static">{{vm.client.payrollPeriodFrom | date: 'mediumDate'}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Payroll Period To</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <p class="form-control-static">{{vm.client.payrollPeriodTo | date: 'mediumDate'}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Payroll Period Month</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <p class="form-control-static">{{vm.client.payrollPeriodMonthString}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Next Payroll Period</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <p class="form-control-static">{{vm.client.nextPayrollPeriod}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Next Payroll Period From</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <p class="form-control-static">{{vm.client.nextPayrollPeriodFrom | date: 'mediumDate'}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Next Payroll Period To</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <p class="form-control-static">{{vm.client.nextPayrollPeriodTo | date: 'mediumDate'}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Next Payroll Period Month</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <p class="form-control-static">{{vm.client.nextPayrollPeriodMonthString}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.endProcessInProgress"></i>
+                        <button type="button" class="btn green" ng-click="vm.endProcessSubmit()" ng-disabled="vm.endProcessInProgress">Process</button>
+                        <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.endProcessInProgress">Exit</a>
+                    </div>
+                </form>
+            </script>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/payroll")
+}

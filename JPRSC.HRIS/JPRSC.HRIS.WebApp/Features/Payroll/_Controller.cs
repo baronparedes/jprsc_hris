@@ -18,6 +18,35 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         }
 
         [HttpGet]
+        public async Task<ActionResult> EndProcess(EndProcess.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> EndProcessQuery(EndProcess.EndProcessQuery query)
+        {
+            var queryResult = await _mediator.Send(query);
+
+            return JsonCamelCase(queryResult);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EndProcessCommand(EndProcess.Command query)
+        {
+            if (!ModelState.IsValid)
+            {
+                return JsonValidationError();
+            }
+
+            var result = await _mediator.Send(query);
+
+            return JsonCamelCase(result);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)
         {
             var result = await _mediator.Send(query);
