@@ -49,9 +49,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public PayrollProcessBatch PayrollProcessBatchForEndProcess { get; set; }
 
                 public int? NextPayrollPeriod => CurrentPayrollPeriod == NumberOfPayrollPeriodsAMonth ? 1 : CurrentPayrollPeriod += 1;
-                public string PayrollPeriodMonthString => PayrollPeriodMonth.ToString();
-                public Month? NextPayrollPeriodMonth => PayrollPeriodMonth == Month.December ? Month.January : (Month)((int)PayrollPeriodMonth + 10);
-                public string NextPayrollPeriodMonthString => NextPayrollPeriodMonth.ToString();
                 public DateTime? NextPayrollPeriodFrom => PayrollPeriodFrom.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value);
                 public DateTime? NextPayrollPeriodTo => PayrollPeriodTo.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value);
             }
@@ -185,6 +182,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         public class Command : IRequest<CommandResult>
         {
             public int? PayrollProcessBatchId { get; set; }
+            public int? PayrollPeriod { get; set; }
+            public DateTime? PayrollPeriodFrom { get; set; }
+            public DateTime? PayrollPeriodTo { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -193,7 +193,17 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             {
                 RuleFor(c => c.PayrollProcessBatchId)
                     .NotEmpty();
-            }   
+
+                RuleFor(c => c.PayrollPeriod)
+                    .NotEmpty();
+
+                RuleFor(c => c.PayrollPeriodFrom)
+                    .NotEmpty();
+
+                RuleFor(c => c.PayrollPeriodTo)
+                    .NotEmpty();
+
+            }
         }
 
         public class CommandResult
@@ -224,10 +234,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Clients
                     .SingleOrDefaultAsync(c => c.Id == payrollProcessBatch.Id && !c.DeletedOn.HasValue);
 
-                client.CurrentPayrollPeriod = client.CurrentPayrollPeriod == client.NumberOfPayrollPeriodsAMonth ? 1 : client.CurrentPayrollPeriod += 1;
-                client.PayrollPeriodFrom = client.PayrollPeriodFrom.Value.AddDays(client.NumberOfWorkingDaysForThisPayrollPeriod.Value);
-                client.PayrollPeriodTo = client.PayrollPeriodTo.Value.AddDays(client.NumberOfWorkingDaysForThisPayrollPeriod.Value);
-                client.PayrollPeriodMonth = client.PayrollPeriodMonth == Month.December ? Month.January : (Month)((int)client.PayrollPeriodMonth + 10);
+                client.CurrentPayrollPeriod = command.PayrollPeriod;
+                client.PayrollPeriodFrom = command.PayrollPeriodFrom;
+                client.PayrollPeriodTo = command.PayrollPeriodTo;
                 client.ModifiedOn = now;
 
                 await _db.SaveChangesAsync();

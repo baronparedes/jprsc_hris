@@ -14,6 +14,8 @@
 
         $timeout(function () {
             vm.client = vm.clients[0];
+            vm.client.nextPayrollPeriodFrom = Date.parse(vm.client.nextPayrollPeriodFrom);
+            vm.client.nextPayrollPeriodTo = Date.parse(vm.client.nextPayrollPeriodTo);
         });
 
         function endProcessSubmit() {
