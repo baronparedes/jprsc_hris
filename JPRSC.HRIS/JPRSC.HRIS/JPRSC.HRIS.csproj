@@ -257,6 +257,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807221158029_AddEmployeeIsActive.Designer.cs">
       <DependentUpon>201807221158029_AddEmployeeIsActive.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807221210064_AddAdditionalClientPayrollContributionSettings.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807221210064_AddAdditionalClientPayrollContributionSettings.Designer.cs">
+      <DependentUpon>201807221210064_AddAdditionalClientPayrollContributionSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -443,6 +447,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807221158029_AddEmployeeIsActive.resx">
       <DependentUpon>201807221158029_AddEmployeeIsActive.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807221210064_AddAdditionalClientPayrollContributionSettings.resx">
+      <DependentUpon>201807221210064_AddAdditionalClientPayrollContributionSettings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

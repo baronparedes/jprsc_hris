@@ -21,6 +21,9 @@ namespace JPRSC.HRIS.Models
         public bool? PagIbigBasic { get; set; }
         public bool? PagIbigCola { get; set; }
         public bool? PagIbigOvertime { get; set; }
+        public bool? PagIbigEarnings { get; set; }
+        public bool? PagIbigDeductions { get; set; }
+        public bool? PagIbigUndertime { get; set; }
         public string PagIbigPayrollPeriod { get; set; }
         public IEnumerable<int> PagIbigPayrollPeriods => String.IsNullOrWhiteSpace(PagIbigPayrollPeriod) ? new List<int>() : PagIbigPayrollPeriod.Split(',').Select(p => Convert.ToInt32(p));
         public PayrollCode? PayrollCode { get; set; }
@@ -30,16 +33,25 @@ namespace JPRSC.HRIS.Models
         public bool? PHICBasic { get; set; }
         public bool? PHICCola { get; set; }
         public bool? PHICOvertime { get; set; }
+        public bool? PHICEarnings { get; set; }
+        public bool? PHICDeductions { get; set; }
+        public bool? PHICUndertime { get; set; }
         public string PHICPayrollPeriod { get; set; }
         public IEnumerable<int> PHICPayrollPeriods => String.IsNullOrWhiteSpace(PHICPayrollPeriod) ? new List<int>() : PHICPayrollPeriod.Split(',').Select(p => Convert.ToInt32(p));
         public bool? SSSBasic { get; set; }
         public bool? SSSCola { get; set; }
         public bool? SSSOvertime { get; set; }
+        public bool? SSSEarnings { get; set; }
+        public bool? SSSDeductions { get; set; }
+        public bool? SSSUndertime { get; set; }
         public string SSSPayrollPeriod { get; set; }
         public IEnumerable<int> SSSPayrollPeriods => String.IsNullOrWhiteSpace(SSSPayrollPeriod) ? new List<int>() : SSSPayrollPeriod.Split(',').Select(p => Convert.ToInt32(p));
         public bool? TaxBasic { get; set; }
         public bool? TaxCola { get; set; }
         public bool? TaxOvertime { get; set; }
+        public bool? TaxEarnings { get; set; }
+        public bool? TaxDeductions { get; set; }
+        public bool? TaxUndertime { get; set; }
         public string TaxPayrollPeriod { get; set; }
         public IEnumerable<int> TaxPayrollPeriods => String.IsNullOrWhiteSpace(TaxPayrollPeriod) ? new List<int>() : TaxPayrollPeriod.Split(',').Select(p => Convert.ToInt32(p));
         public TaxTable? TaxTable { get; set; }
