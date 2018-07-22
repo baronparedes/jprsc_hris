@@ -253,6 +253,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807200804423_AddPayrollProcessBatchFieldsForEndProcess.Designer.cs">
       <DependentUpon>201807200804423_AddPayrollProcessBatchFieldsForEndProcess.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807221158029_AddEmployeeIsActive.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807221158029_AddEmployeeIsActive.Designer.cs">
+      <DependentUpon>201807221158029_AddEmployeeIsActive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -436,6 +440,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807200804423_AddPayrollProcessBatchFieldsForEndProcess.resx">
       <DependentUpon>201807200804423_AddPayrollProcessBatchFieldsForEndProcess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807221158029_AddEmployeeIsActive.resx">
+      <DependentUpon>201807221158029_AddEmployeeIsActive.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

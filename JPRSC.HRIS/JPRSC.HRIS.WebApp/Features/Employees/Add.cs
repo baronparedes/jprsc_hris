@@ -58,6 +58,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public int? DepartmentId { get; set; }
             public string EmployeeStatus { get; set; }
             public string ResignStatus { get; set; }
+            public bool? IsActive { get; set; } = true;
 
             // Pay Info
             public string ATMAccountNumber { get; set; }
@@ -206,6 +207,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     FirstName = command.FirstName,
                     Gender = command.Gender,
                     HourlyRate = command.HourlyRate.HasValue ? command.HourlyRate.Value : 0,
+                    IsActive = command.IsActive,
                     LastName = command.LastName,
                     MiddleName = command.MiddleName,
                     Nickname = command.Nickname,

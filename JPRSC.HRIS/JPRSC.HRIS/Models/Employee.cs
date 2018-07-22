@@ -33,6 +33,7 @@ namespace JPRSC.HRIS.Models
         public Gender? Gender { get; set; }
         public decimal? HourlyRate { get; set; }
         public int Id { get; set; }
+        public bool? IsActive { get; set; }
         public string LastName { get; set; }
         public ICollection<Loan> Loans { get; set; } = new List<Loan>();
         public string MiddleName { get; set; }
