@@ -21,6 +21,13 @@ namespace System
             }
         }
 
+        public static decimal? ToNullableDecimal(this string value)
+        {
+            if (String.IsNullOrWhiteSpace(value)) return null;
+
+            return decimal.Parse(value);
+        }
+
         public static double? ToNullableDouble(this string value)
         {
             if (String.IsNullOrWhiteSpace(value)) return null;

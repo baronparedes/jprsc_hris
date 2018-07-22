@@ -95,6 +95,10 @@ namespace JPRSC.HRIS.Models
 
         // Payroll
         [Display(Name = "Payroll")]
-        PayrollDefault = 2300
+        PayrollDefault = 2300,
+
+        // Earnings and Deductions Records
+        [Display(Name = "Earnings and Deductions Records")]
+        EarningDeductionRecordDefault = 2400
     }
 }

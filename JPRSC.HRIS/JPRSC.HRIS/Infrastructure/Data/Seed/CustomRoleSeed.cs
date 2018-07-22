@@ -43,7 +43,8 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
                 Permission.LoanDefault,
                 Permission.DailyTimeRecordDefault,
                 Permission.OvertimeDefault,
-                Permission.PayrollDefault
+                Permission.PayrollDefault,
+                Permission.EarningDeductionRecordDefault
             });
 
             var defaultRole = new CustomRole

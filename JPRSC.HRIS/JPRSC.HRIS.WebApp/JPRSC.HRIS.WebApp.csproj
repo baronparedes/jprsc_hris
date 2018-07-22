@@ -287,6 +287,9 @@
     <Compile Include="Features\Departments\Search.cs" />
     <Compile Include="Features\Departments\_Controller.cs" />
     <Compile Include="Features\Departments\_MappingProfile.cs" />
+    <Compile Include="Features\EarningDeductionRecords\BulkUpload.cs" />
+    <Compile Include="Features\EarningDeductionRecords\_Controller.cs" />
+    <Compile Include="Features\EarningDeductionRecords\_MappingProfile.cs" />
     <Compile Include="Features\EarningDeductions\Add.cs" />
     <Compile Include="Features\EarningDeductions\Delete.cs" />
     <Compile Include="Features\EarningDeductions\Edit.cs" />
