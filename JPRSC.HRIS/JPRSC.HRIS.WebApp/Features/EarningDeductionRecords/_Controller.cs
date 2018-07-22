@@ -9,11 +9,11 @@ using System.Web.Mvc;
 namespace JPRSC.HRIS.WebApp.Features.EarningDeductionRecords
 {
     [AuthorizePermission(Permission.EarningDeductionRecordDefault)]
-    public class DailyTimeRecordsController : AppController
+    public class EarningDeductionRecordsController : AppController
     {
         private readonly IMediator _mediator;
 
-        public DailyTimeRecordsController(IMediator mediator)
+        public EarningDeductionRecordsController(IMediator mediator)
         {
             _mediator = mediator;
         }
