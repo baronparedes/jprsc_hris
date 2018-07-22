@@ -154,18 +154,18 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     if (shouldDeductSSS)
                     {
-                        payrollRecord.SSSValueEmployee = ComputeSSSEmployee(employee, sssRecords);
-                        payrollRecord.SSSValueEmployer = ComputeSSSEmployer(employee, sssRecords);
+                        payrollRecord.SSSValueEmployee = ComputeSSSEmployee(employee, client, employeeDtrs, employeeOts, employeeEds, sssRecords);
+                        payrollRecord.SSSValueEmployer = ComputeSSSEmployer(employee, client, employeeDtrs, employeeOts, employeeEds, sssRecords);
                     }
 
                     if (shouldDeductPHIC)
                     {
-                        payrollRecord.PHICValueEmployee = ComputePHICEmployee(employee);
-                        payrollRecord.PHICValueEmployer = ComputePHICEmployer(employee);
+                        payrollRecord.PHICValueEmployee = ComputePHICEmployee(employee, client, employeeDtrs, employeeOts, employeeEds);
+                        payrollRecord.PHICValueEmployer = ComputePHICEmployer(employee, client, employeeDtrs, employeeOts, employeeEds);
                     }
 
-                    if (shouldDeductPagIbig) payrollRecord.PagIbigValue = ComputePagIbig(employee, client);
-                    if (shouldDeductTax) payrollRecord.TaxValue = ComputeTax(employee, client);
+                    if (shouldDeductPagIbig) payrollRecord.PagIbigValue = ComputePagIbig(employee, client, employeeDtrs, employeeOts, employeeEds);
+                    if (shouldDeductTax) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrs, employeeOts, employeeEds);
 
                     payrollProcessBatch.PayrollRecords.Add(payrollRecord);
                 }
@@ -182,9 +182,17 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return new CommandResult();
             }
 
-            private decimal? ComputeSSSEmployee(Employee employee, IEnumerable<SSSRecord> sssRecords)
+            private decimal? ComputeSSSEmployee(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds, IEnumerable<SSSRecord> sssRecords)
             {
-                var basicSalary = employee.DailyRate * 20;
+                var computationBasis = 0m;
+                var basicSalary = employee.DailyRate.GetValueOrDefault() * 20;
+
+                if (client.SSSBasic == true) computationBasis += basicSalary;
+                if (client.SSSCola == true) computationBasis += employeeDtrs.Sum(dtr => dtr.COLADailyValue).GetValueOrDefault();
+                if (client.SSSOvertime == true) computationBasis += employeeOts.Sum(ot => ot.NumberOfHoursValue).GetValueOrDefault();
+                if (client.SSSEarnings == true) computationBasis += employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount).GetValueOrDefault();
+                if (client.SSSDeductions == true) computationBasis -= employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount).GetValueOrDefault();
+                if (client.SSSUndertime == true) computationBasis -= employeeDtrs.Sum(dtr => dtr.HoursUndertimeValue).GetValueOrDefault();
 
                 SSSRecord matchingRange = null;
 
@@ -192,7 +200,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 {
                     matchingRange = sssRecords
                         .OrderBy(s => s.Range1)
-                        .First(s => s.Range1 > basicSalary);
+                        .First(s => s.Range1 > computationBasis);
                 }
                 catch
                 {
@@ -202,9 +210,17 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return matchingRange.Employee;
             }
 
-            private decimal? ComputeSSSEmployer(Employee employee, IEnumerable<SSSRecord> sssRecords)
+            private decimal? ComputeSSSEmployer(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds, IEnumerable<SSSRecord> sssRecords)
             {
-                var basicSalary = employee.DailyRate * 20;
+                var computationBasis = 0m;
+                var basicSalary = employee.DailyRate.GetValueOrDefault() * 20;
+
+                if (client.SSSBasic == true) computationBasis += basicSalary;
+                if (client.SSSCola == true) computationBasis += employeeDtrs.Sum(dtr => dtr.COLADailyValue).GetValueOrDefault();
+                if (client.SSSOvertime == true) computationBasis += employeeOts.Sum(ot => ot.NumberOfHoursValue).GetValueOrDefault();
+                if (client.SSSEarnings == true) computationBasis += employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount).GetValueOrDefault();
+                if (client.SSSDeductions == true) computationBasis -= employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount).GetValueOrDefault();
+                if (client.SSSUndertime == true) computationBasis -= employeeDtrs.Sum(dtr => dtr.HoursUndertimeValue).GetValueOrDefault();
 
                 SSSRecord matchingRange = null;
 
@@ -212,7 +228,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 {
                     matchingRange = sssRecords
                         .OrderBy(s => s.Range1)
-                        .First(s => s.Range1 > basicSalary);
+                        .First(s => s.Range1 > computationBasis);
                 }
                 catch
                 {
@@ -222,34 +238,50 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return matchingRange.Employer;
             }
 
-            private decimal? ComputePHICEmployee(Employee employee)
+            private decimal? ComputePHICEmployee(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds)
             {
                 decimal? phic = null;
 
-                var basicSalary = employee.DailyRate * 20;
+                var computationBasis = 0m;
+                var basicSalary = employee.DailyRate.GetValueOrDefault() * 20;
 
-                phic = (decimal)(0.0275 / 2) * basicSalary;
+                if (client.PHICBasic == true) computationBasis += basicSalary;
+                if (client.PHICCola == true) computationBasis += employeeDtrs.Sum(dtr => dtr.COLADailyValue).GetValueOrDefault();
+                if (client.PHICOvertime == true) computationBasis += employeeOts.Sum(ot => ot.NumberOfHoursValue).GetValueOrDefault();
+                if (client.PHICEarnings == true) computationBasis += employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount).GetValueOrDefault();
+                if (client.PHICDeductions == true) computationBasis -= employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount).GetValueOrDefault();
+                if (client.PHICUndertime == true) computationBasis -= employeeDtrs.Sum(dtr => dtr.HoursUndertimeValue).GetValueOrDefault();
+
+                phic = (decimal)(0.0275 / 2) * computationBasis;
 
                 return phic;
             }
 
-            private decimal? ComputePHICEmployer(Employee employee)
+            private decimal? ComputePHICEmployer(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds)
             {
                 decimal? phic = null;
 
-                var basicSalary = employee.DailyRate * 20;
+                var computationBasis = 0m;
+                var basicSalary = employee.DailyRate.GetValueOrDefault() * 20;
 
-                phic = (decimal)(0.0275 / 2) * basicSalary;
+                if (client.PHICBasic == true) computationBasis += basicSalary;
+                if (client.PHICCola == true) computationBasis += employeeDtrs.Sum(dtr => dtr.COLADailyValue).GetValueOrDefault();
+                if (client.PHICOvertime == true) computationBasis += employeeOts.Sum(ot => ot.NumberOfHoursValue).GetValueOrDefault();
+                if (client.PHICEarnings == true) computationBasis += employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount).GetValueOrDefault();
+                if (client.PHICDeductions == true) computationBasis -= employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount).GetValueOrDefault();
+                if (client.PHICUndertime == true) computationBasis -= employeeDtrs.Sum(dtr => dtr.HoursUndertimeValue).GetValueOrDefault();
+
+                phic = (decimal)(0.0275 / 2) * computationBasis;
 
                 return phic;
             }
 
-            private decimal? ComputePagIbig(Employee employee, Client client)
+            private decimal? ComputePagIbig(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds)
             {
                 return 100;
             }
 
-            private decimal? ComputeTax(Employee employee, Client client)
+            private decimal? ComputeTax(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds)
             {
                 return null;
             }
