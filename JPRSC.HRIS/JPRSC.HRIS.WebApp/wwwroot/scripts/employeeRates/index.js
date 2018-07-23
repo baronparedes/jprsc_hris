@@ -17,6 +17,7 @@
 
         $timeout(function () {
             vm.clientsList = vm.serverModel.clientsList;
+            vm.clientsList.splice(0, 0, { text: '-- All Clients --' });
         });
 
         $scope.$watch('vm.searchModel', onSearchModelChange, true);
@@ -32,8 +33,6 @@
         };
 
         function onSearchModelChange(newValue, oldValue) {
-            if (!vm.searchModel.client || !vm.searchModel.client.value || !vm.searchModel.client.value.length) return;
-
             searchClicked();
         };
 
@@ -55,7 +54,12 @@
         };
 
         function searchClicked() {
-            vm.searchModel.clientId = parseInt(vm.searchModel.client.value);
+            if (vm.searchModel.client && vm.searchModel.client.value) {
+                vm.searchModel.clientId = parseInt(vm.searchModel.client.value);
+            }
+            else {
+                vm.searchModel.clientId = undefined;
+            }
             vm.searchInProgress = true;
 
             $http.get('/EmployeeRates/Search', { params: vm.searchModel }).then(function (response) {

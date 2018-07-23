@@ -59,11 +59,15 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
-                if (!query.ClientId.HasValue) return new QueryResult();
-
                 var dbQuery = _db
                     .Employees
-                    .Where(e => !e.DeletedOn.HasValue && e.ClientId == query.ClientId);
+                    .Where(e => !e.DeletedOn.HasValue);
+
+                if (query.ClientId.HasValue)
+                {
+                    dbQuery = dbQuery
+                        .Where(e => e.ClientId == query.ClientId);
+                }
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
