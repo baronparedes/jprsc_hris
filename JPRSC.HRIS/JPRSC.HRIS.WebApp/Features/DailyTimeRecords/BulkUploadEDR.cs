@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator(ApplicationDbContext db)
+            private readonly ApplicationDbContext _db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
+
+            public CommandValidator()
             {
                 RuleFor(c => c.ClientId)
                     .NotEmpty();
@@ -38,6 +41,19 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                 RuleFor(c => c.File)
                     .NotNull();
+
+                When(c => c.ClientId.HasValue && c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue, () =>
+                {
+                    RuleFor(c => c.ClientId)
+                        .MustAsync(NotHaveEndProcessedYet)
+                        .WithMessage("End process for this payroll period has finished.");
+                });
+            }
+
+            private async Task<bool> NotHaveEndProcessedYet(Command command, int? clientId, CancellationToken token)
+            {
+                var endProcessRecord = await _db.PayrollProcessBatches.SingleOrDefaultAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && ppb.EndProcessedOn.HasValue && ppb.ClientId == clientId && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
+                return endProcessRecord == null;
             }
         }
 

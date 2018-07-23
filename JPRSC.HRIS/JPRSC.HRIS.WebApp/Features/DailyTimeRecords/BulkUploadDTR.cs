@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator(ApplicationDbContext db)
+            private readonly ApplicationDbContext _db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
+
+            public CommandValidator()
             {
                 RuleFor(c => c.ClientId)
                     .NotEmpty();
@@ -46,6 +49,19 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         .Must(HaveValidNumberOfColumns)
                         .WithMessage("Unrecognized number of columns. Please use these columns: Employee Code, Last Name, First Name, Days Worked, Hours Worked, Hours Late, Hours Undertime, ROT, ND, NDOT, SH, NDSH, SHOT, NDSHOT, LH, NDLH, LHOT, NDLHOT, DOD, DODOT, SHDOD, SHDODOT, LHDOD, LHDODOT, ADJ_PAY, EXC_DOD, HOLIDAY, ND_LHX8, ND_LHRDX8, ND_LHRDF8, ND_LHF8, NDX8, NDF8, ND_RDX8, ND_RDF8, ND_SHX8, ND_SHRDX8, ND_SHRDF8, ND_SHF8, ND_B2020, OT_LHX8, OT_LHRDX8, OT_LHRDF8, OT_LHF8, OT_RDX8, OT_RDF8, OT_SHF8M, OT_SHX8, OT_SHRDX8, OT_SHRDF8, OT_SHF8, UWLH_B2020");
                 });
+
+                When(c => c.ClientId.HasValue && c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue, () =>
+                {
+                    RuleFor(c => c.ClientId)
+                        .MustAsync(NotHaveEndProcessedYet)
+                        .WithMessage("End process for this payroll period has finished.");
+                });
+            }
+
+            private async Task<bool> NotHaveEndProcessedYet(Command command, int? clientId, CancellationToken token)
+            {
+                var endProcessRecord = await _db.PayrollProcessBatches.SingleOrDefaultAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && ppb.EndProcessedOn.HasValue && ppb.ClientId == clientId && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
+                return endProcessRecord == null;
             }
 
             private bool HaveValidNumberOfColumns(Command command, HttpPostedFileBase file)
