@@ -34,6 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
             public class Employee
             {
+                public string ClientName { get; set; }
                 public string CompanyName { get; set; }
                 public string EmployeeCode { get; set; }
                 public string FirstName { get; set; }
