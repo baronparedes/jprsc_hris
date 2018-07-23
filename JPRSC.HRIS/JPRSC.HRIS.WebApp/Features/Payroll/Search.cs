@@ -36,9 +36,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public DateTime? ModifiedOn { get; set; }
                 public Client Client { get; set; }
                 public int? ClientId { get; set; }
+                public DateTime? EndProcessedOn { get; set; }
                 public int? PayrollPeriod { get; set; }
                 public DateTime? PayrollPeriodFrom { get; set; }
                 public DateTime? PayrollPeriodTo { get; set; }
+
+                public bool IsEndProcessed => EndProcessedOn.HasValue;
             }
 
             public class Client

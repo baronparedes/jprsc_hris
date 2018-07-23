@@ -65,6 +65,7 @@
                                         <th>Payroll Period From</th>
                                         <th>Payroll Period To</th>
                                         <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -73,6 +74,10 @@
                                         <td>{{payrollProcessBatch.payrollPeriod}}</td>
                                         <td>{{payrollProcessBatch.payrollPeriodFrom | date: 'mediumDate'}}</td>
                                         <td>{{payrollProcessBatch.payrollPeriodTo | date: 'mediumDate'}}</td>
+                                        <td>
+                                            <span class="badge bg-green-jungle bg-font-green-jungle badge-roundless" ng-show="payrollProcessBatch.isEndProcessed">End Process Finished</span>
+                                            <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-show="!payrollProcessBatch.isEndProcessed">End Process not Finished</span>
+                                        </td>
                                         <td>
                                             <a href="{{'/Payroll/Report?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank" class="btn btn-primary btn-sm">Report View</a>
                                         </td>

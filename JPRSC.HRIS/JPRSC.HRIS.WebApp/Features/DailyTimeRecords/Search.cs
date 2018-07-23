@@ -65,6 +65,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public double? HoursWorked { get; set; }
                 public decimal? HoursWorkedValue { get; set; }
                 public int Id { get; set; }
+                public DateTime? PayrollPeriodFrom { get; set; }
+                public DateTime? PayrollPeriodTo { get; set; }
             }
         }
 
