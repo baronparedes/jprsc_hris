@@ -38,7 +38,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         }
 
         [HttpPost]
-        public async Task<ActionResult> BulkUpload(BulkUpload.Command command)
+        public async Task<ActionResult> BulkUploadDTR(BulkUploadDTR.Command command)
         {
             if (!ModelState.IsValid)
             {

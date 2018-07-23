@@ -54,7 +54,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.client.id || vm.searchInProgress" ng-click="vm.addDailyTimeRecordClicked()">Add Daily Time Record</button>
-                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.client.id || vm.searchInProgress" ng-click="vm.bulkUploadClicked()">Bulk Upload</button>
+                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.client.id || vm.searchInProgress" ng-click="vm.bulkUploadDTRClicked()">DTR Bulk Upload</button>
                         </div>
                     </div>
                 </div>
@@ -315,7 +315,7 @@
                 </form>
             </script>
             
-            <script type="text/ng-template" id="bulkUploadModal.html">
+            <script type="text/ng-template" id="bulkUploadDTRModal.html">
                 <form class="form-horizontal" role="form" method="post" id="bulkUploadForm" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h3 class="modal-title">Bulk Upload for {{vm.client.name}}</h3>

@@ -13,7 +13,7 @@ using System.Web;
 
 namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 {
-    public class BulkUpload
+    public class BulkUploadDTR
     {
         public class Command : IRequest<CommandResult>
         {

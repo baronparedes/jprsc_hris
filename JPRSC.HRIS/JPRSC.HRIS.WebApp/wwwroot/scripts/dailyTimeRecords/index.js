@@ -6,7 +6,7 @@
     function DailyTimeRecordIndexCtrl($http, $scope, $timeout, $uibModal, globalSettings) {
         var vm = this;
         vm.addDailyTimeRecordClicked = addDailyTimeRecordClicked;
-        vm.bulkUploadClicked = bulkUploadClicked;
+        vm.bulkUploadDTRClicked = bulkUploadDTRClicked;
         vm.currencySymbol = 'P';
         vm.dailyTimeRecords = [];
         vm.datepickerOptions = globalSettings.datepickerOptions;
@@ -50,13 +50,13 @@
             });
         };
 
-        function bulkUploadClicked() {
+        function bulkUploadDTRClicked() {
             var modalInstance = $uibModal.open({
                 animation: true,
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body',
-                templateUrl: 'bulkUploadModal.html',
-                controller: 'BulkUploadModalCtrl',
+                templateUrl: 'bulkUploadDTRModal.html',
+                controller: 'BulkUploadDTRModalCtrl',
                 controllerAs: 'vm',
                 size: 'lg',
                 resolve: {

@@ -1,9 +1,9 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('BulkUploadModalCtrl', ['$http', '$scope', '$timeout', '$uibModalInstance', 'lookups', 'params', BulkUploadModalCtrl]);
+        .controller('BulkUploadDTRModalCtrl', ['$http', '$scope', '$timeout', '$uibModalInstance', 'lookups', 'params', BulkUploadDTRModalCtrl]);
 
-    function BulkUploadModalCtrl($http, $scope, $timeout, $uibModalInstance, lookups, params, $window) {
+    function BulkUploadDTRModalCtrl($http, $scope, $timeout, $uibModalInstance, lookups, params, $window) {
         var vm = this;
         vm.cancel = cancel;
         vm.client = params.client;
@@ -25,7 +25,7 @@
                 var formData = new FormData($('#bulkUploadForm')[0]);
 
                 $.ajax({
-                    url: '/DailyTimeRecords/BulkUpload',
+                    url: '/DailyTimeRecords/BulkUploadDTR',
                     type: 'POST',
                     data: formData,
                     success: function (data) {
