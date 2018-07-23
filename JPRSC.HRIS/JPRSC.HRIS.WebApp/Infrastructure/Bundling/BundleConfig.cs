@@ -132,6 +132,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/dailyTimeRecords/add.js",
                 "~/wwwroot/scripts/dailyTimeRecords/addModal.js",
                 "~/wwwroot/scripts/dailyTimeRecords/bulkUploadDTRModal.js",
+                "~/wwwroot/scripts/dailyTimeRecords/bulkUploadEDRModal.js",
                 "~/wwwroot/scripts/dailyTimeRecords/edit.js",
                 "~/wwwroot/scripts/dailyTimeRecords/index.js");
         }

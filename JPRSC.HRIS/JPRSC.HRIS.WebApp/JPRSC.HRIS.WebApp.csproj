@@ -273,6 +273,7 @@
     <Compile Include="Features\CustomRoles\_Controller.cs" />
     <Compile Include="Features\CustomRoles\_MappingProfile.cs" />
     <Compile Include="Features\DailyTimeRecords\Add.cs" />
+    <Compile Include="Features\DailyTimeRecords\BulkUploadEDR.cs" />
     <Compile Include="Features\DailyTimeRecords\BulkUploadDTR.cs" />
     <Compile Include="Features\DailyTimeRecords\Delete.cs" />
     <Compile Include="Features\DailyTimeRecords\Edit.cs" />
@@ -5922,6 +5923,7 @@
     <Content Include="wwwroot\scripts\customRoles\index.js" />
     <Content Include="wwwroot\scripts\dailyTimeRecords\add.js" />
     <Content Include="wwwroot\scripts\dailyTimeRecords\addModal.js" />
+    <Content Include="wwwroot\scripts\dailyTimeRecords\bulkUploadEDRModal.js" />
     <Content Include="wwwroot\scripts\dailyTimeRecords\bulkUploadDTRModal.js" />
     <Content Include="wwwroot\scripts\dailyTimeRecords\edit.js" />
     <Content Include="wwwroot\scripts\dailyTimeRecords\index.js" />

@@ -7,6 +7,7 @@
         var vm = this;
         vm.addDailyTimeRecordClicked = addDailyTimeRecordClicked;
         vm.bulkUploadDTRClicked = bulkUploadDTRClicked;
+        vm.bulkUploadEDRClicked = bulkUploadEDRClicked;
         vm.currencySymbol = 'P';
         vm.dailyTimeRecords = [];
         vm.datepickerOptions = globalSettings.datepickerOptions;
@@ -57,6 +58,31 @@
                 ariaDescribedBy: 'modal-body',
                 templateUrl: 'bulkUploadDTRModal.html',
                 controller: 'BulkUploadDTRModalCtrl',
+                controllerAs: 'vm',
+                size: 'lg',
+                resolve: {
+                    params: function () {
+                        return {
+                            client: vm.searchModel.client
+                        }
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (result) {
+                searchClicked();
+            }, function () {
+                searchClicked();
+            });
+        };
+
+        function bulkUploadEDRClicked() {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'bulkUploadEDRModal.html',
+                controller: 'BulkUploadEDRModalCtrl',
                 controllerAs: 'vm',
                 size: 'lg',
                 resolve: {

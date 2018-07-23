@@ -51,6 +51,19 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         }
 
         [HttpPost]
+        public async Task<ActionResult> BulkUploadEDR(BulkUploadEDR.Command command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return JsonValidationError();
+            }
+
+            var commandResult = await _mediator.Send(command);
+
+            return JsonCamelCase(commandResult);
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(Delete.Command command)
         {
