@@ -30,8 +30,28 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         public class QueryResult
         {
-            public IEnumerable<PayrollRecord> PayrollRecords { get; set; } = new List<PayrollRecord>();
+            public IEnumerable<PayslipData> PayslipRecords { get; set; } = new List<PayslipData>();
             public PayrollProcessBatch PayrollProcessBatchResult { get; set; }
+
+            public class PayslipData
+            {
+                public Employee Employee { get; set; }
+
+                public decimal? BasicPay { get; set; }
+                public decimal? Overtime { get; set; }
+                public decimal? COLA { get; set; }
+                public decimal? OtherEarnings { get; set; }
+                public decimal TotalEarnings => BasicPay.GetValueOrDefault() + Overtime.GetValueOrDefault() + COLA.GetValueOrDefault() + OtherEarnings.GetValueOrDefault();
+
+                public decimal? SSS { get; set; }
+                public decimal? PagIbig { get; set; }
+                public decimal? PHIC { get; set; }
+                public decimal? Tax { get; set; }
+                public decimal? OtherDeductions { get; set; }
+                public decimal? LoanPayment { get; set; }
+                public decimal? UTTardy { get; set; }
+                public decimal TotalDeductions => SSS.GetValueOrDefault() + PagIbig.GetValueOrDefault() + PHIC.GetValueOrDefault() + OtherDeductions.GetValueOrDefault() + LoanPayment.GetValueOrDefault() + UTTardy.GetValueOrDefault();
+            }
 
             public class PayrollRecord
             {
@@ -98,6 +118,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public DateTime? DateOfBirth { get; set; }
                 public DateTime? DateResigned { get; set; }
                 public DateTime? DeletedOn { get; set; }
+                public Department Department { get; set; }
                 public int? DepartmentId { get; set; }
                 public string Email { get; set; }
                 public string EmployeeCode { get; set; }
@@ -124,6 +145,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public bool? ThirteenthMonthExempt { get; set; }
                 public string TIN { get; set; }
                 public string ZipCode { get; set; }
+            }
+
+            public class Department
+            {
+                public int Id { get; set; }
+                public string Name { get; set; }
             }
 
             public class PayrollProcessBatch
@@ -176,13 +203,33 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var payrollRecords = await _db.PayrollRecords
                     .Include(pr => pr.Employee)
+                    .Include(pr => pr.Employee.Department)
                     .Where(pr => pr.PayrollProcessBatchId == query.PayrollProcessBatchId)
                     .ProjectToListAsync<QueryResult.PayrollRecord>();
+
+                var payslipRecords = payrollRecords
+                    .Select(pr => new QueryResult.PayslipData
+                    {
+                        Employee = pr.Employee,
+                        BasicPay = pr.DaysWorkedValue.GetValueOrDefault() + pr.HoursWorkedValue.GetValueOrDefault(),
+                        Overtime = pr.OvertimeValue.GetValueOrDefault(),
+                        COLA = pr.COLADailyValue.GetValueOrDefault(),
+                        OtherEarnings = pr.EarningsValue.GetValueOrDefault(),
+                        SSS = pr.SSSValueEmployee.GetValueOrDefault(),
+                        PagIbig = pr.PagIbigValue.GetValueOrDefault(),
+                        PHIC = pr.PHICValueEmployee.GetValueOrDefault(),
+                        Tax = pr.TaxValue.GetValueOrDefault(),
+                        LoanPayment = pr.LoanPaymentValue.GetValueOrDefault(),
+                        OtherDeductions = pr.DeductionsValue.GetValueOrDefault(),
+                        UTTardy = pr.HoursUndertimeValue.GetValueOrDefault() + pr.HoursLateValue.GetValueOrDefault()
+                    })
+                    .OrderBy(psr => psr.Employee.LastName)
+                    .ThenBy(psr => psr.Employee.FirstName);
 
                 return new QueryResult
                 {
                     PayrollProcessBatchResult = Mapper.Map<QueryResult.PayrollProcessBatch>(payrollProcessBatch),
-                    PayrollRecords = payrollRecords
+                    PayslipRecords = payslipRecords
                 };
             }
         }
