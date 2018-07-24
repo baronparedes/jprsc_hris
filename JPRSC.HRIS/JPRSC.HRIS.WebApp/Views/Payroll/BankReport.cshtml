@@ -47,7 +47,7 @@
                             <tr>
                                 <td>@payrollRecord.Employee.ATMAccountNumber</td>
                                 <td>@payrollRecord.NetPay</td>
-                                <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, payrollRecord.Employee.MiddleName?.First())</td>
+                                <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, String.IsNullOrWhiteSpace(payrollRecord.Employee.MiddleName) ? payrollRecord.Employee.MiddleName.First().ToString() : null)</td>
                                 <td>&nbsp;</td>
                             </tr>
                         }
