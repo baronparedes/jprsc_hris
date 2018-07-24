@@ -57,6 +57,20 @@
                     </div>
                     <div class="portlet-body">
                         <div class="table-scrollable">
+                            @*<div class="btn-group open">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                    <i class="fa fa-ellipsis-horizontal"></i> Reports
+                                    <i class="fa fa-angle-down"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{'/Payroll/Report?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank" class="btn btn-primary btn-sm">Report View</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;"> Dropdown link </a>
+                                    </li>
+                                </ul>
+                            </div>*@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
@@ -79,7 +93,26 @@
                                             <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-show="!payrollProcessBatch.isEndProcessed">End Process not Finished</span>
                                         </td>
                                         <td>
-                                            <a href="{{'/Payroll/Report?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank" class="btn btn-primary btn-sm">Report View</a>
+                                            <div class="btn-group" style="position: absolute;">
+                                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                                    <i class="fa fa-ellipsis-horizontal"></i> Reports
+                                                    <i class="fa fa-angle-down"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="{{'/Payroll/PayrollReport?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank">Payroll</a>
+                                                    </li>
+                                                    <li ng-show="payrollProcessBatch.isEndProcessed">
+                                                        <a href="{{'/Payroll/BankReport?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank">Bank</a>
+                                                    </li>
+                                                    <li ng-show="payrollProcessBatch.isEndProcessed">
+                                                        <a href="{{'/Payroll/PayslipReport?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank">Payslip</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            @* This is necessary for the positioning of the button dropdown *@
+                                            <a href="" target="_blank" class="btn btn-primary btn-sm">Report</a>
                                         </td>
                                     </tr>
                                 </tbody>

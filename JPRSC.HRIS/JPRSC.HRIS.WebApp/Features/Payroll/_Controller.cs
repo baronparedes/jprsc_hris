@@ -18,6 +18,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         }
 
         [HttpGet]
+        public async Task<ActionResult> BankReport(BankReport.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> EndProcess(EndProcess.Query query)
         {
             var result = await _mediator.Send(query);
@@ -68,7 +76,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         }
 
         [HttpGet]
-        public async Task<ActionResult> Report(Report.Query query)
+        public async Task<ActionResult> PayrollReport(PayrollReport.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> PayslipReport(PayslipReport.Query query)
         {
             var result = await _mediator.Send(query);
 

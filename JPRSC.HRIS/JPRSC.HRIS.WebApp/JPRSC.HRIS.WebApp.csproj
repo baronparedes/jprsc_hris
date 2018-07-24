@@ -352,8 +352,10 @@
     <Compile Include="Features\PayPercentages\_MappingProfile.cs" />
     <Compile Include="Features\Payroll\EndProcess.cs" />
     <Compile Include="Features\Payroll\Index.cs" />
+    <Compile Include="Features\Payroll\BankReport.cs" />
+    <Compile Include="Features\Payroll\PayslipReport.cs" />
     <Compile Include="Features\Payroll\Process.cs" />
-    <Compile Include="Features\Payroll\Report.cs" />
+    <Compile Include="Features\Payroll\PayrollReport.cs" />
     <Compile Include="Features\Payroll\Search.cs" />
     <Compile Include="Features\Payroll\_Controller.cs" />
     <Compile Include="Features\Payroll\_MappingProfile.cs" />
@@ -6946,10 +6948,16 @@
     <Content Include="Views\Payroll\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Payroll\Report.cshtml" />
+    <Content Include="Views\Payroll\PayrollReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Payroll\EndProcess.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payroll\PayslipReport.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payroll\BankReport.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

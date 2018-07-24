@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Payroll
 {
-    public class Report
+    public class PayslipReport
     {
         public class Query : IRequest<QueryResult>
         {
