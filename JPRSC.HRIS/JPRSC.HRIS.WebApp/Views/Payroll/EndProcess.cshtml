@@ -41,9 +41,12 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <button type="button" class="btn btn-primary" ng-disabled="vm.searchInProgress" ng-click="vm.endProcessClicked()">End Process</button>
+                            <button type="button" class="btn btn-primary" ng-disabled="vm.searchInProgress || !vm.clients.length" ng-click="vm.endProcessClicked()">End Process</button>
                         </div>
                     </div>
+                </div>
+                <div class="note note-info" ng-show="!vm.clients.length">
+                    <p>No records pending end process found.</p>
                 </div>
                 @*<div class="note note-info" ng-show="!vm.payrollProcessBatches.length">
                     <p>No end process records found.</p>
