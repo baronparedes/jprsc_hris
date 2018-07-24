@@ -43,17 +43,17 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 When(c => c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue && c.PayrollPeriod.HasValue, () =>
                 {
                     RuleFor(c => c.ClientId)
-                        .MustAsync(NotHavePendingRecordsForEndProcess)
+                        .Must(NotHavePendingRecordsForEndProcess)
                         .WithMessage("There are pending records for end process for this client.");
                 });
             }
 
-            private async Task<bool> NotHavePendingRecordsForEndProcess(Command commnad, int? clientId, CancellationToken token)
+            private bool NotHavePendingRecordsForEndProcess(Command commnad, int? clientId)
             {
-                return await _db
+                return _db
                     .PayrollProcessBatches
-                    .AnyAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue &&
-                                     ppb.PayrollPeriodFrom == commnad.PayrollPeriodFrom && ppb.PayrollPeriodTo == commnad.PayrollPeriodTo && ppb.PayrollPeriod == commnad.PayrollPeriod);
+                    .Any(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue &&
+                                ppb.PayrollPeriodFrom == commnad.PayrollPeriodFrom && ppb.PayrollPeriodTo == commnad.PayrollPeriodTo && ppb.PayrollPeriod == commnad.PayrollPeriod);
             }
         }
 
