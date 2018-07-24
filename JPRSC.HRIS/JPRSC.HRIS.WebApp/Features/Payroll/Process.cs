@@ -137,6 +137,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     var employeeEds = earningDeductions.Where(ed => ed.EmployeeId == employee.Id);
                     var employeeLoans = loans.Where(l => l.EmployeeId == employee.Id);
 
+                    if (!employeeDtrs.Any()) continue;
+
                     var payrollRecord = new PayrollRecord
                     {
                         AddedOn = now,
