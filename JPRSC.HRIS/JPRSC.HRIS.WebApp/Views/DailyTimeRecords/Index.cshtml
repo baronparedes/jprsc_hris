@@ -126,7 +126,7 @@
                                 <div class="col-md-9 col-lg-10">
                                     <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
                                     <select class="form-control" ng-model="vm.employee" ng-options="employee.name for employee in vm.employees track by employee.id"></select>
-                                    <span ng-show="vm.validationErrors.employeeId" class="help-block"></span>
+                                    <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -136,6 +136,7 @@
                                            uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                            is-open="vm.payrollPeriodFromIsOpen" ng-click="vm.payrollPeriodFromIsOpen = true">
                                     <input type="hidden" name="PayrollPeriodFrom" value="{{vm.payrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                    <span ng-show="vm.validationErrors.payrollPeriodFrom" class="help-block">{{vm.validationErrors.payrollPeriodFrom.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -145,6 +146,7 @@
                                            uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                            is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
                                     <input type="hidden" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                    <span ng-show="vm.validationErrors.payrollPeriodTo" class="help-block">{{vm.validationErrors.payrollPeriodTo.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -153,28 +155,28 @@
                                         <label class="col-md-8 col-lg-9 control-label">No. of Days</label>
                                         <div class="col-md-4 col-lg-3">
                                             <input type="text" class="form-control" name="DaysWorked" ng-model="vm.daysWorked" />
-                                            <span ng-show="vm.validationErrors.daysWorked" class="help-block"></span>
+                                            <span ng-show="vm.validationErrors.daysWorked" class="help-block">{{vm.validationErrors.daysWorked.join(' ')}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursWorked }">
                                         <label class="col-md-8 col-lg-9 control-label">No. of Hours</label>
                                         <div class="col-md-4 col-lg-3">
                                             <input type="text" class="form-control" name="HoursWorked" ng-model="vm.hoursWorked" />
-                                            <span ng-show="vm.validationErrors.hoursWorked" class="help-block"></span>
+                                            <span ng-show="vm.validationErrors.hoursWorked" class="help-block">{{vm.validationErrors.hoursWorked.join(' ')}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursLate }">
                                         <label class="col-md-8 col-lg-9 control-label">Total Hours Late</label>
                                         <div class="col-md-4 col-lg-3">
                                             <input type="text" class="form-control" name="HoursLate" ng-model="vm.hoursLate" />
-                                            <span ng-show="vm.validationErrors.hoursLate" class="help-block"></span>
+                                            <span ng-show="vm.validationErrors.hoursLate" class="help-block">{{vm.validationErrors.hoursLate.join(' ')}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursUndertime }">
                                         <label class="col-md-8 col-lg-9 control-label">Total Hours Undertime</label>
                                         <div class="col-md-4 col-lg-3">
                                             <input type="text" class="form-control" name="HoursUnderTime" ng-model="vm.hoursUndertime" />
-                                            <span ng-show="vm.validationErrors.hoursUndertime" class="help-block"></span>
+                                            <span ng-show="vm.validationErrors.hoursUndertime" class="help-block">{{vm.validationErrors.hoursUndertime.join(' ')}}</span>
                                         </div>
                                     </div>
                                 </div>

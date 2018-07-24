@@ -131,7 +131,7 @@
                                 <label class="col-md-4 col-lg-3 control-label">Transaction Number</label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" name="TransactionNumber" ng-model="vm.transactionNumber" />
-                                    <span ng-show="vm.validationErrors.transactionNumber" class="help-block"></span>
+                                    <span ng-show="vm.validationErrors.transactionNumber" class="help-block">{{vm.validationErrors.transactionNumber.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
@@ -141,7 +141,7 @@
                                     <select class="form-control" ng-model="vm.employee" ng-options="employee.firstName for employee in vm.employees track by employee.id">
                                         <option value="?" selected="selected">Select employee</option>
                                     </select>
-                                    <span ng-show="vm.validationErrors.employeeId" class="help-block"></span>
+                                    <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanDate }">
@@ -151,7 +151,7 @@
                                            uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                            is-open="vm.loanDateIsOpen" ng-click="vm.loanDateIsOpen = true">
                                     <input type="hidden" name="LoanDate" value="{{vm.loanDate | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
-                                    <span class="help-block" ng-show="vm.validationErrors.loanDate"></span>
+                                    <span ng-show="vm.validationErrors.loanDate" class="help-block">{{vm.validationErrors.loanDate.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanTypeId }">
@@ -160,21 +160,21 @@
                                     <select class="form-control" name="LoanTypeId" ng-model="vm.loanTypeId" ng-options="loanType.text for loanType in vm.loanTypesList track by loanType.value">
                                         <option value="?" selected="selected">Select loan type</option>
                                     </select>
-                                    <span ng-show="vm.validationErrors.loanTypeId" class="help-block"></span>
+                                    <span ng-show="vm.validationErrors.loanTypeId" class="help-block">{{vm.validationErrors.loanTypeId.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.principalAmount }">
                                 <label class="col-md-4 col-lg-3 control-label">Principal Amount</label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" name="PrincipalAmount" ng-model="vm.principalAmount" />
-                                    <span ng-show="vm.validationErrors.principalAmount" class="help-block"></span>
+                                    <span ng-show="vm.validationErrors.principalAmount" class="help-block">{{vm.validationErrors.principalAmount.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.remainingBalance }">
                                 <label class="col-md-4 col-lg-3 control-label">Remaining Balance</label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" name="RemainingBalance" ng-model="vm.remainingBalance" />
-                                    <span ng-show="vm.validationErrors.remainingBalance" class="help-block"></span>
+                                    <span ng-show="vm.validationErrors.remainingBalance" class="help-block">{{vm.validationErrors.remainingBalance.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriod }">
@@ -183,21 +183,21 @@
                                     <select class="form-control" name="PayrollPeriod" ng-model="vm.payrollPeriod" ng-options="payrollPeriod for payrollPeriod in vm.payrollPeriods track by payrollPeriod">
                                         <option value="?" selected="selected">Select payroll period</option>
                                     </select>
-                                    <span ng-show="vm.validationErrors.payrollPeriod" class="help-block"></span>
+                                    <span ng-show="vm.validationErrors.payrollPeriod" class="help-block">{{vm.validationErrors.payrollPeriod.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.monthsPayable }">
                                 <label class="col-md-4 col-lg-3 control-label">Months Payable</label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" name="MonthsPayable" ng-model="vm.monthsPayable" />
-                                    <span ng-show="vm.validationErrors.monthsPayable" class="help-block"></span>
+                                    <span ng-show="vm.validationErrors.monthsPayable" class="help-block">{{vm.validationErrors.monthsPayable.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.interestRate }">
                                 <label class="col-md-4 col-lg-3 control-label">Interest Rate</label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" name="InterestRate" ng-model="vm.interestRate" />
-                                    <span ng-show="vm.validationErrors.interestRate" class="help-block"></span>
+                                    <span ng-show="vm.validationErrors.interestRate" class="help-block">{{vm.validationErrors.interestRate.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group">

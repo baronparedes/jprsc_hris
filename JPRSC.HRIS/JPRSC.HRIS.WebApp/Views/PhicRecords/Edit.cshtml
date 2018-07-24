@@ -37,7 +37,7 @@
                                     <label class="col-md-3 col-lg-2 control-label">Employee Percentage Share</label>
                                     <div class="col-md-9 col-lg-10">
                                         <input type="text" class="form-control" name="EmployeePercentageShare" ng-model="vm.phicRecord.employeePercentageShare" ng-model-options="{ debounce: 500 }">
-                                        <span ng-show="vm.validationErrors.employeePercentageShare" class="help-block"></span>
+                                        <span ng-show="vm.validationErrors.employeePercentageShare" class="help-block">{{vm.validationErrors.employeePercentageShare.join(' ')}}</span>
                                     </div>
                                 </div>
                                 <div class="form-group">
