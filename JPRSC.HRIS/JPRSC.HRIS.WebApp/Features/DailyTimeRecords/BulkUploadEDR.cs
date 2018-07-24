@@ -45,14 +45,14 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 When(c => c.ClientId.HasValue && c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue, () =>
                 {
                     RuleFor(c => c.ClientId)
-                        .MustAsync(NotHaveEndProcessedYet)
+                        .Must(NotHaveEndProcessedYet)
                         .WithMessage("End process for this payroll period has finished.");
                 });
             }
 
-            private async Task<bool> NotHaveEndProcessedYet(Command command, int? clientId, CancellationToken token)
+            private bool NotHaveEndProcessedYet(Command command, int? clientId)
             {
-                var endProcessRecord = await _db.PayrollProcessBatches.SingleOrDefaultAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && ppb.EndProcessedOn.HasValue && ppb.ClientId == clientId && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
+                var endProcessRecord = _db.PayrollProcessBatches.SingleOrDefault(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && ppb.EndProcessedOn.HasValue && ppb.ClientId == clientId && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
                 return endProcessRecord == null;
             }
         }
