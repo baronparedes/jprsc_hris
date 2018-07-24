@@ -232,7 +232,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var client = await _db
                     .Clients
-                    .SingleOrDefaultAsync(c => c.Id == payrollProcessBatch.Id && !c.DeletedOn.HasValue);
+                    .SingleOrDefaultAsync(c => c.Id == payrollProcessBatch.ClientId && !c.DeletedOn.HasValue);
 
                 client.CurrentPayrollPeriod = command.PayrollPeriod;
                 client.PayrollPeriodFrom = command.PayrollPeriodFrom;
