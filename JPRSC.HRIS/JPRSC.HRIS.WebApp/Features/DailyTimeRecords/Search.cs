@@ -33,15 +33,13 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
         public class QueryResult
         {
-            public IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
+            public IEnumerable<DailyTimeRecord> DailyTimeRecords { get; set; } = new List<DailyTimeRecord>();
 
             public class Employee
             {
                 public decimal? COLADaily { get; set; }
                 public decimal? COLAHourly { get; set; }
                 public decimal? DailyRate { get; set; }
-                public IEnumerable<DailyTimeRecord> DailyTimeRecords { get; set; } = new List<DailyTimeRecord>();
-                public DailyTimeRecord LatestDailyTimeRecord => DailyTimeRecords.OrderByDescending(dtr => dtr.AddedOn).FirstOrDefault();
                 public string EmployeeCode { get; set; }
                 public string FirstName { get; set; }
                 public decimal? HourlyRate { get; set; }
@@ -57,6 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public decimal? DailyRate { get; set; }
                 public double? DaysWorked { get; set; }
                 public decimal? DaysWorkedValue { get; set; }
+                public Employee Employee { get; set; }
                 public decimal? HourlyRate { get; set; }
                 public double? HoursLate { get; set; }
                 public decimal? HoursLateValue { get; set; }
@@ -84,26 +83,26 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 if (!query.ClientId.HasValue) return new QueryResult();
 
                 var dbQuery = _db
-                    .Employees
-                    .Include(e => e.DailyTimeRecords)
-                    .Where(e => !e.DeletedOn.HasValue && e.ClientId == query.ClientId);
+                    .DailyTimeRecords
+                    .Include(dtr => dtr.Employee)
+                    .Where(dtr => !dtr.DeletedOn.HasValue && !dtr.Employee.DeletedOn.HasValue && dtr.Employee.ClientId == query.ClientId);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(e => DbFunctions.Like(e.FirstName, query.SearchLikeTerm) ||
-                            DbFunctions.Like(e.LastName, query.SearchLikeTerm));
+                        .Where(dtr => DbFunctions.Like(dtr.Employee.FirstName, query.SearchLikeTerm) ||
+                            DbFunctions.Like(dtr.Employee.LastName, query.SearchLikeTerm));
                 }
 
-                var employees = await dbQuery
-                    .OrderBy(e => e.LastName)
-                    .ThenBy(e => e.FirstName)
+                var dailyTimeRecords = await dbQuery
+                    .OrderBy(e => e.Employee.LastName)
+                    .ThenBy(e => e.Employee.FirstName)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
-                    .ProjectToListAsync<QueryResult.Employee>();
+                    .ProjectToListAsync<QueryResult.DailyTimeRecord>();
 
                 return new QueryResult
                 {
-                    Employees = employees
+                    DailyTimeRecords = dailyTimeRecords
                 };
             }
         }

@@ -111,8 +111,13 @@
             vm.searchModel.clientId = vm.searchModel.client.id;
             vm.searchInProgress = true;
 
-            $http.get('/DailyTimeRecords/Search', { params: vm.searchModel }).then(function (response) {
+            $http.get('/Employees/GetByClientId', { params: vm.searchModel }).then(function (response) {
                 vm.employees = response.data.employees;
+                vm.searchInProgress = false;
+            });
+
+            $http.get('/DailyTimeRecords/Search', { params: vm.searchModel }).then(function (response) {
+                vm.dailyTimeRecords = response.data.dailyTimeRecords;
                 vm.searchInProgress = false;
             });
         };
