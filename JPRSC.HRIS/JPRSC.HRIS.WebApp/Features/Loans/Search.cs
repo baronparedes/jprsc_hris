@@ -82,19 +82,22 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
-                if (!query.ClientId.HasValue) return new QueryResult();
-
-                var clientEmployeeIds = await _db
-                    .Employees
-                    .Where(e => e.ClientId == query.ClientId.Value && !e.DeletedOn.HasValue)
-                    .Select(e => e.Id)
-                    .ToListAsync();
+                //var clientEmployeeIds = await _db
+                //    .Employees
+                //    .Where(e => e.ClientId == query.ClientId.Value && !e.DeletedOn.HasValue)
+                //    .Select(e => e.Id)
+                //    .ToListAsync();
 
                 var dbQuery = _db
                     .Loans
                     .Include(l => l.Employee)
                     .Include(l => l.LoanType)
-                    .Where(l => l.EmployeeId.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.DeletedOn.HasValue);
+                    .Where(l => l.EmployeeId.HasValue && !l.DeletedOn.HasValue);
+
+                if (query.ClientId.HasValue)
+                {
+                    dbQuery = dbQuery.Where(l => l.Employee.ClientId == query.ClientId);
+                }
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {

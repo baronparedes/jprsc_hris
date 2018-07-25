@@ -28,6 +28,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 public string FirstName { get; set; }
                 public int Id { get; set; }
                 public string LastName { get; set; }
+
+                public string Name => $"{LastName}, {FirstName}";
             }
         }
 
@@ -48,7 +50,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
                 var employees = await dbQuery
                     .Include(e => e.Company)
-                    .OrderBy(e => e.Id)
+                    .OrderBy(e => e.LastName)
+                    .ThenBy(e => e.FirstName)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.Employee>();
 

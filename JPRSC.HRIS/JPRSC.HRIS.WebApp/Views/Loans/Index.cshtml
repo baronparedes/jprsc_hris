@@ -21,18 +21,13 @@
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="LoanIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
-                <div class="note note-info" ng-show="!vm.searchModel.client.id">
-                    <p>Please select a client.</p>
-                </div>
                 <form role="form">
                     <div class="form-body">
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label">Client</label>
-                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id">
-                                        <option value="?" selected="selected">Select client</option>
-                                    </select>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.name for client in vm.clients track by client.id"></select>
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -43,7 +38,7 @@
                                             <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
                                             <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
                                         </span>
-                                        <input type="text" class="form-control" ng-disabled="!vm.searchModel.client.id" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +50,7 @@
                                             <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
                                             <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
                                         </span>
-                                        <input type="text" class="form-control" ng-disabled="!vm.searchModel.client.id" ng-model="vm.searchModel.loanEndDate"
+                                        <input type="text" class="form-control" ng-model="vm.searchModel.loanEndDate"
                                                uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                                is-open="vm.searchModel.loanEndDateIsOpen" ng-click="vm.searchModel.loanEndDateIsOpen = true">
                                     </div>
@@ -67,14 +62,14 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.client.id || vm.searchInProgress" ng-click="vm.addLoanClicked()">Add Loan</button>
+                            <button type="button" class="btn btn-primary" ng-disabled="vm.searchInProgress" ng-click="vm.addLoanClicked()">Add Loan</button>
                         </div>
                     </div>
                 </div>
-                <div class="note note-info" ng-show="vm.searchModel.client.id > 0 && !vm.loans.length">
+                <div class="note note-info" ng-show="!vm.loans.length">
                     <p>No loans found.</p>
                 </div>
-                <div class="portlet light bordered" ng-show="vm.searchModel.client.id > 0 && vm.loans.length">
+                <div class="portlet light bordered" ng-show="vm.loans.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-sun-o font-red-sunglo"></i>
@@ -127,6 +122,14 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Client</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
+                                    <select class="form-control" ng-model="vm.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
+                                    <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
+                                </div>
+                            </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.transactionNumber }">
                                 <label class="col-md-4 col-lg-3 control-label">Transaction Number</label>
                                 <div class="col-md-8 col-lg-9">
@@ -138,7 +141,7 @@
                                 <label class="col-md-4 col-lg-3 control-label">Employee <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
-                                    <select class="form-control" ng-model="vm.employee" ng-options="employee.firstName for employee in vm.employees track by employee.id">
+                                    <select class="form-control" ng-model="vm.employee" ng-options="employee.name for employee in vm.employees track by employee.id">
                                         <option value="?" selected="selected">Select employee</option>
                                     </select>
                                     <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>

@@ -19,6 +19,7 @@
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
+            vm.clients.splice(0, 0, { code: '-- Select a client --', name: '-- Select a client --'})
             vm.loanTypesList = vm.serverModel.loanTypesList;
             vm.nextTransactionNumber = vm.serverModel.nextTransactionNumber;
         });
@@ -35,6 +36,7 @@
                     params: function () {
                         return {
                             client: vm.searchModel.client,
+                            clients: vm.clients,
                             loanTypesList: vm.loanTypesList,
                             nextTransactionNumber: vm.nextTransactionNumber
                         }
@@ -54,13 +56,16 @@
         };
 
         function onSearchModelChange(newValue, oldValue) {
-            if (!vm.searchModel.client || vm.searchModel.client.id <= 0) return;
-
             searchClicked();
         };
 
         function searchClicked() {
-            vm.searchModel.clientId = vm.searchModel.client.id;
+            if (vm.searchModel.client && vm.searchModel.client.id > 0) {
+                vm.searchModel.clientId = vm.searchModel.client.id;
+            }
+            else {
+                vm.searchModel.clientId = undefined;
+            }
             vm.searchInProgress = true;
 
             $http.get('/Loans/Search', { params: vm.searchModel }).then(function (response) {
