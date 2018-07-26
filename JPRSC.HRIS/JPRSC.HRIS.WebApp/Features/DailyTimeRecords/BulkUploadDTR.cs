@@ -129,7 +129,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         {
                             FirstName = uploadItem.FirstName,
                             LastName = uploadItem.LastName,
-                            Reason = "Employee not found."
+                            Reason = $"Employee \"{uploadItem.EmployeeCode}\" not found."
                         });
 
                         continue;
