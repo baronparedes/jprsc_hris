@@ -56,40 +56,40 @@
                         @foreach (var payrollRecord in Model.PayrollRecords)
                         {
                             <tr>
-                                <td>@payrollRecord.EmployeeCode</td>
-                                <td style="text-align: left;">@payrollRecord.EmployeeName</td>
-                                <td>@payrollRecord.RegularPay</td>
-                                <td>@payrollRecord.OverTime</td>
-                                <td>@payrollRecord.UTTardy</td>
-                                <td>@payrollRecord.COLA</td>
-                                <td>@payrollRecord.Earnings</td>
-                                <td><strong>@payrollRecord.TotalEarnings</strong></td>
-                                <td>@payrollRecord.SSS</td>
-                                <td>@payrollRecord.PagIbig</td>
-                                <td>@payrollRecord.Deductions</td>
-                                <td>@payrollRecord.LoanPayments</td>
-                                <td>@payrollRecord.PHIC</td>
-                                <td><strong>@payrollRecord.TotalDeductions</strong></td>
-                                <td><strong>@payrollRecord.NetPay</strong></td>
+                                <td>@payrollRecord.Employee.EmployeeCode</td>
+                                <td style="text-align: left;">@String.Format("{0}, {1}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName)</td>
+                                <td>@String.Format("{0:n}", payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
+                                <td>@String.Format("{0:n}", payrollRecord.OvertimeValue.GetValueOrDefault())</td>
+                                <td>@String.Format("{0:n}", payrollRecord.HoursUndertimeValue.GetValueOrDefault() + payrollRecord.HoursLateValue.GetValueOrDefault())</td>
+                                <td>@String.Format("{0:n}", payrollRecord.COLADailyValue.GetValueOrDefault())</td>
+                                <td>@String.Format("{0:n}", payrollRecord.EarningsValue.GetValueOrDefault())</td>
+                                <td><strong>@String.Format("{0:n}", payrollRecord.TotalEarningsValue)</strong></td>
+                                <td>@String.Format("{0:n}", payrollRecord.SSSValueEmployee.GetValueOrDefault())</td>
+                                <td>@String.Format("{0:n}", payrollRecord.PagIbigValue.GetValueOrDefault())</td>
+                                <td>@String.Format("{0:n}", payrollRecord.DeductionsValue.GetValueOrDefault())</td>
+                                <td>@String.Format("{0:n}", payrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
+                                <td>@String.Format("{0:n}", payrollRecord.PHICValueEmployee.GetValueOrDefault())</td>
+                                <td><strong>@String.Format("{0:n}", payrollRecord.TotalDeductionsValue)</strong></td>
+                                <td><strong>@String.Format("{0:n}", payrollRecord.NetPayValue)</strong></td>
                             </tr>
                         }
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>Total:</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.DaysWorkedValue.GetValueOrDefault() + p.HoursWorkedValue.GetValueOrDefault()))</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.OvertimeValue.GetValueOrDefault()))</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault()))</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.COLADailyValue.GetValueOrDefault()))</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
-                                <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalEarningsValue))</strong></td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.SSSValueEmployee.GetValueOrDefault()))</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PagIbigValue.GetValueOrDefault()))</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.DeductionsValue.GetValueOrDefault()))</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.LoanPaymentValue.GetValueOrDefault()))</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
-                                <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalDeductionsValue))</strong></td>
-                                <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalEarningsValue - p.TotalDeductionsValue))</strong></td>
-                            </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>Total:</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.DaysWorkedValue.GetValueOrDefault() + p.HoursWorkedValue.GetValueOrDefault()))</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.OvertimeValue.GetValueOrDefault()))</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault()))</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.COLADailyValue.GetValueOrDefault()))</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
+                            <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalEarningsValue))</strong></td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.SSSValueEmployee.GetValueOrDefault()))</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PagIbigValue.GetValueOrDefault()))</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.DeductionsValue.GetValueOrDefault()))</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.LoanPaymentValue.GetValueOrDefault()))</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
+                            <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalDeductionsValue))</strong></td>
+                            <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.NetPayValue))</strong></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

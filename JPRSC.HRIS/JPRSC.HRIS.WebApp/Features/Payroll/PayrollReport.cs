@@ -59,28 +59,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public decimal? PHICValueEmployer { get; set; }
                 public decimal? PagIbigValue { get; set; }
                 public decimal? TaxValue { get; set; }
-
                 public decimal? LoanPaymentValue { get; set; }
-
-                public string EmployeeCode => $"{Employee.EmployeeCode}";
-                public string EmployeeName => $"{Employee.LastName}, {Employee.FirstName}";
-                public string TaxableIncome => String.Empty;
-                public string RegularPay => $"{DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault():n}";
-                public string OverTime => $"{OvertimeValue.GetValueOrDefault():n}";
-                public string UTTardy => $"({HoursUndertimeValue.GetValueOrDefault() + HoursLateValue.GetValueOrDefault():n})";
-                public string COLA => $"{COLADailyValue.GetValueOrDefault():n}";
-                public string Earnings => $"{EarningsValue.GetValueOrDefault():n}";
-                public string TotalEarnings => $"{TotalEarningsValue:n}";
-                public string SSS => $"{SSSValueEmployee.GetValueOrDefault():n}";
-                public string PagIbig => $"{PagIbigValue.GetValueOrDefault():n}";
-                public string Deductions => $"{DeductionsValue.GetValueOrDefault():n}";
-                public string LoanPayments => $"{LoanPaymentValue.GetValueOrDefault():n}";
-                public string PHIC => $"{PHICValueEmployee.GetValueOrDefault():n}";
-                public string TotalDeductions => $"{TotalDeductionsValue:n}";
-                public string NetPay => $"{TotalEarningsValue - TotalDeductionsValue:n}";
 
                 public decimal TotalEarningsValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
                 public decimal TotalDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
+                public decimal NetPayValue => TotalEarningsValue - TotalDeductionsValue;
             }
 
             public class Employee

@@ -109,7 +109,7 @@
                                 <td>@String.Format("P{0:n}", payslipRecord.TotalDeductions)</td>
                                 <td>
                                     <span style="float: left">NET PAY:</span>
-                                    <span style="float: right">@String.Format("P{0:n}", payslipRecord.TotalEarnings - payslipRecord.TotalDeductions)</span>
+                                    <span style="float: right">@String.Format("P{0:n}", payslipRecord.NetPay)</span>
                                 </td>
                             </tr>
                         </tbody>

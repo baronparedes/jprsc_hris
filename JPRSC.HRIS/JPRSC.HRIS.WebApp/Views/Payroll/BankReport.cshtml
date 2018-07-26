@@ -46,16 +46,16 @@
                         {
                             <tr>
                                 <td>@payrollRecord.Employee.ATMAccountNumber</td>
-                                <td>@payrollRecord.NetPay</td>
+                                <td>@String.Format("{0:n}", payrollRecord.NetPayValue)</td>
                                 <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, String.IsNullOrWhiteSpace(payrollRecord.Employee.MiddleName) ? payrollRecord.Employee.MiddleName.First().ToString() : null)</td>
                                 <td>&nbsp;</td>
                             </tr>
                         }
-                            <tr>
-                                <td>Total:</td>
-                                <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalEarningsValue - p.TotalDeductionsValue))</td>
-                                <td colspan="2">&nbsp;</td>
-                            </tr>
+                        <tr>
+                            <td>Total:</td>
+                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.NetPayValue))</td>
+                            <td colspan="2">&nbsp;</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
