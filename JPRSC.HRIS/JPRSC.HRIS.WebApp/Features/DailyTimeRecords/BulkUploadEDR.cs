@@ -94,7 +94,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     var lastName = String.IsNullOrWhiteSpace(line[1]) ? null : line[1].Trim();
                     var firstName = String.IsNullOrWhiteSpace(line[2]) ? null : line[2].Trim();
 
-                    var employee = allEmployeesOfClient.SingleOrDefault(e => !e.DeletedOn.HasValue && String.Equals(e.EmployeeCode.Trim(), employeeCode, StringComparison.CurrentCultureIgnoreCase));
+                    var employee = allEmployeesOfClient.SingleOrDefault(e => !e.DeletedOn.HasValue && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
                     if (employee == null)
                     {
                         unprocessedItems.Add(new CommandResult.UnprocessedItem
