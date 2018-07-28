@@ -7,15 +7,13 @@
         var vm = this;
         vm.addInProgress = false;
         vm.cancel = cancel;
-        vm.clients = params.clients;
-        vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.endProcessSubmit = endProcessSubmit;
+        vm.payrollProcessBatch = params.payrollProcessBatch;
         vm.validationErrors = {};
 
         $timeout(function () {
-            vm.client = vm.clients[0];
-            vm.client.nextPayrollPeriodFrom = Date.parse(vm.client.nextPayrollPeriodFrom);
-            vm.client.nextPayrollPeriodTo = Date.parse(vm.client.nextPayrollPeriodTo);
+            vm.payrollProcessBatch.client.nextPayrollPeriodFrom = Date.parse(vm.payrollProcessBatch.client.nextPayrollPeriodFrom);
+            vm.payrollProcessBatch.client.nextPayrollPeriodTo = Date.parse(vm.payrollProcessBatch.client.nextPayrollPeriodTo);
         });
 
         function endProcessSubmit() {

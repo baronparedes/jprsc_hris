@@ -30,10 +30,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
             public class PayrollProcessBatch
             {
-                public DateTime AddedOn { get; set; }
-                public DateTime? DeletedOn { get; set; }
                 public int Id { get; set; }
-                public DateTime? ModifiedOn { get; set; }
                 public Client Client { get; set; }
                 public int? ClientId { get; set; }
                 public DateTime? EndProcessedOn { get; set; }
@@ -47,10 +44,18 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             public class Client
             {
                 public string Code { get; set; }
+                public int? CurrentPayrollPeriod { get; set; }
                 public string Description { get; set; }
                 public int Id { get; set; }
-                public DateTime? ModifiedOn { get; set; }
+                public int? NumberOfPayrollPeriodsAMonth { get; set; }
+                public int? NumberOfWorkingDaysForThisPayrollPeriod { get; set; }
+                public DateTime? PayrollPeriodFrom { get; set; }
+                public DateTime? PayrollPeriodTo { get; set; }
                 public string Name { get; set; }
+
+                public int? NextPayrollPeriod => CurrentPayrollPeriod == NumberOfPayrollPeriodsAMonth ? 1 : CurrentPayrollPeriod += 1;
+                public DateTime? NextPayrollPeriodFrom => PayrollPeriodFrom.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value);
+                public DateTime? NextPayrollPeriodTo => PayrollPeriodTo.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value);
             }
         }
 

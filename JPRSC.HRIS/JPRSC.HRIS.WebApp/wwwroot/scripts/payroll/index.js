@@ -5,6 +5,7 @@
 
     function PayrollIndexCtrl($http, $scope, $timeout, $uibModal, globalSettings) {
         var vm = this;
+        vm.endProcessClicked = endProcessClicked;
         vm.payrollProcessBatches = [];
         vm.processClicked = processClicked;
         vm.searchClicked = searchClicked;
@@ -16,6 +17,31 @@
         });
 
         searchClicked();
+
+        function endProcessClicked(payrollProcessBatch) {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'endProcessModal.html',
+                controller: 'EndProcessModalCtrl',
+                controllerAs: 'vm',
+                size: 'lg',
+                resolve: {
+                    params: function () {
+                        return {
+                            payrollProcessBatch: payrollProcessBatch
+                        }
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (result) {
+                searchClicked();
+            }, function () {
+                searchClicked();
+            });
+        };
 
         function processClicked() {
             var modalInstance = $uibModal.open({
