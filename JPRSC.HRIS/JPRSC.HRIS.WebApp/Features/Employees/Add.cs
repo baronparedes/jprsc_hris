@@ -56,6 +56,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string Position { get; set; }
             public Department Department { get; set; }
             public int? DepartmentId { get; set; }
+            public string Region { get; set; }
             public string EmployeeStatus { get; set; }
             public string ResignStatus { get; set; }
             public bool? IsActive { get; set; } = true;
@@ -216,6 +217,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     PhilHealth = command.PhilHealth,
                     PhilHealthExempt = command.PhilHealthExempt,
                     Position = command.Position,
+                    Region = command.Region,
                     ReligionId = command.ReligionId,
                     ResignStatus = command.ResignStatus,
                     SalaryStatus = command.SalaryStatus,

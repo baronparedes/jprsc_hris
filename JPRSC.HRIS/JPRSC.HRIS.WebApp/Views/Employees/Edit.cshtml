@@ -87,6 +87,7 @@
                                         </div>
                                         @Html.TextBoxHorizontalFormGroup("Position")
                                         @Html.DropdownHorizontalFormGroup(Model.DepartmentsList, "DepartmentId", "Branch")
+                                        @Html.TextBoxHorizontalFormGroup("Region")
                                         @Html.TextBoxHorizontalFormGroup("EmployeeStatus")
                                         <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.resignStatus }">
                                             <label class="col-md-3 col-lg-2 control-label">Resign Status</label>

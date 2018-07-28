@@ -45,6 +45,7 @@ namespace JPRSC.HRIS.Models
         public string PhilHealth { get; set; }
         public bool? PhilHealthExempt { get; set; }
         public string Position { get; set; }
+        public string Region { get; set; }
         public Religion Religion { get; set; }
         public int? ReligionId { get; set; }
         public string ResignStatus { get; set; }
