@@ -12,6 +12,19 @@
 
         $timeout(function () {
             var employee = vm.serverModel;
+
+            if (employee.dateOfBirth) {
+                vm.dateOfBirth = new Date(employee.dateOfBirth);
+            }
+
+            if (employee.dateHired) {
+                vm.dateHired = new Date(employee.dateHired);
+            }
+
+            if (employee.dateResigned) {
+                vm.dateResigned = new Date(employee.dateResigned);
+            }
+
             vm.gender = { value: employee.gender };
             vm.citizenship = { value: employee.citizenship };
             vm.civilStatus = { value: employee.civilStatus };

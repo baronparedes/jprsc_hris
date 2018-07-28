@@ -27,7 +27,7 @@
                             <span class="caption-subject font-red-sunglo bold uppercase">Edit Company @Model.Name</span>
                         </div>
                     </div>
-                    <div class="portlet-body form" ng-controller="EditCompanyCtrl as vm">
+                    <div class="portlet-body form" ng-controller="EditCompanyCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.editCompanySubmit($event)">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(m => m.Id)

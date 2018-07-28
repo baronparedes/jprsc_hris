@@ -23,9 +23,14 @@
             vm.payrollCode = { value: client.payrollCode };
             vm.payrollPeriodMonth = { value: client.payrollPeriodMonth };
             vm.numberOfPayrollPeriodsAMonth = client.numberOfPayrollPeriodsAMonth;
-            console.log('client', client);
 
-            //setupPayrollPeriodsSelection();
+            if (client.payrollPeriodFrom) {
+                vm.payrollPeriodFrom = new Date(client.payrollPeriodFrom);
+            }
+
+            if (client.payrollPeriodTo) {
+                vm.payrollPeriodTo = new Date(client.payrollPeriodTo);
+            }
 
             vm.pagIbigPayrollPeriods = getPayrollPeriodsSelection(client.pagIbigPayrollPeriod);
             vm.phicPayrollPeriods = getPayrollPeriodsSelection(client.phicPayrollPeriod);

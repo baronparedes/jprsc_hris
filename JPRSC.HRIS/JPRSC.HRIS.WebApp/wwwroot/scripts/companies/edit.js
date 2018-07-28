@@ -1,13 +1,21 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('EditCompanyCtrl', ['$http', '$window', 'globalSettings', EditCompanyCtrl]);
+        .controller('EditCompanyCtrl', ['$http', '$timeout', '$window', 'globalSettings', EditCompanyCtrl]);
 
-    function EditCompanyCtrl($http, $window, globalSettings) {
+    function EditCompanyCtrl($http, $timeout, $window, globalSettings) {
         var vm = this;;
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.editCompanySubmit = editCompanySubmit;
         vm.validationErrors = {};
+
+        $timeout(function () {
+            var company = vm.serverModel;
+
+            if (company.dateIssued) {
+                vm.dateIssued = new Date(company.dateIssued);
+            }
+        });
 
         function editCompanySubmit(e) {
             var action = '/Companies/Edit';
