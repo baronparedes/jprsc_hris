@@ -5960,6 +5960,7 @@
     <Content Include="wwwroot\scripts\payPercentages\index.js" />
     <Content Include="wwwroot\scripts\payroll\endProcessModal.js" />
     <Content Include="wwwroot\scripts\payroll\addModal.js" />
+    <Content Include="wwwroot\scripts\payroll\endProcess.js" />
     <Content Include="wwwroot\scripts\payroll\index.js" />
     <Content Include="wwwroot\scripts\phicRecords\add.js" />
     <Content Include="wwwroot\scripts\phicRecords\edit.js" />
@@ -6949,6 +6950,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Payroll\PayrollReport.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Payroll\EndProcess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Payroll\PayslipReport.cshtml" />
