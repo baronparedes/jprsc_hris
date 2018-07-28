@@ -393,6 +393,7 @@
     <Compile Include="Infrastructure\Mapping\MappingConfig.cs" />
     <Compile Include="Infrastructure\Html\NotificationHelper.cs" />
     <Compile Include="Infrastructure\Mvc\EnumHtmlHelperExtensions.cs" />
+    <Compile Include="Infrastructure\Security\AuthorizeHelper.cs" />
     <Compile Include="Infrastructure\Security\AuthorizePermissionAttribute.cs" />
     <Compile Include="Infrastructure\Bundling\BundleConfig.cs" />
     <Compile Include="Infrastructure\Dependency\DependencyConfig.cs" />

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNet.Identity;
 using System;
@@ -188,7 +189,6 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 {
                     AccountType = command.AccountType,
                     AddedOn = DateTime.UtcNow,
-                    ATMAccountNumber = command.ATMAccountNumber,
                     CelNo = command.CelNo,
                     Citizenship = command.Citizenship,
                     CityAddress = command.CityAddress,
@@ -229,6 +229,11 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     TIN = command.TIN,
                     ZipCode = command.ZipCode
                 };
+
+                if (AuthorizeHelper.IsAuthorized(Permission.EmployeeEditATM))
+                {
+                    employee.ATMAccountNumber = command.ATMAccountNumber;
+                }
 
                 _db.Employees.Add(employee);
                 await _db.SaveChangesAsync();

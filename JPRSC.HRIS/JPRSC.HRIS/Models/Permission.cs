@@ -48,6 +48,7 @@ namespace JPRSC.HRIS.Models
         // Employees
         [Display(Name = "Employees")]
         EmployeeDefault = 1100,
+        EmployeeEditATM = 1101,
 
         // Approval Levels
         [Display(Name = "Approval Levels")]

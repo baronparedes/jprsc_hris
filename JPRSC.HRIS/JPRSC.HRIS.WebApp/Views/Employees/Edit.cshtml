@@ -111,7 +111,10 @@
                                         @Html.CheckboxHorizontalFormGroup("IsActive")
                                     </uib-tab>
                                     <uib-tab index="2" heading="Pay Info">
-                                        @Html.TextBoxHorizontalFormGroup("ATMAccountNumber")
+                                        @if (AuthorizeHelper.IsAuthorized(Permission.EmployeeEditATM))
+                                        {
+                                            @Html.TextBoxHorizontalFormGroup("ATMAccountNumber")
+                                        }
                                         @Html.DropdownHorizontalFormGroup("accountTypes", "AccountType")
                                         @Html.DropdownHorizontalFormGroup(Model.TaxStatusesList, "TaxStatusId", "Tax Status")
                                         @Html.TextBoxHorizontalFormGroup("HourlyRate")

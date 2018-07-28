@@ -2,6 +2,7 @@
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -195,7 +196,6 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 var employee = await _db.Employees.SingleAsync(r => r.Id == command.Id);
 
                 employee.AccountType = command.AccountType;
-                employee.ATMAccountNumber = command.ATMAccountNumber;
                 employee.CelNo = command.CelNo;
                 employee.Citizenship = command.Citizenship;
                 employee.CityAddress = command.CityAddress;
@@ -235,6 +235,11 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.ThirteenthMonthExempt = command.ThirteenthMonthExempt;
                 employee.TIN = command.TIN;
                 employee.ZipCode = command.ZipCode;
+
+                if (AuthorizeHelper.IsAuthorized(Permission.EmployeeEditATM))
+                {
+                    employee.ATMAccountNumber = command.ATMAccountNumber;
+                }
 
                 await _db.SaveChangesAsync();
 
