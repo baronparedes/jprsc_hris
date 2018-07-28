@@ -67,7 +67,7 @@
                                             <label class="col-md-3 col-lg-2 control-label">Date Hired</label>
                                             <div class="col-md-9 col-lg-10">
                                                 <input type="text" class="form-control" ng-model="vm.dateHired"
-                                                       uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                                       uib-datepicker-popup="MM/dd/yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                                        is-open="vm.dateHiredIsOpen" ng-click="vm.dateHiredIsOpen = true">
                                                 <input type="hidden" name="DateHired" value="{{vm.dateHired | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                                 <span class="help-block" ng-show="vm.validationErrors.dateHired"></span>
@@ -77,7 +77,7 @@
                                             <label class="col-md-3 col-lg-2 control-label">Date Resigned</label>
                                             <div class="col-md-9 col-lg-10">
                                                 <input type="text" class="form-control" ng-model="vm.dateResigned"
-                                                       uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                                       uib-datepicker-popup="MM/dd/yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                                        is-open="vm.dateResignedIsOpen" ng-click="vm.dateResignedIsOpen = true">
                                                 <input type="hidden" name="DateResigned" value="{{vm.dateResigned | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                                 <span class="help-block" ng-show="vm.validationErrors.dateResigned"></span>
