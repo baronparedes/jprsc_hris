@@ -7,6 +7,7 @@
         var vm = this;
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.editEmployeeSubmit = editEmployeeSubmit;
+        vm.editInProgress = false;
         vm.lookups = lookups;
         vm.validationErrors = {};
 
@@ -34,6 +35,8 @@
         });
 
         function editEmployeeSubmit(e) {
+            vm.editInProgress = true;
+
             var action = '/Employees/Edit';
             var data = $(angular.element(e.target)[0]).serialize();
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
@@ -44,6 +47,8 @@
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
                 }
+
+                vm.editInProgress = false;
             });
         };
     };

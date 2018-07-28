@@ -6,6 +6,7 @@
     function AddEmployeeCtrl($http, $timeout, $window, globalSettings, lookups) {
         var vm = this;
         vm.addEmployeeSubmit = addEmployeeSubmit;
+        vm.addInProgress = false;
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.lookups = lookups;
         vm.validationErrors = {};
@@ -15,6 +16,8 @@
         });
 
         function addEmployeeSubmit(e) {
+            vm.addInProgress = true;
+
             var action = '/Employees/Add';
             var data = $(angular.element(e.target)[0]).serialize();
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
@@ -25,6 +28,8 @@
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
                 }
+
+                vm.addInProgress = false;
             });
         };
     };

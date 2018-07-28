@@ -142,7 +142,8 @@
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "Employees")" class="btn default">Cancel</a>
-                                <button type="submit" class="btn green">Save</button>
+                                <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.endProcessInProgress"></i>
+                                <button type="submit" class="btn green" ng-disabled="vm.editInProgress">Save</button>
                             </div>
                         </form>
                     </div>
