@@ -265,6 +265,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807280143380_AddEmployeeRegion.Designer.cs">
       <DependentUpon>201807280143380_AddEmployeeRegion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807281245186_AddOvertimePayPercentageRelation.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807281245186_AddOvertimePayPercentageRelation.Designer.cs">
+      <DependentUpon>201807281245186_AddOvertimePayPercentageRelation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -457,6 +461,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807280143380_AddEmployeeRegion.resx">
       <DependentUpon>201807280143380_AddEmployeeRegion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807281245186_AddOvertimePayPercentageRelation.resx">
+      <DependentUpon>201807281245186_AddOvertimePayPercentageRelation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

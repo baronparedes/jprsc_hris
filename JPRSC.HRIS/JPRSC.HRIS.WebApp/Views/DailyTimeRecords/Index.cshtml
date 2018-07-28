@@ -246,6 +246,7 @@
                                                         <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'To')}}" value="{{overtime.to | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                                     </td>
                                                     <td style="min-width: 140px;">
+                                                        <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'PayPercentageId')}}" value="{{overtime.payRate.id}}" />
                                                         <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'PayPercentageName')}}" value="{{overtime.payRate.name}}" />
                                                         <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'PayPercentagePercentage')}}" value="{{overtime.payRate.percentage}}" />
                                                         <select class="form-control" ng-model="overtime.payRate" ng-options="payRate.name for payRate in vm.payRates track by payRate.name" ng-change="vm.otRateChanged(overtime)">

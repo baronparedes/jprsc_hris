@@ -13,6 +13,8 @@ namespace JPRSC.HRIS.Models
         public DateTime? ModifiedOn { get; set; }
         public double? NumberOfHours { get; set; }
         public decimal? NumberOfHoursValue { get; set; }
+        public PayPercentage PayPercentage { get; set; }
+        public int? PayPercentageId { get; set; }
         public string PayPercentageName { get; set; }
         public double? PayPercentagePercentage { get; set; }
         public DateTime? PayrollPeriodFrom { get; set; }

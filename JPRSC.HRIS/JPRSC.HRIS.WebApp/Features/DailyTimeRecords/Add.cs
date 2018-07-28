@@ -33,6 +33,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public DateTime? From { get; set; }
                 public double? NumberOfHours { get; set; }
                 public decimal? NumberOfHoursValue { get; set; }
+                public int? PayPercentageId { get; set; }
                 public string PayPercentageName { get; set; }
                 public double? PayPercentagePercentage { get; set; }
                 public string Reference { get; set; }
@@ -95,56 +96,109 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var now = DateTime.UtcNow;
                 var employee = await _db.Employees.SingleOrDefaultAsync(e => e.Id == command.EmployeeId);
 
-                var dailyTimeRecord = new DailyTimeRecord
+                var existingDailyTimeRecord = _db.DailyTimeRecords.SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo);
+                if (existingDailyTimeRecord != null)
                 {
-                    AddedOn = now,
-                    COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily),
-                    DailyRate = employee.DailyRate,
-                    DaysWorked = command.DaysWorked,
-                    DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate),
-                    EmployeeId = command.EmployeeId,
-                    HourlyRate = employee.HourlyRate,
-                    HoursLate = command.HoursLate,
-                    HoursLateValue = GetValue(command.HoursLate, employee.HourlyRate),
-                    HoursUndertime = command.HoursUndertime,
-                    HoursUndertimeValue = GetValue(command.HoursUndertime, employee.HourlyRate),
-                    HoursWorked = command.HoursWorked,
-                    HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate),
-                    PayrollPeriodFrom = command.PayrollPeriodFrom,
-                    PayrollPeriodTo = command.PayrollPeriodTo
-                };
-                _db.DailyTimeRecords.Add(dailyTimeRecord);
+                    existingDailyTimeRecord.COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily);
+                    existingDailyTimeRecord.DailyRate = employee.DailyRate;
+                    existingDailyTimeRecord.DaysWorked = command.DaysWorked;
+                    existingDailyTimeRecord.DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate);
+                    existingDailyTimeRecord.EmployeeId = command.EmployeeId;
+                    existingDailyTimeRecord.HourlyRate = employee.HourlyRate;
+                    existingDailyTimeRecord.HoursLate = command.HoursLate;
+                    existingDailyTimeRecord.HoursLateValue = GetValue(command.HoursLate, employee.HourlyRate);
+                    existingDailyTimeRecord.HoursUndertime = command.HoursUndertime;
+                    existingDailyTimeRecord.HoursUndertimeValue = GetValue(command.HoursUndertime, employee.HourlyRate);
+                    existingDailyTimeRecord.HoursWorked = command.HoursWorked;
+                    existingDailyTimeRecord.HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate);
+                }
+                else
+                {
+                    var dailyTimeRecord = new DailyTimeRecord
+                    {
+                        AddedOn = now,
+                        COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily),
+                        DailyRate = employee.DailyRate,
+                        DaysWorked = command.DaysWorked,
+                        DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate),
+                        EmployeeId = command.EmployeeId,
+                        HourlyRate = employee.HourlyRate,
+                        HoursLate = command.HoursLate,
+                        HoursLateValue = GetValue(command.HoursLate, employee.HourlyRate),
+                        HoursUndertime = command.HoursUndertime,
+                        HoursUndertimeValue = GetValue(command.HoursUndertime, employee.HourlyRate),
+                        HoursWorked = command.HoursWorked,
+                        HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate),
+                        PayrollPeriodFrom = command.PayrollPeriodFrom,
+                        PayrollPeriodTo = command.PayrollPeriodTo
+                    };
+                    _db.DailyTimeRecords.Add(dailyTimeRecord);
+                }
 
-                var overtimes = command
+                var existingOvertimes = await _db
                     .Overtimes
-                    .Select(o => new Overtime
-                    {
-                        AddedOn = now,
-                        EmployeeId = command.EmployeeId,
-                        From = o.From,
-                        NumberOfHours = o.NumberOfHours,
-                        NumberOfHoursValue = o.NumberOfHoursValue,
-                        PayPercentageName = o.PayPercentageName,
-                        PayPercentagePercentage = o.PayPercentagePercentage,
-                        PayrollPeriodFrom = command.PayrollPeriodFrom,
-                        PayrollPeriodTo = command.PayrollPeriodTo,
-                        Reference = o.Reference,
-                        To = o.To
-                    });
-                _db.Overtimes.AddRange(overtimes);
+                    .Where(o => !o.DeletedOn.HasValue && o.EmployeeId == command.EmployeeId && o.PayrollPeriodFrom == command.PayrollPeriodFrom && o.PayrollPeriodTo == command.PayrollPeriodTo)
+                    .ToListAsync();
 
-                var earningDeductionRecords = command
-                    .EarningDeductionRecords
-                    .Select(edr => new EarningDeductionRecord
+                foreach (var overtimeUpload in command.Overtimes)
+                {
+                    var existingOvertime = existingOvertimes.SingleOrDefault(o => o.PayPercentageId == o.PayPercentageId);
+
+                    if (existingOvertime != null)
                     {
-                        AddedOn = now,
-                        Amount = edr.Amount,
-                        EarningDeductionId = edr.EarningDeductionId,
-                        EmployeeId = command.EmployeeId,
-                        PayrollPeriodFrom = command.PayrollPeriodFrom,
-                        PayrollPeriodTo = command.PayrollPeriodTo,
-                    });
-                _db.EarningDeductionRecords.AddRange(earningDeductionRecords);
+                        existingOvertime.ModifiedOn = now;
+                        existingOvertime.PayPercentageName = overtimeUpload.PayPercentageName;
+                        existingOvertime.PayPercentagePercentage = overtimeUpload.PayPercentagePercentage;
+                    }
+                    else
+                    {
+                        var overtime = new Overtime
+                        {
+                            AddedOn = now,
+                            EmployeeId = command.EmployeeId,
+                            From = overtimeUpload.From,
+                            NumberOfHours = overtimeUpload.NumberOfHours,
+                            NumberOfHoursValue = overtimeUpload.NumberOfHoursValue,
+                            PayPercentageName = overtimeUpload.PayPercentageName,
+                            PayPercentagePercentage = overtimeUpload.PayPercentagePercentage,
+                            PayrollPeriodFrom = command.PayrollPeriodFrom,
+                            PayrollPeriodTo = command.PayrollPeriodTo,
+                            Reference = overtimeUpload.Reference,
+                            To = overtimeUpload.To
+                        };
+                        _db.Overtimes.Add(overtime);
+                    }
+                }
+
+                var existingEarningDeductionRecords = await _db
+                    .EarningDeductionRecords
+                    .Where(edr => !edr.DeletedOn.HasValue && edr.EmployeeId == command.EmployeeId && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo)
+                    .ToListAsync();
+
+                foreach (var earningDeductionRecordUpload in command.EarningDeductionRecords)
+                {
+                    var existingEarningDeductionRecord = existingEarningDeductionRecords
+                        .SingleOrDefault(edr => edr.EarningDeductionId == earningDeductionRecordUpload.EarningDeductionId);
+
+                    if (existingEarningDeductionRecord != null)
+                    {
+                        existingEarningDeductionRecord.Amount = earningDeductionRecordUpload.Amount;
+                        existingEarningDeductionRecord.ModifiedOn = now;
+                    }
+                    else
+                    {
+                        var earningDeductionRecord = new EarningDeductionRecord
+                        {
+                            AddedOn = now,
+                            Amount = earningDeductionRecordUpload.Amount,
+                            EarningDeductionId = earningDeductionRecordUpload.EarningDeductionId,
+                            EmployeeId = command.EmployeeId,
+                            PayrollPeriodFrom = command.PayrollPeriodFrom,
+                            PayrollPeriodTo = command.PayrollPeriodTo,
+                        };
+                        _db.EarningDeductionRecords.Add(earningDeductionRecord);
+                    }
+                }
 
                 await _db.SaveChangesAsync();
 
