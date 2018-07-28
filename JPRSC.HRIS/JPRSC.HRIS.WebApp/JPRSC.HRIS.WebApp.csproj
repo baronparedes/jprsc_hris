@@ -350,6 +350,7 @@
     <Compile Include="Features\PayPercentages\Search.cs" />
     <Compile Include="Features\PayPercentages\_Controller.cs" />
     <Compile Include="Features\PayPercentages\_MappingProfile.cs" />
+    <Compile Include="Features\Payroll\Delete.cs" />
     <Compile Include="Features\Payroll\EndProcess.cs" />
     <Compile Include="Features\Payroll\Index.cs" />
     <Compile Include="Features\Payroll\BankReport.cs" />

@@ -89,8 +89,8 @@
                                         <td>{{payrollProcessBatch.payrollPeriodFrom | date: 'mediumDate'}}</td>
                                         <td>{{payrollProcessBatch.payrollPeriodTo | date: 'mediumDate'}}</td>
                                         <td>
-                                            <span class="badge bg-green-jungle bg-font-green-jungle badge-roundless" ng-show="payrollProcessBatch.isEndProcessed">End Process Finished</span>
-                                            <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-show="!payrollProcessBatch.isEndProcessed">End Process not Finished</span>
+                                            <span class="badge bg-green-jungle bg-font-green-jungle badge-roundless" ng-if="payrollProcessBatch.isEndProcessed">End Process Finished</span>
+                                            <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-if="!payrollProcessBatch.isEndProcessed">End Process not Finished</span>
                                         </td>
                                         <td>
                                             <div class="btn-group" style="position: absolute;">
@@ -112,7 +112,13 @@
                                             </div>
 
                                             @* This is necessary for the positioning of the button dropdown *@
-                                            <a href="" target="_blank" class="btn btn-primary btn-sm">Report</a>
+                                            <a href="" target="_blank" class="btn btn-primary btn-sm" style="margin-right: 25px;">Report</a>
+
+                                            <form action="/Payroll/Delete" method="post" style="display: inline-block;" ng-if="!payrollProcessBatch.isEndProcessed">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="PayrollProcessBatchId" value="{{payrollProcessBatch.id}}" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 </tbody>

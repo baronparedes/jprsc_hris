@@ -1,4 +1,5 @@
 ﻿using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.Html;
 using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
@@ -23,6 +24,17 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             var result = await _mediator.Send(query);
 
             return View(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(Delete.Command command)
+        {
+            var commandResult = await _mediator.Send(command);
+
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted payroll record.");
+
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
