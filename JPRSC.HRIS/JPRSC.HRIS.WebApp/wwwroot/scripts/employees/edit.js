@@ -29,6 +29,8 @@
             vm.citizenship = { value: employee.citizenship };
             vm.civilStatus = { value: employee.civilStatus };
             vm.accountType = { value: employee.accountType };
+
+            vm.datepickerOptions.maxMode = 'year';
         });
 
         function editEmployeeSubmit(e) {

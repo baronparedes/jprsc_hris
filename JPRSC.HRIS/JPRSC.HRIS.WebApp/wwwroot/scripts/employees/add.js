@@ -1,14 +1,18 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('AddEmployeeCtrl', ['$http', '$window', 'globalSettings', 'lookups', AddEmployeeCtrl]);
+        .controller('AddEmployeeCtrl', ['$http', '$timeout', '$window', 'globalSettings', 'lookups', AddEmployeeCtrl]);
 
-    function AddEmployeeCtrl($http, $window, globalSettings, lookups) {
+    function AddEmployeeCtrl($http, $timeout, $window, globalSettings, lookups) {
         var vm = this;
         vm.addEmployeeSubmit = addEmployeeSubmit;
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.lookups = lookups;
         vm.validationErrors = {};
+
+        $timeout(function () {  
+            vm.datepickerOptions.maxMode = 'year';
+        });
 
         function addEmployeeSubmit(e) {
             var action = '/Employees/Add';

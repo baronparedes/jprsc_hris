@@ -38,12 +38,12 @@
                                         @Html.TextBoxHorizontalFormGroup("LastName")
                                         @Html.TextBoxHorizontalFormGroup("Nickname")
                                         @Html.TextBoxHorizontalFormGroup("Email")
-                                        @Html.TextBoxHorizontalFormGroup("CityAddress")
+                                        @Html.TextBoxHorizontalFormGroup("CityAddress", "Present Address")
                                         <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.dateOfBirth }">
                                             <label class="col-md-3 col-lg-2 control-label">Date of Birth</label>
                                             <div class="col-md-9 col-lg-10">
                                                 <input type="text" class="form-control" ng-model="vm.dateOfBirth"
-                                                       uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                                       uib-datepicker-popup="MM/dd/yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                                        is-open="vm.dateOfBirthIsOpen" ng-click="vm.dateOfBirthIsOpen = true">
                                                 <input type="hidden" name="DateOfBirth" value="{{vm.dateOfBirth | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                                 <span class="help-block" ng-show="vm.validationErrors.dateOfBirth"></span>
@@ -84,7 +84,7 @@
                                             </div>
                                         </div>
                                         @Html.TextBoxHorizontalFormGroup("Position")
-                                        @Html.DropdownHorizontalFormGroup(Model.DepartmentsList, "DepartmentId", "Department")
+                                        @Html.DropdownHorizontalFormGroup(Model.DepartmentsList, "DepartmentId", "Branch")
                                         @Html.TextBoxHorizontalFormGroup("EmployeeStatus")
                                         <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.resignStatus }">
                                             <label class="col-md-3 col-lg-2 control-label">Resign Status</label>
