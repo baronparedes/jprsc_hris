@@ -22,22 +22,22 @@
         <div class="row" ng-controller="PayrollIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
                 @*<div class="note note-info" ng-show="!vm.searchModel.client.value || !vm.searchModel.client.value.length">
-                <p>Please select a client.</p>
-            </div>
-            <form role="form">
-                <div class="form-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label">Client</label>
-                                <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id">
-                                    <option value="?" selected="selected">Select client</option>
-                                </select>
+                    <p>Please select a client.</p>
+                </div>
+                <form role="form">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id">
+                                        <option value="?" selected="selected">Select client</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>*@
+                </form>*@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
@@ -58,19 +58,19 @@
                     <div class="portlet-body">
                         <div class="table-scrollable">
                             @*<div class="btn-group open">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                                <i class="fa fa-ellipsis-horizontal"></i> Reports
-                                <i class="fa fa-angle-down"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{{'/Payroll/Report?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank" class="btn btn-primary btn-sm">Report View</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;"> Dropdown link </a>
-                                </li>
-                            </ul>
-                        </div>*@
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                    <i class="fa fa-ellipsis-horizontal"></i> Reports
+                                    <i class="fa fa-angle-down"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{'/Payroll/Report?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank" class="btn btn-primary btn-sm">Report View</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;"> Dropdown link </a>
+                                    </li>
+                                </ul>
+                            </div>*@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
@@ -91,7 +91,6 @@
                                         <td>
                                             <span class="badge bg-green-jungle bg-font-green-jungle badge-roundless" ng-show="payrollProcessBatch.isEndProcessed">End Process Finished</span>
                                             <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-show="!payrollProcessBatch.isEndProcessed">End Process not Finished</span>
-                                            <a href="" class="btn btn-primary btn-sm" ng-show="!payrollProcessBatch.isEndProcessed" ng-click="vm.endProcessClicked(payrollProcessBatch)">End Process</a>
                                         </td>
                                         <td>
                                             <div class="btn-group" style="position: absolute;">
@@ -171,82 +170,6 @@
                         <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.processInProgress"></i>
                         <button type="button" class="btn green" ng-click="vm.processSubmit()" ng-disabled="vm.processInProgress">Process</button>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.processInProgress">Exit</a>
-                    </div>
-                </form>
-            </script>
-
-            <script type="text/ng-template" id="endProcessModal.html">
-                <form class="form-horizontal" role="form" method="post" id="endProcessForm">
-                    <div class="modal-header">
-                        <h3 class="modal-title">End Process Payroll</h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-body">
-                            <input type="hidden" name="PayrollProcessBatchId" value="{{vm.payrollProcessBatch.id}}" />
-                            <input type="hidden" name="ClientId" value="{{vm.payrollProcessBatch.client.id}}" />
-                            @*<div class="form-group">
-                                <label class="col-md-4 col-lg-3 control-label">Client</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
-                                    <select class="form-control" ng-model="vm.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
-                                    <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
-                                </div>
-                            </div>*@
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-md-7 col-lg-6 control-label">Payroll Period</label>
-                                        <div class="col-md-5 col-lg-6">
-                                            <p class="form-control-static">{{vm.payrollProcessBatch.client.currentPayrollPeriod}}</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-7 col-lg-6 control-label">Payroll Period From</label>
-                                        <div class="col-md-5 col-lg-6">
-                                            <p class="form-control-static">{{vm.payrollProcessBatch.client.payrollPeriodFrom | date: 'mediumDate'}}</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-7 col-lg-6 control-label">Payroll Period To</label>
-                                        <div class="col-md-5 col-lg-6">
-                                            <p class="form-control-static">{{vm.payrollProcessBatch.client.payrollPeriodTo | date: 'mediumDate'}}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-md-7 col-lg-6 control-label">Next Payroll Period</label>
-                                        <div class="col-md-5 col-lg-6">
-                                            <input type="text" class="form-control" name="PayrollPeriod" ng-model="vm.payrollProcessBatch.client.nextPayrollPeriod" />
-                                            <span ng-show="vm.validationErrors.payrollPeriod" class="help-block">{{vm.validationErrors.payrollPeriod.join(' ')}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-7 col-lg-6 control-label">Next Payroll Period From</label>
-                                        <div class="col-md-5 col-lg-6">
-                                            <input type="text" class="form-control" ng-model="vm.payrollProcessBatch.client.nextPayrollPeriodFrom"
-                                                   uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
-                                                   is-open="vm.nextPayrollPeriodFromIsOpen" ng-click="vm.nextPayrollPeriodFromIsOpen = true">
-                                            <input type="hidden" name="PayrollPeriodFrom" value="{{vm.payrollProcessBatch.client.nextPayrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-7 col-lg-6 control-label">Next Payroll Period To</label>
-                                        <div class="col-md-5 col-lg-6">
-                                            <input type="text" class="form-control" ng-model="vm.payrollProcessBatch.client.nextPayrollPeriodTo"
-                                                   uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
-                                                   is-open="vm.nextPayrollPeriodToIsOpen" ng-click="vm.nextPayrollPeriodToIsOpen = true">
-                                            <input type="hidden" name="PayrollPeriodTo" value="{{vm.payrollProcessBatch.client.nextPayrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.endProcessInProgress"></i>
-                        <button type="button" class="btn green" ng-click="vm.endProcessSubmit()" ng-disabled="vm.endProcessInProgress">End Process</button>
-                        <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.endProcessInProgress">Exit</a>
                     </div>
                 </form>
             </script>
