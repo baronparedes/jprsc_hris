@@ -16,7 +16,6 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
         public class Query : IRequest<QueryResult>
         {
             public string SearchTerm { get; set; }
-            public DateTime? LoanEndDate { get; set; }
             public int? ClientId { get; set; }
 
             public string SearchLikeTerm
@@ -44,6 +43,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 public decimal? HourlyRate { get; set; }
                 public int Id { get; set; }
                 public string LastName { get; set; }
+                public string MiddleName { get; set; }
             }
 
             public class Loan
@@ -52,11 +52,9 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 public Employee Employee { get; set; }
                 public int? EmployeeId { get; set; }
                 public int Id { get; set; }
-                public double? InterestRate { get; set; }
                 public DateTime? LoanDate { get; set; }
                 public LoanType LoanType { get; set; }
                 public int? LoanTypeId { get; set; }
-                public int? MonthsPayable { get; set; }
                 public int? PayrollPeriod { get; set; }
                 public decimal? PrincipalAmount { get; set; }
                 public string TransactionNumber { get; set; }
@@ -82,12 +80,6 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
-                //var clientEmployeeIds = await _db
-                //    .Employees
-                //    .Where(e => e.ClientId == query.ClientId.Value && !e.DeletedOn.HasValue)
-                //    .Select(e => e.Id)
-                //    .ToListAsync();
-
                 var dbQuery = _db
                     .Loans
                     .Include(l => l.Employee)
@@ -110,15 +102,6 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                     .OrderBy(l => l.Id)
                     .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.Loan>();
-
-                if (query.LoanEndDate.HasValue)
-                {
-                    var phTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
-
-                    loans = loans
-                        .Where(l => l.LoanDate.HasValue && l.MonthsPayable.HasValue && TimeZoneInfo.ConvertTimeFromUtc(l.LoanDate.Value, phTimeZoneInfo).AddMonths(l.MonthsPayable.Value).Date == query.LoanEndDate.Value.Date)
-                        .ToList();
-                }
 
                 return new QueryResult
                 {

@@ -10,8 +10,8 @@
         vm.clientChanged = clientChanged;
         vm.clients = params.clients;
         vm.currencySymbol = 'P';
-        vm.getInterestAmount = getInterestAmount;
-        vm.payrollPeriods = [];
+        vm.getPayrollPeriodInput = getPayrollPeriodInput;
+        vm.loanPayrollPeriods = [];
         vm.loanTypesList = params.loanTypesList;
         vm.lookups = lookups;
         vm.transactionNumber = params.nextTransactionNumber;
@@ -19,13 +19,10 @@
 
         init();
 
-        $scope.$watch('vm.remainingBalance', updateDeductionAmount);
-        $scope.$watch('vm.interestRate', updateDeductionAmount);
-        $scope.$watch('vm.monthsPayable', updateDeductionAmount);
-
         $timeout(function () {
-            if (vm.client && vm.client.id > 0) {
+            if (params.client && params.client.id > 0) {
                 vm.client = params.client;
+                clientChanged();
             }
         });
 
@@ -52,10 +49,19 @@
             populatePayrollPeriods();
         };
 
-        function getInterestAmount() {
-            if (!vm.remainingBalance || vm.remainingBalance <= 0 || !vm.interestRate || vm.interestRate <= 0) return 0;
+        function getPayrollPeriodInput(payrollPeriods) {
+            if (!payrollPeriods || !payrollPeriods.length) return;
 
-            return vm.remainingBalance * (vm.interestRate / 100)
+            var selectedPayrollPeriods = [];
+
+            for (var i = 0; i < payrollPeriods.length; i++) {
+                var item = payrollPeriods[i];
+                if (item.selected === true) {
+                    selectedPayrollPeriods.push(item.payrollPeriod.toString());
+                }
+            }
+
+            return selectedPayrollPeriods.join(',');
         };
 
         function init() {
@@ -83,21 +89,11 @@
 
             if (vm.client && vm.client.id > 0) {
                 for (var i = 0; i < vm.client.numberOfPayrollPeriodsAMonth; i++) {
-                    payrollPeriods.push(i + 1);
+                    payrollPeriods.push({ payrollPeriod: i + 1, selected: false });
                 }
             }
-            else {
-                payrollPeriods.push('-- Select a client --');
-                vm.payrollPeriod = '-- Select a client --';
-            }
 
-            vm.payrollPeriods = payrollPeriods;
-        };
-
-        function updateDeductionAmount() {
-            if (vm.getInterestAmount() == 0 || !vm.monthsPayable || vm.monthsPayable <= 0) return 0;
-
-            vm.deductionAmount = Math.round(vm.getInterestAmount() / vm.monthsPayable * 100) / 100;
+            vm.loanPayrollPeriods = angular.copy(payrollPeriods);
         };
     };
 }());

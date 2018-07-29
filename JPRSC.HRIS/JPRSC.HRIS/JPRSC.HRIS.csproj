@@ -269,6 +269,22 @@
     <Compile Include="Infrastructure\Data\Migrations\201807281245186_AddOvertimePayPercentageRelation.Designer.cs">
       <DependentUpon>201807281245186_AddOvertimePayPercentageRelation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807290515008_RemoveLoanInterestRateMonthsPayable.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807290515008_RemoveLoanInterestRateMonthsPayable.Designer.cs">
+      <DependentUpon>201807290515008_RemoveLoanInterestRateMonthsPayable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807290519376_AddLoanInterestAmount.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807290519376_AddLoanInterestAmount.Designer.cs">
+      <DependentUpon>201807290519376_AddLoanInterestAmount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807290537487_RenameStartDeductionToStartDeductionDate.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807290537487_RenameStartDeductionToStartDeductionDate.Designer.cs">
+      <DependentUpon>201807290537487_RenameStartDeductionToStartDeductionDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807290614054_RemoveLoanPayrollPeriod.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807290614054_RemoveLoanPayrollPeriod.Designer.cs">
+      <DependentUpon>201807290614054_RemoveLoanPayrollPeriod.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -464,6 +480,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807281245186_AddOvertimePayPercentageRelation.resx">
       <DependentUpon>201807281245186_AddOvertimePayPercentageRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807290515008_RemoveLoanInterestRateMonthsPayable.resx">
+      <DependentUpon>201807290515008_RemoveLoanInterestRateMonthsPayable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807290519376_AddLoanInterestAmount.resx">
+      <DependentUpon>201807290519376_AddLoanInterestAmount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807290537487_RenameStartDeductionToStartDeductionDate.resx">
+      <DependentUpon>201807290537487_RenameStartDeductionToStartDeductionDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807290614054_RemoveLoanPayrollPeriod.resx">
+      <DependentUpon>201807290614054_RemoveLoanPayrollPeriod.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -2,6 +2,7 @@
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -28,8 +29,9 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 public string FirstName { get; set; }
                 public int Id { get; set; }
                 public string LastName { get; set; }
+                public string MiddleName { get; set; }
 
-                public string Name => $"{LastName}, {FirstName}";
+                public string Name => String.IsNullOrWhiteSpace(MiddleName) ? $"{LastName}, {FirstName}" : $"{LastName}, {FirstName}, {MiddleName.First()}";
             }
         }
 
