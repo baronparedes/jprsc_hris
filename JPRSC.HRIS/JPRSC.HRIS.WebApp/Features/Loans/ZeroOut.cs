@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Loans
 {
-    public class Delete
+    public class ZeroOut
     {
         public class Command : IRequest<CommandResult>
         {
@@ -31,7 +31,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
                 var loan = await _db.Loans.SingleAsync(r => r.Id == command.LoanId);
-                loan.DeletedOn = DateTime.UtcNow;
+                loan.ZeroedOutOn = DateTime.UtcNow;
 
                 await _db.SaveChangesAsync();
 

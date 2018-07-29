@@ -39,11 +39,11 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(Delete.Command command)
+        public async Task<ActionResult> ZeroOut(ZeroOut.Command command)
         {
             var commandResult = await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted loan.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully zeroed out loan.");
 
             return RedirectToAction(nameof(Index));
         }

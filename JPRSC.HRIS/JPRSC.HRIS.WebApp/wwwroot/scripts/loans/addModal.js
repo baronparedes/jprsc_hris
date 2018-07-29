@@ -11,6 +11,7 @@
         vm.clients = params.clients;
         vm.currencySymbol = 'P';
         vm.getPayrollPeriodInput = getPayrollPeriodInput;
+        vm.getTotalAmount = getTotalAmount;
         vm.loanPayrollPeriods = [];
         vm.loanTypesList = params.loanTypesList;
         vm.lookups = lookups;
@@ -64,6 +65,20 @@
             return selectedPayrollPeriods.join(',');
         };
 
+        function getTotalAmount() {
+            var totalAmount = 0;
+
+            if (vm.principalAmount > 0) {
+                totalAmount += parseFloat(vm.principalAmount);
+            }
+
+            if (vm.interestAmount > 0) {
+                totalAmount += parseFloat(vm.interestAmount);
+            }
+
+            return totalAmount;
+        }
+
         function init() {
             populateEmployees();
             populatePayrollPeriods();
@@ -80,7 +95,7 @@
             }
             else {
                 vm.employees = [];
-                vm.employees.splice(0, 0, { name: '-- Select a client --' });
+                vm.employees.splice(0, 0, { name: '-- Select a client --', employeeCode: '-- Select a client --' });
             }            
         };
 

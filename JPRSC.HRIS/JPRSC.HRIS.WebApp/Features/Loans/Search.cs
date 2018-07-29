@@ -52,13 +52,17 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 public Employee Employee { get; set; }
                 public int? EmployeeId { get; set; }
                 public int Id { get; set; }
+                public decimal? InterestAmount { get; set; }
                 public DateTime? LoanDate { get; set; }
                 public LoanType LoanType { get; set; }
                 public int? LoanTypeId { get; set; }
                 public int? PayrollPeriod { get; set; }
                 public decimal? PrincipalAmount { get; set; }
+                public DateTime? StartDeductionDate { get; set; }
                 public string TransactionNumber { get; set; }
                 public DateTime? ZeroedOutOn { get; set; }
+
+                public bool IsZeroedOut => ZeroedOutOn.HasValue;
             }
 
             public class LoanType

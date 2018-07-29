@@ -74,6 +74,7 @@
                                         <td>Loan Date</td>
                                         <td>Principal Amount</td>
                                         <td>Deduction Amount</td>
+                                        <td></td>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -83,10 +84,20 @@
                                         <td>{{loan.employee.firstName}}</td>
                                         <td>{{loan.employee.lastName}}</td>
                                         <td>{{loan.loanType.code}}</td>
-                                        <td>{{loan.startDeductionDate | date:'mediumDate' }}</td>
+                                        <td>{{loan.loanDate | date:'mediumDate' }}</td>
                                         <td>{{vm.currencySymbol}}{{loan.principalAmount | number:2 }}</td>
                                         <td>{{vm.currencySymbol}}{{loan.deductionAmount | number:2 }}</td>
-                                        <td></td>
+                                        <td>
+                                            <span class="badge bg-green-jungle bg-font-green-jungle badge-roundless" ng-if="!loan.isZeroedOut">Active Loan</span>
+                                            <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-if="loan.isZeroedOut">Zeroed Out</span>
+                                        </td>
+                                        <td>
+                                            <form action="/Loans/ZeroOut" method="post" style="display: inline-block;" ng-if="!loan.isZeroedOut">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="LoanId" value="{{loan.id}}" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Zero Out</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -117,11 +128,20 @@
                                     <span ng-show="vm.validationErrors.transactionNumber" class="help-block">{{vm.validationErrors.transactionNumber.join(' ')}}</span>
                                 </div>
                             </div>
+                            <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
-                                <label class="col-md-4 col-lg-3 control-label">Employee <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
+                                <label class="col-md-4 col-lg-3 control-label">Employee Names<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
                                     <select class="form-control" ng-model="vm.employee" ng-options="employee.name for employee in vm.employees track by employee.id">
+                                        <option value="?" selected="selected">Select employee</option>
+                                    </select>
+                                    <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
+                                <label class="col-md-4 col-lg-3 control-label">Employee Codes<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" ng-model="vm.employee" ng-options="employee.employeeCode for employee in vm.employees track by employee.id">
                                         <option value="?" selected="selected">Select employee</option>
                                     </select>
                                     <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>
@@ -178,6 +198,12 @@
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" name="InterestAmount" ng-model="vm.interestAmount" />
                                     <span ng-show="vm.validationErrors.interestAmount" class="help-block">{{vm.validationErrors.interestAmount.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Total Amount</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <p class="form-control-static">{{vm.getTotalAmount() | number:2}}</p>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.deductionAmount }">

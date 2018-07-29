@@ -322,7 +322,7 @@
     <Compile Include="Features\JobTitles\_Controller.cs" />
     <Compile Include="Features\JobTitles\_MappingProfile.cs" />
     <Compile Include="Features\Loans\Add.cs" />
-    <Compile Include="Features\Loans\Delete.cs" />
+    <Compile Include="Features\Loans\ZeroOut.cs" />
     <Compile Include="Features\Loans\Edit.cs" />
     <Compile Include="Features\Loans\Index.cs" />
     <Compile Include="Features\Loans\Search.cs" />
