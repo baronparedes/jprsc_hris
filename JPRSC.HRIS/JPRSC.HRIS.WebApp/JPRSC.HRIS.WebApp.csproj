@@ -278,6 +278,7 @@
     <Compile Include="Features\DailyTimeRecords\Delete.cs" />
     <Compile Include="Features\DailyTimeRecords\Edit.cs" />
     <Compile Include="Features\DailyTimeRecords\Index.cs" />
+    <Compile Include="Features\DailyTimeRecords\PayrollPeriodSelection.cs" />
     <Compile Include="Features\DailyTimeRecords\Search.cs" />
     <Compile Include="Features\DailyTimeRecords\_Controller.cs" />
     <Compile Include="Features\DailyTimeRecords\_MappingProfile.cs" />

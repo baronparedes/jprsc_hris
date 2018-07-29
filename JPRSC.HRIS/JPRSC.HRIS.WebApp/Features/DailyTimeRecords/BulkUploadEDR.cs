@@ -22,6 +22,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public HttpPostedFileBase File { get; set; }
             public DateTime? PayrollPeriodFrom { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
+            public int? PayrollProcessBatchPayrollPeriodBasisId { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -33,12 +34,6 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 RuleFor(c => c.ClientId)
                     .NotEmpty();
 
-                RuleFor(c => c.PayrollPeriodFrom)
-                    .NotNull();
-
-                RuleFor(c => c.PayrollPeriodTo)
-                    .NotNull();
-
                 RuleFor(c => c.File)
                     .NotNull();
 
@@ -48,12 +43,33 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         .Must(NotHaveEndProcessedYet)
                         .WithMessage("End process for this payroll period has finished.");
                 });
+
+                When(c => !c.PayrollProcessBatchPayrollPeriodBasisId.HasValue, () =>
+                {
+                    RuleFor(c => c.PayrollPeriodFrom)
+                        .NotEmpty();
+
+                    RuleFor(c => c.PayrollPeriodTo)
+                        .NotEmpty();
+                });
+
+                When(c => c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue, () =>
+                {
+                    RuleFor(c => c.PayrollPeriodFrom)
+                        .Must(BeBeforePayrollPeriodTo)
+                        .WithMessage("Payroll Period From must precede Payroll Period To.");
+                });
             }
 
             private bool NotHaveEndProcessedYet(Command command, int? clientId)
             {
                 var endProcessRecord = _db.PayrollProcessBatches.SingleOrDefault(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && ppb.EndProcessedOn.HasValue && ppb.ClientId == clientId && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
                 return endProcessRecord == null;
+            }
+
+            private bool BeBeforePayrollPeriodTo(Command command, DateTime? payrollPeriodFrom)
+            {
+                return payrollPeriodFrom.Value.Date < command.PayrollPeriodTo.Value.Date;
             }
         }
 
@@ -79,12 +95,19 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 _db = db;
             }
 
-            public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<CommandResult> Handle(Command command, CancellationToken cancellationToken)
             {
+                if (command.PayrollProcessBatchPayrollPeriodBasisId.HasValue)
+                {
+                    var payrollProcessBatchPayrollPeriodBasis = await _db.PayrollProcessBatches.FindAsync(command.PayrollProcessBatchPayrollPeriodBasisId.Value);
+                    command.PayrollPeriodFrom = payrollProcessBatchPayrollPeriodBasis.PayrollPeriodFrom;
+                    command.PayrollPeriodTo = payrollProcessBatchPayrollPeriodBasis.PayrollPeriodTo;
+                }
+
                 var now = DateTime.UtcNow;
                 var unprocessedItems = new List<CommandResult.UnprocessedItem>();
-                var allEmployeesOfClient = await _db.Employees.Where(e => !e.DeletedOn.HasValue && e.ClientId == request.ClientId).ToListAsync();
-                var csvData = GetCSVData(request);
+                var allEmployeesOfClient = await _db.Employees.Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
+                var csvData = GetCSVData(command);
                 var columnToEarningDeductionMap = await GetColumnToEarningDeductionMap(csvData.Item1);
 
                 // Upload behavior: all-or-nothing
@@ -113,7 +136,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     {
                         var amount = line[entry.Key].ToNullableDecimal();
 
-                        var existingEarningDeductionRecord = await _db.EarningDeductionRecords.SingleOrDefaultAsync(edr => !edr.DeletedOn.HasValue && edr.EmployeeId == employee.Id && edr.PayrollPeriodFrom == request.PayrollPeriodFrom && edr.PayrollPeriodTo == request.PayrollPeriodTo && edr.EarningDeductionId == entry.Value.Id);
+                        var existingEarningDeductionRecord = await _db.EarningDeductionRecords.SingleOrDefaultAsync(edr => !edr.DeletedOn.HasValue && edr.EmployeeId == employee.Id && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.EarningDeductionId == entry.Value.Id);
                         if (existingEarningDeductionRecord != null)
                         {
                             existingEarningDeductionRecord.Amount = amount;
@@ -127,8 +150,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                                 Amount = amount,
                                 EarningDeductionId = entry.Value.Id,
                                 EmployeeId = employee.Id,
-                                PayrollPeriodFrom = request.PayrollPeriodFrom,
-                                PayrollPeriodTo = request.PayrollPeriodTo
+                                PayrollPeriodFrom = command.PayrollPeriodFrom,
+                                PayrollPeriodTo = command.PayrollPeriodTo
                             };
                             _db.EarningDeductionRecords.Add(earningDeductionRecord);
                         }

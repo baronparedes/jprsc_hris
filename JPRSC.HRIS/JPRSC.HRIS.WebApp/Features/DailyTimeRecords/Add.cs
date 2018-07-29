@@ -27,6 +27,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public IEnumerable<Overtime> Overtimes { get; set; } = new List<Overtime>();
             public DateTime? PayrollPeriodFrom { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
+            public int? PayrollProcessBatchPayrollPeriodBasisId { get; set; }
 
             public class Overtime
             {
@@ -77,6 +78,27 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     RuleFor(c => c.HoursUndertime)
                         .GreaterThanOrEqualTo(0);
                 });
+
+                When(c => !c.PayrollProcessBatchPayrollPeriodBasisId.HasValue, () =>
+                {
+                    RuleFor(c => c.PayrollPeriodFrom)
+                        .NotEmpty();
+
+                    RuleFor(c => c.PayrollPeriodTo)
+                        .NotEmpty();
+                });
+
+                When(c => c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue, () =>
+                {
+                    RuleFor(c => c.PayrollPeriodFrom)
+                        .Must(BeBeforePayrollPeriodTo)
+                        .WithMessage("Payroll Period From must precede Payroll Period To.");
+                });
+            }
+
+            private bool BeBeforePayrollPeriodTo(Command command, DateTime? payrollPeriodFrom)
+            {
+                return payrollPeriodFrom.Value.Date < command.PayrollPeriodTo.Value.Date;
             }
         }
 
@@ -93,6 +115,13 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
             public async Task<Unit> Handle(Command command, CancellationToken token)
             {
+                if (command.PayrollProcessBatchPayrollPeriodBasisId.HasValue)
+                {
+                    var payrollProcessBatchPayrollPeriodBasis = await _db.PayrollProcessBatches.FindAsync(command.PayrollProcessBatchPayrollPeriodBasisId.Value);
+                    command.PayrollPeriodFrom = payrollProcessBatchPayrollPeriodBasis.PayrollPeriodFrom;
+                    command.PayrollPeriodTo = payrollProcessBatchPayrollPeriodBasis.PayrollPeriodTo;
+                }
+
                 var now = DateTime.UtcNow;
                 var employee = await _db.Employees.SingleOrDefaultAsync(e => e.Id == command.EmployeeId);
 

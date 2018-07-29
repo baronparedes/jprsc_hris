@@ -29,11 +29,15 @@
         vm.otRateChanged = otRateChanged;
         vm.overtimes = [];
         vm.payRates = params.payRates;
+        vm.payrollPeriods = [];
+        vm.payrollPeriodSelectionDisabled = true;
         vm.validationErrors = {};
 
         $timeout(function () {
             vm.currentEmployeeIndex = 0;
             vm.employee = vm.employees[0];
+
+            populatePayrollPeriodsSelection();
         });
 
         $scope.$watch('vm.daysWorked', function () { if (!vm.employee) return; vm.daysWorkedValue = vm.employee.dailyRate * vm.daysWorked; });
@@ -113,6 +117,24 @@
 
         function otRateChanged(overtime) {
             recalculateNumberOfHoursValue(overtime);
+        };
+
+        function populatePayrollPeriodsSelection() {
+            vm.payrollPeriodSelectionDisabled = true;
+
+            $http.get('/DailyTimeRecords/PayrollPeriodSelection', { params: { clientId: vm.client.id } }).then(function (response) {
+                vm.payrollPeriods = response.data.payrollPeriods;
+
+                if (!vm.payrollPeriods.length) {
+                    vm.payrollPeriods.push({ value: '', text: 'No previous unprocessed payroll records found' });
+                }
+                else {
+                    vm.payrollPeriods.splice(0, 0, { value: '', text: '' });
+                    vm.payrollPeriodSelectionDisabled = false;
+                }
+
+                vm.payrollProcessBatchPayrollPeriodBasis = vm.payrollPeriods[0];
+            });
         };
 
         function recalculateNumberOfHoursValue(overtime) {

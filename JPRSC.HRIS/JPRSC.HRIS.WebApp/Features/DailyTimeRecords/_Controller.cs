@@ -107,6 +107,14 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         }
 
         [HttpGet]
+        public async Task<ActionResult> PayrollPeriodSelection(PayrollPeriodSelection.Query query)
+        {
+            var queryResult = await _mediator.Send(query);
+
+            return JsonCamelCase(queryResult);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> Search(Search.Query query)
         {
             var queryResult = await _mediator.Send(query);
