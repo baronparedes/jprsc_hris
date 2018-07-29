@@ -30,9 +30,13 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="control-label">Client</label>
-                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id">
-                                        <option value="?" selected="selected">Select client</option>
-                                    </select>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Payroll Period</label>
+                                    <select class="form-control" ng-model="vm.dailyTimeRecordPayrollPeriodBasis" ng-disabled="vm.payrollPeriodSelectionDisabled" ng-options="payrollPeriod.text for payrollPeriod in vm.payrollPeriods track by payrollPeriod.value" ng-change="vm.payrollPeriodChanged()"></select>
                                 </div>
                             </div>
                             @*<div class="col-sm-6">
@@ -147,13 +151,6 @@
                                            is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
                                     <input type="hidden" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                     <span ng-show="vm.validationErrors.payrollPeriodTo" class="help-block">{{vm.validationErrors.payrollPeriodTo.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-lg-2 control-label">Payroll Period</label>
-                                <div class="col-md-9 col-lg-10">
-                                    <input type="hidden" name="PayrollProcessBatchPayrollPeriodBasisId" value="{{vm.payrollProcessBatchPayrollPeriodBasis.value}}" />
-                                    <select class="form-control" ng-model="vm.payrollProcessBatchPayrollPeriodBasis" ng-disabled="vm.payrollPeriodSelectionDisabled" ng-options="payrollPeriod.text for payrollPeriod in vm.payrollPeriods track by payrollPeriod.value"></select>
                                 </div>
                             </div>
                             <div class="row">
@@ -365,13 +362,6 @@
                                     <span class="help-block" ng-show="vm.validationErrors.payrollPeriodTo">{{vm.validationErrors.payrollPeriodTo.join(' ')}}</span>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-lg-2 control-label">Payroll Period</label>
-                                <div class="col-md-9 col-lg-10">
-                                    <input type="hidden" name="PayrollProcessBatchPayrollPeriodBasisId" value="{{vm.payrollProcessBatchPayrollPeriodBasis.value}}" />
-                                    <select class="form-control" ng-model="vm.payrollProcessBatchPayrollPeriodBasis" ng-disabled="vm.payrollPeriodSelectionDisabled" ng-options="payrollPeriod.text for payrollPeriod in vm.payrollPeriods track by payrollPeriod.value"></select>
-                                </div>
-                            </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.file }">
                                 <label class="col-md-3 col-lg-2 control-label">CSV File</label>
                                 <div class="col-md-9 col-lg-10">
@@ -423,13 +413,6 @@
                                            is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
                                     <input type="hidden" id="PayrollPeriodTo" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                     <span class="help-block" ng-show="vm.validationErrors.payrollPeriodTo">{{vm.validationErrors.payrollPeriodTo.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-lg-2 control-label">Payroll Period</label>
-                                <div class="col-md-9 col-lg-10">
-                                    <input type="hidden" name="PayrollProcessBatchPayrollPeriodBasisId" value="{{vm.payrollProcessBatchPayrollPeriodBasis.value}}" />
-                                    <select class="form-control" ng-model="vm.payrollProcessBatchPayrollPeriodBasis" ng-disabled="vm.payrollPeriodSelectionDisabled" ng-options="payrollPeriod.text for payrollPeriod in vm.payrollPeriods track by payrollPeriod.value"></select>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.file }">

@@ -19,6 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         {
             public string SearchTerm { get; set; }
             public int? ClientId { get; set; }
+            public int? DailyTimeRecordPayrollPeriodBasisId { get; set; }
 
             public string SearchLikeTerm
             {
@@ -92,6 +93,17 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     dbQuery = dbQuery
                         .Where(dtr => DbFunctions.Like(dtr.Employee.FirstName, query.SearchLikeTerm) ||
                             DbFunctions.Like(dtr.Employee.LastName, query.SearchLikeTerm));
+                }
+
+                if (query.DailyTimeRecordPayrollPeriodBasisId.HasValue)
+                {
+                    var dailyTimeRecordPayrollPeriodBasis = await _db
+                        .DailyTimeRecords
+                        .FindAsync(query.DailyTimeRecordPayrollPeriodBasisId.Value);
+
+                    dbQuery = dbQuery
+                        .Where(dtr => DbFunctions.TruncateTime(dtr.PayrollPeriodFrom) == DbFunctions.TruncateTime(dailyTimeRecordPayrollPeriodBasis.PayrollPeriodFrom) &&
+                                      DbFunctions.TruncateTime(dtr.PayrollPeriodTo) == DbFunctions.TruncateTime(dailyTimeRecordPayrollPeriodBasis.PayrollPeriodTo));
                 }
 
                 var dailyTimeRecords = await dbQuery

@@ -47,25 +47,24 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
-                var clientPayrollProcessBatches = await _db
-                    .PayrollProcessBatches
-                    .Where(ppb => ppb.ClientId == query.ClientId && !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue)
-                    .OrderBy(ppb => ppb.PayrollPeriodFrom)
-                    .ThenBy(ppb => ppb.PayrollPeriodTo)
+                var dailyTimeRecords = await _db
+                    .DailyTimeRecords
+                    .Include(dtr => dtr.Employee)
+                    .Where(dtr => !dtr.DeletedOn.HasValue && dtr.Employee.ClientId == query.ClientId)
                     .ToListAsync();
 
                 return new QueryResult
                 {
-                    PayrollPeriods = GetPayrollPeriods(clientPayrollProcessBatches)
+                    PayrollPeriods = GetPayrollPeriods(dailyTimeRecords)
                 };
             }
 
-            private IList<SelectListItem> GetPayrollPeriods(IList<PayrollProcessBatch> payrollProcessBatches) =>
-                payrollProcessBatches
-                .Select(ppb => new SelectListItem
+            private IList<SelectListItem> GetPayrollPeriods(IList<DailyTimeRecord> dailyTimeRecords) =>
+                dailyTimeRecords
+                .Select(dtr => new SelectListItem
                 {
-                    Value = ppb.Id.ToString(),
-                    Text = $"{ppb.PayrollPeriodFrom.Value:MMM d, yyyy} - {ppb.PayrollPeriodTo.Value:MMM d, yyyy}"
+                    Value = dtr.Id.ToString(),
+                    Text = $"{dtr.PayrollPeriodFrom.Value:MMM d, yyyy} - {dtr.PayrollPeriodTo.Value:MMM d, yyyy}"
                 })
                 .ToList();
         }

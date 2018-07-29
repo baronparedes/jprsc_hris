@@ -133,7 +133,7 @@
                     vm.payrollPeriodSelectionDisabled = false;
                 }
 
-                vm.payrollProcessBatchPayrollPeriodBasis = vm.payrollPeriods[0];
+                vm.dailyTimeRecordPayrollPeriodBasis = vm.payrollPeriods[0];
             });
         };
 
