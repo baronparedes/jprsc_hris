@@ -27,7 +27,7 @@
                             <span class="caption-subject font-red-sunglo bold uppercase">Edit Employee @Model.FirstName @Model.LastName</span>
                         </div>
                     </div>
-                    <div class="portlet-body form" ng-controller="EditEmployeeCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
+                    <div class="portlet-body form" ng-controller="EditEmployeeCtrl as vm" ng-init="vm.init('model')">
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.editEmployeeSubmit($event)">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(m => m.Id)
@@ -161,5 +161,8 @@
 
 @section scripts
 {
+    <script type="text/javascript">
+        window.model= @Html.NgInit(Model);
+    </script>
     @Scripts.Render("~/scriptbundles/employees")
 }

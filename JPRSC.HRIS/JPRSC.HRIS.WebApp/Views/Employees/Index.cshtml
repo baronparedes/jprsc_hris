@@ -39,9 +39,12 @@
                         </div>
                     </div>
                 </form>
-                <div class="note note-info" ng-show="!vm.employees.length">
+                <div class="note note-info" ng-show="!vm.searchInProgress && !vm.employees.length">
                     <p>No employees found.</p>
                 </div>
+                <p ng-show="vm.searchInProgress">
+                    <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.searchInProgress"></i>Loading...
+                </p>
                 <div class="portlet light bordered" ng-show="vm.employees.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">

@@ -8,29 +8,11 @@
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.editEmployeeSubmit = editEmployeeSubmit;
         vm.editInProgress = false;
+        vm.init = init;
         vm.lookups = lookups;
         vm.validationErrors = {};
 
         $timeout(function () {
-            var employee = vm.serverModel;
-
-            if (employee.dateOfBirth) {
-                vm.dateOfBirth = new Date(employee.dateOfBirth);
-            }
-
-            if (employee.dateHired) {
-                vm.dateHired = new Date(employee.dateHired);
-            }
-
-            if (employee.dateResigned) {
-                vm.dateResigned = new Date(employee.dateResigned);
-            }
-
-            vm.gender = { value: employee.gender };
-            vm.citizenship = { value: employee.citizenship };
-            vm.civilStatus = { value: employee.civilStatus };
-            vm.accountType = { value: employee.accountType };
-
             vm.datepickerOptions.maxMode = 'year';
         });
 
@@ -50,6 +32,27 @@
 
                 vm.editInProgress = false;
             });
+        };
+
+        function init(key) {
+            var employee = window[key];
+
+            if (employee.dateOfBirth) {
+                vm.dateOfBirth = new Date(employee.dateOfBirth);
+            }
+
+            if (employee.dateHired) {
+                vm.dateHired = new Date(employee.dateHired);
+            }
+
+            if (employee.dateResigned) {
+                vm.dateResigned = new Date(employee.dateResigned);
+            }
+
+            vm.gender = { value: employee.gender };
+            vm.citizenship = { value: employee.citizenship };
+            vm.civilStatus = { value: employee.civilStatus };
+            vm.accountType = { value: employee.accountType };
         };
     };
 }());
