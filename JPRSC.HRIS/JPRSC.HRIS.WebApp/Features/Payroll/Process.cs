@@ -97,8 +97,10 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .ToListAsync();
 
                 var loans = await _db.Loans
-                    .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && l.LoanPayrollPeriods.ToList().Contains(command.PayrollPeriod.Value) && l.RemainingBalance > 0 && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) >= DbFunctions.TruncateTime(command.PayrollPeriodFrom))
+                    .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && l.RemainingBalance > 0 && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) >= DbFunctions.TruncateTime(command.PayrollPeriodFrom))
                     .ToListAsync();
+
+                loans = loans.Where(l => l.LoanPayrollPeriods.Contains(command.PayrollPeriod.Value)).ToList();
 
                 var sssRecords = await _db.SSSRecords
                     .ToListAsync();
