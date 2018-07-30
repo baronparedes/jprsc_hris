@@ -92,6 +92,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\PermissionHelper.cs" />
     <Compile Include="Infrastructure\.NET\DateTimeExtensions.cs" />
     <Compile Include="Infrastructure\.NET\EnumHelper.cs" />
     <Compile Include="Infrastructure\.NET\IEnumerableExtensions.cs" />

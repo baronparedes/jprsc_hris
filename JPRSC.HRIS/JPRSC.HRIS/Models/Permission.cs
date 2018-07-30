@@ -15,6 +15,8 @@ namespace JPRSC.HRIS.Models
         // Account
         [Display(Name = "Accounts")]
         AccountDefault = 300,
+
+        [Display(Name = "Edit Own")]
         AccountEditOwn = 301,
 
         // Religion
@@ -48,6 +50,8 @@ namespace JPRSC.HRIS.Models
         // Employees
         [Display(Name = "Employees")]
         EmployeeDefault = 1100,
+
+        [Display(Name = "Edit ATM")]
         EmployeeEditATM = 1101,
 
         // Approval Levels
@@ -95,7 +99,7 @@ namespace JPRSC.HRIS.Models
         OvertimeDefault = 2200,
 
         // Payroll
-        [Display(Name = "Payroll")]
+        [Display(Name = "Payroll (w/ end process)")]
         PayrollDefault = 2300,
 
         // Earnings and Deductions Records

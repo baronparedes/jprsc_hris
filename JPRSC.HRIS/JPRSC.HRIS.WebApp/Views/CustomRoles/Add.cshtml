@@ -32,7 +32,39 @@
                             @Html.AntiForgeryToken()
                             <div class="form-body">
                                 @Html.TextBoxHorizontalFormGroup("Name")
-                                @Html.CheckboxSelectListItemHorizontalFormGroup(Model.PermissionsList, "PermissionsList", "Permissions")
+                                <div class="form-group">
+                                    <label class="col-md-3 col-lg-2 control-label">Permissions</label>
+                                    <div class="col-md-9 col-lg-10">
+                                    @{
+                                        var lastCategory = 100;
+
+                                        for (var i = 0; i < Model.PermissionsList.Count; i++)
+                                        {
+                                            var currentCategory = (int)Math.Floor((Convert.ToDouble(Model.PermissionsList[i].Value)) / 100) * 100;
+                                            if (currentCategory > lastCategory)
+                                            {
+                                                lastCategory = currentCategory;
+                                                <h4>@Model.PermissionsList[i].Text</h4>
+                                            }
+
+                                            <input type="hidden" name="@($"PermissionsList[{i}].Value")" value="@Model.PermissionsList[i].Value" />
+                                            <input type="hidden" name="@($"PermissionsList[{i}].Text")" value="@Model.PermissionsList[i].Text" />
+                                            <label class="mt-checkbox mt-checkbox-outline" style="margin-right: 15px;">
+                                                @if (Model.PermissionsList[i].Selected)
+                                                {
+                                                    <input type="checkbox" name="@($"PermissionsList[{i}].Selected")" value="true" checked="checked">
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="@($"PermissionsList[{i}].Selected")" value="true">
+                                                }
+                                                @Model.PermissionsList[i].Text
+                                                <span></span>
+                                            </label>
+                                        }
+                                    }
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-actions right">
                                 <a href="@Url.Action("Index", "CustomRoles")" class="btn default">Cancel</a>

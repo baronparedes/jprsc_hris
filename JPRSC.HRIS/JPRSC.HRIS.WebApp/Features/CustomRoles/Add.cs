@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JPRSC.HRIS.Domain;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
@@ -16,8 +17,15 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
     {
         public class Command : IRequest
         {
+            private IList<int> _permissionValuesNotShownInMenu = new List<int> { (int)Permission.OvertimeDefault, (int)Permission.EarningDeductionRecordDefault };
+
             public string Name { get; set; }
-            public IList<SelectListItem> PermissionsList { get; set; } = EnumHelper.GetSelectList(typeof(Permission));
+            public IList<SelectListItem> PermissionsList { get; set; }
+
+            public Command()
+            {
+                PermissionsList = EnumHelper.GetSelectList(typeof(Permission)).Where(sli => !PermissionHelper.PermissionValuesNotShownInMenu.Contains(Convert.ToInt32(sli.Value))).ToList();
+            }
         }
 
         public class CommandValidator : AbstractValidator<Command>

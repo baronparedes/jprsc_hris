@@ -25,8 +25,11 @@
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         @*<img alt="" class="img-circle" src="@Url.Content(loggedInUser.ProfileImageUrl)" />*@
                         @*<span class="username username-hide-on-mobile"> @(loggedInUser?.DisplayName) </span>*@
-                        <span class="username username-hide-on-mobile"> Admin </span>
-                        <i class="fa fa-angle-down"></i>
+                        @if (loggedInUser != null)
+                        {
+                            <span class="username username-hide-on-mobile"> @(loggedInUser.UserName ?? @loggedInUser.Email) </span>
+                            <i class="fa fa-angle-down"></i>
+                        }
                     </a>
                     <ul class="dropdown-menu dropdown-menu-default">
                         <li>
