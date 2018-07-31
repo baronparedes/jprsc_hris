@@ -59,14 +59,26 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 };
             }
 
-            private IList<SelectListItem> GetPayrollPeriods(IList<DailyTimeRecord> dailyTimeRecords) =>
-                dailyTimeRecords
-                .Select(dtr => new SelectListItem
+            private IList<SelectListItem> GetPayrollPeriods(IList<DailyTimeRecord> dailyTimeRecords)
+            {
+                var payrollPeriods = new List<Tuple<int, DateTime?, DateTime?>>();
+
+                foreach (var dtr in dailyTimeRecords)
                 {
-                    Value = dtr.Id.ToString(),
-                    Text = $"{dtr.PayrollPeriodFrom.Value:MMM d, yyyy} - {dtr.PayrollPeriodTo.Value:MMM d, yyyy}"
-                })
-                .ToList();
+                    if (!payrollPeriods.Any(pp => pp.Item2 == dtr.PayrollPeriodFrom && pp.Item3 == dtr.PayrollPeriodTo))
+                    {
+                        payrollPeriods.Add(Tuple.Create(dtr.Id, dtr.PayrollPeriodFrom, dtr.PayrollPeriodTo));
+                    }
+                }
+
+                return payrollPeriods
+                    .Select(pp => new SelectListItem
+                    {
+                        Value = pp.Item1.ToString(),
+                        Text = $"{pp.Item2.Value:MMM d, yyyy} - {pp.Item3.Value:MMM d, yyyy}"
+                    })
+                    .ToList();
+            }
         }
     }
 }
