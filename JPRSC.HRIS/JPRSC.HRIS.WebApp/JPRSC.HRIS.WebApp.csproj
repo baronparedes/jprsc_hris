@@ -308,6 +308,7 @@
     <Compile Include="Features\EmployeeRates\_MappingProfile.cs" />
     <Compile Include="Features\Employees\Add.cs" />
     <Compile Include="Features\Employees\Delete.cs" />
+    <Compile Include="Features\Employees\Details.cs" />
     <Compile Include="Features\Employees\Edit.cs" />
     <Compile Include="Features\Employees\GetByClientId.cs" />
     <Compile Include="Features\Employees\Index.cs" />
@@ -6964,6 +6965,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <Content Include="Views\Employees\Details.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

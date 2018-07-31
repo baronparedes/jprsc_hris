@@ -1,0 +1,113 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Employees.Details.QueryResult
+
+@{
+    ViewBag.Title = "Employee " + Model.FirstName + " " + Model.LastName;
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Employee Details</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            @Model.FirstName @Model.LastName
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-users font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">@Model.FirstName @Model.LastName</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form">
+                        <form class="form-horizontal" role="form" method="post">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="form-body">
+                                <uib-tabset active="active">
+                                    <uib-tab index="0" heading="Employee Info">
+                                        @Html.StaticHorizontalFormGroup("EmployeeCode")
+                                        @Html.StaticHorizontalFormGroup("FirstName")
+                                        @Html.StaticHorizontalFormGroup("MiddleName")
+                                        @Html.StaticHorizontalFormGroup("LastName")
+                                        @Html.StaticHorizontalFormGroup("Nickname")
+                                        @Html.StaticHorizontalFormGroup("Email")
+                                        @Html.StaticHorizontalFormGroup("CityAddress", "Present Address")
+                                        @Html.StaticHorizontalFormGroup("DateOfBirth")
+                                        @Html.StaticHorizontalFormGroup("ZipCode")
+                                        @Html.StaticHorizontalFormGroup("TelNo")
+                                        @Html.StaticHorizontalFormGroup("CelNo")
+                                        @Html.StaticHorizontalFormGroup("Gender")
+                                        @Html.StaticHorizontalFormGroup("ReligionCode", "Religion")
+                                        @Html.StaticHorizontalFormGroup("Citizenship")
+                                        @Html.StaticHorizontalFormGroup("CivilStatus")
+                                        @Html.StaticHorizontalFormGroup("SSS")
+                                        @Html.StaticHorizontalFormGroup("TIN")
+                                        @Html.StaticHorizontalFormGroup("PagIbig")
+                                        @Html.StaticHorizontalFormGroup("PhilHealth")
+                                    </uib-tab>
+                                    <uib-tab index="1" heading="Company Info">
+                                        @Html.StaticHorizontalFormGroup("ClientName", "Client")
+                                        @Html.StaticHorizontalFormGroup("DateHired")
+                                        @Html.StaticHorizontalFormGroup("DateResigned")
+                                        @Html.StaticHorizontalFormGroup("Position")
+                                        @Html.StaticHorizontalFormGroup("DepartmentName", "Department")
+                                        @Html.StaticHorizontalFormGroup("Region")
+                                        @Html.StaticHorizontalFormGroup("EmployeeStatus")
+                                        @Html.StaticHorizontalFormGroup("ResignStatus")
+                                        @Html.StaticHorizontalFormGroup("IsActive")
+                                    </uib-tab>
+                                    <uib-tab index="2" heading="Pay Info">
+                                        @if (AuthorizeHelper.IsAuthorized(Permission.EmployeeEditATM))
+                                        {
+                                            @Html.StaticHorizontalFormGroup("ATMAccountNumber")
+                                        }
+                                        @Html.StaticHorizontalFormGroup("AccountType")
+                                        @Html.StaticHorizontalFormGroup("TaxStatusCode", "Tax Status")
+                                        @Html.StaticHorizontalFormGroup("HourlyRate")
+                                        @Html.StaticHorizontalFormGroup("DailyRate")
+                                        @Html.StaticHorizontalFormGroup("COLAHourly")
+                                        @Html.StaticHorizontalFormGroup("COLADaily")
+                                        @Html.StaticHorizontalFormGroup("TaxExempt")
+                                        @Html.StaticHorizontalFormGroup("PagIbigExempt")
+                                        @Html.StaticHorizontalFormGroup("ThirteenthMonthExempt")
+                                        @Html.StaticHorizontalFormGroup("PhilHealthExempt")
+                                        @Html.StaticHorizontalFormGroup("SalaryStatus")
+                                    </uib-tab>
+                                    <uib-tab index="3" heading="Submitted Files">
+                                        @Html.StaticHorizontalFormGroup("SubmittedBiodata", "Biodata / Resume with Picture")
+                                        @Html.StaticHorizontalFormGroup("SubmittedIdPictures", "ID Pictures ( 2 pcs each size )")
+                                        @Html.StaticHorizontalFormGroup("SubmittedNBIClearance", "NBI Clearance")
+                                        @Html.StaticHorizontalFormGroup("SubmittedPoliceClearance", "Police Clearance")
+                                        @Html.StaticHorizontalFormGroup("SubmittedBarangayClearance", "Barangay Clearance")
+                                        @Html.StaticHorizontalFormGroup("SubmittedSSSIdOrED1Form", "SSS ID or E1 Form")
+                                        @Html.StaticHorizontalFormGroup("SubmittedPhilHealthIdOrMDRForm", "Philhealth ID or MDR Form")
+                                        @Html.StaticHorizontalFormGroup("SubmittedPagIbigIdOrMIDNo", "Pag-ibig ID or MID No.")
+                                        @Html.StaticHorizontalFormGroup("SubmittedTINIdOr1902Form", "TIN ID or 1902 Form")
+                                        @Html.StaticHorizontalFormGroup("SubmittedBirthCertificate", "Birth Certificate")
+                                        @Html.StaticHorizontalFormGroup("SubmittedMarriageCertification", "Marriage Certification (if Married)")
+                                        @Html.StaticHorizontalFormGroup("SubmittedBirthCertificateOfChildren", "Birth Certificate of Children (if any)")
+                                        @Html.StaticHorizontalFormGroup("SubmittedDiplomaOrTCR", "Diploma or TOR")
+                                        @Html.StaticHorizontalFormGroup("SubmittedPreEmploymentMedicalResult", "Pre-employment Medical Result")
+                                        @Html.StaticHorizontalFormGroup("SubmittedSSSLoanVerification", "SSS Loan Verification")
+                                    </uib-tab>
+                                </uib-tabset>
+                            </div>
+                            <div class="form-actions right">
+                                <a href="@Url.Action("Index", "Employees")" class="btn default">Back</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

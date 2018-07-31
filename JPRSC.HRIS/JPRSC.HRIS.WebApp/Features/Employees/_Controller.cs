@@ -54,6 +54,14 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
         }
 
         [HttpGet]
+        public async Task<ActionResult> Details(Details.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> Edit(Edit.Query query)
         {
             var command = await _mediator.Send(query);

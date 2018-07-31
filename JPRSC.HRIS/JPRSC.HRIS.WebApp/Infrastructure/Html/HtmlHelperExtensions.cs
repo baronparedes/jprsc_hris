@@ -36,6 +36,11 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             return HorizontalFormGroup(helper, propertyName, "password", null, null, labelText, null);
         }
 
+        public static IHtmlString StaticHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null)
+        {
+            return HorizontalFormGroup(helper, propertyName, "static", null, null, labelText, null);
+        }
+
         public static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
         {
             return HorizontalFormGroup(helper, propertyName, "text", null, null, labelText, placeholder);
@@ -155,7 +160,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
                 var option = new HtmlTag("option");
                 option.Attr("value", item.Value);
                 option.AppendText(item.Text);
-                
+
                 if (propertyValue == item.Value)
                 {
                     option.Attr("selected", "selected");
@@ -248,6 +253,9 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
                         control = DropdownControl(helper, propertyName, items);
                     }
                     break;
+                case "static":
+                    control = StaticControl(helper, propertyName, labelText);
+                    break;
                 default:
                     break;
             }
@@ -258,6 +266,31 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             formGroup.Append(controlContainer);
 
             return new MvcHtmlString(formGroup.ToHtmlString());
+        }
+
+        private static HtmlTag StaticControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string labelText)
+        {
+            var control = new HtmlTag("p");
+            control.AddClass("form-control-static");
+
+            var propertyType = helper.ViewData.Model.GetType().GetProperty(propertyName).PropertyType;
+            var propertyValue = GetPropertyValue(helper.ViewData.Model, propertyName);
+
+            if (propertyType.Name == "Boolean" || (propertyType.Name == "Nullable`1" && Nullable.GetUnderlyingType(propertyType).Name == "Boolean"))
+            {
+                if (propertyValue == "True")
+                {
+                    var icon = new HtmlTag("i");
+                    icon.AddClasses("fa", "fa-check");
+                    control.Append(icon);
+                }
+            }
+            else
+            {
+                control.Text(propertyValue);
+            }
+
+            return control;
         }
 
         private static HtmlTag InputControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string type, string placeholder, string camelCasePropertyName)
