@@ -22,6 +22,11 @@
 
             $("form#bulkUploadForm").submit(function (e) {
                 e.preventDefault();
+
+                $scope.$apply(function () {
+                    vm.uploadInProgress = true;
+                });
+
                 var formData = new FormData($('#bulkUploadForm')[0]);
 
                 $.ajax({
@@ -39,6 +44,9 @@
 
                                 $uibModalInstance.close();
                             }
+                            else {
+                                vm.uploadInProgress = false;
+                            }
                         });
                     },
                     error: function (data) {
@@ -48,6 +56,8 @@
                             if (data.status === 400) {
                                 vm.validationErrors = data.responseJSON;
                             }
+
+                            vm.uploadInProgress = false;
                         });
                     },
                     cache: false,

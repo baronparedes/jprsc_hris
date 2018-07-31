@@ -372,7 +372,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn green" value="Upload" />
+                        <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.uploadInProgress"></i>
+                        <input type="submit" class="btn green" ng-disabled="vm.uploadInProgress" value="Upload" />
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.uploadInProgress">Exit</a>
                     </div>
                 </form>
@@ -425,7 +426,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn green" value="Upload" />
+                        <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.uploadInProgress"></i>
+                        <input type="submit" class="btn green" ng-disabled="vm.uploadInProgress" value="Upload" />
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.uploadInProgress">Exit</a>
                     </div>
                 </form>
