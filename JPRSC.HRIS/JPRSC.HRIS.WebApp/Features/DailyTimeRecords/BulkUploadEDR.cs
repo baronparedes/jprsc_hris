@@ -190,12 +190,20 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         }
                         else
                         {
-                            body.Add(lineAsColumns);
+                            if (!IsBlankLine(lineAsColumns))
+                            {
+                                body.Add(lineAsColumns);
+                            }
                         }
                     }
                 }
 
                 return Tuple.Create(header, body);
+            }
+
+            private bool IsBlankLine(IEnumerable<string> items)
+            {
+                return items.All(i => String.IsNullOrWhiteSpace(i));
             }
 
             private async Task<Dictionary<int, EarningDeduction>> GetColumnToEarningDeductionMap(IList<string> header)

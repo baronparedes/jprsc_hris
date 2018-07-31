@@ -655,12 +655,17 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                 for (var i = 0; i < request.Lines.Count; i++)
                 {
-                    if (i == 0) continue;
+                    if (i == 0 || IsBlankLine(request.Lines[i])) continue;
 
                     uploadItems.Add(new UploadItem(request.Lines[i]));
                 }
 
                 return uploadItems;
+            }
+
+            private bool IsBlankLine(IEnumerable<string> items)
+            {
+                return items.All(i => String.IsNullOrWhiteSpace(i));
             }
         }
 
