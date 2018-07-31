@@ -27,15 +27,19 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public IList<SelectListItem> ClientsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> JobTitlesList { get; set; } = new List<SelectListItem>();
 
             // Employee Info
+            public string CompanyIdNumber { get; set; }
             public string FirstName { get; set; }
             public string MiddleName { get; set; }
             public string LastName { get; set; }
             public string Nickname { get; set; }
             public string Email { get; set; }
             public string CityAddress { get; set; }
+            public string PermanentAddress { get; set; }
             public DateTime? DateOfBirth { get; set; }
+            public string PlaceOfBirth { get; set; }
             public string ZipCode { get; set; }
             public string TelNo { get; set; }
             public string CelNo { get; set; }
@@ -54,7 +58,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public int? ClientId { get; set; }
             public DateTime? DateHired { get; set; }
             public DateTime? DateResigned { get; set; }
-            public string Position { get; set; }
+            public JobTitle JobTitle { get; set; }
+            public int? JobTitleId { get; set; }
             public Department Department { get; set; }
             public int? DepartmentId { get; set; }
             public string Region { get; set; }
@@ -112,6 +117,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 command.ClientsList = await GetClientsList();
                 command.DepartmentsList = await GetDepartmentsList();
                 command.TaxStatusesList = await GetTaxStatusesList();
+                command.JobTitlesList = await GetJobTitlesList();
 
                 return command;
             }
@@ -167,6 +173,19 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     })
                     .ToList();
             }
+
+            private async Task<IList<SelectListItem>> GetJobTitlesList()
+            {
+                var jobTitles = await _db.JobTitles.Where(d => !d.DeletedOn.HasValue).ToListAsync();
+
+                return jobTitles
+                    .Select(d => new SelectListItem
+                    {
+                        Text = d.Name,
+                        Value = d.Id.ToString()
+                    })
+                    .ToList();
+            }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -214,6 +233,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     COLADaily = command.COLADaily.HasValue ? command.COLADaily.Value : 0,
                     COLAHourly = command.COLAHourly.HasValue ? command.COLAHourly.Value : 0,
                     CompanyId = currentUser.Company?.Id,
+                    CompanyIdNumber = command.CompanyIdNumber,
                     DailyRate = command.DailyRate.HasValue ? command.DailyRate.Value : 0,
                     DateHired = command.DateHired,
                     DateOfBirth = command.DateOfBirth,
@@ -226,14 +246,16 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     Gender = command.Gender,
                     HourlyRate = command.HourlyRate.HasValue ? command.HourlyRate.Value : 0,
                     IsActive = command.IsActive,
+                    JobTitleId = command.JobTitleId,
                     LastName = command.LastName,
                     MiddleName = command.MiddleName,
                     Nickname = command.Nickname,
                     PagIbig = command.PagIbig,
                     PagIbigExempt = command.PagIbigExempt,
+                    PermanentAddress = command.PermanentAddress,
                     PhilHealth = command.PhilHealth,
                     PhilHealthExempt = command.PhilHealthExempt,
-                    Position = command.Position,
+                    PlaceOfBirth = command.PlaceOfBirth,
                     Region = command.Region,
                     ReligionId = command.ReligionId,
                     ResignStatus = command.ResignStatus,

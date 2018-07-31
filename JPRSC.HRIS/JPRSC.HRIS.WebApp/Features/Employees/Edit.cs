@@ -27,8 +27,10 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public IList<SelectListItem> ClientsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> JobTitlesList { get; set; } = new List<SelectListItem>();
 
             public string EmployeeCode { get; set; }
+            public string CompanyIdNumber { get; set; }
             public int Id { get; set; }
 
             // Employee Info
@@ -38,7 +40,9 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string Nickname { get; set; }
             public string Email { get; set; }
             public string CityAddress { get; set; }
+            public string PermanentAddress { get; set; }
             public DateTime? DateOfBirth { get; set; }
+            public string PlaceOfBirth { get; set; }
             public string ZipCode { get; set; }
             public string TelNo { get; set; }
             public string CelNo { get; set; }
@@ -57,7 +61,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public int? ClientId { get; set; }
             public DateTime? DateHired { get; set; }
             public DateTime? DateResigned { get; set; }
-            public string Position { get; set; }
+            public JobTitle JobTitle { get; set; }
+            public int? JobTitleId { get; set; }
             public Department Department { get; set; }
             public int? DepartmentId { get; set; }
             public string Region { get; set; }
@@ -115,6 +120,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 command.ClientsList = await GetClientsList(query);
                 command.DepartmentsList = await GetDepartmentsList(query);
                 command.TaxStatusesList = await GetTaxStatusesList(query);
+                command.JobTitlesList = await GetJobTitlesList(query);
 
                 return command;
             }
@@ -178,6 +184,21 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     })
                     .ToList();
             }
+
+            private async Task<IList<SelectListItem>> GetJobTitlesList(Query query)
+            {
+                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
+                var jobTitles = await _db.JobTitles.Where(d => !d.DeletedOn.HasValue).ToListAsync();
+
+                return jobTitles
+                    .Select(j => new SelectListItem
+                    {
+                        Text = j.Name,
+                        Value = j.Id.ToString(),
+                        Selected = employee.JobTitleId == j.Id
+                    })
+                    .ToList();
+            }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -220,6 +241,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.ClientId = command.ClientId;
                 employee.COLADaily = command.COLADaily;
                 employee.COLAHourly = command.COLAHourly;
+                employee.CompanyIdNumber = command.CompanyIdNumber;
                 employee.DailyRate = command.DailyRate;
                 employee.DateHired = command.DateHired;
                 employee.DateOfBirth = command.DateOfBirth;
@@ -232,15 +254,17 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.Gender = command.Gender;
                 employee.HourlyRate = command.HourlyRate;
                 employee.IsActive = command.IsActive;
+                employee.JobTitleId = command.JobTitleId;
                 employee.LastName = command.LastName;
                 employee.MiddleName = command.MiddleName;
                 employee.ModifiedOn = DateTime.UtcNow;
                 employee.Nickname = command.Nickname;
                 employee.PagIbig = command.PagIbig;
                 employee.PagIbigExempt = command.PagIbigExempt;
+                employee.PermanentAddress = command.PermanentAddress;
                 employee.PhilHealth = command.PhilHealth;
                 employee.PhilHealthExempt = command.PhilHealthExempt;
-                employee.Position = command.Position;
+                employee.PlaceOfBirth = command.PlaceOfBirth;
                 employee.Region = command.Region;
                 employee.ReligionId = command.ReligionId;
                 employee.ResignStatus = command.ResignStatus;

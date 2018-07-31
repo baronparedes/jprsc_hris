@@ -23,12 +23,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
         public class QueryResult
         {
-            public IList<SelectListItem> ReligionsList { get; set; } = new List<SelectListItem>();
-            public IList<SelectListItem> ClientsList { get; set; } = new List<SelectListItem>();
-            public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
-            public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
-
             public string EmployeeCode { get; set; }
+            public string CompanyIdNumber { get; set; }
             public int Id { get; set; }
 
             // Employee Info
@@ -38,7 +34,9 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string Nickname { get; set; }
             public string Email { get; set; }
             public string CityAddress { get; set; }
+            public string PermanentAddress { get; set; }
             public DateTime? DateOfBirth { get; set; }
+            public string PlaceOfBirth { get; set; }
             public string ZipCode { get; set; }
             public string TelNo { get; set; }
             public string CelNo { get; set; }
@@ -55,7 +53,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string ClientName { get; set; }
             public DateTime? DateHired { get; set; }
             public DateTime? DateResigned { get; set; }
-            public string Position { get; set; }
+            public string JobTitleName { get; set; }
             public string DepartmentName { get; set; }
             public string Region { get; set; }
             public string EmployeeStatus { get; set; }

@@ -74,5 +74,11 @@ namespace JPRSC.HRIS.Models
         public bool? SubmittedDiplomaOrTCR { get; set; }
         public bool? SubmittedPreEmploymentMedicalResult { get; set; }
         public bool? SubmittedSSSLoanVerification { get; set; }
+
+        public JobTitle JobTitle { get; set; }
+        public int? JobTitleId { get; set; }
+        public string CompanyIdNumber { get; set; }
+        public string PermanentAddress { get; set; }
+        public string PlaceOfBirth { get; set; }
     }
 }

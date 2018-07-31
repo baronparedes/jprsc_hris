@@ -290,6 +290,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807310620000_AddEmployeeSubmittedFiles.Designer.cs">
       <DependentUpon>201807310620000_AddEmployeeSubmittedFiles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807310721380_AddAdditionalEmployeeFields.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807310721380_AddAdditionalEmployeeFields.Designer.cs">
+      <DependentUpon>201807310721380_AddAdditionalEmployeeFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -500,6 +504,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807310620000_AddEmployeeSubmittedFiles.resx">
       <DependentUpon>201807310620000_AddEmployeeSubmittedFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807310721380_AddAdditionalEmployeeFields.resx">
+      <DependentUpon>201807310721380_AddAdditionalEmployeeFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

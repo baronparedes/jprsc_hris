@@ -35,12 +35,14 @@
                                 <uib-tabset active="active">
                                     <uib-tab index="0" heading="Employee Info">
                                         @Html.TextBoxHorizontalFormGroup("EmployeeCode")
+                                        @Html.TextBoxHorizontalFormGroup("CompanyIdNumber", "Company ID")
                                         @Html.TextBoxHorizontalFormGroup("FirstName")
                                         @Html.TextBoxHorizontalFormGroup("MiddleName")
                                         @Html.TextBoxHorizontalFormGroup("LastName")
                                         @Html.TextBoxHorizontalFormGroup("Nickname")
                                         @Html.TextBoxHorizontalFormGroup("Email")
                                         @Html.TextBoxHorizontalFormGroup("CityAddress", "Present Address")
+                                        @Html.TextBoxHorizontalFormGroup("PermanentAddress")
                                         <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.dateOfBirth }">
                                             <label class="col-md-3 col-lg-2 control-label">Date of Birth</label>
                                             <div class="col-md-9 col-lg-10">
@@ -51,6 +53,7 @@
                                                 <span class="help-block" ng-show="vm.validationErrors.dateOfBirth"></span>
                                             </div>
                                         </div>
+                                        @Html.TextBoxHorizontalFormGroup("PlaceOfBirth", "Place of Birth")
                                         @Html.TextBoxHorizontalFormGroup("ZipCode")
                                         @Html.TextBoxHorizontalFormGroup("TelNo")
                                         @Html.TextBoxHorizontalFormGroup("CelNo")
@@ -85,7 +88,7 @@
                                                 <span class="help-block" ng-show="vm.validationErrors.dateResigned"></span>
                                             </div>
                                         </div>
-                                        @Html.TextBoxHorizontalFormGroup("Position")
+                                        @Html.DropdownHorizontalFormGroup(Model.JobTitlesList, "JobTitleId", "Job Title")
                                         @Html.DropdownHorizontalFormGroup(Model.DepartmentsList, "DepartmentId", "Branch")
                                         @Html.TextBoxHorizontalFormGroup("Region")
                                         @Html.TextBoxHorizontalFormGroup("EmployeeStatus")
