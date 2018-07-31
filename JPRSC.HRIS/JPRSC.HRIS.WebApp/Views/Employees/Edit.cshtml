@@ -142,7 +142,21 @@
                                         </div>
                                     </uib-tab>
                                     <uib-tab index="3" heading="Submitted Files">
-
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedBiodata", "Biodata / Resume with Picture")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedIdPictures", "ID Pictures ( 2 pcs each size )")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedNBIClearance", "NBI Clearance")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedPoliceClearance", "Police Clearance")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedBarangayClearance", "Barangay Clearance")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedSSSIdOrED1Form", "SSS ID or E1 Form")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedPhilHealthIdOrMDRForm", "Philhealth ID or MDR Form")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedPagIbigIdOrMIDNo", "Pag-ibig ID or MID No.")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedTINIdOr1902Form", "TIN ID or 1902 Form")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedBirthCertificate", "Birth Certificate")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedMarriageCertification", "Marriage Certification (if Married)")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedBirthCertificateOfChildren", "Birth Certificate of Children (if any)")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedDiplomaOrTCR", "Diploma or TOR")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedPreEmploymentMedicalResult", "Pre-employment Medical Result")
+                                        @Html.CheckboxHorizontalFormGroup("SubmittedSSSLoanVerification", "SSS Loan Verification")
                                     </uib-tab>
                                 </uib-tabset>
                             </div>

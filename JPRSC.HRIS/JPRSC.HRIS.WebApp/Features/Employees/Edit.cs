@@ -79,6 +79,23 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public bool? ThirteenthMonthExempt { get; set; }
             public bool? PhilHealthExempt { get; set; }
             public string SalaryStatus { get; set; }
+
+            // Submitted Files
+            public bool? SubmittedBiodata { get; set; }
+            public bool? SubmittedIdPictures { get; set; }
+            public bool? SubmittedNBIClearance { get; set; }
+            public bool? SubmittedPoliceClearance { get; set; }
+            public bool? SubmittedBarangayClearance { get; set; }
+            public bool? SubmittedSSSIdOrED1Form { get; set; }
+            public bool? SubmittedPhilHealthIdOrMDRForm { get; set; }
+            public bool? SubmittedPagIbigIdOrMIDNo { get; set; }
+            public bool? SubmittedTINIdOr1902Form { get; set; }
+            public bool? SubmittedBirthCertificate { get; set; }
+            public bool? SubmittedMarriageCertification { get; set; }
+            public bool? SubmittedBirthCertificateOfChildren { get; set; }
+            public bool? SubmittedDiplomaOrTCR { get; set; }
+            public bool? SubmittedPreEmploymentMedicalResult { get; set; }
+            public bool? SubmittedSSSLoanVerification { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Command>
@@ -229,6 +246,21 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.ResignStatus = command.ResignStatus;
                 employee.SalaryStatus = command.SalaryStatus;
                 employee.SSS = command.SSS;
+                employee.SubmittedBarangayClearance = command.SubmittedBarangayClearance.GetValueOrDefault();
+                employee.SubmittedBirthCertificate = command.SubmittedBirthCertificate.GetValueOrDefault();
+                employee.SubmittedBirthCertificateOfChildren = command.SubmittedBirthCertificateOfChildren.GetValueOrDefault();
+                employee.SubmittedDiplomaOrTCR = command.SubmittedDiplomaOrTCR.GetValueOrDefault();
+                employee.SubmittedIdPictures = command.SubmittedIdPictures.GetValueOrDefault();
+                employee.SubmittedMarriageCertification = command.SubmittedMarriageCertification.GetValueOrDefault();
+                employee.SubmittedNBIClearance = command.SubmittedNBIClearance.GetValueOrDefault();
+                employee.SubmittedPagIbigIdOrMIDNo = command.SubmittedPagIbigIdOrMIDNo.GetValueOrDefault();
+                employee.SubmittedPhilHealthIdOrMDRForm = command.SubmittedPhilHealthIdOrMDRForm.GetValueOrDefault();
+                employee.SubmittedPoliceClearance = command.SubmittedPoliceClearance.GetValueOrDefault();
+                employee.SubmittedPreEmploymentMedicalResult = command.SubmittedPreEmploymentMedicalResult.GetValueOrDefault();
+                employee.SubmittedSSSIdOrED1Form = command.SubmittedSSSIdOrED1Form.GetValueOrDefault();
+                employee.SubmittedSSSLoanVerification = command.SubmittedSSSLoanVerification.GetValueOrDefault();
+                employee.SubmittedTINIdOr1902Form = command.SubmittedTINIdOr1902Form.GetValueOrDefault();
+                employee.SubmittedBiodata = command.SubmittedBiodata.GetValueOrDefault();
                 employee.TaxExempt = command.TaxExempt;
                 employee.TaxStatusId = command.TaxStatusId;
                 employee.TelNo = command.TelNo;

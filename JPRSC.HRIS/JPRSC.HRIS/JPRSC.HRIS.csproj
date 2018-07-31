@@ -286,6 +286,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201807290614054_RemoveLoanPayrollPeriod.Designer.cs">
       <DependentUpon>201807290614054_RemoveLoanPayrollPeriod.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201807310620000_AddEmployeeSubmittedFiles.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201807310620000_AddEmployeeSubmittedFiles.Designer.cs">
+      <DependentUpon>201807310620000_AddEmployeeSubmittedFiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -493,6 +497,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807290614054_RemoveLoanPayrollPeriod.resx">
       <DependentUpon>201807290614054_RemoveLoanPayrollPeriod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201807310620000_AddEmployeeSubmittedFiles.resx">
+      <DependentUpon>201807310620000_AddEmployeeSubmittedFiles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -18,7 +18,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
     public class Add
     {
         public class Query : IRequest<Command>
-        {            
+        {
         }
 
         public class Command : IRequest
@@ -76,6 +76,23 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public bool? ThirteenthMonthExempt { get; set; }
             public bool? PhilHealthExempt { get; set; }
             public string SalaryStatus { get; set; }
+
+            // Submitted Files
+            public bool? SubmittedBiodata { get; set; }
+            public bool? SubmittedIdPictures { get; set; }
+            public bool? SubmittedNBIClearance { get; set; }
+            public bool? SubmittedPoliceClearance { get; set; }
+            public bool? SubmittedBarangayClearance { get; set; }
+            public bool? SubmittedSSSIdOrED1Form { get; set; }
+            public bool? SubmittedPhilHealthIdOrMDRForm { get; set; }
+            public bool? SubmittedPagIbigIdOrMIDNo { get; set; }
+            public bool? SubmittedTINIdOr1902Form { get; set; }
+            public bool? SubmittedBirthCertificate { get; set; }
+            public bool? SubmittedMarriageCertification { get; set; }
+            public bool? SubmittedBirthCertificateOfChildren { get; set; }
+            public bool? SubmittedDiplomaOrTCR { get; set; }
+            public bool? SubmittedPreEmploymentMedicalResult { get; set; }
+            public bool? SubmittedSSSLoanVerification { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Command>
@@ -222,6 +239,21 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     ResignStatus = command.ResignStatus,
                     SalaryStatus = command.SalaryStatus,
                     SSS = command.SSS,
+                    SubmittedBarangayClearance = command.SubmittedBarangayClearance.GetValueOrDefault(),
+                    SubmittedBirthCertificate = command.SubmittedBirthCertificate.GetValueOrDefault(),
+                    SubmittedBirthCertificateOfChildren = command.SubmittedBirthCertificateOfChildren.GetValueOrDefault(),
+                    SubmittedDiplomaOrTCR = command.SubmittedDiplomaOrTCR.GetValueOrDefault(),
+                    SubmittedIdPictures = command.SubmittedIdPictures.GetValueOrDefault(),
+                    SubmittedMarriageCertification = command.SubmittedMarriageCertification.GetValueOrDefault(),
+                    SubmittedNBIClearance = command.SubmittedNBIClearance.GetValueOrDefault(),
+                    SubmittedPagIbigIdOrMIDNo = command.SubmittedPagIbigIdOrMIDNo.GetValueOrDefault(),
+                    SubmittedPhilHealthIdOrMDRForm = command.SubmittedPhilHealthIdOrMDRForm.GetValueOrDefault(),
+                    SubmittedPoliceClearance = command.SubmittedPoliceClearance.GetValueOrDefault(),
+                    SubmittedPreEmploymentMedicalResult = command.SubmittedPreEmploymentMedicalResult.GetValueOrDefault(),
+                    SubmittedSSSIdOrED1Form = command.SubmittedSSSIdOrED1Form.GetValueOrDefault(),
+                    SubmittedSSSLoanVerification = command.SubmittedSSSLoanVerification.GetValueOrDefault(),
+                    SubmittedTINIdOr1902Form = command.SubmittedTINIdOr1902Form.GetValueOrDefault(),
+                    SubmittedBiodata = command.SubmittedBiodata.GetValueOrDefault(),
                     TaxExempt = command.TaxExempt,
                     TaxStatusId = command.TaxStatusId,
                     TelNo = command.TelNo,

@@ -58,5 +58,21 @@ namespace JPRSC.HRIS.Models
         public bool? ThirteenthMonthExempt { get; set; }
         public string TIN { get; set; }
         public string ZipCode { get; set; }
+
+        public bool? SubmittedBiodata { get; set; }
+        public bool? SubmittedIdPictures { get; set; }
+        public bool? SubmittedNBIClearance { get; set; }
+        public bool? SubmittedPoliceClearance { get; set; }
+        public bool? SubmittedBarangayClearance { get; set; }
+        public bool? SubmittedSSSIdOrED1Form { get; set; }
+        public bool? SubmittedPhilHealthIdOrMDRForm { get; set; }
+        public bool? SubmittedPagIbigIdOrMIDNo { get; set; }
+        public bool? SubmittedTINIdOr1902Form { get; set; }
+        public bool? SubmittedBirthCertificate { get; set; }
+        public bool? SubmittedMarriageCertification { get; set; }
+        public bool? SubmittedBirthCertificateOfChildren { get; set; }
+        public bool? SubmittedDiplomaOrTCR { get; set; }
+        public bool? SubmittedPreEmploymentMedicalResult { get; set; }
+        public bool? SubmittedSSSLoanVerification { get; set; }
     }
 }
