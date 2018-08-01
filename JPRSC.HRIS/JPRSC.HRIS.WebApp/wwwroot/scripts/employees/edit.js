@@ -53,6 +53,7 @@
             vm.citizenship = { value: employee.citizenship };
             vm.civilStatus = { value: employee.civilStatus };
             vm.accountType = { value: employee.accountType };
+            vm.region = { value: employee.region };
         };
     };
 }());

@@ -29,7 +29,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
                 Permission.CustomRoleDefault,
                 Permission.EarningDeductionDefault,
                 Permission.JobTitleDefault,
-                Permission.DepartmentDefault,
+                Permission.BranchDefault,
                 Permission.TaxStatusDefault,
                 Permission.EmployeeDefault,
                 Permission.ApprovalLevelDefault,

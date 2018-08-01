@@ -294,6 +294,14 @@
     <Compile Include="Infrastructure\Data\Migrations\201807310721380_AddAdditionalEmployeeFields.Designer.cs">
       <DependentUpon>201807310721380_AddAdditionalEmployeeFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201808010505565_AddPayrollRecordCOLAHourly.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201808010505565_AddPayrollRecordCOLAHourly.Designer.cs">
+      <DependentUpon>201808010505565_AddPayrollRecordCOLAHourly.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201808010521583_ChangeRegionToEnum.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201808010521583_ChangeRegionToEnum.Designer.cs">
+      <DependentUpon>201808010521583_ChangeRegionToEnum.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -346,6 +354,7 @@
     <Compile Include="Models\PayrollProcessBatch.cs" />
     <Compile Include="Models\PayrollRecord.cs" />
     <Compile Include="Models\PhicRecord.cs" />
+    <Compile Include="Models\Region.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\ResignStatus.cs" />
     <Compile Include="Models\SalaryStatus.cs" />
@@ -507,6 +516,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201807310721380_AddAdditionalEmployeeFields.resx">
       <DependentUpon>201807310721380_AddAdditionalEmployeeFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201808010505565_AddPayrollRecordCOLAHourly.resx">
+      <DependentUpon>201808010505565_AddPayrollRecordCOLAHourly.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201808010521583_ChangeRegionToEnum.resx">
+      <DependentUpon>201808010521583_ChangeRegionToEnum.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

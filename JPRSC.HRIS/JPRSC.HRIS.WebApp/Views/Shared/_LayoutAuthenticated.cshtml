@@ -65,17 +65,6 @@
                     male: @Html.EnumLookup(Gender.Male),
                     female: @Html.EnumLookup(Gender.Female)
                 },
-                taxTables: {
-                    weeekly: @Html.EnumLookup(TaxTable.Weekly),
-                    semiMonthly: @Html.EnumLookup(TaxTable.SemiMonthly),
-                    monthly: @Html.EnumLookup(TaxTable.Monthly),
-                    yearly: @Html.EnumLookup(TaxTable.Yearly)
-                },
-                payrollCodes: {
-                    weekly: @Html.EnumLookup(PayrollCode.Weekly),
-                    semiMonthly: @Html.EnumLookup(PayrollCode.SemiMonthly),
-                    monthly: @Html.EnumLookup(PayrollCode.Monthly)
-                },
                 months: {
                     january: @Html.EnumLookup(Month.January),
                     february: @Html.EnumLookup(Month.February),
@@ -89,6 +78,36 @@
                     october: @Html.EnumLookup(Month.October),
                     november: @Html.EnumLookup(Month.November),
                     december: @Html.EnumLookup(Month.December)
+                },
+                payrollCodes: {
+                    weekly: @Html.EnumLookup(PayrollCode.Weekly),
+                    semiMonthly: @Html.EnumLookup(PayrollCode.SemiMonthly),
+                    monthly: @Html.EnumLookup(PayrollCode.Monthly)
+                },
+                regions: {
+                    ncr: @Html.EnumLookup(Region.NCR),
+                    armm: @Html.EnumLookup(Region.ARMM),
+                    car: @Html.EnumLookup(Region.CAR),
+                    region1: @Html.EnumLookup(Region.Region1),
+                    region2: @Html.EnumLookup(Region.Region2),
+                    region3: @Html.EnumLookup(Region.Region3),
+                    region4A: @Html.EnumLookup(Region.Region4A),
+                    region4B: @Html.EnumLookup(Region.Region4B),
+                    region5: @Html.EnumLookup(Region.Region5),
+                    region6: @Html.EnumLookup(Region.Region6),
+                    region7: @Html.EnumLookup(Region.Region7),
+                    region8: @Html.EnumLookup(Region.Region8),
+                    region9: @Html.EnumLookup(Region.Region9),
+                    region10: @Html.EnumLookup(Region.Region10),
+                    region11: @Html.EnumLookup(Region.Region11),
+                    region12: @Html.EnumLookup(Region.Region12),
+                    region13: @Html.EnumLookup(Region.Region13)
+                },
+                taxTables: {
+                    weeekly: @Html.EnumLookup(TaxTable.Weekly),
+                    semiMonthly: @Html.EnumLookup(TaxTable.SemiMonthly),
+                    monthly: @Html.EnumLookup(TaxTable.Monthly),
+                    yearly: @Html.EnumLookup(TaxTable.Yearly)
                 }
             };
 

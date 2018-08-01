@@ -39,9 +39,9 @@ namespace JPRSC.HRIS.Models
         [Display(Name = "Job Titles")]
         JobTitleDefault = 800,
 
-        // Department
-        [Display(Name = "Departments")]
-        DepartmentDefault = 900,
+        // Branch, formerly known as Department
+        [Display(Name = "Branches")]
+        BranchDefault = 900,
 
         // Tax Status
         [Display(Name = "Tax Statuses")]

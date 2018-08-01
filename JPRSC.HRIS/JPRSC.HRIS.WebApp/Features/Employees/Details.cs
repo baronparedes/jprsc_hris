@@ -55,7 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public DateTime? DateResigned { get; set; }
             public string JobTitleName { get; set; }
             public string DepartmentName { get; set; }
-            public string Region { get; set; }
+            public Region? Region { get; set; }
             public string EmployeeStatus { get; set; }
             public string ResignStatus { get; set; }
             public bool? IsActive { get; set; } = true;

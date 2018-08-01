@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Departments
 {
-    [AuthorizePermission(Permission.DepartmentDefault)]
+    [AuthorizePermission(Permission.BranchDefault)]
     public class DepartmentsController : AppController
     {
         private readonly IMediator _mediator;

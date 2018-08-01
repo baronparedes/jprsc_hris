@@ -54,8 +54,12 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 
                 foreach (var permission in customRole.Permissions)
                 {
-                    var correspondingPermissionListItem = command.PermissionsList.Single(p => p.Value == ((int)permission).ToString());
-                    correspondingPermissionListItem.Selected = true;
+                    var correspondingPermissionListItem = command.PermissionsList.SingleOrDefault(p => p.Value == ((int)permission).ToString());
+
+                    if (correspondingPermissionListItem != null)
+                    {
+                        correspondingPermissionListItem.Selected = true;
+                    }
                 }
 
                 return command;
