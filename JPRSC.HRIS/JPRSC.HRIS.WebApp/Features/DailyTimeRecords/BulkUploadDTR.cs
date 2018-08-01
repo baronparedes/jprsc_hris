@@ -42,7 +42,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 {
                     RuleFor(c => c.File)
                         .Must(HaveValidNumberOfColumns)
-                        .WithMessage("Unrecognized number of columns. Please use these columns: Employee Code, Last Name, First Name, Days Worked, Hours Worked, Hours Late, Hours Undertime, ROT, ND, NDOT, SH, NDSH, SHOT, NDSHOT, LH, NDLH, LHOT, NDLHOT, DOD, DODOT, SHDOD, SHDODOT, LHDOD, LHDODOT, ADJ_PAY, EXC_DOD, HOLIDAY, ND_LHX8, ND_LHRDX8, ND_LHRDF8, ND_LHF8, NDX8, NDF8, ND_RDX8, ND_RDF8, ND_SHX8, ND_SHRDX8, ND_SHRDF8, ND_SHF8, ND_B2020, OT_LHX8, OT_LHRDX8, OT_LHRDF8, OT_LHF8, OT_RDX8, OT_RDF8, OT_SHF8M, OT_SHX8, OT_SHRDX8, OT_SHRDF8, OT_SHF8, UWLH_B2020");
+                        .WithMessage("Unrecognized number of columns. Please use these columns: Employee Code, Last Name, First Name, Days Worked, Minutes Worked, Minutes Late, Minutes Undertime, ROT, ND, NDOT, SH, NDSH, SHOT, NDSHOT, LH, NDLH, LHOT, NDLHOT, DOD, DODOT, SHDOD, SHDODOT, LHDOD, LHDODOT, ADJ_PAY, EXC_DOD, HOLIDAY, ND_LHX8, ND_LHRDX8, ND_LHRDF8, ND_LHF8, NDX8, NDF8, ND_RDX8, ND_RDF8, ND_SHX8, ND_SHRDX8, ND_SHRDF8, ND_SHF8, ND_B2020, OT_LHX8, OT_LHRDX8, OT_LHRDF8, OT_LHF8, OT_RDX8, OT_RDF8, OT_SHF8M, OT_SHX8, OT_SHRDX8, OT_SHRDF8, OT_SHF8, UWLH_B2020");
                 });
 
                 When(c => c.ClientId.HasValue && c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue, () =>
@@ -168,12 +168,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         existingDailyTimeRecord.DaysWorked = uploadItem.DaysWorked;
                         existingDailyTimeRecord.DaysWorkedValue = (decimal?)uploadItem.DaysWorked * employee.DailyRate;
                         existingDailyTimeRecord.HourlyRate = employee.HourlyRate;
-                        existingDailyTimeRecord.HoursLate = uploadItem.HoursLate;
-                        existingDailyTimeRecord.HoursLateValue = (decimal?)uploadItem.HoursLate * employee.HourlyRate;
-                        existingDailyTimeRecord.HoursUndertime = uploadItem.HoursUndertime;
-                        existingDailyTimeRecord.HoursUndertimeValue = (decimal?)uploadItem.HoursUndertime * employee.HourlyRate;
-                        existingDailyTimeRecord.HoursWorked = uploadItem.HoursWorked;
-                        existingDailyTimeRecord.HoursWorkedValue = (decimal?)uploadItem.HoursWorked * employee.HourlyRate;
+                        existingDailyTimeRecord.HoursLate = uploadItem.MinutesLate / 60;
+                        existingDailyTimeRecord.HoursLateValue = (decimal?)(uploadItem.MinutesLate / 60) * employee.HourlyRate;
+                        existingDailyTimeRecord.HoursUndertime = uploadItem.MinutesUndertime / 60;
+                        existingDailyTimeRecord.HoursUndertimeValue = (decimal?)(uploadItem.MinutesUndertime / 60) * employee.HourlyRate;
+                        existingDailyTimeRecord.HoursWorked = uploadItem.MinutesWorked / 60;
+                        existingDailyTimeRecord.HoursWorkedValue = (decimal?)(uploadItem.MinutesWorked / 60) * employee.HourlyRate;
                         existingDailyTimeRecord.ModifiedOn = now;
                     }
                     else
@@ -187,420 +187,420 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             DaysWorkedValue = (decimal?)uploadItem.DaysWorked * employee.DailyRate,
                             EmployeeId = employee.Id,
                             HourlyRate = employee.HourlyRate,
-                            HoursLate = uploadItem.HoursLate,
-                            HoursLateValue = (decimal?)uploadItem.HoursLate * employee.HourlyRate,
-                            HoursUndertime = uploadItem.HoursUndertime,
-                            HoursUndertimeValue = (decimal?)uploadItem.HoursUndertime * employee.HourlyRate,
-                            HoursWorked = uploadItem.HoursWorked,
-                            HoursWorkedValue = (decimal?)uploadItem.HoursWorked * employee.HourlyRate,
+                            HoursLate = uploadItem.MinutesLate / 60,
+                            HoursLateValue = (decimal?)(uploadItem.MinutesLate / 60) * employee.HourlyRate,
+                            HoursUndertime = uploadItem.MinutesUndertime / 60,
+                            HoursUndertimeValue = (decimal?)(uploadItem.MinutesUndertime / 60) * employee.HourlyRate,
+                            HoursWorked = uploadItem.MinutesWorked / 60,
+                            HoursWorkedValue = (decimal?)(uploadItem.MinutesWorked / 60) * employee.HourlyRate,
                             PayrollPeriodFrom = command.PayrollPeriodFrom,
                             PayrollPeriodTo = command.PayrollPeriodTo
                         };
                         _db.DailyTimeRecords.Add(dailyTimeRecord);
                     }
 
-                    if (uploadItem.HoursROT.HasValue)
+                    if (uploadItem.MinutesROT.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ROT");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursROT;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursROT * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesROT / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesROT / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND.HasValue)
+                    if (uploadItem.MinutesND.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursNDOT.HasValue)
+                    if (uploadItem.MinutesNDOT.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "NDOT");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursNDOT;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursNDOT * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesNDOT / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesNDOT / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursSH.HasValue)
+                    if (uploadItem.MinutesSH.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "SH");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursSH;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursSH * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesSH / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesSH / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursNDSH.HasValue)
+                    if (uploadItem.MinutesNDSH.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "NDSH");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursNDSH;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursNDSH * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesNDSH / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesNDSH / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursSHOT.HasValue)
+                    if (uploadItem.MinutesSHOT.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "SHOT");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursSHOT;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursSHOT * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesSHOT / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesSHOT / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursNDSHOT.HasValue)
+                    if (uploadItem.MinutesNDSHOT.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "NDSHOT");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursNDSHOT;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursNDSHOT * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesNDSHOT / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesNDSHOT / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursLH.HasValue)
+                    if (uploadItem.MinutesLH.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "LH");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursLH;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursLH * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesLH / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesLH / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursNDLH.HasValue)
+                    if (uploadItem.MinutesNDLH.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "NDLH");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursNDLH;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursNDLH * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesNDLH / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesNDLH / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursLHOT.HasValue)
+                    if (uploadItem.MinutesLHOT.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "LHOT");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursLHOT;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursLHOT * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesLHOT / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesLHOT / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursNDLHOT.HasValue)
+                    if (uploadItem.MinutesNDLHOT.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "NDLHOT");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursNDLHOT;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursNDLHOT * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesNDLHOT;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesNDLHOT / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursDOD.HasValue)
+                    if (uploadItem.MinutesDOD.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "DOD");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursDOD;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursDOD * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesDOD / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesDOD / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursDODOT.HasValue)
+                    if (uploadItem.MinutesDODOT.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "DODOT");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursDODOT;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursDODOT * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesDODOT / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesDODOT / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursSHDOD.HasValue)
+                    if (uploadItem.MinutesSHDOD.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "SHDOD");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursSHDOD;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursSHDOD * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesSHDOD / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesSHDOD / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursSHDODOT.HasValue)
+                    if (uploadItem.MinutesSHDODOT.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "SHDODOT");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursSHDODOT;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursSHDODOT * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesSHDODOT / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesSHDODOT / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursLHDOD.HasValue)
+                    if (uploadItem.MinutesLHDOD.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "LHDOD");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursLHDOD;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursLHDOD * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesLHDOD / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesLHDOD / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursLHDODOT.HasValue)
+                    if (uploadItem.MinutesLHDODOT.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "LHDODOT");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursLHDODOT;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursLHDODOT * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesLHDODOT / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesLHDODOT / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursADJ_PAY.HasValue)
+                    if (uploadItem.MinutesADJ_PAY.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ADJ_PAY");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursADJ_PAY;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursADJ_PAY * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesADJ_PAY / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesADJ_PAY / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursEXC_DOD.HasValue)
+                    if (uploadItem.MinutesEXC_DOD.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "EXC_DOD");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursEXC_DOD;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursEXC_DOD * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesEXC_DOD;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesEXC_DOD / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursHOLIDAY.HasValue)
+                    if (uploadItem.MinutesHOLIDAY.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "HOLIDAY");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursHOLIDAY;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursHOLIDAY * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesHOLIDAY / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesHOLIDAY / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_LHX8.HasValue)
+                    if (uploadItem.MinutesND_LHX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_LHX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_LHX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_LHX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_LHX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_LHX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_LHRDX8.HasValue)
+                    if (uploadItem.MinutesND_LHRDX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_LHRDX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_LHRDX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_LHRDX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_LHRDX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_LHRDX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_LHRDF8.HasValue)
+                    if (uploadItem.MinutesND_LHRDF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_LHRDF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_LHRDF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_LHRDF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_LHRDF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_LHRDF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_LHF8.HasValue)
+                    if (uploadItem.MinutesND_LHF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_LHF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_LHF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_LHF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_LHF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_LHF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursNDX8.HasValue)
+                    if (uploadItem.MinutesNDX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "NDX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursNDX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursNDX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesNDX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesNDX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursNDF8.HasValue)
+                    if (uploadItem.MinutesNDF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "NDF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursNDF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursNDF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesNDF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesNDF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_RDX8.HasValue)
+                    if (uploadItem.MinutesND_RDX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_RDX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_RDX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_RDX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_RDX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_RDX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_RDF8.HasValue)
+                    if (uploadItem.MinutesND_RDF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_RDF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_RDF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_RDF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_RDF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_RDF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_SHX8.HasValue)
+                    if (uploadItem.MinutesND_SHX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_SHX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_SHX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_SHX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_SHX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_SHX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_SHRDX8.HasValue)
+                    if (uploadItem.MinutesND_SHRDX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_SHRDX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_SHRDX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_SHRDX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_SHRDX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_SHRDX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_SHRDF8.HasValue)
+                    if (uploadItem.MinutesND_SHRDF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_SHRDF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_SHRDF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_SHRDF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_SHRDF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_SHRDF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_SHF8.HasValue)
+                    if (uploadItem.MinutesND_SHF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_SHF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_SHF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_SHF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_SHF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_SHF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursND_B2020.HasValue)
+                    if (uploadItem.MinutesND_B2020.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "ND_B2020");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursND_B2020;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursND_B2020 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesND_B2020 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesND_B2020 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_LHX8.HasValue)
+                    if (uploadItem.MinutesOT_LHX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_LHX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_LHX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_LHX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_LHX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_LHX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_LHRDX8.HasValue)
+                    if (uploadItem.MinutesOT_LHRDX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_LHRDX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_LHRDX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_LHRDX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_LHRDX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_LHRDX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_LHRDF8.HasValue)
+                    if (uploadItem.MinutesOT_LHRDF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_LHRDF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_LHRDF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_LHRDF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_LHRDF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_LHRDF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_LHF8.HasValue)
+                    if (uploadItem.MinutesOT_LHF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_LHF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_LHF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_LHF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_LHF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_LHF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_RDX8.HasValue)
+                    if (uploadItem.MinutesOT_RDX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_RDX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_RDX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_RDX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_RDX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_RDX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_RDF8.HasValue)
+                    if (uploadItem.MinutesOT_RDF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_RDF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_RDF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_RDF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_RDF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_RDF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_SHF8M.HasValue)
+                    if (uploadItem.MinutesOT_SHF8M.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_SHF8M");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_SHF8M;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_SHF8M * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_SHF8M / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_SHF8M / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_SHX8.HasValue)
+                    if (uploadItem.MinutesOT_SHX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_SHX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_SHX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_SHX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_SHX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_SHX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_SHRDX8.HasValue)
+                    if (uploadItem.MinutesOT_SHRDX8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_SHRDX8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_SHRDX8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_SHRDX8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_SHRDX8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_SHRDX8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_SHRDF8.HasValue)
+                    if (uploadItem.MinutesOT_SHRDF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_SHRDF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_SHRDF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_SHRDF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_SHRDF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_SHRDF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursOT_SHF8.HasValue)
+                    if (uploadItem.MinutesOT_SHF8.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "OT_SHF8");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursOT_SHF8;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursOT_SHF8 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesOT_SHF8 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesOT_SHF8 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
 
-                    if (uploadItem.HoursUWLH_B2020.HasValue)
+                    if (uploadItem.MinutesUWLH_B2020.HasValue)
                     {
                         var payRate = allPayRates.Single(p => p.Name == "UWLH_B2020");
                         var overtime = await GetOvertime(command, now, employee, payRate);
-                        overtime.NumberOfHours = uploadItem.HoursUWLH_B2020;
-                        overtime.NumberOfHoursValue = (decimal?)uploadItem.HoursUWLH_B2020 * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
+                        overtime.NumberOfHours = uploadItem.MinutesUWLH_B2020 / 60;
+                        overtime.NumberOfHoursValue = (decimal?)(uploadItem.MinutesUWLH_B2020 / 60) * employee.HourlyRate * (decimal?)(payRate.Percentage / 100);
                         if (overtime.Id == 0) _db.Overtimes.Add(overtime);
                     }
                 }
@@ -678,128 +678,128 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 FirstName = String.IsNullOrWhiteSpace(items[2]) ? null : items[2].Trim();
 
                 DaysWorked = items[3].ToNullableDouble();
-                HoursWorked = items[4].ToNullableDouble();
-                HoursLate = items[5].ToNullableDouble();
-                HoursUndertime = items[6].ToNullableDouble();
+                MinutesWorked = items[4].ToNullableDouble();
+                MinutesLate = items[5].ToNullableDouble();
+                MinutesUndertime = items[6].ToNullableDouble();
 
-                HoursROT = items[7].ToNullableDouble();
+                MinutesROT = items[7].ToNullableDouble();
 
-                HoursND = items[8].ToNullableDouble();
-                HoursNDOT = items[9].ToNullableDouble();
+                MinutesND = items[8].ToNullableDouble();
+                MinutesNDOT = items[9].ToNullableDouble();
 
-                HoursSH = items[10].ToNullableDouble();
-                HoursNDSH = items[11].ToNullableDouble();
+                MinutesSH = items[10].ToNullableDouble();
+                MinutesNDSH = items[11].ToNullableDouble();
 
-                HoursSHOT = items[12].ToNullableDouble();
-                HoursNDSHOT = items[13].ToNullableDouble();
+                MinutesSHOT = items[12].ToNullableDouble();
+                MinutesNDSHOT = items[13].ToNullableDouble();
 
-                HoursLH = items[14].ToNullableDouble();
-                HoursNDLH = items[15].ToNullableDouble();
+                MinutesLH = items[14].ToNullableDouble();
+                MinutesNDLH = items[15].ToNullableDouble();
 
-                HoursLHOT = items[16].ToNullableDouble();
-                HoursNDLHOT = items[17].ToNullableDouble();
+                MinutesLHOT = items[16].ToNullableDouble();
+                MinutesNDLHOT = items[17].ToNullableDouble();
 
-                HoursDOD = items[18].ToNullableDouble();
-                HoursDODOT = items[19].ToNullableDouble();
+                MinutesDOD = items[18].ToNullableDouble();
+                MinutesDODOT = items[19].ToNullableDouble();
 
-                HoursSHDOD = items[20].ToNullableDouble();
-                HoursSHDODOT = items[21].ToNullableDouble();
+                MinutesSHDOD = items[20].ToNullableDouble();
+                MinutesSHDODOT = items[21].ToNullableDouble();
 
-                HoursLHDOD = items[22].ToNullableDouble();
-                HoursLHDODOT = items[23].ToNullableDouble();
+                MinutesLHDOD = items[22].ToNullableDouble();
+                MinutesLHDODOT = items[23].ToNullableDouble();
 
-                HoursADJ_PAY = items[24].ToNullableDouble();
-                HoursEXC_DOD = items[25].ToNullableDouble();
-                HoursHOLIDAY = items[26].ToNullableDouble();
-                HoursND_LHX8 = items[27].ToNullableDouble();
-                HoursND_LHRDX8 = items[28].ToNullableDouble();
-                HoursND_LHRDF8 = items[29].ToNullableDouble();
-                HoursND_LHF8 = items[30].ToNullableDouble();
-                HoursNDX8 = items[31].ToNullableDouble();
-                HoursNDF8 = items[32].ToNullableDouble();
-                HoursND_RDX8 = items[33].ToNullableDouble();
-                HoursND_RDF8 = items[34].ToNullableDouble();
-                HoursND_SHX8 = items[35].ToNullableDouble();
-                HoursND_SHRDX8 = items[36].ToNullableDouble();
-                HoursND_SHRDF8 = items[37].ToNullableDouble();
-                HoursND_SHF8 = items[38].ToNullableDouble();
-                HoursND_B2020 = items[39].ToNullableDouble();
-                HoursOT_LHX8 = items[40].ToNullableDouble();
-                HoursOT_LHRDX8 = items[41].ToNullableDouble();
-                HoursOT_LHRDF8 = items[42].ToNullableDouble();
-                HoursOT_LHF8 = items[43].ToNullableDouble();
-                HoursOT_RDX8 = items[44].ToNullableDouble();
-                HoursOT_RDF8 = items[45].ToNullableDouble();
-                HoursOT_SHF8M = items[46].ToNullableDouble();
-                HoursOT_SHX8 = items[47].ToNullableDouble();
-                HoursOT_SHRDX8 = items[48].ToNullableDouble();
-                HoursOT_SHRDF8 = items[49].ToNullableDouble();
-                HoursOT_SHF8 = items[50].ToNullableDouble();
-                HoursUWLH_B2020 = items[51].ToNullableDouble();
+                MinutesADJ_PAY = items[24].ToNullableDouble();
+                MinutesEXC_DOD = items[25].ToNullableDouble();
+                MinutesHOLIDAY = items[26].ToNullableDouble();
+                MinutesND_LHX8 = items[27].ToNullableDouble();
+                MinutesND_LHRDX8 = items[28].ToNullableDouble();
+                MinutesND_LHRDF8 = items[29].ToNullableDouble();
+                MinutesND_LHF8 = items[30].ToNullableDouble();
+                MinutesNDX8 = items[31].ToNullableDouble();
+                MinutesNDF8 = items[32].ToNullableDouble();
+                MinutesND_RDX8 = items[33].ToNullableDouble();
+                MinutesND_RDF8 = items[34].ToNullableDouble();
+                MinutesND_SHX8 = items[35].ToNullableDouble();
+                MinutesND_SHRDX8 = items[36].ToNullableDouble();
+                MinutesND_SHRDF8 = items[37].ToNullableDouble();
+                MinutesND_SHF8 = items[38].ToNullableDouble();
+                MinutesND_B2020 = items[39].ToNullableDouble();
+                MinutesOT_LHX8 = items[40].ToNullableDouble();
+                MinutesOT_LHRDX8 = items[41].ToNullableDouble();
+                MinutesOT_LHRDF8 = items[42].ToNullableDouble();
+                MinutesOT_LHF8 = items[43].ToNullableDouble();
+                MinutesOT_RDX8 = items[44].ToNullableDouble();
+                MinutesOT_RDF8 = items[45].ToNullableDouble();
+                MinutesOT_SHF8M = items[46].ToNullableDouble();
+                MinutesOT_SHX8 = items[47].ToNullableDouble();
+                MinutesOT_SHRDX8 = items[48].ToNullableDouble();
+                MinutesOT_SHRDF8 = items[49].ToNullableDouble();
+                MinutesOT_SHF8 = items[50].ToNullableDouble();
+                MinutesUWLH_B2020 = items[51].ToNullableDouble();
             }
 
             public string EmployeeCode { get; set; }
             public string LastName { get; }
             public string FirstName { get; }
             public double? DaysWorked { get; }
-            public double? HoursWorked { get; }
-            public double? HoursLate { get; }
-            public double? HoursUndertime { get; }
+            public double? MinutesWorked { get; }
+            public double? MinutesLate { get; }
+            public double? MinutesUndertime { get; }
 
-            public double? HoursROT { get; }
+            public double? MinutesROT { get; }
 
-            public double? HoursND { get; }
-            public double? HoursNDOT { get; }
+            public double? MinutesND { get; }
+            public double? MinutesNDOT { get; }
 
-            public double? HoursSH { get; }
-            public double? HoursNDSH { get; }
+            public double? MinutesSH { get; }
+            public double? MinutesNDSH { get; }
 
-            public double? HoursSHOT { get; }
-            public double? HoursNDSHOT { get; }
+            public double? MinutesSHOT { get; }
+            public double? MinutesNDSHOT { get; }
 
-            public double? HoursLH { get; }
-            public double? HoursNDLH { get; }
+            public double? MinutesLH { get; }
+            public double? MinutesNDLH { get; }
 
-            public double? HoursLHOT { get; }
-            public double? HoursNDLHOT { get; }
+            public double? MinutesLHOT { get; }
+            public double? MinutesNDLHOT { get; }
 
-            public double? HoursDOD { get; }
-            public double? HoursDODOT { get; }
+            public double? MinutesDOD { get; }
+            public double? MinutesDODOT { get; }
 
-            public double? HoursSHDOD { get; }
-            public double? HoursSHDODOT { get; }
+            public double? MinutesSHDOD { get; }
+            public double? MinutesSHDODOT { get; }
 
-            public double? HoursLHDOD { get; }
-            public double? HoursLHDODOT { get; }
+            public double? MinutesLHDOD { get; }
+            public double? MinutesLHDODOT { get; }
 
-            public double? HoursADJ_PAY { get; }
-            public double? HoursEXC_DOD { get; }
-            public double? HoursHOLIDAY { get; }
-            public double? HoursND_LHX8 { get; }
-            public double? HoursND_LHRDX8 { get; }
-            public double? HoursND_LHRDF8 { get; }
-            public double? HoursND_LHF8 { get; }
-            public double? HoursNDX8 { get; }
-            public double? HoursNDF8 { get; }
-            public double? HoursND_RDX8 { get; }
-            public double? HoursND_RDF8 { get; }
-            public double? HoursND_SHX8 { get; }
-            public double? HoursND_SHRDX8 { get; }
-            public double? HoursND_SHRDF8 { get; }
-            public double? HoursND_SHF8 { get; }
-            public double? HoursND_B2020 { get; }
-            public double? HoursOT_LHX8 { get; }
-            public double? HoursOT_LHRDX8 { get; }
-            public double? HoursOT_LHRDF8 { get; }
-            public double? HoursOT_LHF8 { get; }
-            public double? HoursOT_RDX8 { get; }
-            public double? HoursOT_RDF8 { get; }
-            public double? HoursOT_SHF8M { get; }
-            public double? HoursOT_SHX8 { get; }
-            public double? HoursOT_SHRDX8 { get; }
-            public double? HoursOT_SHRDF8 { get; }
-            public double? HoursOT_SHF8 { get; }
-            public double? HoursUWLH_B2020 { get; }
+            public double? MinutesADJ_PAY { get; }
+            public double? MinutesEXC_DOD { get; }
+            public double? MinutesHOLIDAY { get; }
+            public double? MinutesND_LHX8 { get; }
+            public double? MinutesND_LHRDX8 { get; }
+            public double? MinutesND_LHRDF8 { get; }
+            public double? MinutesND_LHF8 { get; }
+            public double? MinutesNDX8 { get; }
+            public double? MinutesNDF8 { get; }
+            public double? MinutesND_RDX8 { get; }
+            public double? MinutesND_RDF8 { get; }
+            public double? MinutesND_SHX8 { get; }
+            public double? MinutesND_SHRDX8 { get; }
+            public double? MinutesND_SHRDF8 { get; }
+            public double? MinutesND_SHF8 { get; }
+            public double? MinutesND_B2020 { get; }
+            public double? MinutesOT_LHX8 { get; }
+            public double? MinutesOT_LHRDX8 { get; }
+            public double? MinutesOT_LHRDF8 { get; }
+            public double? MinutesOT_LHF8 { get; }
+            public double? MinutesOT_RDX8 { get; }
+            public double? MinutesOT_RDF8 { get; }
+            public double? MinutesOT_SHF8M { get; }
+            public double? MinutesOT_SHX8 { get; }
+            public double? MinutesOT_SHRDX8 { get; }
+            public double? MinutesOT_SHRDF8 { get; }
+            public double? MinutesOT_SHF8 { get; }
+            public double? MinutesUWLH_B2020 { get; }
         }
     }
 }

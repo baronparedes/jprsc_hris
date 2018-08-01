@@ -72,6 +72,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public decimal? HoursLateValue { get; set; }
                 public decimal? HoursUndertimeValue { get; set; }
                 public decimal? COLADailyValue { get; set; }
+                public decimal? COLAHourlyValue { get; set; }
                 public decimal? EarningsValue { get; set; }
                 public decimal? DeductionsValue { get; set; }
 
@@ -199,7 +200,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         Employee = pr.Employee,
                         BasicPay = pr.DaysWorkedValue.GetValueOrDefault() + pr.HoursWorkedValue.GetValueOrDefault(),
                         Overtime = pr.OvertimeValue.GetValueOrDefault(),
-                        COLA = pr.COLADailyValue.GetValueOrDefault(),
+                        COLA = pr.COLADailyValue.GetValueOrDefault() + pr.COLAHourlyValue.GetValueOrDefault(),
                         OtherEarnings = pr.EarningsValue.GetValueOrDefault(),
                         SSS = pr.SSSValueEmployee.GetValueOrDefault(),
                         PagIbig = pr.PagIbigValue.GetValueOrDefault(),

@@ -162,25 +162,25 @@
                                             <span ng-show="vm.validationErrors.daysWorked" class="help-block">{{vm.validationErrors.daysWorked.join(' ')}}</span>
                                         </div>
                                     </div>
-                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursWorked }">
-                                        <label class="col-md-8 col-lg-9 control-label">No. of Hours</label>
+                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.minutesWorked }">
+                                        <label class="col-md-8 col-lg-9 control-label">No. of Minutes</label>
                                         <div class="col-md-4 col-lg-3">
-                                            <input type="text" class="form-control" name="HoursWorked" ng-model="vm.hoursWorked" />
-                                            <span ng-show="vm.validationErrors.hoursWorked" class="help-block">{{vm.validationErrors.hoursWorked.join(' ')}}</span>
+                                            <input type="text" class="form-control" name="MinutesWorked" ng-model="vm.minutesWorked" />
+                                            <span ng-show="vm.validationErrors.minutesWorked" class="help-block">{{vm.validationErrors.minutesWorked.join(' ')}}</span>
                                         </div>
                                     </div>
-                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursLate }">
-                                        <label class="col-md-8 col-lg-9 control-label">Total Hours Late</label>
+                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.minutesLate }">
+                                        <label class="col-md-8 col-lg-9 control-label">Total Minutes Late</label>
                                         <div class="col-md-4 col-lg-3">
-                                            <input type="text" class="form-control" name="HoursLate" ng-model="vm.hoursLate" />
-                                            <span ng-show="vm.validationErrors.hoursLate" class="help-block">{{vm.validationErrors.hoursLate.join(' ')}}</span>
+                                            <input type="text" class="form-control" name="MinutesLate" ng-model="vm.minutesLate" />
+                                            <span ng-show="vm.validationErrors.minutesLate" class="help-block">{{vm.validationErrors.minutesLate.join(' ')}}</span>
                                         </div>
                                     </div>
-                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursUndertime }">
-                                        <label class="col-md-8 col-lg-9 control-label">Total Hours Undertime</label>
+                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.minutesUndertime }">
+                                        <label class="col-md-8 col-lg-9 control-label">Total Minutes Undertime</label>
                                         <div class="col-md-4 col-lg-3">
-                                            <input type="text" class="form-control" name="HoursUnderTime" ng-model="vm.hoursUndertime" />
-                                            <span ng-show="vm.validationErrors.hoursUndertime" class="help-block">{{vm.validationErrors.hoursUndertime.join(' ')}}</span>
+                                            <input type="text" class="form-control" name="MinutesUnderTime" ng-model="vm.minutesUndertime" />
+                                            <span ng-show="vm.validationErrors.minutesUndertime" class="help-block">{{vm.validationErrors.minutesUndertime.join(' ')}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -230,7 +230,7 @@
                                                     <th>From</th>
                                                     <th>To</th>
                                                     <th>OT Code</th>
-                                                    <th>Number <br />of Hours</th>
+                                                    <th>Number <br />of Minutes</th>
                                                     <th>Amount</th>
                                                     <th>Reference</th>
                                                 </tr>
@@ -258,7 +258,7 @@
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" ng-model="overtime.numberOfHours" ng-change="vm.numberOfHoursChanged(overtime)" name="{{vm.getOvertimeFieldName($index, 'NumberOfHours')}}" />
+                                                        <input type="text" class="form-control" ng-model="overtime.numberOfMinutes" ng-change="vm.numberOfMinutesChanged(overtime)" name="{{vm.getOvertimeFieldName($index, 'NumberOfMinutes')}}" />
                                                     </td>
                                                     <td>
                                                         <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'NumberOfHoursValue')}}" value="{{overtime.numberOfHoursValue}}" />

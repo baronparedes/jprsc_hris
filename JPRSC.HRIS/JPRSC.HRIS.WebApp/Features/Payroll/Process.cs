@@ -145,6 +145,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     {
                         AddedOn = now,
                         COLADailyValue = employeeDtrs.Sum(dtr => dtr.COLADailyValue),
+                        COLAHourlyValue = employeeDtrs.Sum(dtr => dtr.COLAHourlyValue),
                         DaysWorkedValue = employeeDtrs.Sum(dtr => dtr.DaysWorkedValue),
                         DeductionsValue = employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount),
                         EarningsValue = employeeEds.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount),

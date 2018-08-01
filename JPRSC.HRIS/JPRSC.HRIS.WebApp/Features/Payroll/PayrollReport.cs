@@ -50,6 +50,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public decimal? HoursLateValue { get; set; }
                 public decimal? HoursUndertimeValue { get; set; }
                 public decimal? COLADailyValue { get; set; }
+                public decimal? COLAHourlyValue { get; set; }
                 public decimal? EarningsValue { get; set; }
                 public decimal? DeductionsValue { get; set; }
 
@@ -61,7 +62,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public decimal? TaxValue { get; set; }
                 public decimal? LoanPaymentValue { get; set; }
 
-                public decimal TotalEarningsValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
+                public decimal TotalEarningsValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
                 public decimal TotalDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
                 public decimal NetPayValue => TotalEarningsValue - TotalDeductionsValue;
             }

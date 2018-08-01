@@ -61,7 +61,7 @@
                                 <td>@String.Format("{0:n}", payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
                                 <td>@String.Format("{0:n}", payrollRecord.OvertimeValue.GetValueOrDefault())</td>
                                 <td>@String.Format("{0:n}", payrollRecord.HoursUndertimeValue.GetValueOrDefault() + payrollRecord.HoursLateValue.GetValueOrDefault())</td>
-                                <td>@String.Format("{0:n}", payrollRecord.COLADailyValue.GetValueOrDefault())</td>
+                                <td>@String.Format("{0:n}", payrollRecord.COLADailyValue.GetValueOrDefault() + payrollRecord.COLAHourlyValue.GetValueOrDefault())</td>
                                 <td>@String.Format("{0:n}", payrollRecord.EarningsValue.GetValueOrDefault())</td>
                                 <td><strong>@String.Format("{0:n}", payrollRecord.TotalEarningsValue)</strong></td>
                                 <td>@String.Format("{0:n}", payrollRecord.SSSValueEmployee.GetValueOrDefault())</td>

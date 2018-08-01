@@ -21,9 +21,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public double? DaysWorked { get; set; }
             public IEnumerable<EarningDeductionRecord> EarningDeductionRecords { get; set; } = new List<EarningDeductionRecord>();
             public int? EmployeeId { get; set; }
-            public double? HoursLate { get; set; }
-            public double? HoursUndertime { get; set; }
-            public double? HoursWorked { get; set; }
+            public double? MinutesLate { get; set; }
+            public double? MinutesUndertime { get; set; }
+            public double? MinutesWorked { get; set; }
             public IEnumerable<Overtime> Overtimes { get; set; } = new List<Overtime>();
             public DateTime? PayrollPeriodFrom { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
@@ -32,7 +32,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public class Overtime
             {
                 public DateTime? From { get; set; }
-                public double? NumberOfHours { get; set; }
+                public double? NumberOfMinutes { get; set; }
                 public decimal? NumberOfHoursValue { get; set; }
                 public int? PayPercentageId { get; set; }
                 public string PayPercentageName { get; set; }
@@ -61,21 +61,21 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         .GreaterThanOrEqualTo(0);
                 });
 
-                When(c => c.HoursWorked.HasValue, () =>
+                When(c => c.MinutesWorked.HasValue, () =>
                 {
-                    RuleFor(c => c.HoursWorked)
+                    RuleFor(c => c.MinutesWorked)
                         .GreaterThanOrEqualTo(0);
                 });
 
-                When(c => c.HoursLate.HasValue, () =>
+                When(c => c.MinutesLate.HasValue, () =>
                 {
-                    RuleFor(c => c.HoursLate)
+                    RuleFor(c => c.MinutesLate)
                         .GreaterThanOrEqualTo(0);
                 });
 
-                When(c => c.HoursUndertime.HasValue, () =>
+                When(c => c.MinutesUndertime.HasValue, () =>
                 {
-                    RuleFor(c => c.HoursUndertime)
+                    RuleFor(c => c.MinutesUndertime)
                         .GreaterThanOrEqualTo(0);
                 });
 
@@ -134,12 +134,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     existingDailyTimeRecord.DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate);
                     existingDailyTimeRecord.EmployeeId = command.EmployeeId;
                     existingDailyTimeRecord.HourlyRate = employee.HourlyRate;
-                    existingDailyTimeRecord.HoursLate = command.HoursLate;
-                    existingDailyTimeRecord.HoursLateValue = GetValue(command.HoursLate, employee.HourlyRate);
-                    existingDailyTimeRecord.HoursUndertime = command.HoursUndertime;
-                    existingDailyTimeRecord.HoursUndertimeValue = GetValue(command.HoursUndertime, employee.HourlyRate);
-                    existingDailyTimeRecord.HoursWorked = command.HoursWorked;
-                    existingDailyTimeRecord.HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate);
+                    existingDailyTimeRecord.HoursLate = command.MinutesLate / 60;
+                    existingDailyTimeRecord.HoursLateValue = GetValue(command.MinutesLate / 60, employee.HourlyRate);
+                    existingDailyTimeRecord.HoursUndertime = command.MinutesUndertime / 60;
+                    existingDailyTimeRecord.HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate);
+                    existingDailyTimeRecord.HoursWorked = command.MinutesWorked / 60;
+                    existingDailyTimeRecord.HoursWorkedValue = GetValue(command.MinutesWorked / 60, employee.HourlyRate);
                 }
                 else
                 {
@@ -147,17 +147,18 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     {
                         AddedOn = now,
                         COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily),
+                        COLAHourlyValue = GetValue(command.MinutesWorked, employee.COLAHourly),
                         DailyRate = employee.DailyRate,
                         DaysWorked = command.DaysWorked,
                         DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate),
                         EmployeeId = command.EmployeeId,
                         HourlyRate = employee.HourlyRate,
-                        HoursLate = command.HoursLate,
-                        HoursLateValue = GetValue(command.HoursLate, employee.HourlyRate),
-                        HoursUndertime = command.HoursUndertime,
-                        HoursUndertimeValue = GetValue(command.HoursUndertime, employee.HourlyRate),
-                        HoursWorked = command.HoursWorked,
-                        HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate),
+                        HoursLate = command.MinutesLate / 60,
+                        HoursLateValue = GetValue(command.MinutesLate / 60, employee.HourlyRate),
+                        HoursUndertime = command.MinutesUndertime / 60,
+                        HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate),
+                        HoursWorked = command.MinutesWorked / 60,
+                        HoursWorkedValue = GetValue(command.MinutesWorked / 60, employee.HourlyRate),
                         PayrollPeriodFrom = command.PayrollPeriodFrom,
                         PayrollPeriodTo = command.PayrollPeriodTo
                     };
@@ -186,7 +187,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             AddedOn = now,
                             EmployeeId = command.EmployeeId,
                             From = overtimeUpload.From,
-                            NumberOfHours = overtimeUpload.NumberOfHours,
+                            NumberOfHours = overtimeUpload.NumberOfMinutes / 60,
                             NumberOfHoursValue = overtimeUpload.NumberOfHoursValue,
                             PayPercentageName = overtimeUpload.PayPercentageName,
                             PayPercentagePercentage = overtimeUpload.PayPercentagePercentage,

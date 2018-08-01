@@ -25,7 +25,7 @@
         vm.hoursUndertimeValue = 0;
         vm.hoursWorkedValue = 0;
         vm.lookups = lookups;
-        vm.numberOfHoursChanged = numberOfHoursChanged;
+        vm.numberOfMinutesChanged = numberOfMinutesChanged;
         vm.otRateChanged = otRateChanged;
         vm.overtimes = [];
         vm.payRates = params.payRates;
@@ -41,9 +41,9 @@
         });
 
         $scope.$watch('vm.daysWorked', function () { if (!vm.employee) return; vm.daysWorkedValue = vm.employee.dailyRate * vm.daysWorked; });
-        $scope.$watch('vm.hoursWorked', function () { if (!vm.employee) return; vm.hoursWorkedValue = vm.employee.hourlyRate * vm.hoursWorked; });
-        $scope.$watch('vm.hoursLate', function () { if (!vm.employee) return; vm.hoursLateValue = vm.employee.hourlyRate * vm.hoursLate; });
-        $scope.$watch('vm.hoursUndertime', function () { if (!vm.employee) return; vm.hoursUndertimeValue = vm.employee.hourlyRate * vm.hoursUndertime; });
+        $scope.$watch('vm.minutesWorked', function () { if (!vm.employee) return; vm.hoursWorkedValue = vm.employee.hourlyRate * vm.minutesWorked / 60; });
+        $scope.$watch('vm.minutesLate', function () { if (!vm.employee) return; vm.hoursLateValue = vm.employee.hourlyRate * vm.minutesLate / 60; });
+        $scope.$watch('vm.minutesUndertime', function () { if (!vm.employee) return; vm.hoursUndertimeValue = vm.employee.hourlyRate * vm.minutesUndertime / 60; });
 
         function addDailyTimeRecordAndAddAnother() {
             addDailyTimeRecordSubmit(function () {
@@ -52,9 +52,9 @@
                     vm.employee = vm.employees[vm.currentEmployeeIndex];
 
                     vm.daysWorked = 0;
-                    vm.hoursWorked = 0;
-                    vm.hoursLate = 0;
-                    vm.hoursUndertime = 0;
+                    vm.minutesWorked = 0;
+                    vm.minutesLate = 0;
+                    vm.minutesUndertime = 0;
                     vm.overtimes = [];
                 }
             });
@@ -92,7 +92,7 @@
         };
 
         function addOvertimeClicked() {
-            vm.overtimes.push({ numberOfHours: 0 });
+            vm.overtimes.push({ numberOfMinutes: 0 });
         };
 
         function cancel() {
@@ -111,7 +111,7 @@
             return `Overtimes[${index}].${fieldName}`;
         };
 
-        function numberOfHoursChanged(overtime) {
+        function numberOfMinutesChanged(overtime) {
             recalculateNumberOfHoursValue(overtime);
         };
 
@@ -138,10 +138,10 @@
         };
 
         function recalculateNumberOfHoursValue(overtime) {
-            if (!vm.employee || !overtime.payRate || !overtime.payRate.percentage || !overtime.numberOfHours) return;
-            if (parseFloat(overtime.numberOfHours) <= 0) return 0;
+            if (!vm.employee || !overtime.payRate || !overtime.payRate.percentage || !overtime.numberOfMinutes) return;
+            if (parseFloat(overtime.numberOfMinutes) <= 0) return 0;
 
-            overtime.numberOfHoursValue = vm.employee.hourlyRate * (overtime.payRate.percentage / 100) * parseFloat(overtime.numberOfHours);
+            overtime.numberOfHoursValue = vm.employee.hourlyRate * (overtime.payRate.percentage / 100) * parseFloat(overtime.numberOfMinutes) / 60;
         };
     };
 }());

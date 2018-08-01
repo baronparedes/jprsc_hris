@@ -20,6 +20,7 @@ namespace JPRSC.HRIS.Models
         public decimal? HoursLateValue { get; set; }
         public decimal? HoursUndertimeValue { get; set; }
         public decimal? COLADailyValue { get; set; }
+        public decimal? COLAHourlyValue { get; set; }
         public decimal? EarningsValue { get; set; }
         public decimal? DeductionsValue { get; set; }
 
