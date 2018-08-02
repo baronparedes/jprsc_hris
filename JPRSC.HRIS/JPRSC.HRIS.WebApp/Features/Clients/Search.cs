@@ -65,7 +65,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
 
                 var clients = await dbQuery
                     .OrderBy(c => c.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.Client>();
 
                 return new QueryResult

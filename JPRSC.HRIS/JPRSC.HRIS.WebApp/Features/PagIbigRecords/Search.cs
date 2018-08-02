@@ -66,7 +66,7 @@ namespace JPRSC.HRIS.WebApp.Features.PagIbigRecords
 
                 var pagIbigRecords = await dbQuery
                     .OrderBy(pir => pir.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.PagIbigRecord>();
 
                 return new QueryResult

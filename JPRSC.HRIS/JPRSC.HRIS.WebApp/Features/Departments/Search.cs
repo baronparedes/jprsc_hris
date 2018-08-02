@@ -34,6 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
 
             public class Department
             {
+                public string Code { get; set; }
                 public string Name { get; set; }
                 public int Id { get; set; }
             }
@@ -62,7 +63,6 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
 
                 var departments = await dbQuery
                     .OrderBy(d => d.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
                     .ProjectToListAsync<QueryResult.Department>();
 
                 return new QueryResult

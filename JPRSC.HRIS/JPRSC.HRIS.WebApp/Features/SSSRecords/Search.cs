@@ -65,7 +65,7 @@ namespace JPRSC.HRIS.WebApp.Features.SSSRecords
 
                 var sssRecords = await dbQuery
                     .OrderBy(sr => sr.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.SSSRecord>();
 
                 return new QueryResult

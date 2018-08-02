@@ -54,7 +54,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     .Include(e => e.Company)
                     .OrderBy(e => e.LastName)
                     .ThenBy(e => e.FirstName)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.Employee>();
 
                 return new QueryResult

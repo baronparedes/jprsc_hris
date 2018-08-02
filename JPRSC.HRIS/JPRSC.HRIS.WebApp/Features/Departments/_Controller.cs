@@ -35,7 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
 
             await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully added department {command.Name}.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully added branch {command.Name}.");
 
             return Json("success");
         }
@@ -46,7 +46,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
         {
             var commandResult = await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted department {commandResult.Name}.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted branch {commandResult.Name}.");
 
             return RedirectToAction(nameof(Index));
         }
@@ -70,7 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
 
             await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully edited department {command.Name}.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully edited branch {command.Name}.");
 
             return Json("success");
         }

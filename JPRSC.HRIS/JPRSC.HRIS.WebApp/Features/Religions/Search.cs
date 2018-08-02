@@ -64,7 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Religions
 
                 var religions = await dbQuery
                     .OrderBy(r => r.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.Religion>();
 
                 return new QueryResult

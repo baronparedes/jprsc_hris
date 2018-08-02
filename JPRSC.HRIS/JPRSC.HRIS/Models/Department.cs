@@ -5,6 +5,7 @@ namespace JPRSC.HRIS.Models
     public class Department
     {
         public DateTime AddedOn { get; set; }
+        public string Code { get; set; }
         public DateTime? DeletedOn { get; set; }
         public int Id { get; set; }
         public DateTime? ModifiedOn { get; set; }

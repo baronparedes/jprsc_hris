@@ -64,7 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
                 var users = await dbQuery
                     .OrderBy(u => u.Name)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.Account>();
 
                 return new QueryResult

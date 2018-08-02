@@ -70,7 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
 
                 var companies = await dbQuery
                     .OrderBy(cp => cp.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.Company>();
 
                 return new QueryResult

@@ -19,6 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
 
         public class Command : IRequest
         {
+            public string Code { get; set; }
             public int Id { get; set; }
             public string Name { get; set; }
         }
@@ -59,7 +60,8 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
             public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var department = await _db.Departments.SingleAsync(r => r.Id == command.Id);
-                
+
+                department.Code = command.Code;
                 department.ModifiedOn = DateTime.UtcNow;
                 department.Name = command.Name;
 

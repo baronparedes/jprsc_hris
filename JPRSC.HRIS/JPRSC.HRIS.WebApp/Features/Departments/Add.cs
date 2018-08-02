@@ -12,6 +12,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
     {
         public class Command : IRequest
         {
+            public string Code { get; set; }
             public string Name { get; set; }
         }
 
@@ -38,6 +39,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
                 var department = new Department
                 {
                     AddedOn = DateTime.UtcNow,
+                    Code = command.Code,
                     Name = command.Name
                 };
 

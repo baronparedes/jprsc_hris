@@ -109,7 +109,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var dailyTimeRecords = await dbQuery
                     .OrderBy(e => e.Employee.LastName)
                     .ThenBy(e => e.Employee.FirstName)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.DailyTimeRecord>();
 
                 return new QueryResult

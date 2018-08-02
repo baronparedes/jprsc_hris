@@ -68,7 +68,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 var employees = await dbQuery
                     .Include(e => e.Company)
                     .OrderBy(e => e.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.Employee>();
 
                 return new QueryResult

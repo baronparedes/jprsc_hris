@@ -66,7 +66,7 @@ namespace JPRSC.HRIS.WebApp.Features.LoanTypes
 
                 var loanTypes = await dbQuery
                     .OrderBy(lt => lt.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.LoanType>();
 
                 return new QueryResult

@@ -302,6 +302,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201808010521583_ChangeRegionToEnum.Designer.cs">
       <DependentUpon>201808010521583_ChangeRegionToEnum.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201808020048444_AddDepartmentCode.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201808020048444_AddDepartmentCode.Designer.cs">
+      <DependentUpon>201808020048444_AddDepartmentCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -522,6 +526,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201808010521583_ChangeRegionToEnum.resx">
       <DependentUpon>201808010521583_ChangeRegionToEnum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201808020048444_AddDepartmentCode.resx">
+      <DependentUpon>201808020048444_AddDepartmentCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

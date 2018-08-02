@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Departments";
+    ViewBag.Title = "Branches";
 }
 
 <div class="page-content-wrapper">
@@ -10,17 +10,17 @@
                     <a href="@Url.Action("Index", "Home")">Home</a>
                     <i class="fa fa-circle"></i>
                 </li>
-                <li>Departments</li>
+                <li>Branches</li>
             </ul>
         </div>
         <h1 class="page-title">
-            Departments
+            Branches
         </h1>
         @Html.RenderSuccessNotification()
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <a href="@Url.Action("Add", "Departments")" class="btn btn-primary">Add Department</a>
+                    <a href="@Url.Action("Add", "Departments")" class="btn btn-primary">Add Branch</a>
                 </div>
             </div>
         </div>
@@ -39,27 +39,32 @@
                         </div>
                     </div>
                 </form>
-                <div class="note note-info" ng-show="!vm.departments.length">
-                    <p>No departments found.</p>
+                <div class="note note-info" ng-show="!vm.searchInProgress && !vm.departments.length">
+                    <p>No branches found.</p>
                 </div>
+                <p ng-show="vm.searchInProgress">
+                    <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.searchInProgress"></i>Loading...
+                </p>
                 <div class="portlet light bordered" ng-show="vm.departments.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-building font-red-sunglo"></i>
-                            <span class="caption-subject font-red-sunglo bold uppercase">Departments</span>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Branches</span>
                         </div>
                     </div>
-                    <div class="portlet-body">                        
+                    <div class="portlet-body">
                         <div class="table-scrollable">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
+                                        <th>Code</th>
                                         <th>Name</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="department in vm.departments track by department.id">
+                                        <td>{{department.code}}</td>
                                         <td>{{department.name}}</td>
                                         <td>
                                             <a href="{{'/Departments/Edit?departmentId=' + department.id}}" class="btn btn-primary btn-sm">Edit</a>

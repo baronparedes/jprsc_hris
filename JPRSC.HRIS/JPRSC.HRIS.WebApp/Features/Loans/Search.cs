@@ -104,7 +104,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
                 var loans = await dbQuery
                     .OrderBy(l => l.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.Loan>();
 
                 return new QueryResult

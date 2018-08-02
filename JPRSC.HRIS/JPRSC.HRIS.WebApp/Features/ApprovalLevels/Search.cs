@@ -62,7 +62,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
 
                 var approvalLevels = await dbQuery
                     .OrderBy(al => al.Level)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.ApprovalLevel>();
 
                 return new QueryResult

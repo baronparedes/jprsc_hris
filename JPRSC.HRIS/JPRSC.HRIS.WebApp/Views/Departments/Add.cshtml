@@ -1,7 +1,7 @@
 ﻿@model JPRSC.HRIS.WebApp.Features.Departments.Add.Command
 
 @{
-    ViewBag.Title = "Add a Department";
+    ViewBag.Title = "Add a Branch";
 }
 
 <div class="page-content-wrapper">
@@ -12,11 +12,11 @@
                     <a href="@Url.Action("Index", "Home")">Home</a>
                     <i class="fa fa-circle"></i>
                 </li>
-                <li>Add Department</li>
+                <li>Add Branch</li>
             </ul>
         </div>
         <h1 class="page-title">
-            Add Department
+            Add Branch
         </h1>
         <div class="row">
             <div class="col-sm-12">
@@ -24,13 +24,14 @@
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-plus font-red-sunglo"></i>
-                            <span class="caption-subject font-red-sunglo bold uppercase">Add Department</span>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Add Branch</span>
                         </div>
                     </div>
                     <div class="portlet-body form" ng-controller="AddDepartmentCtrl as vm">
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.addDepartmentSubmit($event)">
                             @Html.AntiForgeryToken()
                             <div class="form-body">
+                                @Html.TextBoxHorizontalFormGroup("Code")
                                 @Html.TextBoxHorizontalFormGroup("Name")
                             </div>
                             <div class="form-actions right">

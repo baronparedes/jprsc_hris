@@ -64,7 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
 
                 var payPercentages = await dbQuery
                     .OrderBy(pp => pp.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.PayPercentage>();
 
                 return new QueryResult

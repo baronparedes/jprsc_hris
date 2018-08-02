@@ -64,7 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 
                 var customRoles = await dbQuery
                     .OrderBy(cr => cr.Id)
-                    .Take(AppSettings.Int("DefaultGridPageSize"))
+                    
                     .ProjectToListAsync<QueryResult.CustomRole>();
 
                 return new QueryResult

@@ -22,6 +22,9 @@
 
         protected override void Seed(ApplicationDbContext context)
         {
+            // Moving to the top before seed data check since app is already deployed to prod
+            SeedUserCustomRoles(context);
+
             if (!AppSettings.Bool("ShouldSeedDummyData")) return;
 
             // Order matters!
@@ -43,7 +46,6 @@
 
             SeedUsers(context);
             SeedApprovalLevels(context);
-            SeedUserCustomRoles(context);
             SeedAllowedUserCompanies(context);
             SeedEmployees(context);
         }
