@@ -17,6 +17,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
     {
         public class Query : IRequest<QueryResult>
         {
+            public int? PageNumber { get; set; }
+            public int? PageSize { get; set; }
             public string SearchTerm { get; set; }
             public int? ClientId { get; set; }
             public int? DailyTimeRecordPayrollPeriodBasisId { get; set; }
@@ -83,6 +85,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             {
                 if (!query.ClientId.HasValue) return new QueryResult();
 
+                var pageNumber = query.PageNumber.HasValue && query.PageNumber > 0 ? query.PageNumber.Value : 1;
+                var pageSize = query.PageSize.HasValue && query.PageSize > 0 ? Math.Min(query.PageSize.Value, 1000) : AppSettings.Int("DefaultGridPageSize");
+
                 var dbQuery = _db
                     .DailyTimeRecords
                     .Include(dtr => dtr.Employee)
@@ -109,7 +114,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var dailyTimeRecords = await dbQuery
                     .OrderBy(e => e.Employee.LastName)
                     .ThenBy(e => e.Employee.FirstName)
-                    
+                    .PageBy(pageNumber, pageSize)
                     .ProjectToListAsync<QueryResult.DailyTimeRecord>();
 
                 return new QueryResult

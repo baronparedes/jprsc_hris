@@ -15,6 +15,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
     {
         public class Query : IRequest<QueryResult>
         {
+            public int? PageNumber { get; set; }
+            public int? PageSize { get; set; }
             public string SearchTerm { get; set; }
 
             public string SearchLikeTerm
@@ -54,6 +56,9 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                var pageNumber = query.PageNumber.HasValue && query.PageNumber > 0 ? query.PageNumber.Value : 1;
+                var pageSize = query.PageSize.HasValue && query.PageSize > 0 ? Math.Min(query.PageSize.Value, 1000) : AppSettings.Int("DefaultGridPageSize");
+
                 var dbQuery = _db
                     .Employees
                     .Where(e => !e.DeletedOn.HasValue);
@@ -68,7 +73,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 var employees = await dbQuery
                     .Include(e => e.Company)
                     .OrderBy(e => e.Id)
-                    
+                    .PageBy(pageNumber, pageSize)
                     .ProjectToListAsync<QueryResult.Employee>();
 
                 return new QueryResult

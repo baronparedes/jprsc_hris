@@ -15,6 +15,8 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
     {
         public class Query : IRequest<QueryResult>
         {
+            public int? PageNumber { get; set; }
+            public int? PageSize { get; set; }
             public string SearchTerm { get; set; }
 
             public string SearchLikeTerm
@@ -51,6 +53,9 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                var pageNumber = query.PageNumber.HasValue && query.PageNumber > 0 ? query.PageNumber.Value : 1;
+                var pageSize = query.PageSize.HasValue && query.PageSize > 0 ? Math.Min(query.PageSize.Value, 1000) : AppSettings.Int("DefaultGridPageSize");
+
                 var dbQuery = _db
                     .ApprovalLevels
                     .Where(al => !al.DeletedOn.HasValue);
@@ -62,7 +67,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
 
                 var approvalLevels = await dbQuery
                     .OrderBy(al => al.Level)
-                    
+                    .PageBy(pageNumber, pageSize)
                     .ProjectToListAsync<QueryResult.ApprovalLevel>();
 
                 return new QueryResult

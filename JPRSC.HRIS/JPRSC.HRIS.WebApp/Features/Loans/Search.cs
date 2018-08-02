@@ -15,6 +15,8 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
     {
         public class Query : IRequest<QueryResult>
         {
+            public int? PageNumber { get; set; }
+            public int? PageSize { get; set; }
             public string SearchTerm { get; set; }
             public int? ClientId { get; set; }
 
@@ -84,6 +86,9 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                var pageNumber = query.PageNumber.HasValue && query.PageNumber > 0 ? query.PageNumber.Value : 1;
+                var pageSize = query.PageSize.HasValue && query.PageSize > 0 ? Math.Min(query.PageSize.Value, 1000) : AppSettings.Int("DefaultGridPageSize");
+
                 var dbQuery = _db
                     .Loans
                     .Include(l => l.Employee)
@@ -104,7 +109,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
                 var loans = await dbQuery
                     .OrderBy(l => l.Id)
-                    
+                    .PageBy(pageNumber, pageSize)
                     .ProjectToListAsync<QueryResult.Loan>();
 
                 return new QueryResult

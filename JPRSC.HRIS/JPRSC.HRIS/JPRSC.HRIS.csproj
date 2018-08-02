@@ -96,6 +96,7 @@
     <Compile Include="Infrastructure\.NET\DateTimeExtensions.cs" />
     <Compile Include="Infrastructure\.NET\EnumHelper.cs" />
     <Compile Include="Infrastructure\.NET\IEnumerableExtensions.cs" />
+    <Compile Include="Infrastructure\.NET\IOrderedQueryableExtensions.cs" />
     <Compile Include="Infrastructure\.NET\StringExtensions.cs" />
     <Compile Include="Infrastructure\Configuration\AppSettings.cs" />
     <Compile Include="Infrastructure\Configuration\ConnectionStrings.cs" />

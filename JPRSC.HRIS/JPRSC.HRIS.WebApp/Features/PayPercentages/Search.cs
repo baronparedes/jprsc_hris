@@ -15,6 +15,8 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
     {
         public class Query : IRequest<QueryResult>
         {
+            public int? PageNumber { get; set; }
+            public int? PageSize { get; set; }
             public string SearchTerm { get; set; }
 
             public string SearchLikeTerm
@@ -52,6 +54,9 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                var pageNumber = query.PageNumber.HasValue && query.PageNumber > 0 ? query.PageNumber.Value : 1;
+                var pageSize = query.PageSize.HasValue && query.PageSize > 0 ? Math.Min(query.PageSize.Value, 1000) : AppSettings.Int("DefaultGridPageSize");
+
                 var dbQuery = _db
                     .PayPercentages
                     .AsQueryable();
@@ -64,7 +69,7 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
 
                 var payPercentages = await dbQuery
                     .OrderBy(pp => pp.Id)
-                    
+                    .PageBy(pageNumber, pageSize)
                     .ProjectToListAsync<QueryResult.PayPercentage>();
 
                 return new QueryResult
