@@ -56,6 +56,9 @@
                             if (data.status === 400) {
                                 vm.validationErrors = data.responseJSON;
                             }
+                            else {
+                                alert('An error has occured. Please try again later. If the problem persists, please contact the system administrator.');
+                            }
 
                             vm.uploadInProgress = false;
                         });

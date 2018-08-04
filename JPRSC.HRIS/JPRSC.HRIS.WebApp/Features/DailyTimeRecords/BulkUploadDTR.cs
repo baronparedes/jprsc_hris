@@ -145,7 +145,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 // Upload behavior: all-or-nothing
                 foreach (var uploadItem in uploadItems)
                 {
-                    var employee = allEmployeesOfClient.SingleOrDefault(e => !e.DeletedOn.HasValue && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), uploadItem.EmployeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
+                    var employee = allEmployeesOfClient.SingleOrDefault(e => !e.DeletedOn.HasValue && !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), uploadItem.EmployeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
                     if (employee == null)
                     {
                         unprocessedItems.Add(new CommandResult.UnprocessedItem
