@@ -59,6 +59,7 @@
                                     <tr>
                                         <th>Employee Code</th>
                                         <th>First Name</th>
+                                        <th>Middle Name</th>
                                         <th>Last Name</th>
                                         <th>Client</th>
                                         <th>&nbsp;</th>
@@ -68,6 +69,7 @@
                                     <tr ng-repeat="employee in vm.employees track by employee.id">
                                         <td>{{employee.employeeCode}}</td>
                                         <td>{{employee.firstName}}</td>
+                                        <td>{{employee.middleName}}</td>
                                         <td>{{employee.lastName}}</td>
                                         <td>{{employee.clientName}}</td>
                                         <td>

@@ -42,6 +42,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 public string FirstName { get; set; }
                 public int Id { get; set; }
                 public string LastName { get; set; }
+                public string MiddleName { get; set; }
             }
         }
 
@@ -67,7 +68,9 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 {
                     dbQuery = dbQuery
                         .Where(e => DbFunctions.Like(e.FirstName, query.SearchLikeTerm) ||
-                            DbFunctions.Like(e.LastName, query.SearchLikeTerm));
+                            DbFunctions.Like(e.MiddleName, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.LastName, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.EmployeeCode, query.SearchLikeTerm));
                 }
 
                 var employees = await dbQuery
