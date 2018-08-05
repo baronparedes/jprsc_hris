@@ -260,6 +260,7 @@
     <Compile Include="Features\Clients\_MappingProfile.cs" />
     <Compile Include="Features\Companies\Add.cs" />
     <Compile Include="Features\Companies\Delete.cs" />
+    <Compile Include="Features\Companies\Details.cs" />
     <Compile Include="Features\Companies\Edit.cs" />
     <Compile Include="Features\Companies\Search.cs" />
     <Compile Include="Features\Companies\_Controller.cs" />
@@ -6971,6 +6972,7 @@
     <Content Include="Views\Payroll\CashReport.cshtml" />
     <Content Include="Views\Payroll\CheckReport.cshtml" />
     <Content Include="Views\Payroll\HoldReport.cshtml" />
+    <Content Include="Views\Companies\Details.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

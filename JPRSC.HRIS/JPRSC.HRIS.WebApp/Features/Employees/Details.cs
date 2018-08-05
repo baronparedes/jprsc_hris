@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Employees
 {
@@ -103,12 +98,10 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
-                var result = await _db
+                return await _db
                     .Employees
                     .Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue)
                     .ProjectToSingleAsync<QueryResult>();
-
-                return result;
             }
         }
     }
