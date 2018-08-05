@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Pay Rates";
+    ViewBag.Title = "Overtime Rates";
 }
 
 <div class="page-content-wrapper">
@@ -10,11 +10,11 @@
                     <a href="@Url.Action("Index", "Home")">Home</a>
                     <i class="fa fa-circle"></i>
                 </li>
-                <li>Pay Rates</li>
+                <li>Overtime Rates</li>
             </ul>
         </div>
         <h1 class="page-title">
-            Pay Rates
+            Overtime Rates
         </h1>
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="PayPercentageIndexCtrl as vm">
@@ -33,13 +33,13 @@
                     </div>
                 </form>
                 <div class="note note-info" ng-show="!vm.payPercentages.length">
-                    <p>No pay rates found.</p>
+                    <p>No overtime rates found.</p>
                 </div>
                 <div class="portlet light bordered" ng-show="vm.payPercentages.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
                             <i class="fa fa-percent font-red-sunglo"></i>
-                            <span class="caption-subject font-red-sunglo bold uppercase">Pay Rates</span>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Overtime Rates</span>
                         </div>
                     </div>
                     <div class="portlet-body">
@@ -47,6 +47,7 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
+                                        <th>Code</th>
                                         <th>Name</th>
                                         <th>Percentage</th>
                                         <th>&nbsp;</th>
@@ -55,7 +56,12 @@
                                 <tbody>
                                     <tr ng-repeat="payPercentage in vm.payPercentages track by payPercentage.id">
                                         <td>
-                                            {{payPercentage.name}}
+                                            <span ng-show="!payPercentage.isEditing">{{payPercentage.code}}</span>
+                                            <input ng-show="payPercentage.isEditing" class="form-control input-sm" ng-model="payPercentage.copy.code" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!payPercentage.isEditing">{{payPercentage.name}}</span>
+                                            <input ng-show="payPercentage.isEditing" class="form-control input-sm" ng-model="payPercentage.copy.name" />
                                         </td>
                                         <td>
                                             <span ng-show="!payPercentage.isEditing">{{payPercentage.percentage}}</span>

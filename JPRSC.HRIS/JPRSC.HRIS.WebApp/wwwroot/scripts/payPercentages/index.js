@@ -35,6 +35,8 @@
 
             $http.post(action, data).then(function (response) {
                 payPercentage.isEditing = false;
+                payPercentage.code = payPercentage.copy.code;
+                payPercentage.name = payPercentage.copy.name;
                 payPercentage.percentage = payPercentage.copy.percentage;
             }, function (response) {
                 if (response.status == 400) {

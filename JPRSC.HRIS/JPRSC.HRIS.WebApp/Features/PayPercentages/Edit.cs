@@ -19,7 +19,9 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
 
         public class Command : IRequest
         {
+            public string Code { get; set; }
             public int Id { get; set; }
+            public string Name { get; set; }
             public double? Percentage { get; set; }
         }
 
@@ -42,6 +44,9 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
         {
             public CommandValidator()
             {
+                RuleFor(c => c.Code)
+                    .NotEmpty();
+
                 RuleFor(c => c.Percentage)
                     .NotEmpty();
             }
@@ -60,7 +65,9 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
             {
                 var payPercentage = await _db.PayPercentages.SingleAsync(r => r.Id == command.Id);
 
+                payPercentage.Code = command.Code;
                 payPercentage.ModifiedOn = DateTime.UtcNow;
+                payPercentage.Name = command.Name;
                 payPercentage.Percentage = command.Percentage;
 
                 await _db.SaveChangesAsync();

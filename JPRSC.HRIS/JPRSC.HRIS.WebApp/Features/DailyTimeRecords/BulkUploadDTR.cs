@@ -338,7 +338,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 for (var i = ppStartingColumnIndexInCSV; i < header.Count; i++)
                 {
                     var headerValue = String.IsNullOrWhiteSpace(header[i]) ? null : header[i].Trim();
-                    var matchingPayPercentage = allPayPercentages.SingleOrDefault(ed => String.Equals(ed.Name, headerValue, StringComparison.InvariantCultureIgnoreCase));
+                    var matchingPayPercentage = allPayPercentages.SingleOrDefault(pp => String.Equals(pp.Code, headerValue, StringComparison.InvariantCultureIgnoreCase));
                     columnToPayPercentageIdMap.Add(i, matchingPayPercentage);
                 }
 
