@@ -1,0 +1,102 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Clients.Details.QueryResult
+
+@{
+    ViewBag.Title = "Client " + Model.Name;
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Client Details</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            @Model.Name
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-book font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">@Model.Name</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form">
+                        <form class="form-horizontal" role="form" method="post">
+                            <div class="form-body">
+                                <uib-tabset active="active">
+                                    <uib-tab index="0" heading="Summary">
+                                        @Html.StaticHorizontalFormGroup("Code")
+                                        @Html.StaticHorizontalFormGroup("Name")
+                                        @Html.StaticHorizontalFormGroup("Description")
+                                        @Html.StaticHorizontalFormGroup("DaysPerWeek")
+                                        @Html.StaticHorizontalFormGroup("HoursPerDay")
+                                        @Html.StaticHorizontalFormGroup("TaxTable")
+                                        @Html.StaticHorizontalFormGroup("PayrollCode")
+                                        @Html.StaticHorizontalFormGroup("NumberOfWorkingDaysForThisPayrollPeriod")
+                                        @Html.StaticHorizontalFormGroup("NumberOfPayrollPeriodsAMonth")
+                                        @Html.StaticHorizontalFormGroup("PayrollPeriodFrom")
+                                        @Html.StaticHorizontalFormGroup("PayrollPeriodTo")
+                                        @Html.StaticHorizontalFormGroup("PayrollPeriodMonth")
+                                        @Html.StaticHorizontalFormGroup("CurrentPayrollPeriod")
+                                        @Html.StaticHorizontalFormGroup("ZeroBasic")
+                                    </uib-tab>
+                                    <uib-tab index="1" heading="SSS">
+                                        @Html.StaticHorizontalFormGroup("SSSPayrollPeriod", "Payroll Periods")
+                                        @Html.StaticHorizontalFormGroup("SSSBasic", "Basic")
+                                        @Html.StaticHorizontalFormGroup("SSSOvertime", "Overtime")
+                                        @Html.StaticHorizontalFormGroup("SSSCola", "COLA")
+                                        @Html.StaticHorizontalFormGroup("SSSEarnings", "Earnings")
+                                        @Html.StaticHorizontalFormGroup("SSSDeductions", "Deductions")
+                                        @Html.StaticHorizontalFormGroup("SSSUndertime", "Undertime")
+                                    </uib-tab>
+                                    <uib-tab index="2" heading="PHIC">
+                                        @Html.StaticHorizontalFormGroup("PHICPayrollPeriod", "Payroll Periods")
+                                        @Html.StaticHorizontalFormGroup("PHICBasic", "Basic")
+                                        @Html.StaticHorizontalFormGroup("PHICOvertime", "Overtime")
+                                        @Html.StaticHorizontalFormGroup("PHICCola", "COLA")
+                                        @Html.StaticHorizontalFormGroup("PHICEarnings", "Earnings")
+                                        @Html.StaticHorizontalFormGroup("PHICDeductions", "Deductions")
+                                        @Html.StaticHorizontalFormGroup("PHICUndertime", "Undertime")
+                                    </uib-tab>
+                                    <uib-tab index="3" heading="Pag Ibig">
+                                        @Html.StaticHorizontalFormGroup("PagIbigPayrollPeriod", "Payroll Periods")
+                                        @Html.StaticHorizontalFormGroup("PagIbigBasic", "Basic")
+                                        @Html.StaticHorizontalFormGroup("PagIbigOvertime", "Overtime")
+                                        @Html.StaticHorizontalFormGroup("PagIbigCola", "COLA")
+                                        @Html.StaticHorizontalFormGroup("PagIbigEarnings", "Earnings")
+                                        @Html.StaticHorizontalFormGroup("PagIbigDeductions", "Deductions")
+                                        @Html.StaticHorizontalFormGroup("PagIbigUndertime", "Undertime")
+                                    </uib-tab>
+                                    <uib-tab index="4" heading="Tax">
+                                        @Html.StaticHorizontalFormGroup("TaxPayrollPeriod", "Payroll Periods")
+                                        @Html.StaticHorizontalFormGroup("TaxBasic", "Basic")
+                                        @Html.StaticHorizontalFormGroup("TaxOvertime", "Overtime")
+                                        @Html.StaticHorizontalFormGroup("TaxCola", "COLA")
+                                        @Html.StaticHorizontalFormGroup("TaxEarnings", "Earnings")
+                                        @Html.StaticHorizontalFormGroup("TaxDeductions", "Deductions")
+                                        @Html.StaticHorizontalFormGroup("TaxUndertime", "Undertime")
+                                    </uib-tab>
+                                </uib-tabset>
+                            </div>
+                            <div class="form-actions right">
+                                <a href="@Url.Action("Index", "Clients")" class="btn default">Back</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/clients")
+}

@@ -253,6 +253,7 @@
     <Compile Include="Features\Banks\_MappingProfile.cs" />
     <Compile Include="Features\Clients\Add.cs" />
     <Compile Include="Features\Clients\Delete.cs" />
+    <Compile Include="Features\Clients\Details.cs" />
     <Compile Include="Features\Clients\Edit.cs" />
     <Compile Include="Features\Clients\Index.cs" />
     <Compile Include="Features\Clients\Search.cs" />
@@ -6973,6 +6974,7 @@
     <Content Include="Views\Payroll\CheckReport.cshtml" />
     <Content Include="Views\Payroll\HoldReport.cshtml" />
     <Content Include="Views\Companies\Details.cshtml" />
+    <Content Include="Views\Clients\Details.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

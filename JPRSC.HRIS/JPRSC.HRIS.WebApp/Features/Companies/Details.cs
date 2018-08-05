@@ -15,7 +15,7 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
             public int CompanyId { get; set; }
         }
 
-        public class QueryResult : IRequest
+        public class QueryResult
         {
             public string Address { get; set; }
             public string BOI { get; set; }
