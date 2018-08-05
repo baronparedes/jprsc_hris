@@ -349,6 +349,10 @@
     <Compile Include="Features\PayPercentages\Search.cs" />
     <Compile Include="Features\PayPercentages\_Controller.cs" />
     <Compile Include="Features\PayPercentages\_MappingProfile.cs" />
+    <Compile Include="Features\Payroll\CheckReport.cs" />
+    <Compile Include="Features\Payroll\CashHoldReport.cs" />
+    <Compile Include="Features\Payroll\CashReport.cs" />
+    <Compile Include="Features\Payroll\HoldReport.cs" />
     <Compile Include="Features\Payroll\Delete.cs" />
     <Compile Include="Features\Payroll\EndProcess.cs" />
     <Compile Include="Features\Payroll\Index.cs" />
@@ -6963,6 +6967,10 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Views\Employees\Details.cshtml" />
+    <Content Include="Views\Payroll\CashHoldReport.cshtml" />
+    <Content Include="Views\Payroll\CashReport.cshtml" />
+    <Content Include="Views\Payroll\CheckReport.cshtml" />
+    <Content Include="Views\Payroll\HoldReport.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Payroll
 {
-    public class BankReport
+    public class CashHoldReport
     {
         public class Query : IRequest<QueryResult>
         {
@@ -162,7 +162,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var payrollRecords = await _db.PayrollRecords
                     .Include(pr => pr.Employee)
-                    .Where(pr => pr.PayrollProcessBatchId == query.PayrollProcessBatchId && pr.Employee.ATMAccountNumber != null && pr.Employee.SalaryStatus != SalaryStatus.OnHold && pr.Employee.SalaryStatus != SalaryStatus.ForCheck)
+                    .Where(pr => pr.PayrollProcessBatchId == query.PayrollProcessBatchId && (pr.Employee.ATMAccountNumber == null || pr.Employee.ATMAccountNumber == "0") && pr.Employee.SalaryStatus == SalaryStatus.OnHold)
                     .ProjectToListAsync<QueryResult.PayrollRecord>();
 
                 return new QueryResult

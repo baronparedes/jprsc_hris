@@ -26,6 +26,30 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> CashHoldReport(CashHoldReport.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CashReport(CashReport.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CheckReport(CheckReport.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(Delete.Command command)
@@ -39,6 +63,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         [HttpGet]
         public async Task<ActionResult> EndProcess(EndProcess.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> HoldReport(HoldReport.Query query)
         {
             var result = await _mediator.Send(query);
 
