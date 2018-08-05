@@ -40,6 +40,20 @@
 
                             if (!vm.unprocessedItems.length) {
                                 var successMessage = `Successfully processed ${data.processedItemsCount} employee record/s.`
+
+                                if (data.skippedItems && data.skippedItems.length) {
+                                    var skipMessage = ' Skipping employees with no employee code: ';
+                                    for (var i = 0; i < data.skippedItems.length; i++) {
+                                        skipMessage += data.skippedItems[i].lastName + ', ' + data.skippedItems[i].firstName;
+
+                                        if (i < data.skippedItems.length - 1) {
+                                            skipMessage += '; ';
+                                        }
+                                    }
+
+                                    successMessage += ' ' + skipMessage;
+                                }
+
                                 alert(successMessage);
 
                                 $uibModalInstance.close();

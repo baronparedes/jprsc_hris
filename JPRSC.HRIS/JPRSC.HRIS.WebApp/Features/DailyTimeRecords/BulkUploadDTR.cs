@@ -108,6 +108,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         public class CommandResult
         {
             public IEnumerable<UnprocessedItem> UnprocessedItems { get; set; } = new List<UnprocessedItem>();
+            public IEnumerable<UnprocessedItem> SkippedItems { get; set; } = new List<UnprocessedItem>();
             public int ProcessedItemsCount { get; set; }
 
             public class UnprocessedItem
@@ -141,6 +142,10 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var allPayRates = await _db.PayPercentages.ToListAsync();
                 var allEmployeesOfClient = await _db.Employees.Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
                 var now = DateTime.UtcNow;
+                var processedItemsCount = 0;
+
+                var skippedItems = new List<CommandResult.UnprocessedItem>();
+                skippedItems.AddRange(allEmployeesOfClient.Where(e => String.IsNullOrWhiteSpace(e.EmployeeCode)).Select(e => new CommandResult.UnprocessedItem { FirstName = e.FirstName, LastName = e.LastName, Reason = "No employee code" }));
 
                 // Upload behavior: all-or-nothing
                 foreach (var uploadItem in uploadItems)
@@ -159,7 +164,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     }
 
                     if (unprocessedItems.Any()) continue;
-                    
+
+                    processedItemsCount += 1;
+
                     var existingDailyTimeRecord = _db.DailyTimeRecords.SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo);
                     if (existingDailyTimeRecord != null)
                     {
@@ -613,7 +620,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 return new CommandResult
                 {
                     UnprocessedItems = unprocessedItems,
-                    ProcessedItemsCount = unprocessedItems.Any() ? 0 : uploadItems.Count()
+                    ProcessedItemsCount = unprocessedItems.Any() ? 0 : processedItemsCount,
+                    SkippedItems = skippedItems
                 };
             }
 

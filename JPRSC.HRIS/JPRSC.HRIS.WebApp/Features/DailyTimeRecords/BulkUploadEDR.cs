@@ -76,6 +76,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         public class CommandResult
         {
             public IEnumerable<UnprocessedItem> UnprocessedItems { get; set; } = new List<UnprocessedItem>();
+            public IEnumerable<UnprocessedItem> SkippedItems { get; set; } = new List<UnprocessedItem>();
             public int ProcessedItemsCount { get; set; }
 
             public class UnprocessedItem
@@ -109,6 +110,10 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var allEmployeesOfClient = await _db.Employees.Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
                 var csvData = GetCSVData(command);
                 var columnToEarningDeductionMap = await GetColumnToEarningDeductionMap(csvData.Item1);
+                var processedItemsCount = 0;
+
+                var skippedItems = new List<CommandResult.UnprocessedItem>();
+                skippedItems.AddRange(allEmployeesOfClient.Where(e => String.IsNullOrWhiteSpace(e.EmployeeCode)).Select(e => new CommandResult.UnprocessedItem { FirstName = e.FirstName, LastName = e.LastName, Reason = "No employee code" }));
 
                 // Upload behavior: all-or-nothing
                 foreach (var line in csvData.Item2)
@@ -131,6 +136,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     }
 
                     if (unprocessedItems.Any()) continue;
+
+                    processedItemsCount += 1;
 
                     foreach (KeyValuePair<int, EarningDeduction> entry in columnToEarningDeductionMap.Where(kvp => kvp.Value != null))
                     {
@@ -166,7 +173,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 return new CommandResult
                 {
                     UnprocessedItems = unprocessedItems,
-                    ProcessedItemsCount = unprocessedItems.Any() ? 0 : csvData.Item2.Count()
+                    ProcessedItemsCount = unprocessedItems.Any() ? 0 : processedItemsCount,
+                    SkippedItems = skippedItems
                 };
             }
 
