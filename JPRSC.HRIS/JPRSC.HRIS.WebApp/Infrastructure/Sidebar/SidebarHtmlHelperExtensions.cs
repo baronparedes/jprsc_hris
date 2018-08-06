@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using JPRSC.HRIS.Models;
+using System.Collections.Generic;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Sidebar
 {
@@ -29,6 +31,9 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Sidebar
             for (var i = 0; i < headings.Count(); i++)
             {
                 var heading = headings[i];
+
+                var hasAnySubmenuPermission = HasAnySubmenuPermission(heading, currentUser);
+                if (!hasAnySubmenuPermission) continue;
 
                 if (!String.IsNullOrWhiteSpace(heading.Text))
                 {
@@ -114,6 +119,39 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Sidebar
             }
 
             return new MvcHtmlString(itemsStringBuilder.ToString());
+        }
+
+        private static bool HasAnySubmenuPermission(SidebarHeading heading, User currentUser)
+        {
+            if (currentUser == null) return false;
+
+            var neededPermissions = CollectNeededPermissions(heading.SubMenus);
+
+            var currentUserPermissions = currentUser.CustomRoles.SelectMany(cr => cr.Permissions);
+
+            foreach (var permission in neededPermissions)
+            {
+                if (currentUserPermissions.Any(p => p == permission)) return true;
+            }
+
+            return false;
+        }
+
+        private static IEnumerable<Permission> CollectNeededPermissions(IEnumerable<SidebarMenuItem> menuItems)
+        {
+            var neededPermissions = new List<Permission>();
+
+            foreach (var menuItem in menuItems)
+            {
+                neededPermissions.Add(menuItem.Permission);
+                
+                if (menuItem.SubMenus.Any())
+                {
+                    neededPermissions.AddRange(CollectNeededPermissions(menuItem.SubMenus));
+                }
+            }
+
+            return neededPermissions;
         }
 
         private static HtmlTag GetFinalLevelLinkTag<T>(HtmlHelper<T> helper, SidebarMenuItem item)
