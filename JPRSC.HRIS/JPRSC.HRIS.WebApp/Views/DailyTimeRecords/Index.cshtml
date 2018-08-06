@@ -162,11 +162,11 @@
                                             <span ng-show="vm.validationErrors.daysWorked" class="help-block">{{vm.validationErrors.daysWorked.join(' ')}}</span>
                                         </div>
                                     </div>
-                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.minutesWorked }">
-                                        <label class="col-md-8 col-lg-9 control-label">No. of Minutes</label>
+                                    <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hoursWorked }">
+                                        <label class="col-md-8 col-lg-9 control-label">No. of Hours</label>
                                         <div class="col-md-4 col-lg-3">
-                                            <input type="text" class="form-control" name="MinutesWorked" ng-model="vm.minutesWorked" />
-                                            <span ng-show="vm.validationErrors.minutesWorked" class="help-block">{{vm.validationErrors.minutesWorked.join(' ')}}</span>
+                                            <input type="text" class="form-control" name="HoursWorked" ng-model="vm.hoursWorked" />
+                                            <span ng-show="vm.validationErrors.hoursWorked" class="help-block">{{vm.validationErrors.hoursWorked.join(' ')}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.minutesLate }">
@@ -230,7 +230,7 @@
                                                     <th>From</th>
                                                     <th>To</th>
                                                     <th>OT Code</th>
-                                                    <th>Number <br />of Minutes</th>
+                                                    <th>Number <br />of Hours</th>
                                                     <th>Amount</th>
                                                     <th>Reference</th>
                                                 </tr>
@@ -258,7 +258,7 @@
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" ng-model="overtime.numberOfMinutes" ng-change="vm.numberOfMinutesChanged(overtime)" name="{{vm.getOvertimeFieldName($index, 'NumberOfMinutes')}}" />
+                                                        <input type="text" class="form-control" ng-model="overtime.numberOfHours" ng-change="vm.numberOfHoursChanged(overtime)" name="{{vm.getOvertimeFieldName($index, 'NumberOfHours')}}" />
                                                     </td>
                                                     <td>
                                                         <input type="hidden" name="{{vm.getOvertimeFieldName($index, 'NumberOfHoursValue')}}" value="{{overtime.numberOfHoursValue}}" />

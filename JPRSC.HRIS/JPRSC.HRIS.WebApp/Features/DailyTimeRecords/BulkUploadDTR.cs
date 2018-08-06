@@ -23,7 +23,6 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public DateTime? PayrollPeriodFrom { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
             public int? PayrollProcessBatchPayrollPeriodBasisId { get; set; }
-            public IList<IList<string>> Lines { get; set; } = new List<IList<string>>();
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -37,13 +36,6 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                 RuleFor(c => c.File)
                     .NotNull();
-
-                When(c => c.File != null, () =>
-                {
-                    RuleFor(c => c.File)
-                        .Must(HaveValidNumberOfColumns)
-                        .WithMessage("Unrecognized number of columns. Please use these columns: Employee Code, Last Name, First Name, Days Worked, Minutes Worked, Minutes Late, Minutes Undertime, ROT, ND, NDOT, SH, NDSH, SHOT, NDSHOT, LH, NDLH, LHOT, NDLHOT, DOD, DODOT, SHDOD, SHDODOT, LHDOD, LHDODOT, ADJ_PAY, EXC_DOD, HOLIDAY, ND_LHX8, ND_LHRDX8, ND_LHRDF8, ND_LHF8, NDX8, NDF8, ND_RDX8, ND_RDF8, ND_SHX8, ND_SHRDX8, ND_SHRDF8, ND_SHF8, ND_B2020, OT_LHX8, OT_LHRDX8, OT_LHRDF8, OT_LHF8, OT_RDX8, OT_RDF8, OT_SHF8M, OT_SHX8, OT_SHRDX8, OT_SHRDF8, OT_SHF8, UWLH_B2020");
-                });
 
                 When(c => c.ClientId.HasValue && c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue, () =>
                 {
@@ -73,30 +65,6 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             {
                 var endProcessRecord = _db.PayrollProcessBatches.SingleOrDefault(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && ppb.EndProcessedOn.HasValue && ppb.ClientId == clientId && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
                 return endProcessRecord == null;
-            }
-
-            private bool HaveValidNumberOfColumns(Command command, HttpPostedFileBase file)
-            {
-                // Set the lines here so we don't have to deal with the stream later on
-                var hasValidNumberOfColumns = false;
-                var numberOfColumns = 52;
-
-                using (var csvreader = new StreamReader(file.InputStream))
-                {
-                    while (!csvreader.EndOfStream)
-                    {
-                        var line = csvreader.ReadLine();
-                        var lineAsColumns = line.Split(',');
-                        command.Lines.Add(lineAsColumns);
-
-                        if (lineAsColumns.Count() == numberOfColumns)
-                        {
-                            hasValidNumberOfColumns = true;
-                        }
-                    }
-                }
-
-                return hasValidNumberOfColumns;
             }
 
             private bool BeBeforePayrollPeriodTo(Command command, DateTime? payrollPeriodFrom)
@@ -155,7 +123,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     var lastName = String.IsNullOrWhiteSpace(line[1]) ? null : line[1].Trim();
                     var firstName = String.IsNullOrWhiteSpace(line[2]) ? null : line[2].Trim();
                     var daysWorked = line[3].ToNullableDouble();
-                    var minutesWorked = line[4].ToNullableDouble();
+                    var hoursWorked = line[4].ToNullableDouble();
                     var minutesLate = line[5].ToNullableDouble();
                     var minutesUndertime = line[6].ToNullableDouble();
 
@@ -188,8 +156,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         existingDailyTimeRecord.HoursLateValue = (decimal?)(minutesLate / 60) * employee.HourlyRate;
                         existingDailyTimeRecord.HoursUndertime = minutesUndertime / 60;
                         existingDailyTimeRecord.HoursUndertimeValue = (decimal?)(minutesUndertime / 60) * employee.HourlyRate;
-                        existingDailyTimeRecord.HoursWorked = minutesWorked / 60;
-                        existingDailyTimeRecord.HoursWorkedValue = (decimal?)(minutesWorked / 60) * employee.HourlyRate;
+                        existingDailyTimeRecord.HoursWorked = hoursWorked;
+                        existingDailyTimeRecord.HoursWorkedValue = (decimal?)hoursWorked * employee.HourlyRate;
                         existingDailyTimeRecord.ModifiedOn = now;
                     }
                     else
@@ -207,8 +175,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             HoursLateValue = (decimal?)(minutesLate / 60) * employee.HourlyRate,
                             HoursUndertime = minutesUndertime / 60,
                             HoursUndertimeValue = (decimal?)(minutesUndertime / 60) * employee.HourlyRate,
-                            HoursWorked = minutesWorked / 60,
-                            HoursWorkedValue = (decimal?)(minutesWorked / 60) * employee.HourlyRate,
+                            HoursWorked = hoursWorked,
+                            HoursWorkedValue = (decimal?)hoursWorked * employee.HourlyRate,
                             PayrollPeriodFrom = command.PayrollPeriodFrom,
                             PayrollPeriodTo = command.PayrollPeriodTo
                         };
@@ -217,7 +185,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                     foreach (KeyValuePair<int, PayPercentage> entry in columnToPayPercentageMap.Where(kvp => kvp.Value != null))
                     {
-                        var hours = line[entry.Key].ToNullableDouble() / 60;
+                        var hours = line[entry.Key].ToNullableDouble();
                         var payPercentage = entry.Value;
 
                         var existingOvertime = await _db.Overtimes.SingleOrDefaultAsync(ot => !ot.DeletedOn.HasValue && ot.EmployeeId == employee.Id && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayPercentageId == payPercentage.Id);
