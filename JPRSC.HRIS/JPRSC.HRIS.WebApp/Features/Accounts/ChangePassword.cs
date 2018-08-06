@@ -2,6 +2,7 @@
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Infrastructure.Identity;
+using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
 using System;
 using System.Data.Entity;
@@ -81,10 +82,19 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
             public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
-                var changePasswordResult = await _userManager.ChangePasswordAsync(command.Id, command.OldPassword, command.NewPassword);
-                if (!changePasswordResult.Succeeded)
+                var useOldPassword = !AuthorizeHelper.IsSuperAdmin();
+                if (useOldPassword)
                 {
-                    throw new Exception($"Unable to change password. Errors: {changePasswordResult.Errors.Join(",")}");
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(command.Id, command.OldPassword, command.NewPassword);
+                    if (!changePasswordResult.Succeeded)
+                    {
+                        throw new Exception($"Unable to change password. Errors: {changePasswordResult.Errors.Join(",")}");
+                    }
+                }
+                else
+                {
+                    await _userManager.RemovePasswordAsync(command.Id);
+                    await _userManager.AddPasswordAsync(command.Id, command.NewPassword);
                 }
 
                 return new CommandResult
