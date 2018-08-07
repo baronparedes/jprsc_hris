@@ -30,36 +30,100 @@
                 <h5>@Model.PayrollRecords.Count() record/s total</h5>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <table class="table table-striped table-bordered payroll-table">
-                    <thead>
-                        <tr>
-                            <th>ATM Account #</th>
-                            <th>Amount</th>
-                            <th>Last Name, First Name, MI</th>
-                            <th>Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var payrollRecord in Model.PayrollRecords)
-                        {
-                            <tr>
-                                <td>@payrollRecord.Employee.ATMAccountNumber</td>
-                                <td>@String.Format("{0:n}", payrollRecord.NetPayValue)</td>
-                                <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, String.IsNullOrWhiteSpace(payrollRecord.Employee.MiddleName) ? payrollRecord.Employee.MiddleName.First().ToString() : null)</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                        }
-                        <tr>
-                            <td>Total:</td>
-                            <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.NetPayValue))</td>
-                            <td colspan="2">&nbsp;</td>
-                        </tr>
-                    </tbody>
-                </table>
+        @if (!Model.PayrollRecords.Any())
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <p class="lead">No records found.</p>
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
+                        {
+                            <button class="btn btn-primary" disabled="disabled">Sort by Name</button>
+                            <a href="@Url.Action("CashReport", new { PayrollProcessBatchId = Model.PayrollProcessBatchId, DisplayMode = "Branch" })" class="btn btn-primary">Group by Branch</a>
+                        }
+                        else if (Model.DisplayMode == "Branch")
+                        {
+                            <a href="@Url.Action("CashReport", new { PayrollProcessBatchId = Model.PayrollProcessBatchId })" class="btn btn-primary">Sort by Name</a>
+                            <button class="btn btn-primary" disabled="disabled">Group by Branch</button>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
+                    {
+                        <table class="table table-striped table-bordered payroll-table">
+                            <thead>
+                                <tr>
+                                    <th>ATM Account #</th>
+                                    <th>Amount</th>
+                                    <th>Last Name, First Name, MI</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var payrollRecord in Model.PayrollRecords)
+                                {
+                                    <tr>
+                                        <td>@payrollRecord.Employee.ATMAccountNumber</td>
+                                        <td>@String.Format("{0:n}", payrollRecord.NetPayValue)</td>
+                                        <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, String.IsNullOrWhiteSpace(payrollRecord.Employee.MiddleName) ? payrollRecord.Employee.MiddleName.First().ToString() : null)</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td>Total:</td>
+                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.NetPayValue))</td>
+                                    <td colspan="2">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+                    else if (Model.DisplayMode == "Branch")
+                    {
+                        var groupedByBranch = Model.PayrollRecords.GroupBy(pr => new { pr.Employee.Department.Id, pr.Employee.Department.Name });
+                        foreach (var group in groupedByBranch)
+                        {
+                            <h2>@group.Key.Name</h2>
+                            <table class="table table-striped table-bordered payroll-table">
+                                <thead>
+                                    <tr>
+                                        <th>ATM Account #</th>
+                                        <th>Amount</th>
+                                        <th>Last Name, First Name, MI</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var payrollRecord in group)
+                                    {
+                                        <tr>
+                                            <td>@payrollRecord.Employee.ATMAccountNumber</td>
+                                            <td>@String.Format("{0:n}", payrollRecord.NetPayValue)</td>
+                                            <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, String.IsNullOrWhiteSpace(payrollRecord.Employee.MiddleName) ? payrollRecord.Employee.MiddleName.First().ToString() : null)</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>Total:</td>
+                                        <td>@String.Format("{0:n}", group.Sum(p => p.NetPayValue))</td>
+                                        <td colspan="2">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+                    }
+                </div>
+            </div>
+        }
     </div>
 </body>
 </html>

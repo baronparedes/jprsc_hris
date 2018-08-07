@@ -18,6 +18,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         public class Query : IRequest<QueryResult>
         {
             public int? PayrollProcessBatchId { get; set; }
+            public string DisplayMode { get; set; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
@@ -31,6 +32,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         public class QueryResult
         {
+            public int? PayrollProcessBatchId { get; set; }
+            public string DisplayMode { get; set; }
             public IEnumerable<PayrollRecord> PayrollRecords { get; set; } = new List<PayrollRecord>();
             public PayrollProcessBatch PayrollProcessBatchResult { get; set; }
 
@@ -84,6 +87,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public DateTime? DateOfBirth { get; set; }
                 public DateTime? DateResigned { get; set; }
                 public DateTime? DeletedOn { get; set; }
+                public Department Department { get; set; }
                 public int? DepartmentId { get; set; }
                 public string Email { get; set; }
                 public string EmployeeCode { get; set; }
@@ -110,6 +114,13 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public bool? ThirteenthMonthExempt { get; set; }
                 public string TIN { get; set; }
                 public string ZipCode { get; set; }
+            }
+
+            public class Department
+            {
+                public int Id { get; set; }
+                public string Code { get; set; }
+                public string Name { get; set; }
             }
 
             public class PayrollProcessBatch
@@ -162,11 +173,16 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var payrollRecords = await _db.PayrollRecords
                     .Include(pr => pr.Employee)
+                    .Include(pr => pr.Employee.Department)
                     .Where(pr => pr.PayrollProcessBatchId == query.PayrollProcessBatchId && pr.Employee.ATMAccountNumber != null && pr.Employee.SalaryStatus != SalaryStatus.OnHold && pr.Employee.SalaryStatus != SalaryStatus.ForCheck)
+                    .OrderBy(pr => pr.Employee.LastName)
+                    .ThenBy(pr => pr.Employee.FirstName)
                     .ProjectToListAsync<QueryResult.PayrollRecord>();
 
                 return new QueryResult
                 {
+                    PayrollProcessBatchId = query.PayrollProcessBatchId,
+                    DisplayMode = query.DisplayMode,
                     PayrollProcessBatchResult = Mapper.Map<QueryResult.PayrollProcessBatch>(payrollProcessBatch),
                     PayrollRecords = payrollRecords
                 };

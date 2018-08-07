@@ -30,92 +30,217 @@
                 <h5>@Model.PayslipRecords.Count() record/s total</h5>
             </div>
         </div>
-        @foreach (var payslipRecord in Model.PayslipRecords)
+        @if (!Model.PayslipRecords.Any())
         {
             <div class="row">
                 <div class="col-sm-12">
-                    <table class="table table-bordered payroll-table">
-                        <tbody>
-                            <tr>
-                                <td colspan="5" style="text-align: center;"><h4>Job Placement Resources Cooperative</h4></td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">Payroll period from @Model.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.PayrollProcessBatchResult.PayrollPeriodToFormatted</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">Name: @String.Format("{0}, {1} {2} ({3})", payslipRecord.Employee.LastName, payslipRecord.Employee.FirstName, payslipRecord.Employee.MiddleName, payslipRecord.Employee.EmployeeCode)</td>
-                                <td colspan="3">Department: @String.Format("{0}", payslipRecord.Employee.Department?.Name)</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>Earnings</td>
-                                <td>&nbsp;</td>
-                                <td>Deductions</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: right;">Basic pay:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.BasicPay)</td>
-                                <td style="text-align: right;">SSS:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.SSS)</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: right;">Overtime:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.Overtime)</td>
-                                <td style="text-align: right;">PAGIBIG:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.PagIbig)</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: right;">COLA:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.COLA)</td>
-                                <td style="text-align: right;">PHIC:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.PHIC)</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: right;">Other earnings:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.OtherEarnings)</td>
-                                <td style="text-align: right;">Tax:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.Tax)</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td style="text-align: right;">UT / Tardy:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.UTTardy)</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td style="text-align: right;">Loan payment:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.LoanPayment)</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td style="text-align: right;">Other deductions:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.OtherDeductions)</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: right;">Total Earnings:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.TotalEarnings)</td>
-                                <td style="text-align: right;">Total Deductions:</td>
-                                <td>@String.Format("P{0:n}", payslipRecord.TotalDeductions)</td>
-                                <td>
-                                    <span style="float: left">NET PAY:</span>
-                                    <span style="float: right">@String.Format("P{0:n}", payslipRecord.NetPay)</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <p class="lead">No records found.</p>
                 </div>
             </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
+                        {
+                            <button class="btn btn-primary" disabled="disabled">Sort by Name</button>
+                            <a href="@Url.Action("PayslipReport", new { PayrollProcessBatchId = Model.PayrollProcessBatchId, DisplayMode = "Branch" })" class="btn btn-primary">Group by Branch</a>
+                        }
+                        else if (Model.DisplayMode == "Branch")
+                        {
+                            <a href="@Url.Action("PayslipReport", new { PayrollProcessBatchId = Model.PayrollProcessBatchId })" class="btn btn-primary">Sort by Name</a>
+                            <button class="btn btn-primary" disabled="disabled">Group by Branch</button>
+                        }
+                    </div>
+                </div>
+            </div>
+            if (String.IsNullOrWhiteSpace(Model.DisplayMode))
+            {
+                foreach (var payslipRecord in Model.PayslipRecords)
+                {
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered payroll-table">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" style="text-align: center;"><h4>Job Placement Resources Cooperative</h4></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">Payroll period from @Model.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.PayrollProcessBatchResult.PayrollPeriodToFormatted</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Name: @String.Format("{0}, {1} {2} ({3})", payslipRecord.Employee.LastName, payslipRecord.Employee.FirstName, payslipRecord.Employee.MiddleName, payslipRecord.Employee.EmployeeCode)</td>
+                                        <td colspan="3">Department: @String.Format("{0}", payslipRecord.Employee.Department?.Name)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>Earnings</td>
+                                        <td>&nbsp;</td>
+                                        <td>Deductions</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right;">Basic pay:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.BasicPay)</td>
+                                        <td style="text-align: right;">SSS:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.SSS)</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right;">Overtime:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.Overtime)</td>
+                                        <td style="text-align: right;">PAGIBIG:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.PagIbig)</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right;">COLA:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.COLA)</td>
+                                        <td style="text-align: right;">PHIC:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.PHIC)</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right;">Other earnings:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.OtherEarnings)</td>
+                                        <td style="text-align: right;">Tax:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.Tax)</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td style="text-align: right;">UT / Tardy:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.UTTardy)</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td style="text-align: right;">Loan payment:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.LoanPayment)</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td style="text-align: right;">Other deductions:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.OtherDeductions)</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right;">Total Earnings:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.TotalEarnings)</td>
+                                        <td style="text-align: right;">Total Deductions:</td>
+                                        <td>@String.Format("P{0:n}", payslipRecord.TotalDeductions)</td>
+                                        <td>
+                                            <span style="float: left">NET PAY:</span>
+                                            <span style="float: right">@String.Format("P{0:n}", payslipRecord.NetPay)</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+            }
+            else if (Model.DisplayMode == "Branch")
+            {
+                var groupedByBranch = Model.PayslipRecords.GroupBy(pr => new { pr.Employee.Department.Id, pr.Employee.Department.Name });
+                foreach (var group in groupedByBranch)
+                {
+                    <h2>@group.Key.Name</h2>
+                    foreach (var payslipRecord in group)
+                    {
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered payroll-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" style="text-align: center;"><h4>Job Placement Resources Cooperative</h4></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5">Payroll period from @Model.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.PayrollProcessBatchResult.PayrollPeriodToFormatted</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">Name: @String.Format("{0}, {1} {2} ({3})", payslipRecord.Employee.LastName, payslipRecord.Employee.FirstName, payslipRecord.Employee.MiddleName, payslipRecord.Employee.EmployeeCode)</td>
+                                            <td colspan="3">Department: @String.Format("{0}", payslipRecord.Employee.Department?.Name)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                            <td>Earnings</td>
+                                            <td>&nbsp;</td>
+                                            <td>Deductions</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;">Basic pay:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.BasicPay)</td>
+                                            <td style="text-align: right;">SSS:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.SSS)</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;">Overtime:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.Overtime)</td>
+                                            <td style="text-align: right;">PAGIBIG:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.PagIbig)</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;">COLA:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.COLA)</td>
+                                            <td style="text-align: right;">PHIC:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.PHIC)</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;">Other earnings:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.OtherEarnings)</td>
+                                            <td style="text-align: right;">Tax:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.Tax)</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">UT / Tardy:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.UTTardy)</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">Loan payment:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.LoanPayment)</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: right;">Other deductions:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.OtherDeductions)</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;">Total Earnings:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.TotalEarnings)</td>
+                                            <td style="text-align: right;">Total Deductions:</td>
+                                            <td>@String.Format("P{0:n}", payslipRecord.TotalDeductions)</td>
+                                            <td>
+                                                <span style="float: left">NET PAY:</span>
+                                                <span style="float: right">@String.Format("P{0:n}", payslipRecord.NetPay)</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                }
+            }
         }
     </div>
 </body>

@@ -17,6 +17,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         public class Query : IRequest<QueryResult>
         {
             public int? PayrollProcessBatchId { get; set; }
+            public string DisplayMode { get; set; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
@@ -30,6 +31,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         public class QueryResult
         {
+            public int? PayrollProcessBatchId { get; set; }
+            public string DisplayMode { get; set; }
             public IEnumerable<PayslipData> PayslipRecords { get; set; } = new List<PayslipData>();
             public PayrollProcessBatch PayrollProcessBatchResult { get; set; }
 
@@ -137,6 +140,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             public class Department
             {
                 public int Id { get; set; }
+                public string Code { get; set; }
                 public string Name { get; set; }
             }
 
@@ -215,6 +219,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 return new QueryResult
                 {
+                    PayrollProcessBatchId = query.PayrollProcessBatchId,
+                    DisplayMode = query.DisplayMode,
                     PayrollProcessBatchResult = Mapper.Map<QueryResult.PayrollProcessBatch>(payrollProcessBatch),
                     PayslipRecords = payslipRecords
                 };
