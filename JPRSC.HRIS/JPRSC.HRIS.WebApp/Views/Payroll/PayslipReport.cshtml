@@ -149,7 +149,7 @@
             else if (Model.DisplayMode == "Branch")
             {
                 var groupedByBranch = Model.PayslipRecords.GroupBy(pr => new { pr.Employee.Department.Id, pr.Employee.Department.Name });
-                foreach (var group in groupedByBranch)
+                foreach (var group in groupedByBranch.OrderBy(g => g.Key.Name))
                 {
                     <h2>@group.Key.Name</h2>
                     foreach (var payslipRecord in group)
