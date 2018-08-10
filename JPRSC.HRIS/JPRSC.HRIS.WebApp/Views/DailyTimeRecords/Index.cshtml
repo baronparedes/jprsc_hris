@@ -85,8 +85,8 @@
                                         <th>Payroll Period To</th>
                                         <th>Days Worked</th>
                                         <th>Hours Worked</th>
-                                        <th>Hours Late</th>
-                                        <th>Hours Undertime</th>
+                                        <th>Minutes Late</th>
+                                        <th>Minutes Undertime</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -98,16 +98,16 @@
                                         <td>{{dailyTimeRecord.payrollPeriodFrom | date: 'mediumDate'}}</td>
                                         <td>{{dailyTimeRecord.payrollPeriodTo | date: 'mediumDate'}}</td>
                                         <td>
-                                            <span ng-if="dailyTimeRecord.daysWorked">{{dailyTimeRecord.daysWorked}} days * {{vm.currencySymbol}}{{dailyTimeRecord.dailyRate | number:2}} = <strong>{{vm.currencySymbol}}{{dailyTimeRecord.daysWorkedValue | number:2}}</strong></span>
+                                            <span ng-if="dailyTimeRecord.daysWorked">{{dailyTimeRecord.daysWorked}} days * {{vm.currencySymbol}}{{dailyTimeRecord.dailyRate | number:2}}/day = <strong>{{vm.currencySymbol}}{{dailyTimeRecord.daysWorkedValue | number:2}}</strong></span>
                                         </td>
                                         <td>
-                                            <span ng-if="dailyTimeRecord.hoursWorked">{{dailyTimeRecord.hoursWorked}} hours * {{vm.currencySymbol}}{{dailyTimeRecord.hourlyRate | number:2}} = <strong>{{vm.currencySymbol}}{{dailyTimeRecord.hoursWorkedValue | number:2}}</strong></span>
+                                            <span ng-if="dailyTimeRecord.hoursWorked">{{dailyTimeRecord.hoursWorked}} hours * {{vm.currencySymbol}}{{dailyTimeRecord.hourlyRate | number:2}}/hr = <strong>{{vm.currencySymbol}}{{dailyTimeRecord.hoursWorkedValue | number:2}}</strong></span>
                                         </td>
                                         <td>
-                                            <span ng-if="dailyTimeRecord.hoursLate">{{dailyTimeRecord.hoursLate}} hours * {{vm.currencySymbol}}{{dailyTimeRecord.hourlyRate | number:2}} = (<strong>{{vm.currencySymbol}}{{dailyTimeRecord.hoursLateValue | number:2}}</strong>)</span>
+                                            <span ng-if="dailyTimeRecord.minutesLate">{{dailyTimeRecord.minutesLate | number:0}} minutes * {{vm.currencySymbol}}{{dailyTimeRecord.hourlyRate | number:2}}/hr = (<strong>{{vm.currencySymbol}}{{dailyTimeRecord.hoursLateValue | number:2}}</strong>)</span>
                                         </td>
                                         <td>
-                                            <span ng-if="dailyTimeRecord.hoursUndertime">{{dailyTimeRecord.hoursUndertime}} hours * {{vm.currencySymbol}}{{dailyTimeRecord.hourlyRate | number:2}} = (<strong>{{vm.currencySymbol}}{{dailyTimeRecord.hoursUndertimeValue | number:2}}</strong>)</span>
+                                            <span ng-if="dailyTimeRecord.minutesUndertime">{{dailyTimeRecord.minutesUndertime | number:0}} minutes * {{vm.currencySymbol}}{{dailyTimeRecord.hourlyRate | number:2}}/hr = (<strong>{{vm.currencySymbol}}{{dailyTimeRecord.hoursUndertimeValue | number:2}}</strong>)</span>
                                         </td>
                                         <td></td>
                                     </tr>

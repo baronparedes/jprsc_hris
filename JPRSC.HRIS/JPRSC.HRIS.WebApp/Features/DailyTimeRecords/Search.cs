@@ -61,8 +61,10 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public Employee Employee { get; set; }
                 public decimal? HourlyRate { get; set; }
                 public double? HoursLate { get; set; }
+                public int? MinutesLate => HoursLate.HasValue ? (int)Math.Round(HoursLate.Value * 60) : (int?)null;
                 public decimal? HoursLateValue { get; set; }
                 public double? HoursUndertime { get; set; }
+                public int? MinutesUndertime => HoursUndertime.HasValue ? (int)Math.Round(HoursUndertime.Value * 60) : (int?)null;
                 public decimal? HoursUndertimeValue { get; set; }
                 public double? HoursWorked { get; set; }
                 public decimal? HoursWorkedValue { get; set; }
