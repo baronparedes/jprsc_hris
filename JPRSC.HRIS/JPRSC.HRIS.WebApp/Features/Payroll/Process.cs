@@ -52,7 +52,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             {
                 return !_db
                     .PayrollProcessBatches
-                    .Any(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue &&
+                    .Any(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue && ppb.ClientId == clientId.Value &&
                                 ppb.PayrollPeriodFrom == commnad.PayrollPeriodFrom && ppb.PayrollPeriodTo == commnad.PayrollPeriodTo && ppb.PayrollPeriod == commnad.PayrollPeriod);
             }
         }
