@@ -151,7 +151,7 @@
                                 <label class="col-md-4 col-lg-3 control-label">Loan Date</label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" ng-model="vm.loanDate"
-                                           uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                           uib-datepicker-popup="MM/dd/yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                            is-open="vm.loanDateIsOpen" ng-click="vm.loanDateIsOpen = true">
                                     <input type="hidden" name="LoanDate" value="{{vm.loanDate | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                     <span ng-show="vm.validationErrors.loanDate" class="help-block">{{vm.validationErrors.loanDate.join(' ')}}</span>
@@ -217,7 +217,7 @@
                                 <label class="col-md-4 col-lg-3 control-label">Start Deduction Date</label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" ng-model="vm.startDeductionDate"
-                                           uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                           uib-datepicker-popup="MM/dd/yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                            is-open="vm.startDeductionDateIsOpen" ng-click="vm.startDeductionDateIsOpen = true">
                                     <input type="hidden" name="StartDeductionDate" value="{{vm.startDeductionDate | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                     <span ng-show="vm.validationErrors.startDeductionDate" class="help-block">{{vm.validationErrors.startDeductionDate.join(' ')}}</span>
