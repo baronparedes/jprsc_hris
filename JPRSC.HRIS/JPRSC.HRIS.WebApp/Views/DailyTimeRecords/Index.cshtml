@@ -328,17 +328,17 @@
             <script type="text/ng-template" id="bulkUploadDTRModal.html">
                 <form class="form-horizontal" role="form" method="post" id="bulkUploadForm" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h3 class="modal-title">Bulk Upload for {{vm.client.name}}</h3>
+                        <h3 class="modal-title">DTR Bulk Upload for {{vm.client.name}}</h3>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-danger" ng-show="vm.unprocessedItems.length">
-                            <p style="margin-bottom: 10px;">Unable to process the following employees:</p>
+                            <p style="margin-bottom: 10px;">Error encountered on the following employees:</p>
                             <ul style="margin-bottom: 10px;">
                                 <li ng-repeat="unprocessedItem in vm.unprocessedItems">
                                     {{unprocessedItem.lastName}}, {{unprocessedItem.firstName}}: {{unprocessedItem.reason}}
                                 </li>
                             </ul>
-                            <p>Please make the necessary changes and try again.</p>
+                            <p>The entire operation has been aborted. Please make the necessary changes and try again.</p>
                         </div>
                         <div class="form-body">
                             <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
@@ -382,17 +382,17 @@
             <script type="text/ng-template" id="bulkUploadEDRModal.html">
                 <form class="form-horizontal" role="form" method="post" id="bulkUploadForm" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h3 class="modal-title">Bulk Upload for {{vm.client.name}}</h3>
+                        <h3 class="modal-title">E/D Bulk Upload for {{vm.client.name}}</h3>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-danger" ng-show="vm.unprocessedItems.length">
-                            <p style="margin-bottom: 10px;">Unable to process the following employees:</p>
+                            <p style="margin-bottom: 10px;">Error encountered on the following employees:</p>
                             <ul style="margin-bottom: 10px;">
                                 <li ng-repeat="unprocessedItem in vm.unprocessedItems">
                                     {{unprocessedItem.lastName}}, {{unprocessedItem.firstName}}: {{unprocessedItem.reason}}
                                 </li>
                             </ul>
-                            <p>Please make the necessary changes and try again.</p>
+                            <p>The entire operation has been aborted. Please make the necessary changes and try again.</p>
                         </div>
                         <div class="form-body">
                             <input type="hidden" name="ClientId" value="{{vm.client.id}}" />

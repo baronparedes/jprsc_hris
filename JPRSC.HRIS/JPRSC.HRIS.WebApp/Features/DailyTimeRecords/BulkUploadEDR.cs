@@ -139,11 +139,29 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                     processedItemsCount += 1;
 
+                    var employeeEarningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords.Where(edr => !edr.DeletedOn.HasValue && edr.EmployeeId == employee.Id && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
+
                     foreach (KeyValuePair<int, EarningDeduction> entry in columnToEarningDeductionMap.Where(kvp => kvp.Value != null))
                     {
-                        var amount = line[entry.Key].ToNullableDecimal();
+                        decimal? amount = null;
 
-                        var existingEarningDeductionRecord = await _db.EarningDeductionRecords.SingleOrDefaultAsync(edr => !edr.DeletedOn.HasValue && edr.EmployeeId == employee.Id && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.EarningDeductionId == entry.Value.Id);
+                        try
+                        {
+                            amount = line[entry.Key].ToNullableDecimal();
+                        }
+                        catch
+                        {
+                            unprocessedItems.Add(new CommandResult.UnprocessedItem
+                            {
+                                FirstName = firstName,
+                                LastName = lastName,
+                                Reason = $"Unable to interpret line with employee code \"{employeeCode}\". Please make sure there are no extra commas or other characters."
+                            });
+
+                            break;
+                        }
+
+                        var existingEarningDeductionRecord = employeeEarningDeductionRecordsForPayrollPeriod.SingleOrDefault(edr => edr.EarningDeductionId == entry.Value.Id);
                         if (existingEarningDeductionRecord != null)
                         {
                             existingEarningDeductionRecord.Amount = amount;

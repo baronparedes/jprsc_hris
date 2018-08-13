@@ -122,10 +122,27 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     var employeeCode = String.IsNullOrWhiteSpace(line[0]) ? null : line[0].Trim();
                     var lastName = String.IsNullOrWhiteSpace(line[1]) ? null : line[1].Trim();
                     var firstName = String.IsNullOrWhiteSpace(line[2]) ? null : line[2].Trim();
-                    var daysWorked = line[3].ToNullableDouble();
-                    var hoursWorked = line[4].ToNullableDouble();
-                    var minutesLate = line[5].ToNullableDouble();
-                    var minutesUndertime = line[6].ToNullableDouble();
+
+                    double? daysWorked = null, hoursWorked = null, minutesLate = null, minutesUndertime = null;
+
+                    try
+                    {
+                        daysWorked = line[3].ToNullableDouble();
+                        hoursWorked = line[4].ToNullableDouble();
+                        minutesLate = line[5].ToNullableDouble();
+                        minutesUndertime = line[6].ToNullableDouble();
+                    }
+                    catch
+                    {
+                        unprocessedItems.Add(new CommandResult.UnprocessedItem
+                        {
+                            FirstName = firstName,
+                            LastName = lastName,
+                            Reason = $"Unable to interpret line with employee code \"{employeeCode}\". Please make sure there are no extra commas or other characters."
+                        });
+
+                        continue;
+                    }
 
                     var employee = allEmployeesOfClient.SingleOrDefault(e => !e.DeletedOn.HasValue && !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
                     if (employee == null)
@@ -183,12 +200,31 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         _db.DailyTimeRecords.Add(dailyTimeRecord);
                     }
 
+                    var employeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => !ot.DeletedOn.HasValue && ot.EmployeeId == employee.Id && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
+
                     foreach (KeyValuePair<int, PayPercentage> entry in columnToPayPercentageMap.Where(kvp => kvp.Value != null))
                     {
-                        var hours = line[entry.Key].ToNullableDouble();
+                        double? hours = null;
+
+                        try
+                        {
+                            hours = line[entry.Key].ToNullableDouble();
+                        }
+                        catch
+                        {
+                            unprocessedItems.Add(new CommandResult.UnprocessedItem
+                            {
+                                FirstName = firstName,
+                                LastName = lastName,
+                                Reason = $"Unable to interpret line with employee code \"{employeeCode}\". Please make sure there are no extra commas or other characters."
+                            });
+
+                            break;
+                        }
+
                         var payPercentage = entry.Value;
 
-                        var existingOvertime = await _db.Overtimes.SingleOrDefaultAsync(ot => !ot.DeletedOn.HasValue && ot.EmployeeId == employee.Id && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayPercentageId == payPercentage.Id);
+                        var existingOvertime = employeeOvertimesForPayrollPeriod.SingleOrDefault(ot => ot.PayPercentageId == payPercentage.Id);
                         if (existingOvertime != null)
                         {
                             existingOvertime.ModifiedOn = now;
