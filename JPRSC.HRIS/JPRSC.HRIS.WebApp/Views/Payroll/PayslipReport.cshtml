@@ -148,6 +148,11 @@
             }
             else if (Model.DisplayMode == "Branch")
             {
+                foreach (var payrollRecord in Model.PayslipRecords.Where(p => p.Employee.Department == null))
+                {
+                    payrollRecord.Employee.Department = new JPRSC.HRIS.WebApp.Features.Payroll.PayslipReport.QueryResult.Department { Id = 0, Name = "No Branch" };
+                }
+
                 var groupedByBranch = Model.PayslipRecords.GroupBy(pr => new { pr.Employee.Department.Id, pr.Employee.Department.Name });
                 foreach (var group in groupedByBranch.OrderBy(g => g.Key.Name))
                 {
