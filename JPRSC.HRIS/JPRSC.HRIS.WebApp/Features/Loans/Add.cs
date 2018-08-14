@@ -18,6 +18,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             public DateTime? LoanDate { get; set; }
             public int? LoanTypeId { get; set; }
             public string LoanPayrollPeriod { get; set; }
+            public int? MonthsPayable { get; set; }
             public decimal? PrincipalAmount { get; set; }
             public decimal? RemainingBalance { get; set; }
             public DateTime? StartDeductionDate { get; set; }
@@ -44,6 +45,9 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                     .NotEmpty();
 
                 RuleFor(c => c.LoanPayrollPeriod)
+                    .NotEmpty();
+
+                RuleFor(c => c.MonthsPayable)
                     .NotEmpty();
 
                 RuleFor(c => c.PrincipalAmount)
@@ -80,6 +84,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                     LoanDate = command.LoanDate,
                     LoanTypeId = command.LoanTypeId,
                     LoanPayrollPeriod = command.LoanPayrollPeriod,
+                    //MonthsPayable = command.MonthsPayable,
                     PrincipalAmount = command.PrincipalAmount,
                     RemainingBalance = command.RemainingBalance,
                     StartDeductionDate = command.StartDeductionDate,

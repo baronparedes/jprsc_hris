@@ -74,6 +74,7 @@
                                         <td>Loan Date</td>
                                         <td>Principal Amount</td>
                                         <td>Deduction Amount</td>
+                                        <td>Remaining Balance</td>
                                         <td></td>
                                         <th>&nbsp;</th>
                                     </tr>
@@ -87,6 +88,7 @@
                                         <td>{{loan.loanDate | date:'mediumDate' }}</td>
                                         <td>{{vm.currencySymbol}}{{loan.principalAmount | number:2 }}</td>
                                         <td>{{vm.currencySymbol}}{{loan.deductionAmount | number:2 }}</td>
+                                        <td>{{vm.currencySymbol}}{{loan.remainingBalance | number:2 }}</td>
                                         <td>
                                             <span class="badge bg-green-jungle bg-font-green-jungle badge-roundless" ng-if="!loan.isZeroedOut">Active Loan</span>
                                             <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-if="loan.isZeroedOut">Zeroed Out</span>
@@ -204,6 +206,13 @@
                                 <label class="col-md-4 col-lg-3 control-label">Total Amount</label>
                                 <div class="col-md-8 col-lg-9">
                                     <p class="form-control-static">{{vm.getTotalAmount() | number:2}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.monthsPayable }">
+                                <label class="col-md-4 col-lg-3 control-label">Months Payable</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="MonthsPayable" ng-model="vm.monthsPayable" />
+                                    <span ng-show="vm.validationErrors.monthsPayable" class="help-block">{{vm.validationErrors.monthsPayable.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.deductionAmount }">
