@@ -19,8 +19,9 @@ namespace JPRSC.HRIS.Models
         public LoanType LoanType { get; set; }
         public int? LoanTypeId { get; set; }
         public DateTime? ModifiedOn { get; set; }
-        //public int? MonthsPayable { get; set; }
+        public int? MonthsPayable { get; set; }
         public decimal? PrincipalAmount { get; set; }
+        public decimal? PrincipalAndInterestAmount { get; set; }
         public decimal? RemainingBalance { get; set; }
         public DateTime? StartDeductionDate { get; set; }
         public string TransactionNumber { get; set; }

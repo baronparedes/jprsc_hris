@@ -195,17 +195,18 @@
                                     <span class="help-block" ng-show="vm.validationErrors.loanPayrollPeriod">{{vm.validationErrors.loanPayrollPeriod.join(' ')}}</span>
                                 </div>
                             </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.interestAmount }">
+                            @*<div class="form-group" ng-class="{ 'has-error': vm.validationErrors.interestAmount }">
                                 <label class="col-md-4 col-lg-3 control-label">Interest Amount</label>
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" name="InterestAmount" ng-model="vm.interestAmount" />
                                     <span ng-show="vm.validationErrors.interestAmount" class="help-block">{{vm.validationErrors.interestAmount.join(' ')}}</span>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-4 col-lg-3 control-label">Total Amount</label>
+                            </div>*@
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.principalAndInterestAmount }">
+                                <label class="col-md-4 col-lg-3 control-label">Principal + Interest Amount</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <p class="form-control-static">{{vm.getTotalAmount() | number:2}}</p>
+                                    <input type="text" class="form-control" name="PrincipalAndInterestAmount" ng-model="vm.principalAndInterestAmount" />
+                                    <span ng-show="vm.validationErrors.principalAndInterestAmount" class="help-block">{{vm.validationErrors.principalAndInterestAmount.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.monthsPayable }">
@@ -220,6 +221,12 @@
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" name="DeductionAmount" ng-model="vm.deductionAmount" />
                                     <span ng-show="vm.validationErrors.deductionAmount" class="help-block">{{vm.validationErrors.deductionAmount.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Total Amount</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <p class="form-control-static">{{vm.getTotalAmount() | number:2}}</p>
                                 </div>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.startDeductionDate }">

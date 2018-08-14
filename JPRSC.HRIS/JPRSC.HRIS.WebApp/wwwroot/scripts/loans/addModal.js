@@ -68,12 +68,8 @@
         function getTotalAmount() {
             var totalAmount = 0;
 
-            if (vm.principalAmount > 0) {
-                totalAmount += parseFloat(vm.principalAmount);
-            }
-
-            if (vm.interestAmount > 0) {
-                totalAmount += parseFloat(vm.interestAmount);
+            if (vm.deductionAmount > 0 && vm.monthsPayable > 0) {
+                totalAmount = vm.deductionAmount * vm.monthsPayable;
             }
 
             return totalAmount;
