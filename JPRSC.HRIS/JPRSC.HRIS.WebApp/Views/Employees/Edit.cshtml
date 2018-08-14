@@ -97,6 +97,10 @@
                                             <div class="col-md-9 col-lg-10">
                                                 <div class="mt-radio-list">
                                                     <label class="mt-radio mt-radio-outline">
+                                                        <input type="radio" name="ResignStatus" value="@ResignStatus.None"> @ResignStatus.None
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio mt-radio-outline">
                                                         <input type="radio" name="ResignStatus" value="@ResignStatus.Resigned" checked="@(Model.ResignStatus == ResignStatus.Resigned ? "checked" : null)"> @ResignStatus.Resigned
                                                         <span></span>
                                                     </label>

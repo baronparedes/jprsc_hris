@@ -4,6 +4,7 @@
     {
         public const string Absorbed = "Absorbed";
         public const string AWOL = "AWOL";
+        public const string None = "None";
         public const string Resigned = "Resigned";
     }
 }
