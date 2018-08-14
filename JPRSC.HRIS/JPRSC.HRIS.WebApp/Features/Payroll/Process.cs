@@ -157,7 +157,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         HoursLateValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursLateValue),
                         HoursUndertimeValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursUndertimeValue),
                         HoursWorkedValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursWorkedValue),
-                        LoanPaymentValue = employeeLoans.Any() ? loans.Sum(l => l.RemainingBalance > l.DeductionAmount ? l.DeductionAmount : l.RemainingBalance) : null,
+                        LoanPaymentValue = employeeLoans.Any() ? employeeLoans.Sum(l => l.RemainingBalance > l.DeductionAmount ? l.DeductionAmount : l.RemainingBalance) : null,
                         OvertimeValue = employeeOtsForPayrollPeriod.Sum(ot => ot.NumberOfHoursValue)
                     };
 
