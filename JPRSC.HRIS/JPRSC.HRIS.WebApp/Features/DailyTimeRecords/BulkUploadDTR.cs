@@ -107,8 +107,13 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                 var now = DateTime.UtcNow;
                 var unprocessedItems = new List<CommandResult.UnprocessedItem>();
-                var allPayRates = await _db.PayPercentages.ToListAsync();
-                var allEmployeesOfClient = await _db.Employees.Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
+                var allPayRates = await _db.PayPercentages.AsNoTracking().ToListAsync();
+                var allEmployeesOfClient = await _db.Employees.AsNoTracking().Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
+                var allEmployeesOfClientIds = allEmployeesOfClient.Select(e => e.Id).ToList();
+
+                var allEmployeeDailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords.Where(dtr => allEmployeesOfClientIds.Contains(dtr.EmployeeId.Value) && !dtr.DeletedOn.HasValue && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
+                var allEmployeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => allEmployeesOfClientIds.Contains(ot.EmployeeId.Value) && !ot.DeletedOn.HasValue && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
+
                 var csvData = GetCSVData(command);
                 var columnToPayPercentageMap = await GetColumnToPayPercentageMap(csvData.Item1);
                 var processedItemsCount = 0;
@@ -144,7 +149,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         continue;
                     }
 
-                    var employee = allEmployeesOfClient.SingleOrDefault(e => !e.DeletedOn.HasValue && !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
+                    var employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
                     if (employee == null)
                     {
                         unprocessedItems.Add(new CommandResult.UnprocessedItem
@@ -161,7 +166,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                     processedItemsCount += 1;
 
-                    var existingDailyTimeRecord = _db.DailyTimeRecords.SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo);
+                    var existingDailyTimeRecord = allEmployeeDailyTimeRecordsForPayrollPeriod.SingleOrDefault(dtr => dtr.EmployeeId == employee.Id);
                     if (existingDailyTimeRecord != null)
                     {
                         existingDailyTimeRecord.COLADailyValue = (decimal?)daysWorked * employee.COLADaily;
@@ -200,7 +205,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         _db.DailyTimeRecords.Add(dailyTimeRecord);
                     }
 
-                    var employeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => !ot.DeletedOn.HasValue && ot.EmployeeId == employee.Id && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
+                    var overtimesToAdd = new List<Overtime>();
 
                     foreach (KeyValuePair<int, PayPercentage> entry in columnToPayPercentageMap.Where(kvp => kvp.Value != null))
                     {
@@ -224,7 +229,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                         var payPercentage = entry.Value;
 
-                        var existingOvertime = employeeOvertimesForPayrollPeriod.SingleOrDefault(ot => ot.PayPercentageId == payPercentage.Id);
+                        var existingOvertime = allEmployeeOvertimesForPayrollPeriod.SingleOrDefault(ot => ot.EmployeeId == employee.Id && ot.PayPercentageId == payPercentage.Id);
                         if (existingOvertime != null)
                         {
                             existingOvertime.ModifiedOn = now;
@@ -247,8 +252,13 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                                 PayrollPeriodFrom = command.PayrollPeriodFrom,
                                 PayrollPeriodTo = command.PayrollPeriodTo
                             };
-                            _db.Overtimes.Add(overtime);
+                            overtimesToAdd.Add(overtime);
                         }
+                    }
+
+                    if (overtimesToAdd.Any())
+                    {
+                        _db.Overtimes.AddRange(overtimesToAdd);
                     }
                 }
 

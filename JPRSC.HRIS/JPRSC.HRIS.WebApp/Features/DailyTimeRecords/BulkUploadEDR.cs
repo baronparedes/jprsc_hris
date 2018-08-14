@@ -107,7 +107,11 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                 var now = DateTime.UtcNow;
                 var unprocessedItems = new List<CommandResult.UnprocessedItem>();
-                var allEmployeesOfClient = await _db.Employees.Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
+                var allEmployeesOfClient = await _db.Employees.AsNoTracking().Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
+                var allEmployeesOfClientIds = allEmployeesOfClient.Select(e => e.Id).ToList();
+
+                var allEmployeeEarningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords.Where(edr => allEmployeesOfClientIds.Contains(edr.EmployeeId.Value) && !edr.DeletedOn.HasValue && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
+
                 var csvData = GetCSVData(command);
                 var columnToEarningDeductionMap = await GetColumnToEarningDeductionMap(csvData.Item1);
                 var processedItemsCount = 0;
@@ -122,7 +126,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     var lastName = String.IsNullOrWhiteSpace(line[1]) ? null : line[1].Trim();
                     var firstName = String.IsNullOrWhiteSpace(line[2]) ? null : line[2].Trim();
 
-                    var employee = allEmployeesOfClient.SingleOrDefault(e => !e.DeletedOn.HasValue && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
+                    var employee = allEmployeesOfClient.SingleOrDefault(e => String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
                     if (employee == null)
                     {
                         unprocessedItems.Add(new CommandResult.UnprocessedItem
@@ -139,7 +143,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                     processedItemsCount += 1;
 
-                    var employeeEarningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords.Where(edr => !edr.DeletedOn.HasValue && edr.EmployeeId == employee.Id && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
+                    var earningDeductionRecordsToAdd = new List<EarningDeductionRecord>();
 
                     foreach (KeyValuePair<int, EarningDeduction> entry in columnToEarningDeductionMap.Where(kvp => kvp.Value != null))
                     {
@@ -161,7 +165,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             break;
                         }
 
-                        var existingEarningDeductionRecord = employeeEarningDeductionRecordsForPayrollPeriod.SingleOrDefault(edr => edr.EarningDeductionId == entry.Value.Id);
+                        var existingEarningDeductionRecord = allEmployeeEarningDeductionRecordsForPayrollPeriod.SingleOrDefault(edr => edr.EmployeeId == employee.Id && edr.EarningDeductionId == entry.Value.Id);
                         if (existingEarningDeductionRecord != null)
                         {
                             existingEarningDeductionRecord.Amount = amount;
@@ -178,8 +182,13 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                                 PayrollPeriodFrom = command.PayrollPeriodFrom,
                                 PayrollPeriodTo = command.PayrollPeriodTo
                             };
-                            _db.EarningDeductionRecords.Add(earningDeductionRecord);
+                            earningDeductionRecordsToAdd.Add(earningDeductionRecord);
                         }
+                    }
+
+                    if (earningDeductionRecordsToAdd.Any())
+                    {
+                        _db.EarningDeductionRecords.AddRange(earningDeductionRecordsToAdd);
                     }
                 }
 

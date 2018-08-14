@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Employees
 {
-    [AuthorizePermission(Permission.EmployeeDefault)]
     public class EmployeesController : AppController
     {
         private readonly IMediator _mediator;
@@ -18,6 +17,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             _mediator = mediator;
         }
 
+        [AuthorizePermission(Permission.EmployeeDefault)]
         [HttpGet]
         public async Task<ActionResult> Add()
         {
@@ -26,6 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return View(command);
         }
 
+        [AuthorizePermission(Permission.EmployeeDefault)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(Add.Command command)
@@ -42,6 +43,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return Json("success");
         }
 
+        [AuthorizePermission(Permission.EmployeeDefault)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(Delete.Command command)
@@ -53,6 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return RedirectToAction(nameof(Index));
         }
 
+        [AuthorizePermission(Permission.EmployeeDefault)]
         [HttpGet]
         public async Task<ActionResult> Details(Details.Query query)
         {
@@ -61,6 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return View(result);
         }
 
+        [AuthorizePermission(Permission.EmployeeDefault)]
         [HttpGet]
         public async Task<ActionResult> Edit(Edit.Query query)
         {
@@ -69,6 +73,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return View(command);
         }
 
+        [AuthorizePermission(Permission.EmployeeDefault)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Edit.Command command)
@@ -85,6 +90,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return Json("success");
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult> GetByClientId(GetByClientId.Query query)
         {
@@ -93,6 +99,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return JsonCamelCase(queryResult);
         }
 
+        [AuthorizePermission(Permission.EmployeeDefault)]
         [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)
         {
@@ -101,6 +108,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return View(result);
         }
 
+        [AuthorizePermission(Permission.EmployeeDefault)]
         [HttpGet]
         public async Task<ActionResult> Search(Search.Query query)
         {
