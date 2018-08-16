@@ -15,9 +15,9 @@
             font-family: 'PT Serif', serif;
         }
 
-        /*.payroll-table td {
-            text-align: right;
-        }*/
+        table {
+            font-size: 0.6em;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +40,7 @@
         }
         else
         {
-            <div class="row">
+            <div class="row hidden-print">
                 <div class="col-sm-12">
                     <div class="form-group">
                         @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
@@ -62,7 +62,7 @@
                 {
                     <div class="row">
                         <div class="col-sm-12">
-                            <table class="table table-bordered payroll-table">
+                            <table class="table table-bordered table-condensed">
                                 <tbody>
                                     <tr>
                                         <td colspan="5" style="text-align: center;"><h4>Job Placement Resources Cooperative</h4></td>
@@ -156,12 +156,12 @@
                 var groupedByBranch = Model.PayslipRecords.GroupBy(pr => new { pr.Employee.Department.Id, pr.Employee.Department.Name });
                 foreach (var group in groupedByBranch.OrderBy(g => g.Key.Name))
                 {
-                    <h2>@group.Key.Name</h2>
+                    <h3>@group.Key.Name</h3>
                     foreach (var payslipRecord in group)
                     {
                         <div class="row">
                             <div class="col-sm-12">
-                                <table class="table table-bordered payroll-table">
+                                <table class="table table-bordered table-condensed">
                                     <tbody>
                                         <tr>
                                             <td colspan="5" style="text-align: center;"><h4>Job Placement Resources Cooperative</h4></td>
