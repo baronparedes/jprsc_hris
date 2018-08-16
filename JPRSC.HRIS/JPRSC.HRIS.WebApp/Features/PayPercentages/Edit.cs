@@ -21,6 +21,7 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
         {
             public string Code { get; set; }
             public int Id { get; set; }
+            public bool? IncludeCOLA { get; set; }
             public string Name { get; set; }
             public double? Percentage { get; set; }
         }
@@ -66,6 +67,7 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
                 var payPercentage = await _db.PayPercentages.SingleAsync(r => r.Id == command.Id);
 
                 payPercentage.Code = command.Code;
+                payPercentage.IncludeCOLA = command.IncludeCOLA;
                 payPercentage.ModifiedOn = DateTime.UtcNow;
                 payPercentage.Name = command.Name;
                 payPercentage.Percentage = command.Percentage;

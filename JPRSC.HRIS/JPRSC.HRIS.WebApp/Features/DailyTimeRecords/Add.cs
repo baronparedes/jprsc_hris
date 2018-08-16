@@ -125,45 +125,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var now = DateTime.UtcNow;
                 var employee = await _db.Employees.SingleOrDefaultAsync(e => e.Id == command.EmployeeId);
 
-                var existingDailyTimeRecord = _db.DailyTimeRecords.SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo);
-                if (existingDailyTimeRecord != null)
-                {
-                    existingDailyTimeRecord.COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily);
-                    existingDailyTimeRecord.DailyRate = employee.DailyRate;
-                    existingDailyTimeRecord.DaysWorked = command.DaysWorked;
-                    existingDailyTimeRecord.DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate);
-                    existingDailyTimeRecord.EmployeeId = command.EmployeeId;
-                    existingDailyTimeRecord.HourlyRate = employee.HourlyRate;
-                    existingDailyTimeRecord.HoursLate = command.MinutesLate / 60;
-                    existingDailyTimeRecord.HoursLateValue = GetValue(command.MinutesLate / 60, employee.HourlyRate);
-                    existingDailyTimeRecord.HoursUndertime = command.MinutesUndertime / 60;
-                    existingDailyTimeRecord.HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate);
-                    existingDailyTimeRecord.HoursWorked = command.HoursWorked;
-                    existingDailyTimeRecord.HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate);
-                }
-                else
-                {
-                    var dailyTimeRecord = new DailyTimeRecord
-                    {
-                        AddedOn = now,
-                        COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily),
-                        COLAHourlyValue = GetValue(command.HoursWorked, employee.COLAHourly),
-                        DailyRate = employee.DailyRate,
-                        DaysWorked = command.DaysWorked,
-                        DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate),
-                        EmployeeId = command.EmployeeId,
-                        HourlyRate = employee.HourlyRate,
-                        HoursLate = command.MinutesLate / 60,
-                        HoursLateValue = GetValue(command.MinutesLate / 60, employee.HourlyRate),
-                        HoursUndertime = command.MinutesUndertime / 60,
-                        HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate),
-                        HoursWorked = command.HoursWorked,
-                        HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate),
-                        PayrollPeriodFrom = command.PayrollPeriodFrom,
-                        PayrollPeriodTo = command.PayrollPeriodTo
-                    };
-                    _db.DailyTimeRecords.Add(dailyTimeRecord);
-                }
+                decimal? colaHourlyOTValue = 0;
 
                 var existingOvertimes = await _db
                     .Overtimes
@@ -177,6 +139,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     if (existingOvertime != null)
                     {
                         existingOvertime.ModifiedOn = now;
+                        existingOvertime.NumberOfHours = overtimeUpload.NumberOfHours;
+                        existingOvertime.NumberOfHoursValue = overtimeUpload.NumberOfHoursValue;
                         existingOvertime.PayPercentageName = overtimeUpload.PayPercentageName;
                         existingOvertime.PayPercentagePercentage = overtimeUpload.PayPercentagePercentage;
                     }
@@ -198,6 +162,51 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         };
                         _db.Overtimes.Add(overtime);
                     }
+
+                    colaHourlyOTValue += GetValue(overtimeUpload.NumberOfHours, employee.COLAHourly);
+                }
+
+                var existingDailyTimeRecord = _db.DailyTimeRecords.SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo);
+                if (existingDailyTimeRecord != null)
+                {
+                    existingDailyTimeRecord.COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily);
+                    existingDailyTimeRecord.COLAHourlyValue = GetValue(command.HoursWorked, employee.COLAHourly);
+                    existingDailyTimeRecord.COLAHourlyOTValue = colaHourlyOTValue;
+                    existingDailyTimeRecord.DailyRate = employee.DailyRate;
+                    existingDailyTimeRecord.DaysWorked = command.DaysWorked;
+                    existingDailyTimeRecord.DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate);
+                    existingDailyTimeRecord.EmployeeId = command.EmployeeId;
+                    existingDailyTimeRecord.HourlyRate = employee.HourlyRate;
+                    existingDailyTimeRecord.HoursLate = command.MinutesLate / 60;
+                    existingDailyTimeRecord.HoursLateValue = GetValue(command.MinutesLate / 60, employee.HourlyRate);
+                    existingDailyTimeRecord.HoursUndertime = command.MinutesUndertime / 60;
+                    existingDailyTimeRecord.HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate);
+                    existingDailyTimeRecord.HoursWorked = command.HoursWorked;
+                    existingDailyTimeRecord.HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate);
+                }
+                else
+                {
+                    var dailyTimeRecord = new DailyTimeRecord
+                    {
+                        AddedOn = now,
+                        COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily),
+                        COLAHourlyValue = GetValue(command.HoursWorked, employee.COLAHourly),
+                        COLAHourlyOTValue = colaHourlyOTValue,
+                        DailyRate = employee.DailyRate,
+                        DaysWorked = command.DaysWorked,
+                        DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate),
+                        EmployeeId = command.EmployeeId,
+                        HourlyRate = employee.HourlyRate,
+                        HoursLate = command.MinutesLate / 60,
+                        HoursLateValue = GetValue(command.MinutesLate / 60, employee.HourlyRate),
+                        HoursUndertime = command.MinutesUndertime / 60,
+                        HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate),
+                        HoursWorked = command.HoursWorked,
+                        HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate),
+                        PayrollPeriodFrom = command.PayrollPeriodFrom,
+                        PayrollPeriodTo = command.PayrollPeriodTo
+                    };
+                    _db.DailyTimeRecords.Add(dailyTimeRecord);
                 }
 
                 var existingEarningDeductionRecords = await _db

@@ -7,6 +7,7 @@ namespace JPRSC.HRIS.Models
         public DateTime AddedOn { get; set; }
         public decimal? COLADailyValue { get; set; }
         public decimal? COLAHourlyValue { get; set; }
+        public decimal? COLAHourlyOTValue { get; set; }
         public decimal? DailyRate { get; set; }
         public double? DaysWorked { get; set; }
         public decimal? DaysWorkedValue { get; set; }

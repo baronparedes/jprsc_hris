@@ -315,6 +315,14 @@
     <Compile Include="Infrastructure\Data\Migrations\201808140525591_AddSomeLoanFields.Designer.cs">
       <DependentUpon>201808140525591_AddSomeLoanFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201808160217101_AddPayPercentageIncludeCOLA.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201808160217101_AddPayPercentageIncludeCOLA.Designer.cs">
+      <DependentUpon>201808160217101_AddPayPercentageIncludeCOLA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201808160219561_AddDTRCOLAHourlyOTValue.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201808160219561_AddDTRCOLAHourlyOTValue.Designer.cs">
+      <DependentUpon>201808160219561_AddDTRCOLAHourlyOTValue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -544,6 +552,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201808140525591_AddSomeLoanFields.resx">
       <DependentUpon>201808140525591_AddSomeLoanFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201808160217101_AddPayPercentageIncludeCOLA.resx">
+      <DependentUpon>201808160217101_AddPayPercentageIncludeCOLA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201808160219561_AddDTRCOLAHourlyOTValue.resx">
+      <DependentUpon>201808160219561_AddDTRCOLAHourlyOTValue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

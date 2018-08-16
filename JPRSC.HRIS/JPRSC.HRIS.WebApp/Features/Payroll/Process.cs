@@ -149,7 +149,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     {
                         AddedOn = now,
                         COLADailyValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLADailyValue),
-                        COLAHourlyValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLAHourlyValue),
+                        COLAHourlyValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLAHourlyValue + dtr.COLAHourlyOTValue),
                         DaysWorkedValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.DaysWorkedValue),
                         DeductionsValue = employeeEdrsForPayrollPeriod.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount),
                         EarningsValue = employeeEdrsForPayrollPeriod.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount),
@@ -260,7 +260,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var deductionBasis = 0m;
 
                 if (client.SSSBasic == true) deductionBasis += dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.DaysWorkedValue + dtr.HoursWorkedValue).GetValueOrDefault() + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.DaysWorkedValue + dtr.HoursWorkedValue).GetValueOrDefault();
-                if (client.SSSCola == true) deductionBasis += dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.COLADailyValue + dtr.COLAHourlyValue).GetValueOrDefault() + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLADailyValue + dtr.COLAHourlyValue).GetValueOrDefault();
+                if (client.SSSCola == true) deductionBasis += dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.COLADailyValue + dtr.COLAHourlyValue + dtr.COLAHourlyOTValue).GetValueOrDefault() + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLADailyValue + dtr.COLAHourlyValue + dtr.COLAHourlyOTValue).GetValueOrDefault();
                 if (client.SSSOvertime == true) deductionBasis += overtimesForPreviousPayrollProcessBatches.Sum(ot => ot.NumberOfHoursValue).GetValueOrDefault() + overtimesForPayrollPeriod.Sum(ot => ot.NumberOfHoursValue).GetValueOrDefault();
                 if (client.SSSEarnings == true) deductionBasis += earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount).GetValueOrDefault() + employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount).GetValueOrDefault();
                 if (client.SSSDeductions == true) deductionBasis -= earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount).GetValueOrDefault() + employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount).GetValueOrDefault();
@@ -274,7 +274,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var deductionBasis = 0m;
 
                 if (client.PHICBasic == true) deductionBasis += dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.DaysWorkedValue + dtr.HoursWorkedValue).GetValueOrDefault() + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.DaysWorkedValue + dtr.HoursWorkedValue).GetValueOrDefault();
-                if (client.PHICCola == true) deductionBasis += dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.COLADailyValue + dtr.COLAHourlyValue).GetValueOrDefault() + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLADailyValue + dtr.COLAHourlyValue).GetValueOrDefault();
+                if (client.PHICCola == true) deductionBasis += dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.COLADailyValue + dtr.COLAHourlyValue + dtr.COLAHourlyOTValue).GetValueOrDefault() + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLADailyValue + dtr.COLAHourlyValue + dtr.COLAHourlyOTValue).GetValueOrDefault();
                 if (client.PHICOvertime == true) deductionBasis += overtimesForPreviousPayrollProcessBatches.Sum(ot => ot.NumberOfHoursValue).GetValueOrDefault() + overtimesForPayrollPeriod.Sum(ot => ot.NumberOfHoursValue).GetValueOrDefault();
                 if (client.PHICEarnings == true) deductionBasis += earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount).GetValueOrDefault() + employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount).GetValueOrDefault();
                 if (client.PHICDeductions == true) deductionBasis -= earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount).GetValueOrDefault() + employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount).GetValueOrDefault();

@@ -7,6 +7,7 @@ namespace JPRSC.HRIS.Models
         public string Code { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public int Id { get; set; }
+        public bool? IncludeCOLA { get; set; }
         public string Name { get; set; }
         public double? Percentage { get; set; }
     }

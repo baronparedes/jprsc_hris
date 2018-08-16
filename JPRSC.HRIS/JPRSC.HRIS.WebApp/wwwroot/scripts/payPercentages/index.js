@@ -38,6 +38,7 @@
                 payPercentage.code = payPercentage.copy.code;
                 payPercentage.name = payPercentage.copy.name;
                 payPercentage.percentage = payPercentage.copy.percentage;
+                payPercentage.includeCOLA = payPercentage.copy.includeCOLA;
             }, function (response) {
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
