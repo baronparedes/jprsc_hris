@@ -126,7 +126,7 @@
                                             @* This is necessary for the positioning of the button dropdown *@
                                             <a href="" target="_blank" class="btn btn-primary btn-sm" style="margin-right: 25px;">Report</a>
 
-                                            <form action="/Payroll/Delete" method="post" style="display: inline-block;" ng-if="!payrollProcessBatch.isEndProcessed">
+                                            <form action="/Payroll/Delete" method="post" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this record?');" ng-if="!payrollProcessBatch.isEndProcessed">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="PayrollProcessBatchId" value="{{payrollProcessBatch.id}}" />
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
