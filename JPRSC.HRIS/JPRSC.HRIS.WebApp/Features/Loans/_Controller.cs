@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Loans
 {
-    [AuthorizePermission(Permission.LoanDefault)]
     public class LoansController : AppController
     {
         private readonly IMediator _mediator;
@@ -18,12 +17,14 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             _mediator = mediator;
         }
 
+        [AuthorizePermission(Permission.LoanAdd)]
         [HttpGet]
         public ActionResult Add()
         {
             return View(new Add.Command());
         }
 
+        [AuthorizePermission(Permission.LoanAdd)]
         [HttpPost]
         public async Task<ActionResult> Add(Add.Command command)
         {
@@ -37,17 +38,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             return Json("success");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ZeroOut(ZeroOut.Command command)
-        {
-            var commandResult = await _mediator.Send(command);
-
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully zeroed out loan.");
-
-            return RedirectToAction(nameof(Index));
-        }
-
+        [AuthorizePermission(Permission.LoanDefault)]
         [HttpGet]
         public async Task<ActionResult> Edit(Edit.Query query)
         {
@@ -56,6 +47,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             return View(command);
         }
 
+        [AuthorizePermission(Permission.LoanDefault)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Edit.Command command)
@@ -72,6 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             return Json("success");
         }
 
+        [AuthorizePermission(Permission.LoanDefault)]
         [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)
         {
@@ -80,12 +73,25 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             return View(result);
         }
 
+        [AuthorizePermission(Permission.LoanDefault)]
         [HttpGet]
         public async Task<ActionResult> Search(Search.Query query)
         {
             var queryResult = await _mediator.Send(query);
 
             return JsonCamelCase(queryResult);
+        }
+
+        [AuthorizePermission(Permission.LoanZeroOut)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ZeroOut(ZeroOut.Command command)
+        {
+            var commandResult = await _mediator.Send(command);
+
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully zeroed out loan.");
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

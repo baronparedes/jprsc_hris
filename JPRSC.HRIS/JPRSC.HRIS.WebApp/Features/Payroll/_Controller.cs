@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Payroll
 {
-    [AuthorizePermission(Permission.PayrollDefault)]
     public class PayrollController : AppController
     {
         private readonly IMediator _mediator;
@@ -18,6 +17,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             _mediator = mediator;
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> BankReport(BankReport.Query query)
         {
@@ -26,6 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> CashHoldReport(CashHoldReport.Query query)
         {
@@ -34,6 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> CashReport(CashReport.Query query)
         {
@@ -42,6 +44,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> CheckReport(CheckReport.Query query)
         {
@@ -50,6 +53,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [AuthorizePermission(Permission.PayrollDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(Delete.Command command)
@@ -61,6 +65,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return RedirectToAction(nameof(Index));
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> EndProcess(EndProcess.Query query)
         {
@@ -69,6 +74,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> HoldReport(HoldReport.Query query)
         {
@@ -77,6 +83,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [AuthorizePermission(Permission.PayrollEndProcess)]
         [HttpGet]
         public async Task<ActionResult> EndProcessQuery(EndProcess.EndProcessQuery query)
         {
@@ -85,6 +92,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return JsonCamelCase(queryResult);
         }
 
+        [AuthorizePermission(Permission.PayrollEndProcess)]
         [HttpPost]
         public async Task<ActionResult> EndProcessCommand(EndProcess.Command query)
         {
@@ -98,6 +106,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return JsonCamelCase(result);
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)
         {
@@ -106,6 +115,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [AuthorizePermission(Permission.PayrollProcess)]
         [HttpPost]
         public async Task<ActionResult> Process(Process.Command command)
         {
@@ -119,6 +129,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return Json("success");
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> PayrollReport(PayrollReport.Query query)
         {
@@ -127,6 +138,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> PayslipReport(PayslipReport.Query query)
         {
@@ -135,6 +147,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> Search(Search.Query query)
         {

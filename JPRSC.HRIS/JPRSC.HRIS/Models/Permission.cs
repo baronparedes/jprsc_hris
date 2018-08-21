@@ -27,6 +27,15 @@ namespace JPRSC.HRIS.Models
         [Display(Name = "Clients")]
         ClientDefault = 500,
 
+        [Display(Name = "Add")]
+        ClientAdd = 501,
+
+        [Display(Name = "Edit")]
+        ClientEdit = 502,
+
+        [Display(Name = "Delete")]
+        ClientDelete = 503,
+
         // Custom Role
         [Display(Name = "Roles")]
         CustomRoleDefault = 600,
@@ -53,6 +62,15 @@ namespace JPRSC.HRIS.Models
 
         [Display(Name = "Edit ATM")]
         EmployeeEditATM = 1101,
+
+        [Display(Name = "Add")]
+        EmployeeAdd = 1102,
+
+        [Display(Name = "Edit")]
+        EmployeeEdit = 1103,
+
+        [Display(Name = "Delete")]
+        EmployeeDelete = 1104,
 
         // Approval Levels
         [Display(Name = "Approval Levels")]
@@ -90,6 +108,12 @@ namespace JPRSC.HRIS.Models
         [Display(Name = "Loans")]
         LoanDefault = 2000,
 
+        [Display(Name = "Add")]
+        LoanAdd = 2001,
+
+        [Display(Name = "Zero Out")]
+        LoanZeroOut = 2002,
+
         // Daily Time Record
         [Display(Name = "Daily Time Records")]
         DailyTimeRecordDefault = 2100,
@@ -99,8 +123,17 @@ namespace JPRSC.HRIS.Models
         OvertimeDefault = 2200,
 
         // Payroll
-        [Display(Name = "Payroll (w/ end process)")]
+        [Display(Name = "Payroll")]
         PayrollDefault = 2300,
+
+        [Display(Name = "Process")]
+        PayrollProcess = 2301,
+
+        [Display(Name = "Delete")]
+        PayrollDelete = 2302,
+
+        [Display(Name = "End Process")]
+        PayrollEndProcess = 2303,
 
         // Earnings and Deductions Records
         [Display(Name = "Earnings and Deductions Records")]

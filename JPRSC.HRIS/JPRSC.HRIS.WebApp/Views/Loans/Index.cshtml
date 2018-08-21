@@ -45,13 +45,16 @@
                         </div>
                     </div>
                 </form>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <button type="button" class="btn btn-primary" ng-disabled="vm.searchInProgress" ng-click="vm.addLoanClicked()">Add Loan</button>
+                @if (AuthorizeHelper.IsAuthorized(Permission.LoanAdd))
+                {
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" ng-disabled="vm.searchInProgress" ng-click="vm.addLoanClicked()">Add Loan</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 <div class="note note-info" ng-show="!vm.loans.length">
                     <p>No loans found.</p>
                 </div>
@@ -94,11 +97,14 @@
                                             <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-if="loan.isZeroedOut">Zeroed Out</span>
                                         </td>
                                         <td>
-                                            <form action="/Loans/ZeroOut" method="post" style="display: inline-block;" ng-if="!loan.isZeroedOut">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="LoanId" value="{{loan.id}}" />
-                                                <button type="submit" class="btn btn-danger btn-sm">Zero Out</button>
-                                            </form>
+                                            @if (AuthorizeHelper.IsAuthorized(Permission.LoanZeroOut))
+                                            {
+                                                <form action="/Loans/ZeroOut" method="post" style="display: inline-block;" ng-if="!loan.isZeroedOut">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="LoanId" value="{{loan.id}}" />
+                                                    <button type="submit" class="btn btn-danger btn-sm">Zero Out</button>
+                                                </form>
+                                            }
                                         </td>
                                     </tr>
                                 </tbody>

@@ -17,7 +17,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             _mediator = mediator;
         }
 
-        [AuthorizePermission(Permission.EmployeeDefault)]
+        [AuthorizePermission(Permission.EmployeeAdd)]
         [HttpGet]
         public async Task<ActionResult> Add()
         {
@@ -26,7 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return View(command);
         }
 
-        [AuthorizePermission(Permission.EmployeeDefault)]
+        [AuthorizePermission(Permission.EmployeeAdd)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(Add.Command command)
@@ -43,7 +43,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return Json("success");
         }
 
-        [AuthorizePermission(Permission.EmployeeDefault)]
+        [AuthorizePermission(Permission.EmployeeDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(Delete.Command command)
@@ -64,7 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return View(result);
         }
 
-        [AuthorizePermission(Permission.EmployeeDefault)]
+        [AuthorizePermission(Permission.EmployeeEdit)]
         [HttpGet]
         public async Task<ActionResult> Edit(Edit.Query query)
         {
@@ -73,7 +73,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return View(command);
         }
 
-        [AuthorizePermission(Permission.EmployeeDefault)]
+        [AuthorizePermission(Permission.EmployeeEdit)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Edit.Command command)

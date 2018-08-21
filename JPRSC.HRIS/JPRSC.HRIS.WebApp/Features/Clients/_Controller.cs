@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.Clients
 {
-    [AuthorizePermission(Permission.ClientDefault)]
     public class ClientsController : AppController
     {
         private readonly IMediator _mediator;
@@ -18,12 +17,14 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             _mediator = mediator;
         }
 
+        [AuthorizePermission(Permission.ClientAdd)]
         [HttpGet]
         public ActionResult Add()
         {
             return View(new Add.Command());
         }
 
+        [AuthorizePermission(Permission.ClientAdd)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(Add.Command command)
@@ -40,6 +41,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             return Json("success");
         }
 
+        [AuthorizePermission(Permission.ClientDelete)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(Delete.Command command)
@@ -51,6 +53,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             return RedirectToAction(nameof(Index));
         }
 
+        [AuthorizePermission(Permission.ClientDefault)]
         [HttpGet]
         public async Task<ActionResult> Details(Details.Query query)
         {
@@ -59,6 +62,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             return View(result);
         }
 
+        [AuthorizePermission(Permission.ClientEdit)]
         [HttpGet]
         public async Task<ActionResult> Edit(Edit.Query query)
         {
@@ -67,6 +71,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             return View(command);
         }
 
+        [AuthorizePermission(Permission.ClientEdit)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Edit.Command command)
@@ -83,6 +88,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             return Json("success");
         }
 
+        [AuthorizePermission(Permission.ClientDefault)]
         [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)
         {
@@ -91,6 +97,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             return View(result);
         }
 
+        [AuthorizePermission(Permission.ClientDefault)]
         [HttpGet]
         public async Task<ActionResult> Search(Search.Query query)
         {
