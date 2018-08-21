@@ -323,6 +323,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201808160219561_AddDTRCOLAHourlyOTValue.Designer.cs">
       <DependentUpon>201808160219561_AddDTRCOLAHourlyOTValue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201808210310006_AddAuditTrail.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201808210310006_AddAuditTrail.Designer.cs">
+      <DependentUpon>201808210310006_AddAuditTrail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -351,6 +355,7 @@
     <Compile Include="Infrastructure\Sms\NoopSmsService.cs" />
     <Compile Include="Models\AccountType.cs" />
     <Compile Include="Models\ApprovalLevel.cs" />
+    <Compile Include="Models\AuditTrailEntry.cs" />
     <Compile Include="Models\Bank.cs" />
     <Compile Include="Models\Citizenship.cs" />
     <Compile Include="Models\CivilStatus.cs" />
@@ -558,6 +563,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201808160219561_AddDTRCOLAHourlyOTValue.resx">
       <DependentUpon>201808160219561_AddDTRCOLAHourlyOTValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201808210310006_AddAuditTrail.resx">
+      <DependentUpon>201808210310006_AddAuditTrail.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

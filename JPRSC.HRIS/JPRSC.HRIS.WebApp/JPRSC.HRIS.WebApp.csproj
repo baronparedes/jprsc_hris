@@ -394,6 +394,7 @@
     <Compile Include="Features\TaxStatuses\_Controller.cs" />
     <Compile Include="Features\TaxStatuses\_MappingProfile.cs" />
     <Compile Include="Infrastructure\Angular\AngularHtmlHelperExtensions.cs" />
+    <Compile Include="Infrastructure\AuditTrail\AuditTrailAttribute.cs" />
     <Compile Include="Infrastructure\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Logging\LogHelper.cs" />
     <Compile Include="Infrastructure\Mapping\MappingConfig.cs" />

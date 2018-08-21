@@ -11,6 +11,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         }
 
         public DbSet<ApprovalLevel> ApprovalLevels { get; set; }
+        public DbSet<AuditTrailEntry> AuditTrailEntries { get; set; }
         public DbSet<Bank> Banks { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Company> Companies { get; set; }
