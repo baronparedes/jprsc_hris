@@ -244,6 +244,9 @@
     <Compile Include="Features\ApprovalLevels\Search.cs" />
     <Compile Include="Features\ApprovalLevels\_Controller.cs" />
     <Compile Include="Features\ApprovalLevels\_MappingProfile.cs" />
+    <Compile Include="Features\AuditTrails\Index.cs" />
+    <Compile Include="Features\AuditTrails\Search.cs" />
+    <Compile Include="Features\AuditTrails\_Controller.cs" />
     <Compile Include="Features\Banks\Add.cs" />
     <Compile Include="Features\Banks\Delete.cs" />
     <Compile Include="Features\Banks\Edit.cs" />
@@ -5919,6 +5922,7 @@
     <Content Include="wwwroot\scripts\approvalLevels\add.js" />
     <Content Include="wwwroot\scripts\approvalLevels\edit.js" />
     <Content Include="wwwroot\scripts\approvalLevels\index.js" />
+    <Content Include="wwwroot\scripts\auditTrails\index.js" />
     <Content Include="wwwroot\scripts\banks\add.js" />
     <Content Include="wwwroot\scripts\banks\edit.js" />
     <Content Include="wwwroot\scripts\banks\index.js" />
@@ -6976,6 +6980,7 @@
     <Content Include="Views\Payroll\HoldReport.cshtml" />
     <Content Include="Views\Companies\Details.cshtml" />
     <Content Include="Views\Clients\Details.cshtml" />
+    <Content Include="Views\AuditTrails\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

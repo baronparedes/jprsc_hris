@@ -108,6 +108,10 @@ namespace JPRSC.HRIS.Models
 
         // Reports
         [Display(Name = "Reports")]
-        ReportsDefault = 2500
+        ReportsDefault = 2500,
+
+        // Audit trail
+        [Display(Name = "Audit Trails")]
+        AuditTrailDefault = 2600
     }
 }

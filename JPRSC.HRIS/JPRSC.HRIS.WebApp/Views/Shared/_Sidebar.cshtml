@@ -35,7 +35,8 @@
                 </li>*@
             @Html.RenderSidebarMenu(
                 new SidebarHeading(null,
-                    new SidebarMenuItem("Home", "Index", "Home", "fa fa-home", Permission.HomeDefault)),
+                    new SidebarMenuItem("Home", "Index", "Home", "fa fa-home", Permission.HomeDefault),
+                    new SidebarMenuItem("Audit Trail Logs", "Index", "AuditTrails", "fa fa-list", Permission.AuditTrailDefault)),
                 new SidebarHeading("Setup",
                     new SidebarMenuItem("Companies", "Index", "Companies", "fa fa-building", Permission.CompanyDefault),
                     new SidebarMenuItem("Accounts", "Index", "Accounts", "fa fa-user", Permission.AccountDefault),
