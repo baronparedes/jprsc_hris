@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Dapper;
+using FluentValidation;
+using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
@@ -6,6 +8,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -151,6 +154,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                     var earningDeductionRecordsToAdd = new List<EarningDeductionRecord>();
 
+                    var existingEarningDeductionRecordIdsToDelete = new List<int>();
+
                     foreach (KeyValuePair<int, EarningDeduction> entry in columnToEarningDeductionMap.Where(kvp => kvp.Value != null))
                     {
                         decimal? amount = null;
@@ -169,6 +174,15 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             });
 
                             break;
+                        }
+
+                        if (!amount.HasValue) continue;
+
+                        var existingEarningDeductionRecords = allEmployeeEarningDeductionRecordsForPayrollPeriod.OrderByDescending(edr => edr.AddedOn).Where(edr => edr.EmployeeId == employee.Id && edr.EarningDeductionId == entry.Value.Id);
+                        if (existingEarningDeductionRecords.Count() > 1)
+                        {
+                            var existingEarningDeductionRecordsToDelete = existingEarningDeductionRecords.Skip(1);
+                            existingEarningDeductionRecordIdsToDelete.AddRange(existingEarningDeductionRecordsToDelete.Select(edr => edr.Id));
                         }
 
                         var existingEarningDeductionRecord = allEmployeeEarningDeductionRecordsForPayrollPeriod.SingleOrDefault(edr => edr.EmployeeId == employee.Id && edr.EarningDeductionId == entry.Value.Id);
@@ -195,6 +209,17 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     if (earningDeductionRecordsToAdd.Any())
                     {
                         _db.EarningDeductionRecords.AddRange(earningDeductionRecordsToAdd);
+                    }
+
+                    if (existingEarningDeductionRecordIdsToDelete.Any())
+                    {
+                        using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
+                        {
+                            var deleteCommand = "DELETE FROM EarningDeductionRecords WHERE Id in @Ids";
+                            var args = new { Ids = existingEarningDeductionRecordIdsToDelete };
+
+                            await connection.ExecuteAsync(deleteCommand, args);
+                        }
                     }
                 }
 

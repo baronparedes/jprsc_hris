@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Dapper;
+using FluentValidation;
+using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
@@ -6,6 +8,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -176,6 +179,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                     var overtimesToAdd = new List<Overtime>();
 
+                    var existingOvertimeIdsToDelete = new List<int>();
+
                     foreach (KeyValuePair<int, PayPercentage> entry in columnToPayPercentageMap.Where(kvp => kvp.Value != null))
                     {
                         double? hours = null;
@@ -196,9 +201,18 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             break;
                         }
 
+                        if (!hours.HasValue) continue;
+
                         var payPercentage = entry.Value;
 
-                        var existingOvertime = allEmployeeOvertimesForPayrollPeriod.SingleOrDefault(ot => ot.EmployeeId == employee.Id && ot.PayPercentageId == payPercentage.Id);
+                        var existingOvertimes = allEmployeeOvertimesForPayrollPeriod.OrderByDescending(o => o.AddedOn).Where(ot => ot.EmployeeId == employee.Id && ot.PayPercentageId == payPercentage.Id);
+                        if (existingOvertimes.Count() > 1)
+                        {
+                            var existingOvertimeToDelete = existingOvertimes.Skip(1);
+                            existingOvertimeIdsToDelete.AddRange(existingOvertimeToDelete.Select(ot => ot.Id));
+                        }
+
+                        var existingOvertime = existingOvertimes.FirstOrDefault(ot => ot.EmployeeId == employee.Id && ot.PayPercentageId == payPercentage.Id);
                         if (existingOvertime != null)
                         {
                             existingOvertime.ModifiedOn = now;
@@ -230,6 +244,17 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     if (overtimesToAdd.Any())
                     {
                         _db.Overtimes.AddRange(overtimesToAdd);
+                    }
+
+                    if (existingOvertimeIdsToDelete.Any())
+                    {
+                        using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
+                        {
+                            var deleteCommand = "DELETE FROM Overtimes WHERE Id in @Ids";
+                            var args = new { Ids = existingOvertimeIdsToDelete };
+
+                            await connection.ExecuteAsync(deleteCommand, args);
+                        }
                     }
 
                     var existingDailyTimeRecord = allEmployeeDailyTimeRecordsForPayrollPeriod.SingleOrDefault(dtr => dtr.EmployeeId == employee.Id);
