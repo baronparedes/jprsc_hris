@@ -149,7 +149,13 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         continue;
                     }
 
-                    var employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
+                    var employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim(), employeeCode, StringComparison.CurrentCultureIgnoreCase)); ;
+                    if (employee == null)
+                    {
+                        // Try finding the employee using employee code with trimmed leading zeroes
+                        employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
+                    }
+                    
                     if (employee == null)
                     {
                         unprocessedItems.Add(new CommandResult.UnprocessedItem
