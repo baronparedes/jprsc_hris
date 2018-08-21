@@ -36,9 +36,6 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 RuleFor(c => c.EmployeeId)
                     .NotEmpty();
 
-                RuleFor(c => c.InterestAmount)
-                    .NotEmpty();
-
                 RuleFor(c => c.LoanDate)
                     .NotEmpty();
 
