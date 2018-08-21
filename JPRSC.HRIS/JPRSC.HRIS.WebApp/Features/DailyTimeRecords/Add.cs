@@ -31,14 +31,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
             public class Overtime
             {
-                public DateTime? From { get; set; }
                 public double? NumberOfHours { get; set; }
                 public decimal? NumberOfHoursValue { get; set; }
                 public int? PayPercentageId { get; set; }
                 public string PayPercentageName { get; set; }
                 public double? PayPercentagePercentage { get; set; }
                 public string Reference { get; set; }
-                public DateTime? To { get; set; }
             }
 
             public class EarningDeductionRecord
@@ -150,7 +148,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         {
                             AddedOn = now,
                             EmployeeId = command.EmployeeId,
-                            From = overtimeUpload.From,
+                            From = command.PayrollPeriodFrom,
                             NumberOfHours = overtimeUpload.NumberOfHours,
                             NumberOfHoursValue = overtimeUpload.NumberOfHoursValue,
                             PayPercentageName = overtimeUpload.PayPercentageName,
@@ -158,7 +156,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             PayrollPeriodFrom = command.PayrollPeriodFrom,
                             PayrollPeriodTo = command.PayrollPeriodTo,
                             Reference = overtimeUpload.Reference,
-                            To = overtimeUpload.To
+                            To = command.PayrollPeriodTo
                         };
                         _db.Overtimes.Add(overtime);
                     }
