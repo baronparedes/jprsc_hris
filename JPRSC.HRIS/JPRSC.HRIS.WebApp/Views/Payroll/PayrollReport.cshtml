@@ -71,11 +71,20 @@
                                     <th>COLA</th>
                                     <th>Earningds</th>
                                     <th>Total Earnings</th>
-                                    <th>SSS Prem</th>
-                                    <th>Pag-Ibig</th>
+                                    @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
+                                    {
+                                        <th>SSS Prem</th>
+                                    }
+                                    @if (Model.PayrollProcessBatchResult.DeductedPagIbig == true)
+                                    {
+                                        <th>Pag-Ibig</th>
+                                    }
                                     <th>Deductions</th>
                                     <th>Loan Payments</th>
-                                    <th>PHIC</th>
+                                    @if (Model.PayrollProcessBatchResult.DeductedPHIC == true)
+                                    {
+                                        <th>PHIC</th>
+                                    }
                                     <th>Total Deductions</th>
                                     <th>Net Pay</th>
                                 </tr>
@@ -92,11 +101,20 @@
                                         <td>@String.Format("{0:n}", payrollRecord.COLADailyValue.GetValueOrDefault() + payrollRecord.COLAHourlyValue.GetValueOrDefault())</td>
                                         <td>@String.Format("{0:n}", payrollRecord.EarningsValue.GetValueOrDefault())</td>
                                         <td><strong>@String.Format("{0:n}", payrollRecord.TotalEarningsValue)</strong></td>
+                                        @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
+                                        {
                                         <td>@String.Format("{0:n}", payrollRecord.SSSValueEmployee.GetValueOrDefault())</td>
-                                        <td>@String.Format("{0:n}", payrollRecord.PagIbigValue.GetValueOrDefault())</td>
+                                        }
+                                        @if (Model.PayrollProcessBatchResult.DeductedPagIbig == true)
+                                        {
+                                            <td>@String.Format("{0:n}", payrollRecord.PagIbigValue.GetValueOrDefault())</td>
+                                        }                                        
                                         <td>@String.Format("{0:n}", payrollRecord.DeductionsValue.GetValueOrDefault())</td>
                                         <td>@String.Format("{0:n}", payrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
-                                        <td>@String.Format("{0:n}", payrollRecord.PHICValueEmployee.GetValueOrDefault())</td>
+                                        @if (Model.PayrollProcessBatchResult.DeductedPHIC == true)
+                                        {
+                                            <td>@String.Format("{0:n}", payrollRecord.PHICValueEmployee.GetValueOrDefault())</td>
+                                        }                                        
                                         <td><strong>@String.Format("{0:n}", payrollRecord.TotalDeductionsValue)</strong></td>
                                         <td><strong>@String.Format("{0:n}", payrollRecord.NetPayValue)</strong></td>
                                     </tr>
@@ -110,11 +128,20 @@
                                     <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.COLADailyValue.GetValueOrDefault()))</td>
                                     <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
                                     <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalEarningsValue))</strong></td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.SSSValueEmployee.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PagIbigValue.GetValueOrDefault()))</td>
+                                    @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
+                                    {
+                                        <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.SSSValueEmployee.GetValueOrDefault()))</td>
+                                    }                                 
+                                    @if (Model.PayrollProcessBatchResult.DeductedPagIbig == true)
+                                    {
+                                        <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PagIbigValue.GetValueOrDefault()))</td>
+                                    }
                                     <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.DeductionsValue.GetValueOrDefault()))</td>
                                     <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.LoanPaymentValue.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
+                                    @if (Model.PayrollProcessBatchResult.DeductedPHIC == true)
+                                    {
+                                        <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
+                                    }                                    
                                     <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalDeductionsValue))</strong></td>
                                     <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.NetPayValue))</strong></td>
                                 </tr>

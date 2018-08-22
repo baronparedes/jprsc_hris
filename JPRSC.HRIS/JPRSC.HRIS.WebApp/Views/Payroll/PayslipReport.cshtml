@@ -84,29 +84,69 @@
                                     <tr>
                                         <td style="text-align: right;">Basic pay:</td>
                                         <td>@String.Format("P{0:n}", payslipRecord.BasicPay)</td>
-                                        <td style="text-align: right;">SSS:</td>
-                                        <td>@String.Format("P{0:n}", payslipRecord.SSS)</td>
+                                        <td style="text-align: right;">
+                                            @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
+                                            {
+                                                @Html.Raw("SSS:")
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
+                                            {
+                                                @String.Format("P{0:n}", payslipRecord.SSS)
+                                            }
+                                        </td>
                                         <td>&nbsp;</td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: right;">Overtime:</td>
                                         <td>@String.Format("P{0:n}", payslipRecord.Overtime)</td>
-                                        <td style="text-align: right;">PAGIBIG:</td>
-                                        <td>@String.Format("P{0:n}", payslipRecord.PagIbig)</td>
+                                        <td style="text-align: right;">
+                                            @if (Model.PayrollProcessBatchResult.DeductedPagIbig == true)
+                                            {
+                                                @Html.Raw("PAGIBIG:")
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (Model.PayrollProcessBatchResult.DeductedPagIbig == true)
+                                            {
+                                                @String.Format("P{0:n}", payslipRecord.PagIbig)
+                                            }
+                                        </td>
                                         <td>&nbsp;</td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: right;">COLA:</td>
                                         <td>@String.Format("P{0:n}", payslipRecord.COLA)</td>
-                                        <td style="text-align: right;">PHIC:</td>
-                                        <td>@String.Format("P{0:n}", payslipRecord.PHIC)</td>
+                                        <td style="text-align: right;">
+                                            @if (Model.PayrollProcessBatchResult.DeductedPHIC == true)
+                                            {
+                                                @Html.Raw("PHIC:")
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (Model.PayrollProcessBatchResult.DeductedPHIC == true)
+                                            {
+                                                @String.Format("P{0:n}", payslipRecord.PHIC)
+                                            }
+                                        </td>
                                         <td>&nbsp;</td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: right;">Other earnings:</td>
                                         <td>@String.Format("P{0:n}", payslipRecord.OtherEarnings)</td>
-                                        <td style="text-align: right;">Tax:</td>
-                                        <td>@String.Format("P{0:n}", payslipRecord.Tax)</td>
+                                        <td style="text-align: right;">
+                                            @if (Model.PayrollProcessBatchResult.DeductedTax == true)
+                                            {
+                                                @Html.Raw("Tax:")
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (Model.PayrollProcessBatchResult.DeductedTax == true)
+                                            {
+                                                @String.Format("P{0:n}", payslipRecord.Tax)
+                                            }
+                                        </td>
                                         <td>&nbsp;</td>
                                     </tr>
                                     <tr>
@@ -183,29 +223,69 @@
                                         <tr>
                                             <td style="text-align: right;">Basic pay:</td>
                                             <td>@String.Format("P{0:n}", payslipRecord.BasicPay)</td>
-                                            <td style="text-align: right;">SSS:</td>
-                                            <td>@String.Format("P{0:n}", payslipRecord.SSS)</td>
+                                            <td style="text-align: right;">
+                                                @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
+                                                {
+                                                    @Html.Raw("SSS:")
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
+                                                {
+                                                    @String.Format("P{0:n}", payslipRecord.SSS)
+                                                }
+                                            </td>
                                             <td>&nbsp;</td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: right;">Overtime:</td>
                                             <td>@String.Format("P{0:n}", payslipRecord.Overtime)</td>
-                                            <td style="text-align: right;">PAGIBIG:</td>
-                                            <td>@String.Format("P{0:n}", payslipRecord.PagIbig)</td>
+                                            <td style="text-align: right;">
+                                                @if (Model.PayrollProcessBatchResult.DeductedPagIbig == true)
+                                                {
+                                                    @Html.Raw("PAGIBIG:")
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (Model.PayrollProcessBatchResult.DeductedPagIbig == true)
+                                                {
+                                                    @String.Format("P{0:n}", payslipRecord.PagIbig)
+                                                }
+                                            </td>
                                             <td>&nbsp;</td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: right;">COLA:</td>
                                             <td>@String.Format("P{0:n}", payslipRecord.COLA)</td>
-                                            <td style="text-align: right;">PHIC:</td>
-                                            <td>@String.Format("P{0:n}", payslipRecord.PHIC)</td>
+                                            <td style="text-align: right;">
+                                                @if (Model.PayrollProcessBatchResult.DeductedPHIC == true)
+                                                {
+                                                    @Html.Raw("PHIC:")
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (Model.PayrollProcessBatchResult.DeductedPHIC == true)
+                                                {
+                                                    @String.Format("P{0:n}", payslipRecord.PHIC)
+                                                }
+                                            </td>
                                             <td>&nbsp;</td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: right;">Other earnings:</td>
                                             <td>@String.Format("P{0:n}", payslipRecord.OtherEarnings)</td>
-                                            <td style="text-align: right;">Tax:</td>
-                                            <td>@String.Format("P{0:n}", payslipRecord.Tax)</td>
+                                            <td style="text-align: right;">
+                                                @if (Model.PayrollProcessBatchResult.DeductedTax == true)
+                                                {
+                                                    @Html.Raw("Tax:")
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (Model.PayrollProcessBatchResult.DeductedTax == true)
+                                                {
+                                                    @String.Format("P{0:n}", payslipRecord.Tax)
+                                                }
+                                            </td>
                                             <td>&nbsp;</td>
                                         </tr>
                                         <tr>
