@@ -8,6 +8,7 @@
         vm.addLoanClicked = addLoanClicked;
         vm.currencySymbol = 'P';
         vm.datepickerOptions = globalSettings.datepickerOptions;
+        vm.detailsClicked = detailsClicked;
         vm.getInterestAmount = getInterestAmount;
         vm.loans = [];
         vm.nextTransactionNumber = '';
@@ -39,13 +40,31 @@
                             clients: vm.clients,
                             loanTypesList: vm.loanTypesList,
                             nextTransactionNumber: vm.nextTransactionNumber
-                        }
+                        };
                     }
                 }
             });
 
             modalInstance.result.then(function (result) {
                 searchClicked();
+            });
+        };
+
+        function detailsClicked(loan) {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'loanDetailsModal.html',
+                controller: 'LoanDetailsModalCtrl',
+                controllerAs: 'vm',
+                resolve: {
+                    params: function () {
+                        return {
+                            loan: loan
+                        };
+                    }
+                }
             });
         };
 

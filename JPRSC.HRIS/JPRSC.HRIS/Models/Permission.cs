@@ -114,6 +114,9 @@ namespace JPRSC.HRIS.Models
         [Display(Name = "Zero Out")]
         LoanZeroOut = 2002,
 
+        [Display(Name = "Details")]
+        LoanDetails = 2003,
+
         // Daily Time Record
         [Display(Name = "Daily Time Records")]
         DailyTimeRecordDefault = 2100,

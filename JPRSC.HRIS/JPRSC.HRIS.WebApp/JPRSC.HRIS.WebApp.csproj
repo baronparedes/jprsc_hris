@@ -325,6 +325,7 @@
     <Compile Include="Features\JobTitles\_Controller.cs" />
     <Compile Include="Features\JobTitles\_MappingProfile.cs" />
     <Compile Include="Features\Loans\Add.cs" />
+    <Compile Include="Features\Loans\GetById.cs" />
     <Compile Include="Features\Loans\ZeroOut.cs" />
     <Compile Include="Features\Loans\Edit.cs" />
     <Compile Include="Features\Loans\Index.cs" />
@@ -5957,6 +5958,7 @@
     <Content Include="wwwroot\scripts\jobTitles\edit.js" />
     <Content Include="wwwroot\scripts\jobTitles\index.js" />
     <Content Include="wwwroot\scripts\loans\add.js" />
+    <Content Include="wwwroot\scripts\loans\detailsModal.js" />
     <Content Include="wwwroot\scripts\loans\addModal.js" />
     <Content Include="wwwroot\scripts\loans\edit.js" />
     <Content Include="wwwroot\scripts\loans\index.js" />

@@ -50,6 +50,7 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
                 Permission.LoanDefault,
                 Permission.LoanAdd,
                 Permission.LoanZeroOut,
+                Permission.LoanDetails,
                 Permission.DailyTimeRecordDefault,
                 Permission.OvertimeDefault,
                 Permission.PayrollDefault,

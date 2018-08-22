@@ -14,7 +14,6 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
         {
             public decimal? DeductionAmount { get; set; }
             public int? EmployeeId { get; set; }
-            public decimal? InterestAmount { get; set; }
             public DateTime? LoanDate { get; set; }
             public int? LoanTypeId { get; set; }
             public string LoanPayrollPeriod { get; set; }
@@ -81,7 +80,6 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                     AddedOn = DateTime.UtcNow,
                     DeductionAmount = command.DeductionAmount,
                     EmployeeId = command.EmployeeId,
-                    InterestAmount = command.InterestAmount,
                     LoanDate = command.LoanDate,
                     LoanTypeId = command.LoanTypeId,
                     LoanPayrollPeriod = command.LoanPayrollPeriod,

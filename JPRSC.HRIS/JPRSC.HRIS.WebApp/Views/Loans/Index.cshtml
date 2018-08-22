@@ -97,6 +97,10 @@
                                             <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-if="loan.isZeroedOut">Zeroed Out</span>
                                         </td>
                                         <td>
+                                            @if (AuthorizeHelper.IsAuthorized(Permission.LoanDetails))
+                                            {
+                                                <a href="" class="btn btn-primary btn-sm" ng-click="vm.detailsClicked(loan)">Details</a>
+                                            }
                                             @if (AuthorizeHelper.IsAuthorized(Permission.LoanZeroOut))
                                             {
                                                 <form action="/Loans/ZeroOut" method="post" style="display: inline-block;" ng-if="!loan.isZeroedOut">
@@ -114,145 +118,237 @@
                 </div>
             </div>
 
-            <script type="text/ng-template" id="addLoanModal.html">
-                <form class="form-horizontal" role="form" method="post" ng-submit="vm.addLoanSubmit($event)">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Add Loan</h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-body">
-                            <div class="form-group">
-                                <label class="col-md-4 col-lg-3 control-label">Client</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
-                                    <select class="form-control" ng-model="vm.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
-                                    <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.transactionNumber }">
-                                <label class="col-md-4 col-lg-3 control-label">Transaction Number</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" name="TransactionNumber" ng-model="vm.transactionNumber" />
-                                    <span ng-show="vm.validationErrors.transactionNumber" class="help-block">{{vm.validationErrors.transactionNumber.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
-                                <label class="col-md-4 col-lg-3 control-label">Employee Names<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
-                                <div class="col-md-8 col-lg-9">
-                                    <select class="form-control" ng-model="vm.employee" ng-options="employee.name for employee in vm.employees track by employee.id">
-                                        <option value="?" selected="selected">Select employee</option>
-                                    </select>
-                                    <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
-                                <label class="col-md-4 col-lg-3 control-label">Employee Codes<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
-                                <div class="col-md-8 col-lg-9">
-                                    <select class="form-control" ng-model="vm.employee" ng-options="employee.employeeCode for employee in vm.employees track by employee.id">
-                                        <option value="?" selected="selected">Select employee</option>
-                                    </select>
-                                    <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanDate }">
-                                <label class="col-md-4 col-lg-3 control-label">Loan Date</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" ng-model="vm.loanDate"
-                                           uib-datepicker-popup="MM/dd/yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
-                                           is-open="vm.loanDateIsOpen" ng-click="vm.loanDateIsOpen = true">
-                                    <input type="hidden" name="LoanDate" value="{{vm.loanDate | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
-                                    <span ng-show="vm.validationErrors.loanDate" class="help-block">{{vm.validationErrors.loanDate.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanTypeId }">
-                                <label class="col-md-4 col-lg-3 control-label">Loan Type</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <select class="form-control" name="LoanTypeId" ng-model="vm.loanTypeId" ng-options="loanType.text for loanType in vm.loanTypesList track by loanType.value">
-                                        <option value="?" selected="selected">Select loan type</option>
-                                    </select>
-                                    <span ng-show="vm.validationErrors.loanTypeId" class="help-block">{{vm.validationErrors.loanTypeId.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.principalAmount }">
-                                <label class="col-md-4 col-lg-3 control-label">Principal Amount</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" name="PrincipalAmount" ng-model="vm.principalAmount" />
-                                    <span ng-show="vm.validationErrors.principalAmount" class="help-block">{{vm.validationErrors.principalAmount.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.remainingBalance }">
-                                <label class="col-md-4 col-lg-3 control-label">Remaining Balance</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" name="RemainingBalance" ng-model="vm.remainingBalance" />
-                                    <span ng-show="vm.validationErrors.remainingBalance" class="help-block">{{vm.validationErrors.remainingBalance.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanPayrollPeriod }">
-                                <label class="col-md-4 col-lg-3 control-label">Payroll Periods</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="hidden" name="LoanPayrollPeriod" value="{{vm.getPayrollPeriodInput(vm.loanPayrollPeriods)}}" />
-                                    <div class="mt-checkbox-list">
-                                        <label class="mt-checkbox mt-checkbox-outline" ng-repeat="payrollPeriod in vm.loanPayrollPeriods">
-                                            <input type="checkbox" ng-model="payrollPeriod.selected" value="{{payrollPeriod.payrollPeriod}}"> {{payrollPeriod.payrollPeriod}}
-                                            <span></span>
-                                        </label>
+            @if (AuthorizeHelper.IsAuthorized(Permission.LoanAdd))
+            {
+                <script type="text/ng-template" id="addLoanModal.html">
+                    <form class="form-horizontal" role="form" method="post" ng-submit="vm.addLoanSubmit($event)">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Add Loan</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Client</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
+                                        <select class="form-control" ng-model="vm.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
+                                        <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
                                     </div>
-                                    <span class="help-block" ng-show="vm.validationErrors.loanPayrollPeriod">{{vm.validationErrors.loanPayrollPeriod.join(' ')}}</span>
                                 </div>
-                            </div>
-                            @*<div class="form-group" ng-class="{ 'has-error': vm.validationErrors.interestAmount }">
-                                <label class="col-md-4 col-lg-3 control-label">Interest Amount</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" name="InterestAmount" ng-model="vm.interestAmount" />
-                                    <span ng-show="vm.validationErrors.interestAmount" class="help-block">{{vm.validationErrors.interestAmount.join(' ')}}</span>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.transactionNumber }">
+                                    <label class="col-md-4 col-lg-3 control-label">Transaction Number</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="text" class="form-control" name="TransactionNumber" ng-model="vm.transactionNumber" />
+                                        <span ng-show="vm.validationErrors.transactionNumber" class="help-block">{{vm.validationErrors.transactionNumber.join(' ')}}</span>
+                                    </div>
                                 </div>
-                            </div>*@
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.principalAndInterestAmount }">
-                                <label class="col-md-4 col-lg-3 control-label">Principal + Interest Amount</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" name="PrincipalAndInterestAmount" ng-model="vm.principalAndInterestAmount" />
-                                    <span ng-show="vm.validationErrors.principalAndInterestAmount" class="help-block">{{vm.validationErrors.principalAndInterestAmount.join(' ')}}</span>
+                                <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
+                                    <label class="col-md-4 col-lg-3 control-label">Employee Names<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <select class="form-control" ng-model="vm.employee" ng-options="employee.name for employee in vm.employees track by employee.id">
+                                            <option value="?" selected="selected">Select employee</option>
+                                        </select>
+                                        <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.monthsPayable }">
-                                <label class="col-md-4 col-lg-3 control-label">Months Payable</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" name="MonthsPayable" ng-model="vm.monthsPayable" />
-                                    <span ng-show="vm.validationErrors.monthsPayable" class="help-block">{{vm.validationErrors.monthsPayable.join(' ')}}</span>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
+                                    <label class="col-md-4 col-lg-3 control-label">Employee Codes<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <select class="form-control" ng-model="vm.employee" ng-options="employee.employeeCode for employee in vm.employees track by employee.id">
+                                            <option value="?" selected="selected">Select employee</option>
+                                        </select>
+                                        <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.deductionAmount }">
-                                <label class="col-md-4 col-lg-3 control-label">Deduction Amount</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" name="DeductionAmount" ng-model="vm.deductionAmount" />
-                                    <span ng-show="vm.validationErrors.deductionAmount" class="help-block">{{vm.validationErrors.deductionAmount.join(' ')}}</span>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanDate }">
+                                    <label class="col-md-4 col-lg-3 control-label">Loan Date</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="text" class="form-control" ng-model="vm.loanDate"
+                                               uib-datepicker-popup="MM/dd/yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                               is-open="vm.loanDateIsOpen" ng-click="vm.loanDateIsOpen = true">
+                                        <input type="hidden" name="LoanDate" value="{{vm.loanDate | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                        <span ng-show="vm.validationErrors.loanDate" class="help-block">{{vm.validationErrors.loanDate.join(' ')}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-4 col-lg-3 control-label">Total Amount</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <p class="form-control-static">{{vm.getTotalAmount() | number:2}}</p>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanTypeId }">
+                                    <label class="col-md-4 col-lg-3 control-label">Loan Type</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <select class="form-control" name="LoanTypeId" ng-model="vm.loanTypeId" ng-options="loanType.text for loanType in vm.loanTypesList track by loanType.value">
+                                            <option value="?" selected="selected">Select loan type</option>
+                                        </select>
+                                        <span ng-show="vm.validationErrors.loanTypeId" class="help-block">{{vm.validationErrors.loanTypeId.join(' ')}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.startDeductionDate }">
-                                <label class="col-md-4 col-lg-3 control-label">Start Deduction Date</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <input type="text" class="form-control" ng-model="vm.startDeductionDate"
-                                           uib-datepicker-popup="MM/dd/yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
-                                           is-open="vm.startDeductionDateIsOpen" ng-click="vm.startDeductionDateIsOpen = true">
-                                    <input type="hidden" name="StartDeductionDate" value="{{vm.startDeductionDate | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
-                                    <span ng-show="vm.validationErrors.startDeductionDate" class="help-block">{{vm.validationErrors.startDeductionDate.join(' ')}}</span>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.principalAmount }">
+                                    <label class="col-md-4 col-lg-3 control-label">Principal Amount</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="text" class="form-control" name="PrincipalAmount" ng-model="vm.principalAmount" />
+                                        <span ng-show="vm.validationErrors.principalAmount" class="help-block">{{vm.validationErrors.principalAmount.join(' ')}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.remainingBalance }">
+                                    <label class="col-md-4 col-lg-3 control-label">Remaining Balance</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="text" class="form-control" name="RemainingBalance" ng-model="vm.remainingBalance" />
+                                        <span ng-show="vm.validationErrors.remainingBalance" class="help-block">{{vm.validationErrors.remainingBalance.join(' ')}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanPayrollPeriod }">
+                                    <label class="col-md-4 col-lg-3 control-label">Payroll Periods</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="hidden" name="LoanPayrollPeriod" value="{{vm.getPayrollPeriodInput(vm.loanPayrollPeriods)}}" />
+                                        <div class="mt-checkbox-list">
+                                            <label class="mt-checkbox mt-checkbox-outline" ng-repeat="payrollPeriod in vm.loanPayrollPeriods">
+                                                <input type="checkbox" ng-model="payrollPeriod.selected" value="{{payrollPeriod.payrollPeriod}}"> {{payrollPeriod.payrollPeriod}}
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                        <span class="help-block" ng-show="vm.validationErrors.loanPayrollPeriod">{{vm.validationErrors.loanPayrollPeriod.join(' ')}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.principalAndInterestAmount }">
+                                    <label class="col-md-4 col-lg-3 control-label">Principal + Interest Amount</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="text" class="form-control" name="PrincipalAndInterestAmount" ng-model="vm.principalAndInterestAmount" />
+                                        <span ng-show="vm.validationErrors.principalAndInterestAmount" class="help-block">{{vm.validationErrors.principalAndInterestAmount.join(' ')}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.monthsPayable }">
+                                    <label class="col-md-4 col-lg-3 control-label">Months Payable</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="text" class="form-control" name="MonthsPayable" ng-model="vm.monthsPayable" />
+                                        <span ng-show="vm.validationErrors.monthsPayable" class="help-block">{{vm.validationErrors.monthsPayable.join(' ')}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.deductionAmount }">
+                                    <label class="col-md-4 col-lg-3 control-label">Deduction Amount</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="text" class="form-control" name="DeductionAmount" ng-model="vm.deductionAmount" />
+                                        <span ng-show="vm.validationErrors.deductionAmount" class="help-block">{{vm.validationErrors.deductionAmount.join(' ')}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Total Amount</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.getTotalAmount() | number:2}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.startDeductionDate }">
+                                    <label class="col-md-4 col-lg-3 control-label">Start Deduction Date</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="text" class="form-control" ng-model="vm.startDeductionDate"
+                                               uib-datepicker-popup="MM/dd/yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
+                                               is-open="vm.startDeductionDateIsOpen" ng-click="vm.startDeductionDateIsOpen = true">
+                                        <input type="hidden" name="StartDeductionDate" value="{{vm.startDeductionDate | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                        <span ng-show="vm.validationErrors.startDeductionDate" class="help-block">{{vm.validationErrors.startDeductionDate.join(' ')}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn green">Add</button>
-                        <a href="" class="btn btn-default" ng-click="vm.cancel()">Cancel</a>
-                    </div>
-                </form>
-            </script>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn green">Add</button>
+                            <a href="" class="btn btn-default" ng-click="vm.cancel()">Cancel</a>
+                        </div>
+                    </form>
+                </script>
+            }
+
+            @if (AuthorizeHelper.IsAuthorized(Permission.LoanDetails))
+            {
+                <script type="text/ng-template" id="loanDetailsModal.html">
+                    <form class="form-horizontal" role="form" method="post">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Loan Details</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Client</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.loanResult.employee.client.name}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Transaction Number</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.loanResult.transactionNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Employee</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.loanResult.employee.name}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Loan Date</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.loanResult.loanDate | date: 'mediumDate'}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Loan Type</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.loanResult.loanType.code}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Principal Amount</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static"><span ng-if="vm.loanResult.principalAmount">{{vm.currencySymbol}}</span>{{vm.loanResult.principalAmount | number:2}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Remaining Balance</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static"><span ng-if="vm.loanResult.remainingBalance">{{vm.currencySymbol}}</span>{{vm.loanResult.remainingBalance | number:2}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Payroll Periods</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.loanResult.loanPayrollPeriod}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Principal + Interest Amount</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static"><span ng-if="vm.loanResult.principalAndInterestAmount">{{vm.currencySymbol}}</span>{{vm.loanResult.principalAndInterestAmount | number:2}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Months Payable</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.loanResult.monthsPayable}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Deduction Amount</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static"><span ng-if="vm.loanResult.deductionAmount">{{vm.currencySymbol}}</span>{{vm.loanResult.deductionAmount | number:2}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Total Amount</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static"><span ng-if="vm.loanResult.totalAmount">{{vm.currencySymbol}}</span>{{vm.loanResult.totalAmount | number:2}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Start Deduction Date</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.loanResult.startDeductionDate | date:'mediumDate'}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="" class="btn btn-default" ng-click="vm.cancel()">Exit</a>
+                        </div>
+                    </form>
+                </script>
+            }
         </div>
     </div>
 </div>

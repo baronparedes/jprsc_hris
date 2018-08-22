@@ -12,6 +12,7 @@ namespace JPRSC.HRIS.Models
         public Employee Employee { get; set; }
         public int? EmployeeId { get; set; }
         public int Id { get; set; }
+        [Obsolete]
         public decimal? InterestAmount { get; set; }
         public DateTime? LoanDate { get; set; }
         public string LoanPayrollPeriod { get; set; }
