@@ -124,10 +124,14 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var skippedItems = new List<CommandResult.UnprocessedItem>();
                 skippedItems.AddRange(allEmployeesOfClient.Where(e => String.IsNullOrWhiteSpace(e.EmployeeCode)).Select(e => new CommandResult.UnprocessedItem { FirstName = e.FirstName, LastName = e.LastName, Reason = "No employee code" }));
 
+                var emptyEmployeeCode = csvData.Item2.Count(r => String.IsNullOrWhiteSpace(r[0]));
+
                 // Upload behavior: all-or-nothing
                 foreach (var line in csvData.Item2)
                 {
                     var employeeCode = String.IsNullOrWhiteSpace(line[0]) ? null : line[0].Trim();
+                    if (String.IsNullOrWhiteSpace(employeeCode)) continue;
+
                     var lastName = String.IsNullOrWhiteSpace(line[1]) ? null : line[1].Trim();
                     var firstName = String.IsNullOrWhiteSpace(line[2]) ? null : line[2].Trim();
 
@@ -152,7 +156,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         continue;
                     }
 
-                    var employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim(), employeeCode, StringComparison.CurrentCultureIgnoreCase)); ;
+                    var employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim(), employeeCode, StringComparison.CurrentCultureIgnoreCase));
                     if (employee == null)
                     {
                         // Try finding the employee using employee code with trimmed leading zeroes

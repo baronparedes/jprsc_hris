@@ -126,6 +126,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 foreach (var line in csvData.Item2)
                 {
                     var employeeCode = String.IsNullOrWhiteSpace(line[0]) ? null : line[0].Trim();
+                    if (String.IsNullOrWhiteSpace(employeeCode)) continue;
+
                     var lastName = String.IsNullOrWhiteSpace(line[1]) ? null : line[1].Trim();
                     var firstName = String.IsNullOrWhiteSpace(line[2]) ? null : line[2].Trim();
 
