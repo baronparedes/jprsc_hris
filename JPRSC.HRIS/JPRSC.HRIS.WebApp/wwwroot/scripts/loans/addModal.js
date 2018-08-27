@@ -5,6 +5,7 @@
 
     function AddLoanModalCtrl($http, $scope, $timeout, $uibModalInstance, lookups, params, $window) {
         var vm = this;
+        vm.addInProgress = false;
         vm.addLoanSubmit = addLoanSubmit;
         vm.cancel = cancel;
         vm.clientChanged = clientChanged;
@@ -28,6 +29,8 @@
         });
 
         function addLoanSubmit(e) {
+            vm.addInProgress = true;
+
             var action = '/Loans/Add';
             var data = $(angular.element(e.target)[0]).serialize();
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
@@ -38,6 +41,8 @@
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
                 }
+
+                vm.addInProgress = false;
             });
         };
 

@@ -247,8 +247,9 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn green">Add</button>
-                            <a href="" class="btn btn-default" ng-click="vm.cancel()">Cancel</a>
+                            <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.addInProgress"></i>
+                            <button type="submit" ng-disabled="vm.addInProgress" class="btn green">Add</button>
+                            <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.addInProgress">Cancel</a>
                         </div>
                     </form>
                 </script>
