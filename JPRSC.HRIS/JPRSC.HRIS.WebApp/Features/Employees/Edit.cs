@@ -2,6 +2,7 @@
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
 using System;
@@ -203,6 +204,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
         public class CommandValidator : AbstractValidator<Command>
         {
+            private readonly ApplicationDbContext _db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
+
             public CommandValidator()
             {
                 RuleFor(c => c.EmployeeCode)
@@ -217,6 +220,66 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 RuleFor(c => c.Email)
                     .EmailAddress()
                     .When(c => !String.IsNullOrWhiteSpace(c.Email));
+
+                When(c => !String.IsNullOrWhiteSpace(c.CompanyIdNumber), () =>
+                {
+                    RuleFor(c => c.CompanyIdNumber)
+                        .Must(BeUniqueCompanyIdNumber)
+                        .WithMessage("Company Id {PropertyValue} is already taken.");
+                });
+
+                When(c => !String.IsNullOrWhiteSpace(c.SSS), () =>
+                {
+                    RuleFor(c => c.SSS)
+                        .Must(BeUniqueSSS)
+                        .WithMessage("SSS {PropertyValue} is already taken.");
+                });
+
+                When(c => !String.IsNullOrWhiteSpace(c.TIN), () =>
+                {
+                    RuleFor(c => c.TIN)
+                        .Must(BeUniqueTIN)
+                        .WithMessage("TIN {PropertyValue} is already taken.");
+                });
+
+                When(c => !String.IsNullOrWhiteSpace(c.PhilHealth), () =>
+                {
+                    RuleFor(c => c.PhilHealth)
+                        .Must(BeUniquePhilHealth)
+                        .WithMessage("PhilHealth {PropertyValue} is already taken.");
+                });
+
+                When(c => !String.IsNullOrWhiteSpace(c.PagIbig), () =>
+                {
+                    RuleFor(c => c.PagIbig)
+                        .Must(BeUniquePagIbig)
+                        .WithMessage("PagIbig {PropertyValue} is already taken.");
+                });
+            }
+
+            private bool BeUniquePagIbig(Command command, string pagIbig)
+            {
+                return !_db.Employees.Any(e => e.Id != command.Id && e.PagIbig == pagIbig);
+            }
+
+            private bool BeUniquePhilHealth(Command command, string philHealth)
+            {
+                return !_db.Employees.Any(e => e.Id != command.Id && e.PhilHealth == philHealth);
+            }
+
+            private bool BeUniqueTIN(Command command, string tin)
+            {
+                return !_db.Employees.Any(e => e.Id != command.Id && e.TIN == tin);
+            }
+
+            private bool BeUniqueSSS(Command command, string sss)
+            {
+                return !_db.Employees.Any(e => e.Id != command.Id && e.SSS == sss);
+            }
+
+            private bool BeUniqueCompanyIdNumber(Command command, string companyIdNumber)
+            {
+                return !_db.Employees.Any(e => e.Id != command.Id && e.CompanyIdNumber == companyIdNumber);
             }
         }
 
