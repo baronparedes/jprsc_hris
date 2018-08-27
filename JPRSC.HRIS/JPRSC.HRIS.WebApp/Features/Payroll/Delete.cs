@@ -41,7 +41,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     var deleteDailyTimeRecords = "DELETE dtr FROM DailyTimeRecords dtr " +
                         "JOIN Employees e ON dtr.EmployeeId = e.Id " +
                         "WHERE dtr.PayrollPeriodFrom = @PayrollPeriodFrom AND dtr.PayrollPeriodTo = @PayrollPeriodTo AND e.ClientId = @ClientId";
-                    await connection.ExecuteAsync(deleteDailyTimeRecords, new { PayrollPeriodFrom = payrollProcessBatch.PayrollPeriod, PayrollPeriodTo = payrollProcessBatch.PayrollPeriodTo, ClientId = payrollProcessBatch.ClientId });
+                    await connection.ExecuteAsync(deleteDailyTimeRecords, new { PayrollPeriodFrom = payrollProcessBatch.PayrollPeriodFrom, PayrollPeriodTo = payrollProcessBatch.PayrollPeriodTo, ClientId = payrollProcessBatch.ClientId });
                 }
 
                 using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
@@ -49,7 +49,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     var deleteOvertimes = "DELETE o FROM Overtimes o " +
                         "JOIN Employees e ON o.EmployeeId = e.Id " +
                         "WHERE o.PayrollPeriodFrom = @PayrollPeriodFrom AND o.PayrollPeriodTo = @PayrollPeriodTo AND e.ClientId = @ClientId";
-                    await connection.ExecuteAsync(deleteOvertimes, new { PayrollPeriodFrom = payrollProcessBatch.PayrollPeriod, PayrollPeriodTo = payrollProcessBatch.PayrollPeriodTo, ClientId = payrollProcessBatch.ClientId });
+                    await connection.ExecuteAsync(deleteOvertimes, new { PayrollPeriodFrom = payrollProcessBatch.PayrollPeriodFrom, PayrollPeriodTo = payrollProcessBatch.PayrollPeriodTo, ClientId = payrollProcessBatch.ClientId });
                 }
 
                 using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
@@ -57,7 +57,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     var deleteEarningDeductionRecords = "DELETE edr FROM EarningDeductionRecords edr " +
                         "JOIN Employees e ON edr.EmployeeId = e.Id " +
                         "WHERE edr.PayrollPeriodFrom = @PayrollPeriodFrom AND edr.PayrollPeriodTo = @PayrollPeriodTo AND e.ClientId = @ClientId";
-                    await connection.ExecuteAsync(deleteEarningDeductionRecords, new { PayrollPeriodFrom = payrollProcessBatch.PayrollPeriod, PayrollPeriodTo = payrollProcessBatch.PayrollPeriodTo, ClientId = payrollProcessBatch.ClientId });
+                    await connection.ExecuteAsync(deleteEarningDeductionRecords, new { PayrollPeriodFrom = payrollProcessBatch.PayrollPeriodFrom, PayrollPeriodTo = payrollProcessBatch.PayrollPeriodTo, ClientId = payrollProcessBatch.ClientId });
                 }
 
                 using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))

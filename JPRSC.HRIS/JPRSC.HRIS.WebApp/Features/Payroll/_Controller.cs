@@ -60,7 +60,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         {
             var commandResult = await _mediator.Send(command);
 
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted payroll record.");
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted payroll record and all associated dtrs, overtimes, and e/d records.");
 
             return RedirectToAction(nameof(Index));
         }
