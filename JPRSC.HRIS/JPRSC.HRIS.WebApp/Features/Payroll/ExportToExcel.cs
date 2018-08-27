@@ -47,7 +47,21 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     filename = $"Payslip report for {payslipReportResult.PayrollProcessBatchResult.Client.Name} {payslipReportResult.PayrollProcessBatchResult.PayrollPeriodFromFormatted} - {payslipReportResult.PayrollProcessBatchResult.PayrollPeriodToFormatted}.xlsx";
 
-                    var columns = new List<ColumnInfo<PayslipReport.QueryResult.PayslipData>>
+                    var columns = GetColumnsForPayslipReport(payslipReportResult.PayrollProcessBatchResult.DeductedSSS, payslipReportResult.PayrollProcessBatchResult.DeductedPagIbig, payslipReportResult.PayrollProcessBatchResult.DeductedPHIC, payslipReportResult.PayrollProcessBatchResult.DeductedTax);
+
+                    excelObject = payslipReportResult.PayslipRecords.ToExcelObject(columns);
+                }
+
+                return new QueryResult
+                {
+                    FileContent = _excelBuilder.BuildExcelFile(excelObject),
+                    Filename = filename
+                };
+            }
+
+            private IEnumerable<ColumnInfo<PayslipReport.QueryResult.PayslipData>> GetColumnsForPayslipReport(bool? deductedSSS, bool? deductedPagIbig, bool? deductedPHIC, bool? deductedTax)
+            {
+                var columns = new List<ColumnInfo<PayslipReport.QueryResult.PayslipData>>
                     {
                         new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Payroll Period From", "PayrollPeriodFrom", p => p.PayrollProcessBatchResult.PayrollPeriodFromFormatted),
                         new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Payroll Period To", "PayrollPeriodTo", p => p.PayrollProcessBatchResult.PayrollPeriodToFormatted),
@@ -60,43 +74,36 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         new ColumnInfo<PayslipReport.QueryResult.PayslipData>("TotalEarnings", "TotalEarnings")
                     };
 
-                    if (payslipReportResult.PayrollProcessBatchResult.DeductedSSS == true)
-                    {
-                        columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("SSS", "SSS"));
-                    }
-
-                    if (payslipReportResult.PayrollProcessBatchResult.DeductedPagIbig == true)
-                    {
-                        columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("PagIbig", "PagIbig"));
-                    }
-
-                    if (payslipReportResult.PayrollProcessBatchResult.DeductedPHIC == true)
-                    {
-                        columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("PHIC", "PHIC"));
-                    }
-
-                    if (payslipReportResult.PayrollProcessBatchResult.DeductedTax == true)
-                    {
-                        columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Tax", "Tax"));
-                    }
-
-                    columns.AddRange(new List<ColumnInfo<PayslipReport.QueryResult.PayslipData>>
-                    {
-                        new ColumnInfo<PayslipReport.QueryResult.PayslipData>("OtherDeductions", "OtherDeductions"),
-                        new ColumnInfo<PayslipReport.QueryResult.PayslipData>("LoanPayment", "LoanPayment"),
-                        new ColumnInfo<PayslipReport.QueryResult.PayslipData>("UTTardy", "UTTardy"),
-                        new ColumnInfo<PayslipReport.QueryResult.PayslipData>("TotalDeductions", "TotalDeductions"),
-                        new ColumnInfo<PayslipReport.QueryResult.PayslipData>("NetPay", "NetPay")
-                    });
-
-                    excelObject = payslipReportResult.PayslipRecords.ToExcelObject(columns);
+                if (deductedSSS == true)
+                {
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("SSS", "SSS"));
                 }
 
-                return new QueryResult
+                if (deductedPagIbig == true)
                 {
-                    FileContent = _excelBuilder.BuildExcelFile(excelObject),
-                    Filename = filename
-                };
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("PagIbig", "PagIbig"));
+                }
+
+                if (deductedPHIC == true)
+                {
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("PHIC", "PHIC"));
+                }
+
+                if (deductedTax == true)
+                {
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Tax", "Tax"));
+                }
+
+                columns.AddRange(new List<ColumnInfo<PayslipReport.QueryResult.PayslipData>>
+                {
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("OtherDeductions", "OtherDeductions"),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("LoanPayment", "LoanPayment"),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("UTTardy", "UTTardy"),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("TotalDeductions", "TotalDeductions"),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("NetPay", "NetPay")
+                });
+
+                return columns;
             }
         }
     }
