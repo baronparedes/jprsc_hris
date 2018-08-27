@@ -39,6 +39,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             public class PayslipData
             {
                 public Employee Employee { get; set; }
+                public PayrollProcessBatch PayrollProcessBatchResult { get; set; }
 
                 public decimal? BasicPay { get; set; }
                 public decimal? Overtime { get; set; }
@@ -193,6 +194,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Include(ppb => ppb.Client)
                     .SingleAsync(ppb => ppb.Id == query.PayrollProcessBatchId);
 
+                var payrollProcessBatchResult = Mapper.Map<QueryResult.PayrollProcessBatch>(payrollProcessBatch);
+
                 var payrollRecords = await _db.PayrollRecords
                     .Include(pr => pr.Employee)
                     .Include(pr => pr.Employee.Department)
@@ -203,6 +206,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Select(pr => new QueryResult.PayslipData
                     {
                         Employee = pr.Employee,
+                        PayrollProcessBatchResult = payrollProcessBatchResult,
                         BasicPay = pr.DaysWorkedValue.GetValueOrDefault() + pr.HoursWorkedValue.GetValueOrDefault(),
                         Overtime = pr.OvertimeValue.GetValueOrDefault(),
                         COLA = pr.COLADailyValue.GetValueOrDefault() + pr.COLAHourlyValue.GetValueOrDefault() + pr.COLAHourlyOTValue.GetValueOrDefault(),
@@ -222,7 +226,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,
                     DisplayMode = query.DisplayMode,
-                    PayrollProcessBatchResult = Mapper.Map<QueryResult.PayrollProcessBatch>(payrollProcessBatch),
+                    PayrollProcessBatchResult = payrollProcessBatchResult,
                     PayslipRecords = payslipRecords
                 };
             }

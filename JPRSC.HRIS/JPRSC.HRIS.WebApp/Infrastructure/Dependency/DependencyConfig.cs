@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Infrastructure.Identity;
+using JPRSC.HRIS.WebApp.Infrastructure.Excel;
 using JPRSC.HRIS.WebApp.Infrastructure.Logging;
 using SimpleInjector;
 using SimpleInjector.Integration.Web;
@@ -45,6 +46,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             container.Register<UserManager>(GetUserManager, Lifestyle.Scoped);
             container.Register<IAuthenticationManager>(GetAuthenticationManager, Lifestyle.Scoped);
             container.Register<IMVCLogger, MVCLogger>(Lifestyle.Singleton);
+            container.Register<IExcelBuilder, OpenXMLExcelBuilder>(Lifestyle.Scoped);
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
 
