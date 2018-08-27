@@ -75,7 +75,7 @@
                                     <tr>
                                         <td>@payrollRecord.Employee.ATMAccountNumber</td>
                                         <td>@String.Format("{0:n}", payrollRecord.NetPayValue)</td>
-                                        <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, String.IsNullOrWhiteSpace(payrollRecord.Employee.MiddleName) ? payrollRecord.Employee.MiddleName.First().ToString() : null)</td>
+                                        <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, !String.IsNullOrWhiteSpace(payrollRecord.Employee.MiddleName) ? payrollRecord.Employee.MiddleName.First().ToString() : null)</td>
                                         <td>&nbsp;</td>
                                     </tr>
                                 }
@@ -113,7 +113,7 @@
                                         <tr>
                                             <td>@payrollRecord.Employee.ATMAccountNumber</td>
                                             <td>@String.Format("{0:n}", payrollRecord.NetPayValue)</td>
-                                            <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, String.IsNullOrWhiteSpace(payrollRecord.Employee.MiddleName) ? payrollRecord.Employee.MiddleName.First().ToString() : null)</td>
+                                            <td style="text-align: left;">@String.Format("{0}, {1}, {2}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName, !String.IsNullOrWhiteSpace(payrollRecord.Employee.MiddleName) ? payrollRecord.Employee.MiddleName.First().ToString() : null)</td>
                                             <td>&nbsp;</td>
                                         </tr>
                                     }
