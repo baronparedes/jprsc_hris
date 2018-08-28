@@ -22,5 +22,15 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Excel
 
             return sb.ToString();
         }
+
+        public IEnumerable<IEnumerable<string>> ToLines()
+        {
+            var lines = new List<IEnumerable<string>>();
+
+            lines.Add(Header);
+            lines.AddRange(Rows);
+
+            return lines;
+        }
     }
 }

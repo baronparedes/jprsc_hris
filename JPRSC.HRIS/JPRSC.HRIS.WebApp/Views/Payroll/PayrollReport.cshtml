@@ -43,6 +43,7 @@
             <div class="row hidden-print">
                 <div class="col-sm-12">
                     <div class="form-group">
+                        <a href="@Url.Action("ExportToExcel", new { PayrollProcessBatchId = Model.PayrollProcessBatchId, ReportType = "Payroll" })" class="btn btn-primary" style="margin-right: 20px;">Download Excel</a>
                         @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
                         {
                             <button class="btn btn-primary" disabled="disabled">Sort by Name</button>
@@ -69,7 +70,7 @@
                                     <th>Overtime</th>
                                     <th>UT/Tardy</th>
                                     <th>COLA</th>
-                                    <th>Earningds</th>
+                                    <th>Earnings</th>
                                     <th>Total Earnings</th>
                                     @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
                                     {
