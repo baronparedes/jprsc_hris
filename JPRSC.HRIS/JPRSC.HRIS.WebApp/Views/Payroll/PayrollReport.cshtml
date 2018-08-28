@@ -126,7 +126,7 @@
                                     <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.DaysWorkedValue.GetValueOrDefault() + p.HoursWorkedValue.GetValueOrDefault()))</td>
                                     <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.OvertimeValue.GetValueOrDefault()))</td>
                                     <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.COLADailyValue.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault()))</td>
                                     <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
                                     <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalEarningsValue))</strong></td>
                                     @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
@@ -207,7 +207,7 @@
                                         <td>@String.Format("{0:n}", group.Sum(p => p.DaysWorkedValue.GetValueOrDefault() + p.HoursWorkedValue.GetValueOrDefault()))</td>
                                         <td>@String.Format("{0:n}", group.Sum(p => p.OvertimeValue.GetValueOrDefault()))</td>
                                         <td>@String.Format("{0:n}", group.Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault()))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.COLADailyValue.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault()))</td>
                                         <td>@String.Format("{0:n}", group.Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
                                         <td><strong>@String.Format("{0:n}", group.Sum(p => p.TotalEarningsValue))</strong></td>
                                         <td>@String.Format("{0:n}", group.Sum(p => p.SSSValueEmployee.GetValueOrDefault()))</td>
