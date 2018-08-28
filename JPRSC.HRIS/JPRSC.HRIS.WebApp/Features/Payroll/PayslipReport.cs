@@ -35,6 +35,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             public string DisplayMode { get; set; }
             public IEnumerable<PayslipData> PayslipRecords { get; set; } = new List<PayslipData>();
             public PayrollProcessBatch PayrollProcessBatchResult { get; set; }
+            public IEnumerable<Models.DailyTimeRecord> DailyTimeRecords { get; set; } = new List<Models.DailyTimeRecord>();
+            public IEnumerable<Models.EarningDeductionRecord> EarningDeductionRecords { get; set; } = new List<Models.EarningDeductionRecord>();
+            public IEnumerable<Models.Overtime> Overtimes { get; set; } = new List<Models.Overtime>();
 
             public class PayslipData
             {
@@ -222,12 +225,37 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .OrderBy(psr => psr.Employee.LastName)
                     .ThenBy(psr => psr.Employee.FirstName);
 
+                var employeeIds = payrollRecords.Select(pr => pr.EmployeeId.Value).ToList();
+
+                var dailyTimeRecords = await _db
+                    .DailyTimeRecords
+                    .AsNoTracking()
+                    .Where(dtr => !dtr.DeletedOn.HasValue && employeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && dtr.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
+                    .ToListAsync();
+
+                var earningDeductionRecords = await _db
+                    .EarningDeductionRecords
+                    .Include(edr => edr.EarningDeduction)
+                    .AsNoTracking()
+                    .Where(edr => !edr.DeletedOn.HasValue && employeeIds.Contains(edr.EmployeeId.Value) && edr.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && edr.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
+                    .ToListAsync();
+
+                var overtimes = await _db
+                    .Overtimes
+                    .Include(ot => ot.PayPercentage)
+                    .AsNoTracking()
+                    .Where(ot => !ot.DeletedOn.HasValue && employeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && ot.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
+                    .ToListAsync();
+
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,
                     DisplayMode = query.DisplayMode,
                     PayrollProcessBatchResult = payrollProcessBatchResult,
-                    PayslipRecords = payslipRecords
+                    PayslipRecords = payslipRecords,
+                    DailyTimeRecords = dailyTimeRecords,
+                    EarningDeductionRecords = earningDeductionRecords,
+                    Overtimes = overtimes
                 };
             }
         }
