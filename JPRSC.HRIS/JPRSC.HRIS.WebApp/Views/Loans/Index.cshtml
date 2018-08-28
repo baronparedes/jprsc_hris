@@ -32,7 +32,7 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label class="control-label">Search Loans by Employee Code or Loan Type</label>
+                                    <label class="control-label">Search Loans by First Name, Last Name, or Employee Code</label>
                                     <div class="input-group">
                                         <span class="input-group-addon">
                                             <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
@@ -40,6 +40,12 @@
                                         </span>
                                         <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Loan Type</label>
+                                    <select class="form-control" ng-model="vm.searchModel.loanType" ng-options="loanType.code for loanType in vm.loanTypes track by loanType.id"></select>
                                 </div>
                             </div>
                         </div>

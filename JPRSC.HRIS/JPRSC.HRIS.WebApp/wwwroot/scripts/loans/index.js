@@ -11,6 +11,7 @@
         vm.detailsClicked = detailsClicked;
         vm.getInterestAmount = getInterestAmount;
         vm.loans = [];
+        vm.loanTypes = [];
         vm.nextTransactionNumber = '';
         vm.searchClicked = searchClicked;
         vm.searchModel = {};
@@ -20,9 +21,14 @@
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
-            vm.clients.splice(0, 0, { code: '-- Select a client --', name: '-- Select a client --'})
+            vm.clients.splice(0, 0, { code: '-- Select a client --', name: '-- Select a client --' });
             vm.loanTypesList = vm.serverModel.loanTypesList;
             vm.nextTransactionNumber = vm.serverModel.nextTransactionNumber;
+
+            $http.get('/LoanTypes/Search').then(function (response) {
+                vm.loanTypes = response.data.loanTypes;
+                vm.loanTypes.splice(0, 0, { code: '-- Select a loan type --', description: ' -- Select a loan type -- ' });
+            });
         });
 
         function addLoanClicked() {
@@ -71,7 +77,7 @@
         function getInterestAmount(loan) {
             if (!loan.principalAmount || loan.principalAmount <= 0 || !loan.interestRate || loan.interestRate <= 0) return 0;
 
-            return loan.principalAmount * (loan.interestRate / 100)
+            return loan.principalAmount * (loan.interestRate / 100);
         };
 
         function onSearchModelChange(newValue, oldValue) {
@@ -85,6 +91,14 @@
             else {
                 vm.searchModel.clientId = undefined;
             }
+
+            if (vm.searchModel.loanType && vm.searchModel.loanType.id > 0) {
+                vm.searchModel.loanTypeId = vm.searchModel.loanType.id;
+            }
+            else {
+                vm.searchModel.loanTypeId = undefined;
+            }
+
             vm.searchInProgress = true;
 
             $http.get('/Loans/Search', { params: vm.searchModel }).then(function (response) {

@@ -19,6 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             public int? PageSize { get; set; }
             public string SearchTerm { get; set; }
             public int? ClientId { get; set; }
+            public int? LoanTypeId { get; set; }
 
             public string SearchLikeTerm
             {
@@ -101,11 +102,17 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                     dbQuery = dbQuery.Where(l => l.Employee.ClientId == query.ClientId);
                 }
 
+                if (query.LoanTypeId.HasValue)
+                {
+                    dbQuery = dbQuery.Where(l => l.LoanTypeId == query.LoanTypeId);
+                }
+
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
                         .Where(l => DbFunctions.Like(l.Employee.EmployeeCode, query.SearchLikeTerm) ||
-                            DbFunctions.Like(l.LoanType.Description, query.SearchLikeTerm));
+                            DbFunctions.Like(l.Employee.FirstName, query.SearchLikeTerm) ||
+                            DbFunctions.Like(l.Employee.LastName, query.SearchLikeTerm));
                 }
 
                 var loans = await dbQuery
