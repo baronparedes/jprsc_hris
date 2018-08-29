@@ -190,7 +190,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     var columns = GetColumnsForPayrollReport(payrollReportResult.PayrollProcessBatchResult.DeductedSSS, payrollReportResult.PayrollProcessBatchResult.DeductedPagIbig, payrollReportResult.PayrollProcessBatchResult.DeductedPHIC, payrollReportResult.PayrollProcessBatchResult.DeductedTax);
 
-                    var excelObject = payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).ToExcelObject(columns);
+                    var excelObject = payrollReportResult.PayrollReportItems.ToExcelObject(columns);
 
                     var lines = new List<IEnumerable<string>>();
                     lines.Add(new List<string> { "Job Placement Resources Services Cooperative" });
@@ -327,36 +327,36 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return columns;
             }
 
-            private IEnumerable<ColumnInfo<Models.PayrollRecord>> GetColumnsForPayrollReport(bool? deductedSSS, bool? deductedPagIbig, bool? deductedPHIC, bool? deductedTax)
+            private IEnumerable<ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>> GetColumnsForPayrollReport(bool? deductedSSS, bool? deductedPagIbig, bool? deductedPHIC, bool? deductedTax)
             {
-                var columns = new List<ColumnInfo<Models.PayrollRecord>>
+                var columns = new List<ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>>
                 {
-                    new ColumnInfo<Models.PayrollRecord>("Employee Code", "EmployeeCode", p => p.Employee.EmployeeCode),
-                    new ColumnInfo<Models.PayrollRecord>("Employee", "Employee", p => String.Format("{0}, {1}", p.Employee.LastName, p.Employee.FirstName)),
-                    new ColumnInfo<Models.PayrollRecord>("Regulary Pay", "RegularPay", p => String.Format("{0:n}", p.DaysWorkedValue.GetValueOrDefault() + p.HoursWorkedValue.GetValueOrDefault())),
-                    new ColumnInfo<Models.PayrollRecord>("Overtime", "Overtime", p => String.Format("{0:n}", p.OvertimeValue.GetValueOrDefault())),
-                    new ColumnInfo<Models.PayrollRecord>("UT/Tardy", "UT/Tardy", p => String.Format("{0:n}", p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault())),
-                    new ColumnInfo<Models.PayrollRecord>("COLA", "COLA", p => String.Format("{0:n}", p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault())),
-                    new ColumnInfo<Models.PayrollRecord>("Earnings", "Earnings", p => String.Format("{0:n}", p.EarningsValue.GetValueOrDefault())),
-                    new ColumnInfo<Models.PayrollRecord>("Total Earnings", "TotalEarnings", p => String.Format("{0:n}", p.TotalEarningsValue))
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Employee Code", "EmployeeCode", p => p.PayrollRecord.Employee.EmployeeCode),
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Employee", "Employee", p => String.Format("{0}, {1}", p.PayrollRecord.Employee.LastName, p.PayrollRecord.Employee.FirstName)),
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Regulary Pay", "RegularPay", p => String.Format("{0:n}", p.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + p.PayrollRecord.HoursWorkedValue.GetValueOrDefault())),
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Overtime", "Overtime", p => String.Format("{0:n}", p.PayrollRecord.OvertimeValue.GetValueOrDefault())),
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("UT/Tardy", "UT/Tardy", p => String.Format("{0:n}", p.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + p.PayrollRecord.HoursLateValue.GetValueOrDefault())),
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("COLA", "COLA", p => String.Format("{0:n}", p.PayrollRecord.COLADailyValue.GetValueOrDefault() + p.PayrollRecord.COLAHourlyValue.GetValueOrDefault())),
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Earnings", "Earnings", p => String.Format("{0:n}", p.PayrollRecord.EarningsValue.GetValueOrDefault())),
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Total Earnings", "TotalEarnings", p => String.Format("{0:n}", p.PayrollRecord.TotalEarningsValue))
                 };
 
                 if (deductedSSS == true)
                 {
-                    columns.Add(new ColumnInfo<Models.PayrollRecord>("SSS Prem", "SSS", p => String.Format("{0:n}", p.SSSValueEmployee.GetValueOrDefault())));
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("SSS Prem", "SSS", p => String.Format("{0:n}", p.PayrollRecord.SSSValueEmployee.GetValueOrDefault())));
                 }
 
                 if (deductedPagIbig == true)
                 {
-                    columns.Add(new ColumnInfo<Models.PayrollRecord>("Pag-Ibig", "PagIbig", p => String.Format("{0:n}", p.PagIbigValue.GetValueOrDefault())));
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Pag-Ibig", "PagIbig", p => String.Format("{0:n}", p.PayrollRecord.PagIbigValue.GetValueOrDefault())));
                 }
 
-                columns.Add(new ColumnInfo<Models.PayrollRecord>("Deductions", "Deductions", p => String.Format("{0:n}", p.DeductionsValue.GetValueOrDefault())));
-                columns.Add(new ColumnInfo<Models.PayrollRecord>("Loan Payments", "LoanPayments", p => String.Format("{0:n}", p.LoanPaymentValue.GetValueOrDefault())));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Deductions", "Deductions", p => String.Format("{0:n}", p.PayrollRecord.DeductionsValue.GetValueOrDefault())));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Loan Payments", "LoanPayments", p => String.Format("{0:n}", p.PayrollRecord.LoanPaymentValue.GetValueOrDefault())));
 
                 if (deductedPHIC == true)
                 {
-                    columns.Add(new ColumnInfo<Models.PayrollRecord>("PHIC", "PHIC", p => String.Format("{0:n}", p.PHICValueEmployee.GetValueOrDefault())));
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("PHIC", "PHIC", p => String.Format("{0:n}", p.PayrollRecord.PHICValueEmployee.GetValueOrDefault())));
                 }
 
                 if (deductedTax == true)
@@ -364,54 +364,54 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     // Do nothing
                 }
 
-                columns.Add(new ColumnInfo<Models.PayrollRecord>("Total Deductions", "TotalDeductions", p => String.Format("{0:n}", p.TotalDeductionsValue)));
-                columns.Add(new ColumnInfo<Models.PayrollRecord>("Net Pay", "NetPay", p => String.Format("{0:n}", p.NetPayValue)));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Total Deductions", "TotalDeductions", p => String.Format("{0:n}", p.PayrollRecord.TotalDeductionsValue)));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Net Pay", "NetPay", p => String.Format("{0:n}", p.PayrollRecord.NetPayValue)));
 
                 return columns;
             }
 
-            private IEnumerable<ColumnInfo<PayslipReport.QueryResult.PayslipData>> GetColumnsForPayslipReport(bool? deductedSSS, bool? deductedPagIbig, bool? deductedPHIC, bool? deductedTax)
+            private IEnumerable<ColumnInfo<PayslipReport.QueryResult.PayslipRecord>> GetColumnsForPayslipReport(bool? deductedSSS, bool? deductedPagIbig, bool? deductedPHIC, bool? deductedTax)
             {
-                var columns = new List<ColumnInfo<PayslipReport.QueryResult.PayslipData>>
+                var columns = new List<ColumnInfo<PayslipReport.QueryResult.PayslipRecord>>
                 {
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Payroll Period From", "PayrollPeriodFrom", p => p.PayrollProcessBatchResult.PayrollPeriodFromFormatted),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Payroll Period To", "PayrollPeriodTo", p => p.PayrollProcessBatchResult.PayrollPeriodToFormatted),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Employee", "Employee", p => String.Format("{0}, {1} {2} ({3})", p.Employee.LastName, p.Employee.FirstName, p.Employee.MiddleName, p.Employee.EmployeeCode)),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Department", "Department", p => String.Format("{0}", p.Employee.Department?.Name)),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Basic pay", "BasicPay"),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Overtime", "Overtime"),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("COLA", "COLA"),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("OtherEarnings", "OtherEarnings"),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("TotalEarnings", "TotalEarnings")
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Payroll Period From", "PayrollPeriodFrom", p => p.PayrollProcessBatchResult.PayrollPeriodFromFormatted),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Payroll Period To", "PayrollPeriodTo", p => p.PayrollProcessBatchResult.PayrollPeriodToFormatted),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Employee", "Employee", p => String.Format("{0}, {1} {2} ({3})", p.PayrollRecord.Employee.LastName, p.PayrollRecord.Employee.FirstName, p.PayrollRecord.Employee.MiddleName, p.PayrollRecord.Employee.EmployeeCode)),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Department", "Department", p => String.Format("{0}", p.PayrollRecord.Employee.Department?.Name)),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Basic pay", "BasicPay", p => String.Format("P{0:n}", p.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + p.PayrollRecord.HoursWorkedValue.GetValueOrDefault())),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Overtime", "Overtime", p => String.Format("P{0:n}", p.PayrollRecord.OvertimeValue.GetValueOrDefault())),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("COLA", "COLA", p => String.Format("P{0:n}", p.PayrollRecord.COLADailyValue.GetValueOrDefault() + p.PayrollRecord.COLAHourlyValue.GetValueOrDefault())),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("OtherEarnings", "OtherEarnings", p => String.Format("P{0:n}", p.PayrollRecord.EarningsValue.GetValueOrDefault())),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("TotalEarnings", "TotalEarnings", p => String.Format("P{0:n}", p.PayrollRecord.TotalEarningsValue))
                 };
 
                 if (deductedSSS == true)
                 {
-                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("SSS", "SSS"));
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("SSS", "SSS", p => String.Format("P{0:n}", p.PayrollRecord.SSSValueEmployee.GetValueOrDefault())));
                 }
 
                 if (deductedPagIbig == true)
                 {
-                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("PagIbig", "PagIbig"));
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("PagIbig", "PagIbig", p => String.Format("P{0:n}", p.PayrollRecord.PagIbigValue.GetValueOrDefault())));
                 }
 
                 if (deductedPHIC == true)
                 {
-                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("PHIC", "PHIC"));
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("PHIC", "PHIC", p => String.Format("P{0:n}", p.PayrollRecord.PHICValueEmployee.GetValueOrDefault())));
                 }
 
                 if (deductedTax == true)
                 {
-                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipData>("Tax", "Tax"));
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Tax", "Tax", p => String.Format("P{0:n}", p.PayrollRecord.TaxValue.GetValueOrDefault())));
                 }
 
-                columns.AddRange(new List<ColumnInfo<PayslipReport.QueryResult.PayslipData>>
+                columns.AddRange(new List<ColumnInfo<PayslipReport.QueryResult.PayslipRecord>>
                 {
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("OtherDeductions", "OtherDeductions"),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("LoanPayment", "LoanPayment"),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("UTTardy", "UTTardy"),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("TotalDeductions", "TotalDeductions"),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipData>("NetPay", "NetPay")
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("OtherDeductions", "OtherDeductions", p => String.Format("P{0:n}", p.PayrollRecord.DeductionsValue.GetValueOrDefault())),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("LoanPayment", "LoanPayment", p => String.Format("P{0:n}", p.PayrollRecord.LoanPaymentValue.GetValueOrDefault())),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("UTTardy", "UTTardy", p => String.Format("P{0:n}", p.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + p.PayrollRecord.HoursLateValue.GetValueOrDefault())),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("TotalDeductions", "TotalDeductions", p => String.Format("P{0:n}", p.PayrollRecord.TotalDeductionsValue)),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("NetPay", "NetPay", p => @String.Format("P{0:n}", p.PayrollRecord.NetPayValue))
                 });
 
                 return columns;
