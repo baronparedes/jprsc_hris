@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Collections.Generic;
 
 namespace JPRSC.HRIS.Models
@@ -24,5 +25,9 @@ namespace JPRSC.HRIS.Models
         public DateTime? EndProcessedOn { get; set; }
 
         public ICollection<PayrollRecord> PayrollRecords { get; set; } = new List<PayrollRecord>();
+
+        public string PayrollPeriodFromFormatted => $"{PayrollPeriodFrom.Value:MMM d, yyy}";
+        public string PayrollPeriodToFormatted => $"{PayrollPeriodTo.Value:MMM d, yyy}";
+        public string PayrollPeriodFormatted => PayrollPeriod.Value.Ordinalize();
     }
 }

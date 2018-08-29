@@ -27,10 +27,10 @@
                 <h3>Job Placement Resources Services Cooperative</h3>
                 <h4>Payroll Report for @Model.PayrollProcessBatchResult.Client.Name</h4>
                 <h5>For the period @Model.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.PayrollProcessBatchResult.PayrollPeriodToFormatted (@Model.PayrollProcessBatchResult.PayrollPeriodFormatted payroll period)</h5>
-                <h5>@Model.PayrollRecords.Count() record/s total</h5>
+                <h5>@Model.PayrollReportItems.Count() record/s total</h5>
             </div>
         </div>
-        @if (!Model.PayrollRecords.Any())
+        @if (!Model.PayrollReportItems.Any())
         {
             <div class="row">
                 <div class="col-sm-12">
@@ -91,72 +91,72 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var payrollRecord in Model.PayrollRecords)
+                                @foreach (var payrollReportItem in Model.PayrollReportItems)
                                 {
                                     <tr>
-                                        <td>@payrollRecord.Employee.EmployeeCode</td>
-                                        <td style="text-align: left;">@String.Format("{0}, {1}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName)</td>
-                                        <td>@String.Format("{0:n}", payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
-                                        <td>@String.Format("{0:n}", payrollRecord.OvertimeValue.GetValueOrDefault())</td>
-                                        <td>@String.Format("{0:n}", payrollRecord.HoursUndertimeValue.GetValueOrDefault() + payrollRecord.HoursLateValue.GetValueOrDefault())</td>
-                                        <td>@String.Format("{0:n}", payrollRecord.COLADailyValue.GetValueOrDefault() + payrollRecord.COLAHourlyValue.GetValueOrDefault())</td>
-                                        <td>@String.Format("{0:n}", payrollRecord.EarningsValue.GetValueOrDefault())</td>
-                                        <td><strong>@String.Format("{0:n}", payrollRecord.TotalEarningsValue)</strong></td>
+                                        <td>@payrollReportItem.PayrollRecord.Employee.EmployeeCode</td>
+                                        <td style="text-align: left;">@String.Format("{0}, {1}", payrollReportItem.PayrollRecord.Employee.LastName, payrollReportItem.PayrollRecord.Employee.FirstName)</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.OvertimeValue.GetValueOrDefault())</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.HoursLateValue.GetValueOrDefault())</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.COLADailyValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.COLAHourlyValue.GetValueOrDefault())</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.EarningsValue.GetValueOrDefault())</td>
+                                        <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalEarningsValue)</strong></td>
                                         @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
                                         {
-                                        <td>@String.Format("{0:n}", payrollRecord.SSSValueEmployee.GetValueOrDefault())</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.SSSValueEmployee.GetValueOrDefault())</td>
                                         }
                                         @if (Model.PayrollProcessBatchResult.DeductedPagIbig == true)
                                         {
-                                            <td>@String.Format("{0:n}", payrollRecord.PagIbigValue.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.PagIbigValue.GetValueOrDefault())</td>
                                         }                                        
-                                        <td>@String.Format("{0:n}", payrollRecord.DeductionsValue.GetValueOrDefault())</td>
-                                        <td>@String.Format("{0:n}", payrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.DeductionsValue.GetValueOrDefault())</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
                                         @if (Model.PayrollProcessBatchResult.DeductedPHIC == true)
                                         {
-                                            <td>@String.Format("{0:n}", payrollRecord.PHICValueEmployee.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.PHICValueEmployee.GetValueOrDefault())</td>
                                         }                                        
-                                        <td><strong>@String.Format("{0:n}", payrollRecord.TotalDeductionsValue)</strong></td>
-                                        <td><strong>@String.Format("{0:n}", payrollRecord.NetPayValue)</strong></td>
+                                        <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalDeductionsValue)</strong></td>
+                                        <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.NetPayValue)</strong></td>
                                     </tr>
                                 }
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td>Total:</td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.DaysWorkedValue.GetValueOrDefault() + p.HoursWorkedValue.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.OvertimeValue.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
-                                    <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalEarningsValue))</strong></td>
+                                    <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.DaysWorkedValue.GetValueOrDefault() + p.HoursWorkedValue.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.OvertimeValue.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
+                                    <td><strong>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalEarningsValue))</strong></td>
                                     @if (Model.PayrollProcessBatchResult.DeductedSSS == true)
                                     {
-                                        <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.SSSValueEmployee.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.SSSValueEmployee.GetValueOrDefault()))</td>
                                     }                                 
                                     @if (Model.PayrollProcessBatchResult.DeductedPagIbig == true)
                                     {
-                                        <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PagIbigValue.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.PagIbigValue.GetValueOrDefault()))</td>
                                     }
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.DeductionsValue.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.LoanPaymentValue.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.DeductionsValue.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()))</td>
                                     @if (Model.PayrollProcessBatchResult.DeductedPHIC == true)
                                     {
-                                        <td>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
                                     }                                    
-                                    <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.TotalDeductionsValue))</strong></td>
-                                    <td><strong>@String.Format("{0:n}", Model.PayrollRecords.Sum(p => p.NetPayValue))</strong></td>
+                                    <td><strong>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue))</strong></td>
+                                    <td><strong>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue))</strong></td>
                                 </tr>
                             </tbody>
                         </table>
                     }
                     else if (Model.DisplayMode == "Branch")
                     {
-                        foreach (var payrollRecord in Model.PayrollRecords.Where(p => p.Employee.Department == null))
+                        foreach (var payrollReportItem in Model.PayrollReportItems.Where(p => p.PayrollRecord.Employee.Department == null))
                         {
-                            payrollRecord.Employee.Department = new JPRSC.HRIS.WebApp.Features.Payroll.PayrollReport.QueryResult.Department { Id = 0, Name = "No Branch" };
+                            payrollReportItem.PayrollRecord.Employee.Department = new JPRSC.HRIS.Models.Department { Id = 0, Name = "No Branch" };
                         }
 
-                        var groupedByBranch = Model.PayrollRecords.GroupBy(pr => new { pr.Employee.Department.Id, pr.Employee.Department.Name });
+                        var groupedByBranch = Model.PayrollReportItems.GroupBy(pr => new { pr.PayrollRecord.Employee.Department.Id, pr.PayrollRecord.Employee.Department.Name });
                         foreach (var group in groupedByBranch.OrderBy(g => g.Key.Name))
                         {
                             <h2>@group.Key.Name</h2>
@@ -181,42 +181,42 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var payrollRecord in group)
+                                    @foreach (var payrollReportItem in group)
                                     {
                                         <tr>
-                                            <td>@payrollRecord.Employee.EmployeeCode</td>
-                                            <td style="text-align: left;">@String.Format("{0}, {1}", payrollRecord.Employee.LastName, payrollRecord.Employee.FirstName)</td>
-                                            <td>@String.Format("{0:n}", payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
-                                            <td>@String.Format("{0:n}", payrollRecord.OvertimeValue.GetValueOrDefault())</td>
-                                            <td>@String.Format("{0:n}", payrollRecord.HoursUndertimeValue.GetValueOrDefault() + payrollRecord.HoursLateValue.GetValueOrDefault())</td>
-                                            <td>@String.Format("{0:n}", payrollRecord.COLADailyValue.GetValueOrDefault() + payrollRecord.COLAHourlyValue.GetValueOrDefault())</td>
-                                            <td>@String.Format("{0:n}", payrollRecord.EarningsValue.GetValueOrDefault())</td>
-                                            <td><strong>@String.Format("{0:n}", payrollRecord.TotalEarningsValue)</strong></td>
-                                            <td>@String.Format("{0:n}", payrollRecord.SSSValueEmployee.GetValueOrDefault())</td>
-                                            <td>@String.Format("{0:n}", payrollRecord.PagIbigValue.GetValueOrDefault())</td>
-                                            <td>@String.Format("{0:n}", payrollRecord.DeductionsValue.GetValueOrDefault())</td>
-                                            <td>@String.Format("{0:n}", payrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
-                                            <td>@String.Format("{0:n}", payrollRecord.PHICValueEmployee.GetValueOrDefault())</td>
-                                            <td><strong>@String.Format("{0:n}", payrollRecord.TotalDeductionsValue)</strong></td>
-                                            <td><strong>@String.Format("{0:n}", payrollRecord.NetPayValue)</strong></td>
+                                            <td>@payrollReportItem.PayrollRecord.Employee.EmployeeCode</td>
+                                            <td style="text-align: left;">@String.Format("{0}, {1}", payrollReportItem.PayrollRecord.Employee.LastName, payrollReportItem.PayrollRecord.Employee.FirstName)</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.OvertimeValue.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.HoursLateValue.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.COLADailyValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.COLAHourlyValue.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.EarningsValue.GetValueOrDefault())</td>
+                                            <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalEarningsValue)</strong></td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.SSSValueEmployee.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.PagIbigValue.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.DeductionsValue.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.PHICValueEmployee.GetValueOrDefault())</td>
+                                            <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalDeductionsValue)</strong></td>
+                                            <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.NetPayValue)</strong></td>
                                         </tr>
                                     }
                                     <tr>
                                         <td>&nbsp;</td>
                                         <td>Total:</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.DaysWorkedValue.GetValueOrDefault() + p.HoursWorkedValue.GetValueOrDefault()))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.OvertimeValue.GetValueOrDefault()))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault()))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault()))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
-                                        <td><strong>@String.Format("{0:n}", group.Sum(p => p.TotalEarningsValue))</strong></td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.SSSValueEmployee.GetValueOrDefault()))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.PagIbigValue.GetValueOrDefault()))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.DeductionsValue.GetValueOrDefault()))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.LoanPaymentValue.GetValueOrDefault()))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
-                                        <td><strong>@String.Format("{0:n}", group.Sum(p => p.TotalDeductionsValue))</strong></td>
-                                        <td><strong>@String.Format("{0:n}", group.Sum(p => p.NetPayValue))</strong></td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.DaysWorkedValue.GetValueOrDefault() + p.HoursWorkedValue.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.OvertimeValue.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
+                                        <td><strong>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.TotalEarningsValue))</strong></td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.SSSValueEmployee.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.PagIbigValue.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.DeductionsValue.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
+                                        <td><strong>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue))</strong></td>
+                                        <td><strong>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue))</strong></td>
                                     </tr>
                                 </tbody>
                             </table>
