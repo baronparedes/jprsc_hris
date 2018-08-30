@@ -17,6 +17,20 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             _mediator = mediator;
         }
 
+        [AuthorizePermission(Permission.PayrollProcess)]
+        [HttpPost]
+        public async Task<ActionResult> AddForProcessingBatch(AddForProcessingBatch.Command command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return JsonValidationError();
+            }
+
+            var result = await _mediator.Send(command);
+
+            return JsonCamelCase(result);
+        }
+
         [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> BankReport(BankReport.Query query)
@@ -65,9 +79,39 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return RedirectToAction(nameof(Index));
         }
 
+        [AuthorizePermission(Permission.PayrollDelete)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteForProcessingBatch(DeleteForProcessingBatch.Command command)
+        {
+            var commandResult = await _mediator.Send(command);
+
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully deleted for processing queue.");
+
+            return RedirectToAction(nameof(ForProcessingQueue));
+        }
+
         [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> EndProcess(EndProcess.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [AuthorizePermission(Permission.PayrollProcess)]
+        [HttpGet]
+        public async Task<ActionResult> ForProcessing(ForProcessing.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [AuthorizePermission(Permission.PayrollProcess)]
+        [HttpGet]
+        public async Task<ActionResult> ForProcessingQueue(ForProcessingQueue.Query query)
         {
             var result = await _mediator.Send(query);
 

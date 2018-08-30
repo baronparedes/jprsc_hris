@@ -236,6 +236,8 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/payroll/addModal.js",
                 "~/wwwroot/scripts/payroll/endProcess.js",
                 "~/wwwroot/scripts/payroll/endProcessModal.js",
+                "~/wwwroot/scripts/payroll/forProcessing.js",
+                "~/wwwroot/scripts/payroll/forProcessingQueue.js",
                 "~/wwwroot/scripts/payroll/index.js");
         }
 

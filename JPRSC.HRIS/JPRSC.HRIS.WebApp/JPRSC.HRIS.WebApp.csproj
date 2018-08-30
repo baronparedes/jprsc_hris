@@ -420,13 +420,17 @@
     <Compile Include="Features\PayPercentages\Search.cs" />
     <Compile Include="Features\PayPercentages\_Controller.cs" />
     <Compile Include="Features\PayPercentages\_MappingProfile.cs" />
+    <Compile Include="Features\Payroll\AddForProcessingBatch.cs" />
     <Compile Include="Features\Payroll\CheckReport.cs" />
     <Compile Include="Features\Payroll\CashHoldReport.cs" />
     <Compile Include="Features\Payroll\CashReport.cs" />
+    <Compile Include="Features\Payroll\DeleteForProcessingBatch.cs" />
     <Compile Include="Features\Payroll\ExportToExcel.cs" />
+    <Compile Include="Features\Payroll\ForProcessingQueue.cs" />
     <Compile Include="Features\Payroll\HoldReport.cs" />
     <Compile Include="Features\Payroll\Delete.cs" />
     <Compile Include="Features\Payroll\EndProcess.cs" />
+    <Compile Include="Features\Payroll\ForProcessing.cs" />
     <Compile Include="Features\Payroll\Index.cs" />
     <Compile Include="Features\Payroll\BankReport.cs" />
     <Compile Include="Features\Payroll\PayslipReport.cs" />
@@ -6044,7 +6048,9 @@
     <Content Include="wwwroot\scripts\payroll\endProcessModal.js" />
     <Content Include="wwwroot\scripts\payroll\addModal.js" />
     <Content Include="wwwroot\scripts\payroll\endProcess.js" />
+    <Content Include="wwwroot\scripts\payroll\forProcessingQueue.js" />
     <Content Include="wwwroot\scripts\payroll\index.js" />
+    <Content Include="wwwroot\scripts\payroll\forProcessing.js" />
     <Content Include="wwwroot\scripts\phicRecords\add.js" />
     <Content Include="wwwroot\scripts\phicRecords\edit.js" />
     <Content Include="wwwroot\scripts\phicRecords\index.js" />
@@ -7053,6 +7059,8 @@
     <Content Include="Views\Companies\Details.cshtml" />
     <Content Include="Views\Clients\Details.cshtml" />
     <Content Include="Views\AuditTrails\Index.cshtml" />
+    <Content Include="Views\Payroll\ForProcessing.cshtml" />
+    <Content Include="Views\Payroll\ForProcessingQueue.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

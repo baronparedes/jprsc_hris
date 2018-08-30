@@ -1,0 +1,108 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Payroll.ForProcessing.QueryResult
+
+@{
+    ViewBag.Title = "For Processing";
+}
+
+@section styles
+{
+    <style>
+        tr:hover {
+            cursor: pointer;
+        }
+
+        th, td {
+            height: 20px;
+        }
+
+        td > label.checkbox {
+            margin-top: 0px;
+        }
+    </style>    
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>For Processing</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            For Processing
+        </h1>
+        @Html.RenderSuccessNotification()
+        <div class="row" ng-controller="ForProcessingCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
+            <div class="col-sm-12">
+                <form role="form">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.searchClicked()"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Search by Employee Code, First Name, Last Name, or MI</label>
+                                    <div class="input-group" style="width: 100%">
+                                        <input type="text" class="form-control" ng-disabled="!vm.employees.length" ng-model="vm.localSearchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.clientId || !vm.employees.length || vm.searchInProgresss" ng-click="vm.addToQueueClicked()">Add to Queue</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="note note-info" ng-show="!vm.employees.length">
+                    <p>No employees found.</p>
+                </div>
+                <p ng-show="vm.searchInProgress">Loading...</p>
+                <div class="portlet light bordered" ng-show="vm.employees.length">
+                    <div class="portlet-body">
+                        <div class="table-scrollable fit-to-portlet">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <td>Employee Code</td>
+                                        <td>Last Name</td>
+                                        <td>First Name</td>
+                                        <td>MI</td>
+                                        <td style="width: 120px;">&nbsp;</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="employee in vm.filteredEmployees track by employee.id" ng-class="{ 'active': employee.includeInBatch }" ng-click="employee.includeInBatch = !employee.includeInBatch">
+                                        <td>{{employee.employeeCode}}</td>
+                                        <td>{{employee.lastName}}</td>
+                                        <td>{{employee.firstName}}</td>
+                                        <td>{{employee.middleInitial}}</td>
+                                        <td style="width: 120px;">
+                                            <span class="badge bg-green-jungle bg-font-green-jungle badge-roundless" ng-show="employee.includeInBatch">For Processing</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/payroll")
+}

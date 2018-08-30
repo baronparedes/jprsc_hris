@@ -330,6 +330,14 @@
     <Compile Include="Infrastructure\Data\Migrations\201808210310006_AddAuditTrail.Designer.cs">
       <DependentUpon>201808210310006_AddAuditTrail.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201808300612536_AddForProcessingBatch.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201808300612536_AddForProcessingBatch.Designer.cs">
+      <DependentUpon>201808300612536_AddForProcessingBatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201808300633277_AddForProcessingBatchProcessedOn.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201808300633277_AddForProcessingBatchProcessedOn.Designer.cs">
+      <DependentUpon>201808300633277_AddForProcessingBatchProcessedOn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -383,6 +391,7 @@
     <Compile Include="Models\PayrollProcessBatch.cs" />
     <Compile Include="Models\PayrollRecord.cs" />
     <Compile Include="Models\PhicRecord.cs" />
+    <Compile Include="Models\ForProcessingBatch.cs" />
     <Compile Include="Models\Region.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\ResignStatus.cs" />
@@ -569,6 +578,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201808210310006_AddAuditTrail.resx">
       <DependentUpon>201808210310006_AddAuditTrail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201808300612536_AddForProcessingBatch.resx">
+      <DependentUpon>201808300612536_AddForProcessingBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201808300633277_AddForProcessingBatchProcessedOn.resx">
+      <DependentUpon>201808300633277_AddForProcessingBatchProcessedOn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
