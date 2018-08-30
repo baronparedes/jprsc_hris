@@ -15,6 +15,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         {
             public string ReportType { get; set; }
             public int? PayrollProcessBatchId { get; set; }
+            public bool? ViewDetailed { get; set; }
         }
 
         public class QueryResult
@@ -188,7 +189,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     filename = $"Payroll report for {payrollReportResult.PayrollProcessBatchResult.Client.Name} {payrollReportResult.PayrollProcessBatchResult.PayrollPeriodFromFormatted} - {payrollReportResult.PayrollProcessBatchResult.PayrollPeriodToFormatted}.xlsx";
 
-                    var columns = GetColumnsForPayrollReport(payrollReportResult.PayrollProcessBatchResult.DeductedSSS, payrollReportResult.PayrollProcessBatchResult.DeductedPagIbig, payrollReportResult.PayrollProcessBatchResult.DeductedPHIC, payrollReportResult.PayrollProcessBatchResult.DeductedTax);
+                    var columns = GetColumnsForPayrollReport(payrollReportResult.PayrollProcessBatchResult.DeductedSSS, payrollReportResult.PayrollProcessBatchResult.DeductedPagIbig, payrollReportResult.PayrollProcessBatchResult.DeductedPHIC, payrollReportResult.PayrollProcessBatchResult.DeductedTax, payrollReportResult, query.ViewDetailed);
 
                     var excelObject = payrollReportResult.PayrollReportItems.ToExcelObject(columns);
 
@@ -237,6 +238,24 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue)));
                     totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue)));
+
+                    if (query.ViewDetailed == true)
+                    {
+                        foreach (var earningDeduction in payrollReportResult.EarningDeductions)
+                        {
+                            totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault())));
+                        }
+
+                        foreach (var loanType in payrollReportResult.LoanTypes)
+                        {
+                            totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault())));
+                        }
+
+                        foreach (var payRate in payrollReportResult.PayRates)
+                        {
+                            totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault())));
+                        }
+                    }
 
                     lines.Add(totals);
 
@@ -327,7 +346,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return columns;
             }
 
-            private IEnumerable<ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>> GetColumnsForPayrollReport(bool? deductedSSS, bool? deductedPagIbig, bool? deductedPHIC, bool? deductedTax)
+            private IEnumerable<ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>> GetColumnsForPayrollReport(bool? deductedSSS, bool? deductedPagIbig, bool? deductedPHIC, bool? deductedTax, PayrollReport.QueryResult payrollReportResult, bool? viewDetailed)
             {
                 var columns = new List<ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>>
                 {
@@ -366,6 +385,24 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Total Deductions", "TotalDeductions", p => String.Format("{0:n}", p.PayrollRecord.TotalDeductionsValue)));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Net Pay", "NetPay", p => String.Format("{0:n}", p.PayrollRecord.NetPayValue)));
+
+                if (viewDetailed == true)
+                {
+                    foreach (var earningDeduction in payrollReportResult.EarningDeductions)
+                    {
+                        columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{earningDeduction.Code}", $"{earningDeduction.Code}", p => String.Format("{0:n}", p.EarningDeductionRecords.SingleOrDefault(edr => edr.EarningDeductionId == earningDeduction.Id)?.Amount.GetValueOrDefault().ToString() ?? "0.00")));
+                    }
+
+                    foreach (var loanType in payrollReportResult.LoanTypes)
+                    {
+                        columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{loanType.Code}", $"{loanType.Code}", p => String.Format("{0:n}", p.Loans.SingleOrDefault(lt => lt.LoanTypeId == loanType.Id)?.DeductionAmount.GetValueOrDefault().ToString() ?? "0.00")));
+                    }
+
+                    foreach (var payRate in payrollReportResult.PayRates)
+                    {
+                        columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{payRate.Code}", $"{payRate.Code}", p => String.Format("{0:n}", p.Overtimes.SingleOrDefault(edr => edr.PayPercentageId == payRate.Id)?.NumberOfHoursValue.GetValueOrDefault().ToString() ?? "0.00")));
+                    }
+                }
 
                 return columns;
             }

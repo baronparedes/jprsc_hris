@@ -116,6 +116,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         }
 
         [AuthorizePermission(Permission.PayrollDefault)]
+        [HttpPost]
+        public async Task<ActionResult> ExportToExcelPost(ExportToExcel.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+        }
+
+        [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)
         {

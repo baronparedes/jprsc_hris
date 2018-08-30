@@ -34,6 +34,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             public int? PayrollProcessBatchId { get; set; }
             public string DisplayMode { get; set; }
             public Models.PayrollProcessBatch PayrollProcessBatchResult { get; set; }
+            public IEnumerable<Models.PayPercentage> PayRates { get; set; } = new List<Models.PayPercentage>();
+            public IEnumerable<Models.EarningDeduction> EarningDeductions { get; set; } = new List<Models.EarningDeduction>();
+            public IEnumerable<Models.LoanType> LoanTypes { get; set; } = new List<Models.LoanType>();
 
             public IEnumerable<PayrollReportItem> PayrollReportItems { get; set; } = new List<PayrollReportItem>();
 
@@ -43,6 +46,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public Models.DailyTimeRecord DailyTimeRecord { get; set; }
                 public IEnumerable<Models.Overtime> Overtimes { get; set; } = new List<Models.Overtime>();
                 public IEnumerable<Models.EarningDeductionRecord> EarningDeductionRecords { get; set; } = new List<Models.EarningDeductionRecord>();
+                public IEnumerable<Models.Loan> Loans { get; set; } = new List<Models.Loan>();
             }
         }
 
@@ -91,6 +95,13 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Where(ot => !ot.DeletedOn.HasValue && employeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && ot.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
                     .ToListAsync();
 
+                var loans = await _db
+                    .Loans
+                    .Include(l => l.LoanType)
+                    .AsNoTracking()
+                    .Where(l => !l.DeletedOn.HasValue && employeeIds.Contains(l.EmployeeId.Value) && l.RemainingBalance > 0 && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                    .ToListAsync();
+
                 var payrollReportItems = new List<QueryResult.PayrollReportItem>(payrollRecords.Count);
 
                 foreach (var payrollRecord in payrollRecords)
@@ -100,16 +111,24 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     payrollReportItem.DailyTimeRecord = dailyTimeRecords.SingleOrDefault(dtr => dtr.EmployeeId == payrollRecord.EmployeeId);
                     payrollReportItem.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
                     payrollReportItem.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
+                    payrollReportItem.Loans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId).ToList();
 
                     payrollReportItems.Add(payrollReportItem);
                 }
+
+                var payRates = await _db.PayPercentages.AsNoTracking().ToListAsync();
+                var earningDeductions = await _db.EarningDeductions.AsNoTracking().ToListAsync();
+                var loanTypes = await _db.LoanTypes.AsNoTracking().ToListAsync();
 
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,
                     DisplayMode = query.DisplayMode,
                     PayrollProcessBatchResult = payrollProcessBatch,
-                    PayrollReportItems = payrollReportItems
+                    PayrollReportItems = payrollReportItems,
+                    PayRates = payRates,
+                    EarningDeductions = earningDeductions,
+                    LoanTypes = loanTypes
                 };
             }
         }

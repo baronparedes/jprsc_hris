@@ -43,7 +43,12 @@
             <div class="row hidden-print">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <a href="@Url.Action("ExportToExcel", new { PayrollProcessBatchId = Model.PayrollProcessBatchId, ReportType = "Payroll" })" class="btn btn-primary" style="margin-right: 20px;">Download Excel</a>
+                        <form action="~/Payroll/ExportToExcelPost" method="post" style="display: inline-block;">
+                            <input type="hidden" name="PayrollProcessBatchId" value="@Model.PayrollProcessBatchId" />
+                            <input type="hidden" name="ReportType" value="Payroll" />
+                            <input type="hidden" name="ViewDetailed" id="ViewDetailed" value="false" />
+                            <button type="submit" class="btn btn-primary" style="margin-right: 20px;">Download Excel</button>
+                        </form>
                         @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
                         {
                             <button class="btn btn-primary" disabled="disabled">Sort by Name</button>
@@ -54,6 +59,9 @@
                             <a href="@Url.Action("PayrollReport", new { PayrollProcessBatchId = Model.PayrollProcessBatchId })" class="btn btn-primary">Sort by Name</a>
                             <button class="btn btn-primary" disabled="disabled">Group by Branch</button>
                         }
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="viewDetailedCheckbox" /> View in detail
                     </div>
                 </div>
             </div>
@@ -88,6 +96,18 @@
                                     }
                                     <th>Total Deductions</th>
                                     <th>Net Pay</th>
+                                    @foreach (var earningDeduction in Model.EarningDeductions)
+                                    {
+                                        <th class="detail hidden">@earningDeduction.Code</th>
+                                    }
+                                    @foreach (var loanType in Model.LoanTypes)
+                                    {
+                                        <th class="detail hidden">@loanType.Code</th>
+                                    }
+                                    @foreach (var payRate in Model.PayRates)
+                                    {
+                                        <th class="detail hidden">@payRate.Code</th>
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
@@ -118,6 +138,18 @@
                                         }                                        
                                         <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalDeductionsValue)</strong></td>
                                         <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.NetPayValue)</strong></td>
+                                        @foreach (var earningDeduction in Model.EarningDeductions)
+                                        {
+                                            <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.EarningDeductionRecords.SingleOrDefault(edr => edr.EarningDeductionId == earningDeduction.Id)?.Amount.GetValueOrDefault().ToString() ?? "0.00")</td>
+                                        }
+                                        @foreach (var loanType in Model.LoanTypes)
+                                        {
+                                            <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.Loans.SingleOrDefault(l => l.LoanTypeId == loanType.Id)?.DeductionAmount.GetValueOrDefault().ToString() ?? "0.00")</td>
+                                        }
+                                        @foreach (var payRate in Model.PayRates)
+                                        {
+                                            <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.Overtimes.SingleOrDefault(ot => ot.PayPercentageId == payRate.Id)?.NumberOfHoursValue.GetValueOrDefault().ToString() ?? "0.00")</td>
+                                        }
                                     </tr>
                                 }
                                 <tr>
@@ -145,6 +177,18 @@
                                     }                                    
                                     <td><strong>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue))</strong></td>
                                     <td><strong>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue))</strong></td>
+                                    @foreach (var earningDeduction in Model.EarningDeductions)
+                                    {
+                                        <td class="detail hidden">@String.Format("{0:n}", Model.PayrollReportItems.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault()))</td>
+                                    }
+                                    @foreach (var loanType in Model.LoanTypes)
+                                    {
+                                        <td class="detail hidden">@String.Format("{0:n}", Model.PayrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
+                                    }
+                                    @foreach (var payRate in Model.PayRates)
+                                    {
+                                        <td class="detail hidden">@String.Format("{0:n}", Model.PayrollReportItems.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()))</td>
+                                    }
                                 </tr>
                             </tbody>
                         </table>
@@ -178,6 +222,18 @@
                                         <th>PHIC</th>
                                         <th>Total Deductions</th>
                                         <th>Net Pay</th>
+                                        @foreach (var earningDeduction in Model.EarningDeductions)
+                                        {
+                                            <th class="detail hidden">@earningDeduction.Code</th>
+                                        }
+                                        @foreach (var loanType in Model.LoanTypes)
+                                        {
+                                            <th class="detail hidden">@loanType.Code</th>
+                                        }
+                                        @foreach (var payRate in Model.PayRates)
+                                        {
+                                            <th class="detail hidden">@payRate.Code</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -199,6 +255,18 @@
                                             <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.PHICValueEmployee.GetValueOrDefault())</td>
                                             <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalDeductionsValue)</strong></td>
                                             <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.NetPayValue)</strong></td>
+                                            @foreach (var earningDeduction in Model.EarningDeductions)
+                                            {
+                                                <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.EarningDeductionRecords.SingleOrDefault(edr => edr.EarningDeductionId == earningDeduction.Id)?.Amount.GetValueOrDefault().ToString() ?? "0.00")</td>
+                                            }
+                                            @foreach (var loanType in Model.LoanTypes)
+                                            {
+                                                <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.Loans.SingleOrDefault(l => l.LoanTypeId == loanType.Id)?.DeductionAmount.GetValueOrDefault().ToString() ?? "0.00")</td>
+                                            }
+                                            @foreach (var payRate in Model.PayRates)
+                                            {
+                                                <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.Overtimes.SingleOrDefault(ot => ot.PayPercentageId == payRate.Id)?.NumberOfHoursValue.GetValueOrDefault().ToString() ?? "0.00")</td>
+                                            }
                                         </tr>
                                     }
                                     <tr>
@@ -217,6 +285,18 @@
                                         <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
                                         <td><strong>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue))</strong></td>
                                         <td><strong>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue))</strong></td>
+                                        @foreach (var earningDeduction in Model.EarningDeductions)
+                                        {
+                                            <td class="detail hidden">@String.Format("{0:n}", group.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault()))</td>
+                                        }
+                                        @foreach (var loanType in Model.LoanTypes)
+                                        {
+                                            <td class="detail hidden">@String.Format("{0:n}", group.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
+                                        }
+                                        @foreach (var payRate in Model.PayRates)
+                                        {
+                                            <td class="detail hidden">@String.Format("{0:n}", group.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()))</td>
+                                        }
                                     </tr>
                                 </tbody>
                             </table>
@@ -226,5 +306,23 @@
             </div>
         }
     </div>
+
+    <script src="~/wwwroot/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("ready!");
+            $("#viewDetailedCheckbox").change(function () {
+                console.log('changed', this.checked);
+                if (this.checked) {
+                    $('#ViewDetailed').val(true);
+                    $('.detail').removeClass('hidden');
+                }
+                else {
+                    $('#ViewDetailed').val(false);
+                    $('.detail').addClass('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
