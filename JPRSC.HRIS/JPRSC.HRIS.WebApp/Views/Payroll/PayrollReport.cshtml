@@ -62,6 +62,7 @@
                     </div>
                     <div class="form-group">
                         <input type="checkbox" id="viewDetailedCheckbox" /> View in detail
+                        <span id="loader" class="hidden">Loading...</span>
                     </div>
                 </div>
             </div>
@@ -313,6 +314,9 @@
             console.log("ready!");
             $("#viewDetailedCheckbox").change(function () {
                 console.log('changed', this.checked);
+
+                $('#loader').removeClass('hidden');
+
                 if (this.checked) {
                     $('#ViewDetailed').val(true);
                     $('.detail').removeClass('hidden');
@@ -321,6 +325,8 @@
                     $('#ViewDetailed').val(false);
                     $('.detail').addClass('hidden');
                 }
+
+                $('#loader').addClass('hidden');
             });
         });
     </script>

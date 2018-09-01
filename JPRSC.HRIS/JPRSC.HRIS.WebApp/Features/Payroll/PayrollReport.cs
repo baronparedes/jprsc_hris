@@ -117,8 +117,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 }
 
                 var payRates = await _db.PayPercentages.AsNoTracking().ToListAsync();
-                var earningDeductions = await _db.EarningDeductions.AsNoTracking().ToListAsync();
-                var loanTypes = await _db.LoanTypes.AsNoTracking().ToListAsync();
+                var earningDeductions = await _db.EarningDeductions.AsNoTracking().Where(ed => !ed.DeletedOn.HasValue).ToListAsync();
+                var loanTypes = await _db.LoanTypes.AsNoTracking().Where(lt => !lt.DeletedOn.HasValue).ToListAsync();
 
                 return new QueryResult
                 {
