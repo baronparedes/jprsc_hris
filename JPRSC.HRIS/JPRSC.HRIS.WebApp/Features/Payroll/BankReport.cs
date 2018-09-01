@@ -180,6 +180,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .ThenBy(pr => pr.Employee.FirstName)
                     .ProjectToListAsync<QueryResult.PayrollRecord>();
 
+                payrollRecords.RemoveAll(pr => String.IsNullOrWhiteSpace(pr.Employee.ATMAccountNumber) || pr.Employee.ATMAccountNumber == "0");
+
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,
