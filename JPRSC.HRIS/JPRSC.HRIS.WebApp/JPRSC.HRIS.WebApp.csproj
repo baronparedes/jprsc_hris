@@ -425,6 +425,8 @@
     <Compile Include="Features\Payroll\CashHoldReport.cs" />
     <Compile Include="Features\Payroll\CashReport.cs" />
     <Compile Include="Features\Payroll\DeleteForProcessingBatch.cs" />
+    <Compile Include="Features\Payroll\ExportQueueToEDRExcel.cs" />
+    <Compile Include="Features\Payroll\ExportQueueToDTRExcel.cs" />
     <Compile Include="Features\Payroll\ExportToExcel.cs" />
     <Compile Include="Features\Payroll\ForProcessingBatchSearch.cs" />
     <Compile Include="Features\Payroll\ForProcessingQueue.cs" />

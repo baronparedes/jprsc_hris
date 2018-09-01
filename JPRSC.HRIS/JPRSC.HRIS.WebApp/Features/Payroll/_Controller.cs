@@ -3,6 +3,8 @@ using JPRSC.HRIS.WebApp.Infrastructure.Html;
 using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
+using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -100,42 +102,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return View(result);
         }
 
-        [AuthorizePermission(Permission.PayrollProcess)]
-        [HttpGet]
-        public async Task<ActionResult> ForProcessing(ForProcessing.Query query)
-        {
-            var result = await _mediator.Send(query);
-
-            return View(result);
-        }
-
-        [AuthorizePermission(Permission.PayrollProcess)]
-        [HttpGet]
-        public async Task<ActionResult> ForProcessingQueue(ForProcessingQueue.Query query)
-        {
-            var result = await _mediator.Send(query);
-
-            return View(result);
-        }
-
-        [AuthorizePermission(Permission.PayrollDefault)]
-        [HttpGet]
-        public async Task<ActionResult> HoldReport(HoldReport.Query query)
-        {
-            var result = await _mediator.Send(query);
-
-            return View(result);
-        }
-
-        [AuthorizePermission(Permission.PayrollEndProcess)]
-        [HttpGet]
-        public async Task<ActionResult> EndProcessQuery(EndProcess.EndProcessQuery query)
-        {
-            var queryResult = await _mediator.Send(query);
-
-            return JsonCamelCase(queryResult);
-        }
-
         [AuthorizePermission(Permission.PayrollEndProcess)]
         [HttpPost]
         public async Task<ActionResult> EndProcessCommand(EndProcess.Command query)
@@ -148,6 +114,33 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             var result = await _mediator.Send(query);
 
             return JsonCamelCase(result);
+        }
+
+        [AuthorizePermission(Permission.PayrollEndProcess)]
+        [HttpGet]
+        public async Task<ActionResult> EndProcessQuery(EndProcess.EndProcessQuery query)
+        {
+            var queryResult = await _mediator.Send(query);
+
+            return JsonCamelCase(queryResult);
+        }
+
+        [AuthorizePermission(Permission.PayrollProcess)]
+        [HttpGet]
+        public async Task<ActionResult> ExportQueueToDTRExcel(ExportQueueToDTRExcel.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+        }
+
+        [AuthorizePermission(Permission.PayrollProcess)]
+        [HttpGet]
+        public async Task<ActionResult> ExportQueueToEDRExcel(ExportQueueToEDRExcel.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
         }
 
         [AuthorizePermission(Permission.PayrollDefault)]
@@ -170,11 +163,38 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         [AuthorizePermission(Permission.PayrollProcess)]
         [HttpGet]
+        public async Task<ActionResult> ForProcessing(ForProcessing.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [AuthorizePermission(Permission.PayrollProcess)]
+        [HttpGet]
         public async Task<ActionResult> ForProcessingBatchSearch(ForProcessingBatchSearch.Query query)
         {
             var result = await _mediator.Send(query);
 
             return JsonCamelCase(result);
+        }
+
+        [AuthorizePermission(Permission.PayrollProcess)]
+        [HttpGet]
+        public async Task<ActionResult> ForProcessingQueue(ForProcessingQueue.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [AuthorizePermission(Permission.PayrollDefault)]
+        [HttpGet]
+        public async Task<ActionResult> HoldReport(HoldReport.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
         }
 
         [AuthorizePermission(Permission.PayrollDefault)]
@@ -184,20 +204,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             var result = await _mediator.Send(query);
 
             return View(result);
-        }
-
-        [AuthorizePermission(Permission.PayrollProcess)]
-        [HttpPost]
-        public async Task<ActionResult> Process(Process.Command command)
-        {
-            if (!ModelState.IsValid)
-            {
-                return JsonValidationError();
-            }
-
-            await _mediator.Send(command);
-
-            return Json("success");
         }
 
         [AuthorizePermission(Permission.PayrollDefault)]
@@ -216,6 +222,20 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             var result = await _mediator.Send(query);
 
             return View(result);
+        }
+
+        [AuthorizePermission(Permission.PayrollProcess)]
+        [HttpPost]
+        public async Task<ActionResult> Process(Process.Command command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return JsonValidationError();
+            }
+
+            await _mediator.Send(command);
+
+            return Json("success");
         }
 
         [AuthorizePermission(Permission.PayrollDefault)]

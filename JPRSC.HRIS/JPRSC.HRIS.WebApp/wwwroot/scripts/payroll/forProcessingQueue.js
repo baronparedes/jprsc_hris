@@ -1,11 +1,10 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('ForProcessingQueueCtrl', ['$http', '$uibModal', '$scope', 'globalSettings', ForProcessingQueueCtrl]);
+        .controller('ForProcessingQueueCtrl', ['$http', '$scope', '$timeout', '$uibModal', '$scope', 'globalSettings', ForProcessingQueueCtrl]);
 
-    function ForProcessingQueueCtrl($http,  $uibModal, $scope, globalSettings) {
+    function ForProcessingQueueCtrl($http, $scope, $timeout, $uibModal, $scope, globalSettings) {
         var vm = this;
-        vm.downloadQueueClicked = downloadQueueClicked;
         vm.forProcessingBatches = [];
         vm.searchClicked = searchClicked;
         vm.searchModel = {};
@@ -15,10 +14,6 @@
 
         function onSearchModelChange(newValue, oldValue) {
             searchClicked();
-        };
-
-        function downloadQueueClicked(forProcessingBatch) {
-            console.log('downloadQueueClicked');
         };
 
         function searchClicked() {
