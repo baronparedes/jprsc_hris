@@ -168,6 +168,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
         }
 
+        [AuthorizePermission(Permission.PayrollProcess)]
+        [HttpGet]
+        public async Task<ActionResult> ForProcessingBatchSearch(ForProcessingBatchSearch.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return JsonCamelCase(result);
+        }
+
         [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)

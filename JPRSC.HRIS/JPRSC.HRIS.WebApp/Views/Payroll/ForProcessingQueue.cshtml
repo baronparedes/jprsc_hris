@@ -38,26 +38,26 @@
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="ForProcessingQueueCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
-                @*<form role="form">
+                <form role="form">
                     <div class="form-body">
                         <div class="row">
-                            <div class="col-sm-6">
+                            @*<div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="control-label">Client</label>
                                     <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.searchClicked()"></select>
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
+                            </div>*@
+                            <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="control-label">Search by Employee Code, First Name, Last Name, or MI</label>
+                                    <label class="control-label">Search by Name</label>
                                     <div class="input-group" style="width: 100%">
-                                        <input type="text" class="form-control" ng-disabled="!vm.employees.length" ng-model="vm.localSearchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>*@
+                </form>
                 <div class="note note-info" ng-show="!vm.forProcessingBatches.length">
                     <p>No items found.</p>
                 </div>
