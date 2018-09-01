@@ -238,6 +238,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue)));
                     totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue)));
+                    totals.Add(String.Empty);
+                    totals.Add(String.Empty);
+                    totals.Add(String.Empty);
+                    totals.Add(String.Empty);
+                    totals.Add(String.Empty);
 
                     if (query.ViewDetailed == true)
                     {
@@ -385,6 +390,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Total Deductions", "TotalDeductions", p => String.Format("{0:n}", p.PayrollRecord.TotalDeductionsValue)));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Net Pay", "NetPay", p => String.Format("{0:n}", p.PayrollRecord.NetPayValue)));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Days Worked", "DaysWorked", p => String.Format("{0:n}", p.DailyTimeRecord.DaysWorked?.ToString() ?? "0")));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Hours Worked", "HoursWorked", p => String.Format("{0:n}", p.DailyTimeRecord.HoursWorked?.ToString() ?? "0")));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Overtime Worked", "OvertimeWorked", p => String.Format("{0:n}", p.Overtimes.Sum(ot => ot.NumberOfHours.GetValueOrDefault()))));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Undertime Minutes", "UndertimeMinutes", p => String.Format("{0:n}", p.DailyTimeRecord.HoursUndertime.GetValueOrDefault() * 60)));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Tardiness Minutes", "TardinessMinutes", p => String.Format("{0:n}", p.DailyTimeRecord.HoursLate.GetValueOrDefault() * 60)));
+
 
                 if (viewDetailed == true)
                 {

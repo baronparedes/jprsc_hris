@@ -97,6 +97,11 @@
                                     }
                                     <th>Total Deductions</th>
                                     <th>Net Pay</th>
+                                    <th>Days Worked</th>
+                                    <th>Hours Worked</th>
+                                    <th>Overtime Worked</th>
+                                    <th>Undertime Minutes</th>
+                                    <th>Tardiness Minutes</th>
                                     @foreach (var earningDeduction in Model.EarningDeductions)
                                     {
                                         <th class="detail hidden">@earningDeduction.Code</th>
@@ -139,6 +144,11 @@
                                         }                                        
                                         <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalDeductionsValue)</strong></td>
                                         <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.NetPayValue)</strong></td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.DaysWorked?.ToString() ?? "0")</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.HoursWorked?.ToString() ?? "0")</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.Overtimes.Sum(ot => ot.NumberOfHours.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.HoursUndertime.GetValueOrDefault() * 60)</td>
+                                        <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.HoursLate.GetValueOrDefault() * 60)</td>
                                         @foreach (var earningDeduction in Model.EarningDeductions)
                                         {
                                             <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.EarningDeductionRecords.SingleOrDefault(edr => edr.EarningDeductionId == earningDeduction.Id)?.Amount.GetValueOrDefault().ToString() ?? "0.00")</td>
@@ -178,6 +188,11 @@
                                     }                                    
                                     <td><strong>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue))</strong></td>
                                     <td><strong>@String.Format("{0:n}", Model.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue))</strong></td>
+                                    <td>@String.Empty</td>
+                                    <td>@String.Empty</td>
+                                    <td>@String.Empty</td>
+                                    <td>@String.Empty</td>
+                                    <td>@String.Empty</td>
                                     @foreach (var earningDeduction in Model.EarningDeductions)
                                     {
                                         <td class="detail hidden">@String.Format("{0:n}", Model.PayrollReportItems.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault()))</td>
@@ -223,6 +238,11 @@
                                         <th>PHIC</th>
                                         <th>Total Deductions</th>
                                         <th>Net Pay</th>
+                                        <th>Days Worked</th>
+                                        <th>Hours Worked</th>
+                                        <th>Overtime Worked</th>
+                                        <th>Undertime Minutes</th>
+                                        <th>Tardiness Minutes</th>
                                         @foreach (var earningDeduction in Model.EarningDeductions)
                                         {
                                             <th class="detail hidden">@earningDeduction.Code</th>
@@ -256,6 +276,11 @@
                                             <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.PHICValueEmployee.GetValueOrDefault())</td>
                                             <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalDeductionsValue)</strong></td>
                                             <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.NetPayValue)</strong></td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.DaysWorked?.ToString() ?? "0")</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.HoursWorked?.ToString() ?? "0")</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.Overtimes.Sum(ot => ot.NumberOfHours.GetValueOrDefault()))</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.HoursUndertime.GetValueOrDefault() * 60)</td>
+                                            <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.HoursLate.GetValueOrDefault() * 60)</td>
                                             @foreach (var earningDeduction in Model.EarningDeductions)
                                             {
                                                 <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.EarningDeductionRecords.SingleOrDefault(edr => edr.EarningDeductionId == earningDeduction.Id)?.Amount.GetValueOrDefault().ToString() ?? "0.00")</td>
@@ -286,6 +311,11 @@
                                         <td>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
                                         <td><strong>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue))</strong></td>
                                         <td><strong>@String.Format("{0:n}", group.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue))</strong></td>
+                                        <td>@String.Empty</td>
+                                        <td>@String.Empty</td>
+                                        <td>@String.Empty</td>
+                                        <td>@String.Empty</td>
+                                        <td>@String.Empty</td>
                                         @foreach (var earningDeduction in Model.EarningDeductions)
                                         {
                                             <td class="detail hidden">@String.Format("{0:n}", group.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault()))</td>
