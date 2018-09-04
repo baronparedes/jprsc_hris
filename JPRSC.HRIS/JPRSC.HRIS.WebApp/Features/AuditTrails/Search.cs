@@ -37,6 +37,7 @@ namespace JPRSC.HRIS.WebApp.Features.AuditTrails
             public class AuditTrail
             {
                 public DateTime? AddedOn { get; set; }
+                public int Id { get; set; }
                 public int? RecordId { get; set; }
                 public string Action { get; set; }
                 public string Module { get; set; }
