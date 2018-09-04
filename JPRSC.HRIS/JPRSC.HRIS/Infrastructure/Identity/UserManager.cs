@@ -72,7 +72,7 @@ namespace JPRSC.HRIS.Infrastructure.Identity
         {
             return new PasswordValidator
             {
-                RequiredLength = 3,
+                RequiredLength = 2,
                 RequireNonLetterOrDigit = false,
                 RequireDigit = false,
                 RequireLowercase = false,

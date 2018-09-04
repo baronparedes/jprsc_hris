@@ -105,7 +105,13 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
                     .NotEmpty();
 
                 RuleFor(c => c.Password)
-                    .NotEmpty();
+                    .NotEmpty()
+                    .DependentRules(() =>
+                    {
+                        RuleFor(c => c.Password)
+                            .Must(p => p.Length >= 2)
+                            .WithMessage("Password must be at least 2 characters.");
+                    });
 
                 RuleFor(c => c.RepeatPassword)
                     .NotEmpty();
