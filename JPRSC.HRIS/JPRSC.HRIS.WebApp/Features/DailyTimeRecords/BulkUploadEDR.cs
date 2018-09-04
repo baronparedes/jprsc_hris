@@ -266,6 +266,19 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     }
                 }
 
+                IList<IList<string>> reversedBody = new List<IList<string>>();
+                var employeeCodes = new List<string>(body.Count);
+                for (var i = body.Count - 1; i > 0; i--)
+                {
+                    var employeeCode = body[i][0];
+                    if (!employeeCodes.Contains(employeeCode))
+                    {
+                        reversedBody.Add(body[i]);
+                    }
+
+                    employeeCodes.Add(employeeCode);
+                }
+
                 return Tuple.Create(header, body);
             }
 
