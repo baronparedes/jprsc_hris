@@ -14,6 +14,7 @@
             {
                 if (Model.Item2.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()) > 0)
                 {
+                    <th class="detail hidden">@payRate.Code hours</th>
                     <th class="detail hidden">@payRate.Code</th>
                 }
             }
@@ -70,6 +71,7 @@
                 {
                     if (Model.Item2.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()) > 0)
                     {
+                        <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.Overtimes.SingleOrDefault(ot => ot.PayPercentageId == payRate.Id)?.NumberOfHours.GetValueOrDefault().ToString() ?? "0.00")</td>
                         <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.Overtimes.SingleOrDefault(ot => ot.PayPercentageId == payRate.Id)?.NumberOfHoursValue.GetValueOrDefault().ToString() ?? "0.00")</td>
                     }
                 }
@@ -124,6 +126,7 @@
             {
                 if (Model.Item2.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()) > 0)
                 {
+                    <td>@String.Empty</td>
                     <td class="detail hidden">@String.Format("{0:n}", Model.Item2.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()))</td>
                 }
             }
