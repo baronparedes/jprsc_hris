@@ -121,7 +121,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 }
 
                 var now = DateTime.UtcNow;
-                var employee = await _db.Employees.SingleOrDefaultAsync(e => e.Id == command.EmployeeId);
+                var employee = await _db.Employees.SingleOrDefaultAsync(e => !e.DeletedOn.HasValue && e.Id == command.EmployeeId);
+                var client = await _db.Clients.SingleOrDefaultAsync(c => !c.DeletedOn.HasValue && c.Id == employee.ClientId);
 
                 decimal? colaHourlyOTValue = 0;
 
@@ -172,7 +173,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     existingDailyTimeRecord.COLAHourlyOTValue = colaHourlyOTValue;
                     existingDailyTimeRecord.DailyRate = employee.DailyRate;
                     existingDailyTimeRecord.DaysWorked = command.DaysWorked;
-                    existingDailyTimeRecord.DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate);
+                    existingDailyTimeRecord.DaysWorkedValue = GetValue(command.DaysWorked, client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate);
                     existingDailyTimeRecord.EmployeeId = command.EmployeeId;
                     existingDailyTimeRecord.HourlyRate = employee.HourlyRate;
                     existingDailyTimeRecord.HoursLate = command.MinutesLate / 60;
@@ -181,6 +182,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     existingDailyTimeRecord.HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate);
                     existingDailyTimeRecord.HoursWorked = command.HoursWorked;
                     existingDailyTimeRecord.HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate);
+                    existingDailyTimeRecord.MonthlyRate = employee.MonthlyRate;
                 }
                 else
                 {
@@ -192,7 +194,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         COLAHourlyOTValue = colaHourlyOTValue,
                         DailyRate = employee.DailyRate,
                         DaysWorked = command.DaysWorked,
-                        DaysWorkedValue = GetValue(command.DaysWorked, employee.DailyRate),
+                        DaysWorkedValue = GetValue(command.DaysWorked, client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate),
                         EmployeeId = command.EmployeeId,
                         HourlyRate = employee.HourlyRate,
                         HoursLate = command.MinutesLate / 60,
@@ -201,6 +203,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate),
                         HoursWorked = command.HoursWorked,
                         HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate),
+                        MonthlyRate = employee.MonthlyRate,
                         PayrollPeriodFrom = command.PayrollPeriodFrom,
                         PayrollPeriodTo = command.PayrollPeriodTo
                     };

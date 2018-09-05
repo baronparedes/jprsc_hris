@@ -40,6 +40,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 public int Id { get; set; }
                 public string LastName { get; set; }
                 public string MiddleName { get; set; }
+                public decimal? MonthlyRate { get; set; }
 
                 public string Name => String.IsNullOrWhiteSpace(MiddleName) ? $"{LastName}, {FirstName}" : $"{LastName}, {FirstName}, {MiddleName.First()}";
             }
@@ -60,6 +61,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 public decimal? PrincipalAmount { get; set; }
                 public decimal? PrincipalAndInterestAmount { get; set; }
                 public decimal? RemainingBalance { get; set; }
+                public decimal? RemainingBalanceForDisplay { get; set; }
                 public DateTime? StartDeductionDate { get; set; }
                 public string TransactionNumber { get; set; }
                 public DateTime? ZeroedOutOn { get; set; }

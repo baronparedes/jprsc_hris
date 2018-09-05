@@ -61,6 +61,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string TaxStatusCode { get; set; }
             public decimal? HourlyRate { get; set; }
             public decimal? DailyRate { get; set; }
+            public decimal? MonthlyRate { get; set; }
             public decimal? COLAHourly { get; set; }
             public decimal? COLADaily { get; set; }
             public bool? TaxExempt { get; set; }

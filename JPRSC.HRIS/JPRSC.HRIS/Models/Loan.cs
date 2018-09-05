@@ -24,6 +24,7 @@ namespace JPRSC.HRIS.Models
         public decimal? PrincipalAmount { get; set; }
         public decimal? PrincipalAndInterestAmount { get; set; }
         public decimal? RemainingBalance { get; set; }
+        public decimal? RemainingBalanceForDisplay => !RemainingBalance.HasValue ? (decimal?)null : Math.Max(0, RemainingBalance.Value);
         public DateTime? StartDeductionDate { get; set; }
         public string TransactionNumber { get; set; }
         public DateTime? ZeroedOutOn { get; set; }

@@ -4,6 +4,7 @@ using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,6 +65,21 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 {
                     var deletePayrollRecords = "DELETE FROM PayrollRecords WHERE PayrollProcessBatchId = @PayrollProcessBatchId";
                     await connection.ExecuteAsync(deletePayrollRecords, new { PayrollProcessBatchId = command.PayrollProcessBatchId });
+                }
+                
+                var clientEmployeeIds = await _db
+                    .Employees
+                    .Where(e => e.ClientId == payrollProcessBatch.ClientId)
+                    .Select(e => e.Id)
+                    .ToListAsync();
+
+                var loans = await _db.Loans
+                    .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                    .ToListAsync();
+
+                foreach (var loan in loans)
+                {
+                    loan.RemainingBalance += loan.DeductionAmount.GetValueOrDefault();
                 }
 
                 _db.PayrollProcessBatches.Remove(payrollProcessBatch);

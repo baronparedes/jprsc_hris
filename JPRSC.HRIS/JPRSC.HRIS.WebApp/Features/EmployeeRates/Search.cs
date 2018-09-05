@@ -47,6 +47,7 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
                 public decimal? HourlyRate { get; set; }
                 public int Id { get; set; }
                 public string LastName { get; set; }
+                public decimal? MonthlyRate { get; set; }
             }
         }
 

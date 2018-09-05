@@ -77,6 +77,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public decimal? DailyRate { get; set; }
             public decimal? COLAHourly { get; set; }
             public decimal? COLADaily { get; set; }
+            public decimal? MonthlyRate { get; set; }
             public bool? TaxExempt { get; set; }
             public bool? PagIbigExempt { get; set; }
             public bool? ThirteenthMonthExempt { get; set; }
@@ -293,11 +294,11 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     CityAddress = command.CityAddress,
                     CivilStatus = command.CivilStatus,
                     ClientId = command.ClientId,
-                    COLADaily = command.COLADaily.HasValue ? command.COLADaily.Value : 0,
-                    COLAHourly = command.COLAHourly.HasValue ? command.COLAHourly.Value : 0,
+                    COLADaily = command.COLADaily.GetValueOrDefault(),
+                    COLAHourly = command.COLAHourly.GetValueOrDefault(),
                     CompanyId = currentUser.Company?.Id,
                     CompanyIdNumber = command.CompanyIdNumber,
-                    DailyRate = command.DailyRate.HasValue ? command.DailyRate.Value : 0,
+                    DailyRate = command.DailyRate.GetValueOrDefault(),
                     DateHired = command.DateHired,
                     DateOfBirth = command.DateOfBirth,
                     DateResigned = command.DateResigned,
@@ -307,11 +308,12 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     EmployeeStatus = command.EmployeeStatus,
                     FirstName = command.FirstName,
                     Gender = command.Gender,
-                    HourlyRate = command.HourlyRate.HasValue ? command.HourlyRate.Value : 0,
+                    HourlyRate = command.HourlyRate.GetValueOrDefault(),
                     IsActive = command.IsActive,
                     JobTitleId = command.JobTitleId,
                     LastName = command.LastName,
                     MiddleName = command.MiddleName,
+                    MonthlyRate = command.MonthlyRate.GetValueOrDefault(),
                     Nickname = command.Nickname,
                     PagIbig = command.PagIbig,
                     PagIbigExempt = command.PagIbigExempt,

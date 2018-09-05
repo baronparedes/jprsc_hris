@@ -193,7 +193,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 foreach (var loan in loans)
                 {
-                    loan.RemainingBalance -= loan.RemainingBalance > loan.DeductionAmount ? loan.DeductionAmount : loan.RemainingBalance;
+                    loan.RemainingBalance -= loan.DeductionAmount.GetValueOrDefault();
                 }
 
                 _db.PayrollProcessBatches.Add(payrollProcessBatch);
