@@ -97,7 +97,7 @@
                                         <td>{{loan.loanDate | date:'mediumDate' }}</td>
                                         <td>{{vm.currencySymbol}}{{loan.principalAmount | number:2 }}</td>
                                         <td>{{vm.currencySymbol}}{{loan.deductionAmount | number:2 }}</td>
-                                        <td>{{vm.currencySymbol}}{{loan.remainingBalance | number:2 }}</td>
+                                        <td>{{vm.currencySymbol}}{{loan.remainingBalanceForDisplay | number:2 }}</td>
                                         <td>
                                             <span class="badge bg-green-jungle bg-font-green-jungle badge-roundless" ng-if="!loan.isZeroedOut">Active Loan</span>
                                             <span class="badge bg-red-thunderbird bg-font-red-thunderbird badge-roundless" ng-if="loan.isZeroedOut">Zeroed Out</span>
@@ -309,7 +309,7 @@
                                 <div class="form-group">
                                     <label class="col-md-4 col-lg-3 control-label">Remaining Balance</label>
                                     <div class="col-md-8 col-lg-9">
-                                        <p class="form-control-static"><span ng-if="vm.loanResult.remainingBalance">{{vm.currencySymbol}}</span>{{vm.loanResult.remainingBalance | number:2}}</p>
+                                        <p class="form-control-static"><span ng-if="vm.loanResult.remainingBalanceForDisplay">{{vm.currencySymbol}}</span>{{vm.loanResult.remainingBalanceForDisplay | number:2}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
