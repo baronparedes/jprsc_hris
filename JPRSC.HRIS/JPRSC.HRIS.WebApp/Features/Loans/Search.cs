@@ -62,6 +62,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 public int? PayrollPeriod { get; set; }
                 public decimal? PrincipalAmount { get; set; }
                 public decimal? RemainingBalance { get; set; }
+                public decimal? RemainingBalanceForDisplay { get; set; }
                 public DateTime? StartDeductionDate { get; set; }
                 public string TransactionNumber { get; set; }
                 public DateTime? ZeroedOutOn { get; set; }
