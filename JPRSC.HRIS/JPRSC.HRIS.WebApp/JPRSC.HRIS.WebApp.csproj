@@ -7064,6 +7064,7 @@
     <Content Include="Views\AuditTrails\Index.cshtml" />
     <Content Include="Views\Payroll\ForProcessing.cshtml" />
     <Content Include="Views\Payroll\ForProcessingQueue.cshtml" />
+    <Content Include="Views\Payroll\PayrollReportTable.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
