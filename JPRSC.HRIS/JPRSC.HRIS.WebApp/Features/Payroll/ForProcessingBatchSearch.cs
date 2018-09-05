@@ -65,7 +65,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 }
 
                 var forProcessingBatches = await dbQuery
-                    .OrderBy(fpb => fpb.ProcessedOn)
+                    .OrderByDescending(fpb => fpb.ProcessedOn)
                     .ProjectToListAsync<QueryResult.ForProcessingBatch>();
 
                 return new QueryResult
