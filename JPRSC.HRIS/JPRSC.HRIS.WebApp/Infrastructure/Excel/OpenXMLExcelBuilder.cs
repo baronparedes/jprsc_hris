@@ -121,11 +121,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Excel
                 row.Append(line.Select(cr => new Cell
                 {
                     CellValue = new CellValue(cr),
-                    DataType =
-                        //int.TryParse(cr?.Replace(",", ""), out int intVal) || double.TryParse(cr?.Replace(",", ""), out double doubleVal) || decimal.TryParse(cr?.Replace(",", ""), out decimal decimalVal) ?
-                        int.TryParse(cr?.Replace(",", ""), out int intVal) ?
-                        new EnumValue<CellValues>(CellValues.Number) :
-                        new EnumValue<CellValues>(CellValues.String)
+                    DataType = new EnumValue<CellValues>(CellValues.String)
                 }));
 
                 sheetData.AppendChild(row);
