@@ -218,6 +218,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         {
                             if (payrollReportResult.PayrollReportItems.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()) > 0)
                             {
+                                totals.Add(String.Empty);
                                 totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault())));
                             }
                         }
@@ -383,7 +384,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     {
                         if (payrollReportResult.PayrollReportItems.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()) > 0)
                         {
-                            columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{payRate.Code}", $"{payRate.Code}", p => String.Format("{0:n}", p.Overtimes.SingleOrDefault(edr => edr.PayPercentageId == payRate.Id)?.NumberOfHoursValue.GetValueOrDefault().ToString() ?? "0.00")));
+                            columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{payRate.Code} hours", $"{payRate.Code} hours", p => String.Format("{0:n}", p.Overtimes.SingleOrDefault(ot => ot.PayPercentageId == payRate.Id)?.NumberOfHours.GetValueOrDefault().ToString() ?? "0.00")));
+                            columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{payRate.Code}", $"{payRate.Code}", p => String.Format("{0:n}", p.Overtimes.SingleOrDefault(ot => ot.PayPercentageId == payRate.Id)?.NumberOfHoursValue.GetValueOrDefault().ToString() ?? "0.00")));
                         }
                     }
                 }
