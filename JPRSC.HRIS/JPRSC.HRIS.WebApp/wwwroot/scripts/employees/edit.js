@@ -8,6 +8,7 @@
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.editEmployeeSubmit = editEmployeeSubmit;
         vm.editInProgress = false;
+        vm.hasValidationErrors = false;
         vm.init = init;
         vm.lookups = lookups;
         vm.validationErrors = {};
@@ -18,6 +19,7 @@
 
         function editEmployeeSubmit(e) {
             vm.editInProgress = true;
+            vm.hasValidationErrors = false;
 
             var action = '/Employees/Edit';
             var data = $(angular.element(e.target)[0]).serialize();
@@ -28,6 +30,7 @@
             }, function (response) {
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
+                    vm.hasValidationErrors = true;
                 }
 
                 vm.editInProgress = false;
