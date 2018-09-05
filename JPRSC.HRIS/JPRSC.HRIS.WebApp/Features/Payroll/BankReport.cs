@@ -99,6 +99,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public string LastName { get; set; }
                 public string MiddleName { get; set; }
                 public DateTime? ModifiedOn { get; set; }
+                public decimal? MonthlyRate { get; set; }
                 public string Nickname { get; set; }
                 public string PagIbig { get; set; }
                 public bool? PagIbigExempt { get; set; }

@@ -38,6 +38,7 @@ namespace JPRSC.HRIS.Models
         public ICollection<Loan> Loans { get; set; } = new List<Loan>();
         public string MiddleName { get; set; }
         public DateTime? ModifiedOn { get; set; }
+        public decimal? MonthlyRate { get; set; }
         public string Nickname { get; set; }
         public ICollection<Overtime> Overtimes { get; set; } = new List<Overtime>();
         public string PagIbig { get; set; }

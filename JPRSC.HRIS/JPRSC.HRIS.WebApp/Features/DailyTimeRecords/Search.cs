@@ -48,6 +48,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public decimal? HourlyRate { get; set; }
                 public int Id { get; set; }
                 public string LastName { get; set; }
+                public decimal? MonthlyRate { get; set; }
                 public string Name => $"{LastName}, {FirstName}";
             }
 
@@ -68,6 +69,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public decimal? HoursUndertimeValue { get; set; }
                 public double? HoursWorked { get; set; }
                 public decimal? HoursWorkedValue { get; set; }
+                public decimal? MonthlyRate { get; set; }
                 public int Id { get; set; }
                 public DateTime? PayrollPeriodFrom { get; set; }
                 public DateTime? PayrollPeriodTo { get; set; }

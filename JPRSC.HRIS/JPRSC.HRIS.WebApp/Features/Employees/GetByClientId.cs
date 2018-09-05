@@ -35,6 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 public string LastName { get; set; }
                 public string MiddleName { get; set; }
                 public string MiddleInitial => String.IsNullOrWhiteSpace(MiddleName) ? null : MiddleName.First().ToString();
+                public decimal? MonthlyRate { get; set; }
 
                 public string Name => String.IsNullOrWhiteSpace(MiddleName) ? $"{LastName}, {FirstName}" : $"{LastName}, {FirstName} {MiddleInitial}.";
             }

@@ -111,6 +111,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var now = DateTime.UtcNow;
                 var unprocessedItems = new List<CommandResult.UnprocessedItem>();
                 var allPayRates = await _db.PayPercentages.AsNoTracking().ToListAsync();
+                var client = await _db.Clients.SingleOrDefaultAsync(c => !c.DeletedOn.HasValue && c.Id == command.ClientId);
                 var allEmployeesOfClient = await _db.Employees.AsNoTracking().Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
                 var allEmployeesOfClientIds = allEmployeesOfClient.Select(e => e.Id).ToList();
 
@@ -135,11 +136,11 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     var lastName = String.IsNullOrWhiteSpace(line[1]) ? null : line[1].Trim();
                     var firstName = String.IsNullOrWhiteSpace(line[2]) ? null : line[2].Trim();
 
-                    double? daysWorked = null, hoursWorked = null, minutesLate = null, minutesUndertime = null;
+                    double? daysOrMonthsWorked = null, hoursWorked = null, minutesLate = null, minutesUndertime = null;
 
                     try
                     {
-                        daysWorked = line[3].ToNullableDouble();
+                        daysOrMonthsWorked = line[3].ToNullableDouble();
                         hoursWorked = line[4].ToNullableDouble();
                         minutesLate = line[5].ToNullableDouble();
                         minutesUndertime = line[6].ToNullableDouble();
@@ -264,12 +265,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     var existingDailyTimeRecord = allEmployeeDailyTimeRecordsForPayrollPeriod.SingleOrDefault(dtr => dtr.EmployeeId == employee.Id);
                     if (existingDailyTimeRecord != null)
                     {
-                        existingDailyTimeRecord.COLADailyValue = (decimal?)daysWorked * employee.COLADaily;
+                        existingDailyTimeRecord.COLADailyValue = (decimal?)daysOrMonthsWorked * employee.COLADaily;
                         existingDailyTimeRecord.COLAHourlyValue = (decimal?)hoursWorked * employee.COLAHourly;
                         existingDailyTimeRecord.COLAHourlyOTValue = colaHourlyOTValue;
                         existingDailyTimeRecord.DailyRate = employee.DailyRate;
-                        existingDailyTimeRecord.DaysWorked = daysWorked;
-                        existingDailyTimeRecord.DaysWorkedValue = (decimal?)daysWorked * employee.DailyRate;
+                        existingDailyTimeRecord.DaysWorked = daysOrMonthsWorked;
+                        existingDailyTimeRecord.DaysWorkedValue =  (decimal?)daysOrMonthsWorked * (client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate);
                         existingDailyTimeRecord.HourlyRate = employee.HourlyRate;
                         existingDailyTimeRecord.HoursLate = minutesLate / 60;
                         existingDailyTimeRecord.HoursLateValue = (decimal?)(minutesLate / 60) * employee.HourlyRate;
@@ -278,18 +279,19 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         existingDailyTimeRecord.HoursWorked = hoursWorked;
                         existingDailyTimeRecord.HoursWorkedValue = (decimal?)hoursWorked * employee.HourlyRate;
                         existingDailyTimeRecord.ModifiedOn = now;
+                        existingDailyTimeRecord.MonthlyRate = employee.MonthlyRate;
                     }
                     else
                     {
                         var dailyTimeRecord = new DailyTimeRecord
                         {
                             AddedOn = now,
-                            COLADailyValue = (decimal?)daysWorked * employee.COLADaily,
+                            COLADailyValue = (decimal?)daysOrMonthsWorked * employee.COLADaily,
                             COLAHourlyValue = (decimal?)hoursWorked * employee.COLAHourly,
                             COLAHourlyOTValue = colaHourlyOTValue,
                             DailyRate = employee.DailyRate,
-                            DaysWorked = daysWorked,
-                            DaysWorkedValue = (decimal?)daysWorked * employee.DailyRate,
+                            DaysWorked = daysOrMonthsWorked,
+                            DaysWorkedValue = (decimal?)daysOrMonthsWorked * (client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate),
                             EmployeeId = employee.Id,
                             HourlyRate = employee.HourlyRate,
                             HoursLate = minutesLate / 60,
@@ -298,6 +300,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             HoursUndertimeValue = (decimal?)(minutesUndertime / 60) * employee.HourlyRate,
                             HoursWorked = hoursWorked,
                             HoursWorkedValue = (decimal?)hoursWorked * employee.HourlyRate,
+                            MonthlyRate = employee.MonthlyRate,
                             PayrollPeriodFrom = command.PayrollPeriodFrom,
                             PayrollPeriodTo = command.PayrollPeriodTo
                         };

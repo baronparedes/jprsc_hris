@@ -338,6 +338,14 @@
     <Compile Include="Infrastructure\Data\Migrations\201808300633277_AddForProcessingBatchProcessedOn.Designer.cs">
       <DependentUpon>201808300633277_AddForProcessingBatchProcessedOn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201809050235453_AddMonthlyRate.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201809050235453_AddMonthlyRate.Designer.cs">
+      <DependentUpon>201809050235453_AddMonthlyRate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201809050252126_AddMonthlyRateToDTR.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201809050252126_AddMonthlyRateToDTR.Designer.cs">
+      <DependentUpon>201809050252126_AddMonthlyRateToDTR.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -584,6 +592,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201808300633277_AddForProcessingBatchProcessedOn.resx">
       <DependentUpon>201808300633277_AddForProcessingBatchProcessedOn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201809050235453_AddMonthlyRate.resx">
+      <DependentUpon>201809050235453_AddMonthlyRate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201809050252126_AddMonthlyRateToDTR.resx">
+      <DependentUpon>201809050252126_AddMonthlyRateToDTR.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

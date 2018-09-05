@@ -23,6 +23,7 @@ namespace JPRSC.HRIS.Models
         public decimal? HoursWorkedValue { get; set; }
         public int Id { get; set; }
         public DateTime? ModifiedOn { get; set; }
+        public decimal? MonthlyRate { get; set; }
         public DateTime? PayrollPeriodFrom { get; set; }
         public DateTime? PayrollPeriodTo { get; set; }
     }
