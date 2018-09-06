@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using FluentValidation;
-using Humanizer;
+﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -35,6 +32,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             public string DisplayMode { get; set; }
             public IEnumerable<PayslipRecord> PayslipRecords { get; set; } = new List<PayslipRecord>();
             public Models.PayrollProcessBatch PayrollProcessBatchResult { get; set; }
+            public IEnumerable<Models.PayPercentage> PayRates { get; set; } = new List<Models.PayPercentage>();
+            public IEnumerable<Models.EarningDeduction> EarningDeductions { get; set; } = new List<Models.EarningDeduction>();
+            public IEnumerable<Models.LoanType> LoanTypes { get; set; } = new List<Models.LoanType>();
 
             public class PayslipRecord
             {
@@ -42,6 +42,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public Models.DailyTimeRecord DailyTimeRecord { get; set; }
                 public IEnumerable<Models.Overtime> Overtimes { get; set; } = new List<Models.Overtime>();
                 public IEnumerable<Models.EarningDeductionRecord> EarningDeductionRecords { get; set; } = new List<Models.EarningDeductionRecord>();
+                public IEnumerable<Models.Loan> Loans { get; set; } = new List<Models.Loan>();
                 public Models.PayrollProcessBatch PayrollProcessBatchResult { get; set; }
             }
         }
@@ -93,6 +94,13 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Where(ot => !ot.DeletedOn.HasValue && employeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && ot.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
                     .ToListAsync();
 
+                var loans = await _db
+                    .Loans
+                    .Include(l => l.LoanType)
+                    .AsNoTracking()
+                    .Where(l => !l.DeletedOn.HasValue && employeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                    .ToListAsync();
+
                 var payslipRecords = new List<QueryResult.PayslipRecord>(payrollRecords.Count);
 
                 foreach (var payrollRecord in payrollRecords)
@@ -103,16 +111,24 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     payslipRecord.DailyTimeRecord = dailyTimeRecords.SingleOrDefault(dtr => dtr.EmployeeId == payrollRecord.EmployeeId);
                     payslipRecord.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
                     payslipRecord.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
+                    payslipRecord.Loans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId).ToList();
 
                     payslipRecords.Add(payslipRecord);
                 }
+
+                var payRates = await _db.PayPercentages.AsNoTracking().ToListAsync();
+                var earningDeductions = await _db.EarningDeductions.AsNoTracking().Where(ed => !ed.DeletedOn.HasValue).ToListAsync();
+                var loanTypes = await _db.LoanTypes.AsNoTracking().Where(lt => !lt.DeletedOn.HasValue).ToListAsync();
 
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,
                     DisplayMode = query.DisplayMode,
                     PayrollProcessBatchResult = payrollProcessBatchResult,
-                    PayslipRecords = payslipRecords
+                    PayslipRecords = payslipRecords,
+                    PayRates = payRates,
+                    EarningDeductions = earningDeductions,
+                    LoanTypes = loanTypes
                 };
             }
         }

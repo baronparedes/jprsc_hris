@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using FluentValidation;
-using Humanizer;
+﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;

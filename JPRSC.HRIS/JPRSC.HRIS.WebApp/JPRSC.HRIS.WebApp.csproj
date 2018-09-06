@@ -7065,6 +7065,7 @@
     <Content Include="Views\Payroll\ForProcessing.cshtml" />
     <Content Include="Views\Payroll\ForProcessingQueue.cshtml" />
     <Content Include="Views\Payroll\PayrollReportTable.cshtml" />
+    <Content Include="Views\Payroll\PayslipReportTable.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
