@@ -178,8 +178,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     existingDailyTimeRecord.HourlyRate = employee.HourlyRate;
                     existingDailyTimeRecord.HoursLate = command.MinutesLate / 60;
                     existingDailyTimeRecord.HoursLateValue = GetValue(command.MinutesLate / 60, employee.HourlyRate);
-                    existingDailyTimeRecord.HoursUndertime = command.MinutesUndertime / 60;
-                    existingDailyTimeRecord.HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate);
+                    existingDailyTimeRecord.HoursUndertime = client.PayrollCode == PayrollCode.Monthly ? command.MinutesUndertime : command.MinutesUndertime / 60;
+                    existingDailyTimeRecord.HoursUndertimeValue = client.PayrollCode == PayrollCode.Monthly ? GetValue(command.MinutesUndertime, employee.DailyRate) : GetValue(command.MinutesUndertime / 60, employee.HourlyRate);
                     existingDailyTimeRecord.HoursWorked = command.HoursWorked;
                     existingDailyTimeRecord.HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate);
                     existingDailyTimeRecord.MonthlyRate = employee.MonthlyRate;
@@ -199,8 +199,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         HourlyRate = employee.HourlyRate,
                         HoursLate = command.MinutesLate / 60,
                         HoursLateValue = GetValue(command.MinutesLate / 60, employee.HourlyRate),
-                        HoursUndertime = command.MinutesUndertime / 60,
-                        HoursUndertimeValue = GetValue(command.MinutesUndertime / 60, employee.HourlyRate),
+                        HoursUndertime = client.PayrollCode == PayrollCode.Monthly ? command.MinutesUndertime : command.MinutesUndertime / 60,
+                        HoursUndertimeValue = client.PayrollCode == PayrollCode.Monthly ? GetValue(command.MinutesUndertime, employee.DailyRate) : GetValue(command.MinutesUndertime / 60, employee.HourlyRate),
                         HoursWorked = command.HoursWorked,
                         HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate),
                         MonthlyRate = employee.MonthlyRate,
