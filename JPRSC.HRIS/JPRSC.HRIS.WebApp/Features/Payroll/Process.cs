@@ -148,17 +148,17 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     var payrollRecord = new PayrollRecord
                     {
                         AddedOn = now,
-                        COLADailyValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLADailyValue),
-                        COLAHourlyValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLAHourlyValue + dtr.COLAHourlyOTValue),
-                        DaysWorkedValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.DaysWorkedValue),
-                        DeductionsValue = employeeEdrsForPayrollPeriod.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount),
-                        EarningsValue = employeeEdrsForPayrollPeriod.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount),
+                        COLADailyValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLADailyValue.GetValueOrDefault()),
+                        COLAHourlyValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLAHourlyValue.GetValueOrDefault() + dtr.COLAHourlyOTValue.GetValueOrDefault()),
+                        DaysWorkedValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.DaysWorkedValue.GetValueOrDefault()),
+                        DeductionsValue = employeeEdrsForPayrollPeriod.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(ed => ed.Amount.GetValueOrDefault()),
+                        EarningsValue = employeeEdrsForPayrollPeriod.Where(ed => ed.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(ed => ed.Amount.GetValueOrDefault()),
                         EmployeeId = employee.Id,
-                        HoursLateValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursLateValue),
-                        HoursUndertimeValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursUndertimeValue),
-                        HoursWorkedValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursWorkedValue),
-                        LoanPaymentValue = employeeLoans.Any() ? employeeLoans.Sum(l => l.RemainingBalance > l.DeductionAmount ? l.DeductionAmount : l.RemainingBalance) : null,
-                        OvertimeValue = employeeOtsForPayrollPeriod.Sum(ot => ot.NumberOfHoursValue)
+                        HoursLateValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursLateValue.GetValueOrDefault()),
+                        HoursUndertimeValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursUndertimeValue.GetValueOrDefault()),
+                        HoursWorkedValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursWorkedValue.GetValueOrDefault()),
+                        LoanPaymentValue = employeeLoans.Any() ? employeeLoans.Sum(l => l.RemainingBalance.GetValueOrDefault() > l.DeductionAmount.GetValueOrDefault() ? l.DeductionAmount.GetValueOrDefault() : l.RemainingBalance.GetValueOrDefault()) : 0,
+                        OvertimeValue = employeeOtsForPayrollPeriod.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault())
                     };
 
                     var dailyTimeRecordsForPreviousPayrollProcessBatches = new List<DailyTimeRecord>();
