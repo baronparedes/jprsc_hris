@@ -65,6 +65,7 @@
                                         <th>Last Name</th>
                                         <th>Hourly Rate</th>
                                         <th>Daily Rate</th>
+                                        <th>Monthly Rate</th>
                                         <th>COLA Hourly</th>
                                         <th>COLA Daily</th>
                                         <th>&nbsp;</th>
@@ -82,6 +83,10 @@
                                         <td>
                                             <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.dailyRate | number:2}}</span>
                                             <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.dailyRate" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.monthlyRate | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.monthlyRate" />
                                         </td>
                                         <td>
                                             <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaHourly | number:2}}</span>

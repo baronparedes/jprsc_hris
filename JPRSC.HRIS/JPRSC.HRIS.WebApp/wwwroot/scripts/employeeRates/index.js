@@ -43,6 +43,7 @@
             $http.post(action, data).then(function (response) {
                 employee.hourlyRate = employee.copy.hourlyRate;
                 employee.dailyRate = employee.copy.dailyRate;
+                employee.monthlyRate = employee.copy.monthlyRate;
                 employee.colaHourly = employee.copy.colaHourly;
                 employee.colaDaily = employee.copy.colaDaily;
                 employee.isEditing = false;
