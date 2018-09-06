@@ -126,7 +126,7 @@
             {
                 if (Model.Item2.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()) > 0)
                 {
-                    <td>@String.Empty</td>
+                    <td class="detail hidden">@String.Empty</td>
                     <td class="detail hidden">@String.Format("{0:n}", Model.Item2.SelectMany(p => p.Overtimes.Where(ot => ot.PayPercentageId == payRate.Id)).Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()))</td>
                 }
             }
