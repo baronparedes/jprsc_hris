@@ -243,7 +243,10 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             overtimesToAdd.Add(overtime);
                         }
 
-                        colaHourlyOTValue += (decimal?)hours * employee.COLAHourly;
+                        if (payPercentage.IncludeCOLA == true)
+                        {
+                            colaHourlyOTValue += (decimal?)hours * employee.COLAHourly;
+                        }
                     }
 
                     if (overtimesToAdd.Any())

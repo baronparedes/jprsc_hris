@@ -131,9 +131,16 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     .Where(o => !o.DeletedOn.HasValue && o.EmployeeId == command.EmployeeId && o.PayrollPeriodFrom == command.PayrollPeriodFrom && o.PayrollPeriodTo == command.PayrollPeriodTo)
                     .ToListAsync();
 
+                var payPercentageIds = command.Overtimes.Where(ot => ot.PayPercentageId.HasValue).Select(ot => ot.PayPercentageId.Value);
+                var payRates = await _db
+                    .PayPercentages
+                    .Where(pp => payPercentageIds.Contains(pp.Id))
+                    .ToListAsync();
+
                 foreach (var overtimeUpload in command.Overtimes)
                 {
-                    var existingOvertime = existingOvertimes.SingleOrDefault(o => o.PayPercentageId == o.PayPercentageId);
+                    var existingOvertime = existingOvertimes.SingleOrDefault(o => o.PayPercentageId == overtimeUpload.PayPercentageId);
+                    var payRate = payRates.Single(pr => pr.Id == overtimeUpload.PayPercentageId);
 
                     if (existingOvertime != null)
                     {
@@ -162,7 +169,10 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         _db.Overtimes.Add(overtime);
                     }
 
-                    colaHourlyOTValue += GetValue(overtimeUpload.NumberOfHours, employee.COLAHourly);
+                    if (payRate.IncludeCOLA == true)
+                    {
+                        colaHourlyOTValue += GetValue(overtimeUpload.NumberOfHours, employee.COLAHourly);
+                    }
                 }
 
                 var existingDailyTimeRecord = _db.DailyTimeRecords.SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo);
