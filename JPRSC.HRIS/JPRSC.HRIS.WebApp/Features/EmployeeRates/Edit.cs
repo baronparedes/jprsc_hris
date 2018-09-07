@@ -46,7 +46,7 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
                 var employee = await _db.Employees.SingleAsync(r => r.Id == command.Id);
 
                 employee.COLADaily = command.COLADaily;
-                employee.COLAHourly = command.HourlyRate;
+                employee.COLAHourly = command.COLAHourly;
                 employee.DailyRate = command.DailyRate;
                 employee.HourlyRate = command.HourlyRate;
                 employee.ModifiedOn = DateTime.UtcNow;
