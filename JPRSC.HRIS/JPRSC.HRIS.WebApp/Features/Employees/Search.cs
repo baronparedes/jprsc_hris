@@ -70,12 +70,18 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                         .Where(e => DbFunctions.Like(e.FirstName, query.SearchLikeTerm) ||
                             DbFunctions.Like(e.MiddleName, query.SearchLikeTerm) ||
                             DbFunctions.Like(e.LastName, query.SearchLikeTerm) ||
-                            DbFunctions.Like(e.EmployeeCode, query.SearchLikeTerm));
+                            DbFunctions.Like(e.EmployeeCode, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.CompanyIdNumber, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.TIN, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.PhilHealth, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.PagIbig, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.SSS, query.SearchLikeTerm));
                 }
 
                 var employees = await dbQuery
                     .Include(e => e.Company)
-                    .OrderBy(e => e.Id)
+                    .OrderBy(e => e.LastName)
+                    .ThenBy(e => e.FirstName)
                     .PageBy(pageNumber, pageSize)
                     .ProjectToListAsync<QueryResult.Employee>();
 
