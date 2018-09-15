@@ -201,9 +201,12 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
 
             var propertyValueAsString = Convert.ToString(propertyValue);
 
-            if (DateTime.TryParse(propertyValueAsString, out DateTime d))
+            if (property.PropertyType.Name == "DateTime" || (property.PropertyType.Name == "Nullable`1" && Nullable.GetUnderlyingType(property.PropertyType).Name == "DateTime"))
             {
-                propertyValueAsString = String.Format("{0:M/d/yyyy}", d);
+                if (DateTime.TryParse(propertyValueAsString, out DateTime d))
+                {
+                    propertyValueAsString = String.Format("{0:M/d/yyyy}", d);
+                }
             }
 
             return propertyValueAsString;
