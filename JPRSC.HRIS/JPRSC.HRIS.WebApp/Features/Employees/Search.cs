@@ -15,6 +15,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
     {
         public class Query : IRequest<QueryResult>
         {
+            public int? ClientId { get; set; }
             public int? PageNumber { get; set; }
             public int? PageSize { get; set; }
             public string SearchTerm { get; set; }
@@ -33,6 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
         public class QueryResult
         {
             public IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
+            public int TotalResultsCount { get; set; }
 
             public class Employee
             {
@@ -78,6 +80,14 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                             DbFunctions.Like(e.SSS, query.SearchLikeTerm));
                 }
 
+                if (query.ClientId.HasValue)
+                {
+                    dbQuery = dbQuery.Where(e => e.ClientId == query.ClientId);
+                }
+
+                var totalResultsCount = await dbQuery
+                    .CountAsync();
+
                 var employees = await dbQuery
                     .Include(e => e.Company)
                     .OrderBy(e => e.LastName)
@@ -87,7 +97,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
                 return new QueryResult
                 {
-                    Employees = employees
+                    Employees = employees,
+                    TotalResultsCount = totalResultsCount
                 };
             }
         }

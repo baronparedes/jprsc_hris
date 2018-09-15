@@ -7,6 +7,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
     {
         public MappingProfile()
         {
+            CreateMap<Client, Index.QueryResult.Client>();
             CreateMap<Employee, Search.QueryResult.Employee>();
             CreateMap<Employee, Edit.Command>();
         }

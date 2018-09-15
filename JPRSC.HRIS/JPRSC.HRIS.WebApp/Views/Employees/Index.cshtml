@@ -1,4 +1,5 @@
-﻿@{
+﻿@model JPRSC.HRIS.WebApp.Features.Employees.Index.QueryResult
+@{
     ViewBag.Title = "Employees";
 }
 
@@ -26,18 +27,29 @@
                     </div>
                 </div>
             </div>
-        }        
-        <div class="row" ng-controller="EmployeeIndexCtrl as vm">
+        }
+        <div class="row" ng-controller="EmployeeIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
                 <form role="form">
                     <div class="form-body">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
-                                    <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
-                                </span>
-                                <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Search</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                            <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                        </span>
+                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.name for client in vm.clients track by client.id"></select>
+                                </div>
                             </div>
                         </div>
                     </div>
