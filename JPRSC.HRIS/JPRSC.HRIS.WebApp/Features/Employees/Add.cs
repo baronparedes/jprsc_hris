@@ -365,13 +365,22 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 var employeeCodes = await _db
                     .Employees
                     .Where(e => !e.DeletedOn.HasValue && e.EmployeeCode != null)
-                    .Select(e => e.EmployeeCode)
+                    .Select(e => e.EmployeeCode.Trim())
                     .ToListAsync();
 
                 if (!employeeCodes.Any()) return "0001";
 
-                var maxEmployeeCode = employeeCodes
-                    .ConvertAll(Convert.ToInt32)
+                var employeeCodeNumbers = new List<int>(employeeCodes.Count);
+
+                foreach (var employeeCode in employeeCodes.Where(ec => !String.IsNullOrWhiteSpace(ec)))
+                {
+                    if (int.TryParse(employeeCode, out int employeeCodeNumber))
+                    {
+                        employeeCodeNumbers.Add(employeeCodeNumber);
+                    }
+                }
+
+                var maxEmployeeCode = employeeCodeNumbers
                     .Max();
 
                 return (maxEmployeeCode + 1).ToString(maxEmployeeCode + 1 < 1000 ? "D4" : null);
