@@ -131,11 +131,30 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     var lastName = String.IsNullOrWhiteSpace(line[1]) ? null : line[1].Trim();
                     var firstName = String.IsNullOrWhiteSpace(line[2]) ? null : line[2].Trim();
 
-                    var employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim(), employeeCode, StringComparison.CurrentCultureIgnoreCase)); ;
-                    if (employee == null)
+                    Employee employee = null;
+
+                    try
                     {
-                        // Try finding the employee using employee code with trimmed leading zeroes
-                        employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
+                        employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim(), employeeCode, StringComparison.CurrentCultureIgnoreCase)); ;
+                        if (employee == null)
+                        {
+                            // Try finding the employee using employee code with trimmed leading zeroes
+                            employee = allEmployeesOfClient.SingleOrDefault(e => !String.IsNullOrWhiteSpace(e.EmployeeCode) && String.Equals(e.EmployeeCode.Trim().TrimStart('0'), employeeCode.TrimStart('0'), StringComparison.CurrentCultureIgnoreCase));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.Message == "Sequence contains more than one matching element")
+                        {
+                            unprocessedItems.Add(new CommandResult.UnprocessedItem
+                            {
+                                FirstName = firstName,
+                                LastName = lastName,
+                                Reason = $"There is more than one employee found with employee code {employeeCode}."
+                            });
+
+                            continue;
+                        }
                     }
 
                     if (employee == null)
