@@ -34,6 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
         public class QueryResult
         {
             public IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
+            public int LastPageNumber { get; set; }
             public int TotalResultsCount { get; set; }
 
             public class Employee
@@ -95,9 +96,14 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     .PageBy(pageNumber, pageSize)
                     .ProjectToListAsync<QueryResult.Employee>();
 
+                var remainder = totalResultsCount % pageSize;
+                var divisor = totalResultsCount / pageSize;
+                var lastPageNumber = remainder > 0 ? divisor + 1 : divisor;
+
                 return new QueryResult
                 {
                     Employees = employees,
+                    LastPageNumber = lastPageNumber,
                     TotalResultsCount = totalResultsCount
                 };
             }
