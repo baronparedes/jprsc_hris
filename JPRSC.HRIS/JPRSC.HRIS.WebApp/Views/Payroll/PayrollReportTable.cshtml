@@ -108,7 +108,7 @@
                 {
                     if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
                     {
-                        <td>@String.Format("{0:n}", payrollReportItem.Loans.SingleOrDefault(l => l.LoanTypeId == loanType.Id)?.DeductionAmount.GetValueOrDefault().ToString() ?? "0.00")</td>
+                        <td>@String.Format("{0:n}", payrollReportItem.Loans.Where(l => l.LoanTypeId == loanType.Id).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
                     }
                 }
                 <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.NetPayValue)</strong></td>
