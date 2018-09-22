@@ -346,6 +346,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201809050252126_AddMonthlyRateToDTR.Designer.cs">
       <DependentUpon>201809050252126_AddMonthlyRateToDTR.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201809220308241_AddPHICMinMaxDeduction.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201809220308241_AddPHICMinMaxDeduction.Designer.cs">
+      <DependentUpon>201809220308241_AddPHICMinMaxDeduction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -598,6 +602,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201809050252126_AddMonthlyRateToDTR.resx">
       <DependentUpon>201809050252126_AddMonthlyRateToDTR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201809220308241_AddPHICMinMaxDeduction.resx">
+      <DependentUpon>201809220308241_AddPHICMinMaxDeduction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -77,6 +77,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var client = await _db.Clients
                     .SingleAsync(c => c.Id == command.ClientId);
 
+                var phicSettings = await _db.PhicRecords
+                    .SingleOrDefaultAsync();
+
+                if (!phicSettings.Percentage.HasValue) throw new Exception("No PHIC percentage set.");
+                if (!phicSettings.MaximumDeduction.HasValue) throw new Exception("No PHIC maximum deduction set.");
+                if (!phicSettings.MinimumDeduction.HasValue) throw new Exception("No PHIC minimum deduction set.");
+                if (!phicSettings.EmployeePercentageShare.HasValue || !phicSettings.EmployerPercentageShare.HasValue) throw new Exception("No PHIC share percentages set.");
+
                 var clientEmployees = await _db.Employees
                     .Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId && e.DailyRate.HasValue)
                     .ToListAsync();
@@ -181,8 +189,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     if (shouldDeductPHIC)
                     {
                         var phicDeductionBasis = GetPHICDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
-                        payrollRecord.PHICValueEmployee = ComputePHICEmployee(phicDeductionBasis);
-                        payrollRecord.PHICValueEmployer = ComputePHICEmployer(phicDeductionBasis);
+                        payrollRecord.PHICValueEmployee = ComputePHICEmployee(phicDeductionBasis, phicSettings);
+                        payrollRecord.PHICValueEmployer = ComputePHICEmployer(phicDeductionBasis, phicSettings);
                     }
 
                     if (shouldDeductPagIbig) payrollRecord.PagIbigValue = ComputePagIbig(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
@@ -319,8 +327,25 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return matchingRange.Employer;
             }
 
-            private decimal ComputePHICEmployee(decimal deductionBasis) => (decimal)(0.0275 / 2) * deductionBasis;
-            private decimal ComputePHICEmployer(decimal deductionBasis) => (decimal)(0.0275 / 2) * deductionBasis;
+            private decimal ComputePHICEmployee(decimal deductionBasis, PhicRecord phicSettings)
+            {
+                var basePhicDeduction = (decimal)phicSettings.Percentage.Value / 100 * deductionBasis;
+
+                basePhicDeduction = Math.Max(basePhicDeduction, phicSettings.MinimumDeduction.Value);
+                basePhicDeduction = Math.Min(basePhicDeduction, phicSettings.MaximumDeduction.Value);
+
+                return (decimal)phicSettings.EmployeePercentageShare / 100 * basePhicDeduction;
+            }
+                
+            private decimal ComputePHICEmployer(decimal deductionBasis, PhicRecord phicSettings)
+            {
+                var basePhicDeduction = (decimal)phicSettings.Percentage.Value / 100 * deductionBasis;
+
+                basePhicDeduction = Math.Max(basePhicDeduction, phicSettings.MinimumDeduction.Value);
+                basePhicDeduction = Math.Min(basePhicDeduction, phicSettings.MaximumDeduction.Value);
+
+                return (decimal)phicSettings.EmployerPercentageShare / 100 * basePhicDeduction;
+            }
 
             private decimal? ComputePagIbig(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds)
             {
