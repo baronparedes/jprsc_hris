@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -78,11 +79,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
         public class CommandResult
         {
-            public IEnumerable<UnprocessedItem> UnprocessedItems { get; set; } = new List<UnprocessedItem>();
-            public IEnumerable<UnprocessedItem> SkippedItems { get; set; } = new List<UnprocessedItem>();
+            public IEnumerable<EmployeeResult> UnprocessedItems { get; set; } = new List<EmployeeResult>();
+            public IEnumerable<EmployeeResult> SkippedItems { get; set; } = new List<EmployeeResult>();
+            public IEnumerable<EmployeeResult> MissingRates { get; set; } = new List<EmployeeResult>();
             public int ProcessedItemsCount { get; set; }
 
-            public class UnprocessedItem
+            public class EmployeeResult
             {
                 public string FirstName { get; set; }
                 public string LastName { get; set; }
@@ -109,7 +111,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 }
 
                 var now = DateTime.UtcNow;
-                var unprocessedItems = new List<CommandResult.UnprocessedItem>();
+                var unprocessedItems = new List<CommandResult.EmployeeResult>();
                 var allPayRates = await _db.PayPercentages.AsNoTracking().ToListAsync();
                 var client = await _db.Clients.SingleOrDefaultAsync(c => !c.DeletedOn.HasValue && c.Id == command.ClientId);
                 var allEmployeesOfClient = await _db.Employees.AsNoTracking().Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
@@ -122,8 +124,10 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var columnToPayPercentageMap = await GetColumnToPayPercentageMap(csvData.Item1);
                 var processedItemsCount = 0;
 
-                var skippedItems = new List<CommandResult.UnprocessedItem>();
-                skippedItems.AddRange(allEmployeesOfClient.Where(e => String.IsNullOrWhiteSpace(e.EmployeeCode)).Select(e => new CommandResult.UnprocessedItem { FirstName = e.FirstName, LastName = e.LastName, Reason = "No employee code" }));
+                var skippedItems = new List<CommandResult.EmployeeResult>();
+                skippedItems.AddRange(allEmployeesOfClient.Where(e => String.IsNullOrWhiteSpace(e.EmployeeCode)).Select(e => new CommandResult.EmployeeResult { FirstName = e.FirstName, LastName = e.LastName, Reason = "No employee code" }));
+
+                var missingRates = new List<CommandResult.EmployeeResult>();
 
                 var emptyEmployeeCode = csvData.Item2.Count(r => String.IsNullOrWhiteSpace(r[0]));
 
@@ -147,7 +151,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     }
                     catch
                     {
-                        unprocessedItems.Add(new CommandResult.UnprocessedItem
+                        unprocessedItems.Add(new CommandResult.EmployeeResult
                         {
                             FirstName = firstName,
                             LastName = lastName,
@@ -172,7 +176,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     {
                         if (ex.Message == "Sequence contains more than one matching element")
                         {
-                            unprocessedItems.Add(new CommandResult.UnprocessedItem
+                            unprocessedItems.Add(new CommandResult.EmployeeResult
                             {
                                 FirstName = firstName,
                                 LastName = lastName,
@@ -182,10 +186,10 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             continue;
                         }
                     }
-                    
+
                     if (employee == null)
                     {
-                        unprocessedItems.Add(new CommandResult.UnprocessedItem
+                        unprocessedItems.Add(new CommandResult.EmployeeResult
                         {
                             FirstName = firstName,
                             LastName = lastName,
@@ -196,6 +200,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     }
 
                     if (unprocessedItems.Any()) continue;
+
+                    var missingRate = ConstructMissingRate(employee, client);
+                    if (missingRate != null)
+                    {
+                        missingRates.Add(missingRate);
+                    }
 
                     processedItemsCount += 1;
 
@@ -215,7 +225,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         }
                         catch
                         {
-                            unprocessedItems.Add(new CommandResult.UnprocessedItem
+                            unprocessedItems.Add(new CommandResult.EmployeeResult
                             {
                                 FirstName = firstName,
                                 LastName = lastName,
@@ -292,7 +302,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         existingDailyTimeRecord.COLAHourlyOTValue = colaHourlyOTValue;
                         existingDailyTimeRecord.DailyRate = employee.DailyRate;
                         existingDailyTimeRecord.DaysWorked = daysOrMonthsWorked;
-                        existingDailyTimeRecord.DaysWorkedValue =  (decimal?)daysOrMonthsWorked * (client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate);
+                        existingDailyTimeRecord.DaysWorkedValue = (decimal?)daysOrMonthsWorked * (client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate);
                         existingDailyTimeRecord.HourlyRate = employee.HourlyRate;
                         existingDailyTimeRecord.HoursLate = minutesLate / 60;
                         existingDailyTimeRecord.HoursLateValue = (decimal?)(minutesLate / 60) * employee.HourlyRate;
@@ -339,7 +349,35 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 {
                     UnprocessedItems = unprocessedItems,
                     ProcessedItemsCount = unprocessedItems.Any() ? 0 : processedItemsCount,
-                    SkippedItems = skippedItems
+                    SkippedItems = skippedItems,
+                    MissingRates = missingRates
+                };
+            }
+
+            private CommandResult.EmployeeResult ConstructMissingRate(Employee employee, Client client)
+            {
+                var missingRates = new List<string>();
+
+                if (client.PayrollCode == PayrollCode.Monthly)
+                {
+                    if (!employee.MonthlyRate.HasValue || employee.MonthlyRate <= 0) missingRates.Add("Monthly Rate");
+                }
+                else
+                {
+                    if (!employee.DailyRate.HasValue || employee.DailyRate <= 0) missingRates.Add("Daily Rate");
+                }
+
+                if (!employee.HourlyRate.HasValue || employee.HourlyRate <= 0) missingRates.Add("Hourly Rate");
+                if (!employee.COLADaily.HasValue || employee.COLADaily <= 0) missingRates.Add("COLA Daily");
+                if (!employee.COLAHourly.HasValue || employee.COLAHourly <= 0) missingRates.Add("COLA Hourly");
+
+                if (!missingRates.Any()) return null;
+
+                return new CommandResult.EmployeeResult
+                {
+                    FirstName = employee.FirstName,
+                    LastName = employee.LastName,
+                    Reason = $"{employee.EmployeeCode}: {String.Join(", ", missingRates)}"
                 };
             }
 

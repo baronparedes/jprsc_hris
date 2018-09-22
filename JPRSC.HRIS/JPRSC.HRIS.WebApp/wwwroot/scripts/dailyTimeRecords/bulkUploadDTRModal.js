@@ -39,19 +39,34 @@
                             vm.unprocessedItems = data.unprocessedItems;
 
                             if (!vm.unprocessedItems.length) {
-                                var successMessage = `Successfully processed ${data.processedItemsCount} employee record/s.`
+                                var successMessage = `Successfully processed ${data.processedItemsCount} employee record/s.`;
 
                                 if (data.skippedItems && data.skippedItems.length) {
                                     var skipMessage = ' Skipping employees with no employee code: ';
                                     for (var i = 0; i < data.skippedItems.length; i++) {
-                                        skipMessage += data.skippedItems[i].lastName + ', ' + data.skippedItems[i].firstName;
+                                        var currentSkippedItem = data.skippedItems[i];
+                                        skipMessage += `${currentSkippedItem.lastName}, ${currentSkippedItem.firstName}`;
 
                                         if (i < data.skippedItems.length - 1) {
                                             skipMessage += '; ';
                                         }
                                     }
 
-                                    successMessage += ' ' + skipMessage;
+                                    successMessage += ` ${skipMessage}`;
+                                }
+
+                                if (data.missingRates && data.missingRates.length) {
+                                    var missingRateMessage = '\nSome employees have missing rates:\n';
+                                    for (var j = 0; j < data.missingRates.length; j++) {
+                                        var currentMissingRate = data.missingRates[j];
+                                        missingRateMessage += `${currentMissingRate.reason}`;
+
+                                        if (j < data.missingRates.length - 1) {
+                                            missingRateMessage += '\n';
+                                        }
+                                    }
+
+                                    successMessage += `\n${missingRateMessage}`;
                                 }
 
                                 alert(successMessage);
