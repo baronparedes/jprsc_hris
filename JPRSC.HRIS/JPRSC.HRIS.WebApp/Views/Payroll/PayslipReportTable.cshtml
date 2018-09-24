@@ -91,6 +91,18 @@
                         </td>
                         <td>&nbsp;</td>
                     </tr>
+
+                    @foreach (var overtime in payslipRecord.Overtimes)
+                    {
+                        <tr>
+                            <td>@overtime.PayPercentageName.ToString()</td>
+                            <td>@overtime.NumberOfHoursValue.GetValueOrDefault()</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    }
+
                     <tr>
                         <td></td>
                         <td></td>
