@@ -3,12 +3,10 @@ using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Features.PhicRecords
 {
@@ -23,6 +21,8 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
         {
             public double? EmployeePercentageShare { get; set; }
             public int Id { get; set; }
+            public decimal? MaximumDeduction { get; set; }
+            public decimal? MinimumDeduction { get; set; }
             public double? Percentage { get; set; }
         }
 
@@ -49,7 +49,14 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
         {
             public CommandValidator()
             {
+                RuleFor(c => c.Percentage)
+                    .NotEmpty();
 
+                RuleFor(c => c.MaximumDeduction)
+                    .NotEmpty();
+
+                RuleFor(c => c.MinimumDeduction)
+                    .NotEmpty();
             }
         }
 
@@ -67,6 +74,8 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
                 var phicRecord = await _db.PhicRecords.SingleAsync(r => r.Id == command.Id);
 
                 phicRecord.EmployeePercentageShare = command.EmployeePercentageShare;
+                phicRecord.MaximumDeduction = command.MaximumDeduction;
+                phicRecord.MinimumDeduction = command.MinimumDeduction;
                 phicRecord.ModifiedOn = DateTime.UtcNow;
                 phicRecord.Percentage = command.Percentage;
 
