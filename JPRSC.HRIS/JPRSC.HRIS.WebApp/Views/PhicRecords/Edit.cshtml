@@ -46,6 +46,8 @@
                                         <p class="form-control-static" ng-bind="100 - vm.phicRecord.employeePercentageShare"></p>
                                     </div>
                                 </div>
+                                @Html.TextBoxHorizontalFormGroup("MinimumDeduction")
+                                @Html.TextBoxHorizontalFormGroup("MaximumDeduction")
                             </div>
                             <div class="form-actions right">
                                 <button type="submit" class="btn green">Save</button>
