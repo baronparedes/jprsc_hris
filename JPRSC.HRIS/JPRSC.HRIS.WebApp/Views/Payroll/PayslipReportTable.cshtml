@@ -7,18 +7,21 @@
             <table class="table table-bordered table-condensed">
                 <tbody>
                     <tr>
-                        <td colspan="5" style="text-align: center;"><h4>Job Placement Resources Cooperative</h4></td>
+                        <td colspan="6" style="text-align: center;"><h4>Job Placement Resources Cooperative</h4></td>
                     </tr>
                     <tr>
-                        <td colspan="5">Payroll period from @Model.Item1.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.Item1.PayrollProcessBatchResult.PayrollPeriodToFormatted</td>
+                        <td colspan="6">Payroll period from @Model.Item1.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.Item1.PayrollProcessBatchResult.PayrollPeriodToFormatted</td>
                     </tr>
                     <tr>
                         <td colspan="2">Name: @String.Format("{0}, {1} {2} ({3})", payslipRecord.PayrollRecord.Employee.LastName, payslipRecord.PayrollRecord.Employee.FirstName, payslipRecord.PayrollRecord.Employee.MiddleName, payslipRecord.PayrollRecord.Employee.EmployeeCode)</td>
-                        <td colspan="3">Department: @String.Format("{0}", payslipRecord.PayrollRecord.Employee.Department?.Name)</td>
+                        <td>@String.Format("Daily Rate: P{0:n}", payslipRecord.PayrollRecord.Employee.DailyRate.GetValueOrDefault())</td>
+                        <td>@String.Format("Hourly Rate: P{0:n}", payslipRecord.PayrollRecord.Employee.HourlyRate.GetValueOrDefault())</td>
+                        <td colspan="2">Department: @String.Format("{0}", payslipRecord.PayrollRecord.Employee.Department?.Name)</td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
                         <td>Earnings</td>
+                        <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>Deductions</td>
                         <td>&nbsp;</td>
@@ -26,6 +29,7 @@
                     <tr>
                         <td style="text-align: right;">Basic pay:</td>
                         <td>@String.Format("P{0:n}", payslipRecord.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + payslipRecord.PayrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
+                        <td style="text-align: left;">@String.Format("{0:n} days/(months) and {1:n} hours", payslipRecord.DailyTimeRecord.DaysWorked.GetValueOrDefault(), payslipRecord.DailyTimeRecord.HoursWorked.GetValueOrDefault())</td>
                         <td style="text-align: right;">
                             @if (Model.Item1.PayrollProcessBatchResult.DeductedSSS == true)
                             {
@@ -35,7 +39,7 @@
                         <td>
                             @if (Model.Item1.PayrollProcessBatchResult.DeductedSSS == true)
                             {
-                                @String.Format("P{0:n}", payslipRecord.PayrollRecord.SSSValueEmployee.GetValueOrDefault())
+                                @String.Format("(P{0:n})", payslipRecord.PayrollRecord.SSSValueEmployee.GetValueOrDefault())
                             }
                         </td>
                         <td>&nbsp;</td>
@@ -43,6 +47,7 @@
                     <tr>
                         <td style="text-align: right;">Overtime:</td>
                         <td>@String.Format("P{0:n}", payslipRecord.PayrollRecord.OvertimeValue.GetValueOrDefault())</td>
+                        <td>&nbsp;</td>
                         <td style="text-align: right;">
                             @if (Model.Item1.PayrollProcessBatchResult.DeductedPagIbig == true)
                             {
@@ -52,14 +57,28 @@
                         <td>
                             @if (Model.Item1.PayrollProcessBatchResult.DeductedPagIbig == true)
                             {
-                                @String.Format("P{0:n}", payslipRecord.PayrollRecord.PagIbigValue.GetValueOrDefault())
+                                @String.Format("(P{0:n})", payslipRecord.PayrollRecord.PagIbigValue.GetValueOrDefault())
                             }
                         </td>
                         <td>&nbsp;</td>
                     </tr>
+
+                    @foreach (var overtime in payslipRecord.Overtimes)
+                    {
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>@String.Format("{0} - P{1:n}", overtime.PayPercentageName.ToString(), overtime.NumberOfHoursValue.GetValueOrDefault())</td>
+                            <td>@String.Format("{0:n} hours", overtime.NumberOfHours.GetValueOrDefault())</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    }
+
                     <tr>
                         <td style="text-align: right;">COLA:</td>
                         <td>@String.Format("P{0:n}", payslipRecord.PayrollRecord.COLADailyValue.GetValueOrDefault() + payslipRecord.PayrollRecord.COLAHourlyValue.GetValueOrDefault())</td>
+                        <td>&nbsp;</td>
                         <td style="text-align: right;">
                             @if (Model.Item1.PayrollProcessBatchResult.DeductedPHIC == true)
                             {
@@ -69,7 +88,7 @@
                         <td>
                             @if (Model.Item1.PayrollProcessBatchResult.DeductedPHIC == true)
                             {
-                                @String.Format("P{0:n}", payslipRecord.PayrollRecord.PHICValueEmployee.GetValueOrDefault())
+                                @String.Format("(P{0:n})", payslipRecord.PayrollRecord.PHICValueEmployee.GetValueOrDefault())
                             }
                         </td>
                         <td>&nbsp;</td>
@@ -77,6 +96,7 @@
                     <tr>
                         <td style="text-align: right;">Other earnings:</td>
                         <td>@String.Format("P{0:n}", payslipRecord.PayrollRecord.EarningsValue.GetValueOrDefault())</td>
+                        <td>&nbsp;</td>
                         <td style="text-align: right;">
                             @if (Model.Item1.PayrollProcessBatchResult.DeductedTax == true)
                             {
@@ -86,19 +106,52 @@
                         <td>
                             @if (Model.Item1.PayrollProcessBatchResult.DeductedTax == true)
                             {
-                                @String.Format("P{0:n}", payslipRecord.PayrollRecord.TaxValue.GetValueOrDefault())
+                                @String.Format("(P{0:n})", payslipRecord.PayrollRecord.TaxValue.GetValueOrDefault())
                             }
                         </td>
                         <td>&nbsp;</td>
                     </tr>
 
-                    @foreach (var overtime in payslipRecord.Overtimes)
+                    @foreach (var earnings in payslipRecord.EarningDeductionRecords)
+                    {
+                        if (earnings.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings)
+                        {
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>@String.Format("{0} - P{1:n}", earnings.EarningDeduction.Code.ToString(), earnings.Amount.GetValueOrDefault())</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        }
+                    }
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>&nbsp;</td>
+                        <td style="text-align: right;">UT / Tardy:</td>
+                        <td>@String.Format("(P{0:n})", payslipRecord.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + payslipRecord.PayrollRecord.HoursLateValue.GetValueOrDefault())</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>&nbsp;</td>
+                        <td style="text-align: right;">Loan payment:</td>
+                        <td>@String.Format("(P{0:n})", payslipRecord.PayrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    @foreach (var loan in payslipRecord.Loans)
                     {
                         <tr>
-                            <td>@overtime.PayPercentageName.ToString()</td>
-                            <td>@overtime.NumberOfHoursValue.GetValueOrDefault()</td>
+                            <td>&nbsp;</td>
+                            <td></td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
+                            <td>@String.Format("{0} - (P{1:n})", loan.LoanType.Description, loan.DeductionAmount.GetValueOrDefault())</td>
                             <td>&nbsp;</td>
                         </tr>
                     }
@@ -106,29 +159,17 @@
                     <tr>
                         <td></td>
                         <td></td>
-                        <td style="text-align: right;">UT / Tardy:</td>
-                        <td>@String.Format("P{0:n}", payslipRecord.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + payslipRecord.PayrollRecord.HoursLateValue.GetValueOrDefault())</td>
                         <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td style="text-align: right;">Loan payment:</td>
-                        <td>@String.Format("P{0:n}", payslipRecord.PayrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
                         <td style="text-align: right;">Other deductions:</td>
-                        <td>@String.Format("P{0:n}", payslipRecord.PayrollRecord.DeductionsValue.GetValueOrDefault())</td>
+                        <td>@String.Format("(P{0:n})", payslipRecord.PayrollRecord.DeductionsValue.GetValueOrDefault())</td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td style="text-align: right;">Total Earnings:</td>
                         <td>@String.Format("P{0:n}", payslipRecord.PayrollRecord.TotalEarningsValue)</td>
+                        <td>&nbsp;</td>
                         <td style="text-align: right;">Total Deductions:</td>
-                        <td>@String.Format("P{0:n}", payslipRecord.PayrollRecord.TotalDeductionsValue)</td>
+                        <td>@String.Format("(P{0:n})", payslipRecord.PayrollRecord.TotalDeductionsValue)</td>
                         <td>
                             <span style="float: left">NET PAY:</span>
                             <span style="float: right">@String.Format("P{0:n}", payslipRecord.PayrollRecord.NetPayValue)</span>
