@@ -13,5 +13,9 @@ namespace JPRSC.HRIS.Models
         public decimal? MinimumDeduction { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public double? Percentage { get; set; }
+
+        public decimal PercentageForComputation => !Percentage.HasValue ? default(decimal) : (decimal)(Percentage.Value) / 100;
+        public decimal EmployeePercentageShareForComputation => !EmployeePercentageShare.HasValue ? default(decimal) : (decimal)(EmployeePercentageShare.Value) / 100;
+        public decimal EmployerPercentageShareForComputation => !EmployerPercentageShare.HasValue ? default(decimal) : (decimal)(EmployerPercentageShare.Value) / 100;
     }
 }

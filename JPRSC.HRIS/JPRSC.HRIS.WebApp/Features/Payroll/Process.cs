@@ -329,22 +329,18 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
             private decimal ComputePHICEmployee(decimal deductionBasis, PhicRecord phicSettings)
             {
-                var basePhicDeduction = (decimal)phicSettings.Percentage.Value / 100 * deductionBasis;
+                deductionBasis = Math.Max(deductionBasis, phicSettings.MinimumDeduction.Value);
+                deductionBasis = Math.Min(deductionBasis, phicSettings.MaximumDeduction.Value);
 
-                basePhicDeduction = Math.Max(basePhicDeduction, phicSettings.MinimumDeduction.Value);
-                basePhicDeduction = Math.Min(basePhicDeduction, phicSettings.MaximumDeduction.Value);
-
-                return (decimal)phicSettings.EmployeePercentageShare / 100 * basePhicDeduction;
+                return phicSettings.PercentageForComputation * phicSettings.EmployeePercentageShareForComputation * deductionBasis;
             }
                 
             private decimal ComputePHICEmployer(decimal deductionBasis, PhicRecord phicSettings)
             {
-                var basePhicDeduction = (decimal)phicSettings.Percentage.Value / 100 * deductionBasis;
+                deductionBasis = Math.Max(deductionBasis, phicSettings.MinimumDeduction.Value);
+                deductionBasis = Math.Min(deductionBasis, phicSettings.MaximumDeduction.Value);
 
-                basePhicDeduction = Math.Max(basePhicDeduction, phicSettings.MinimumDeduction.Value);
-                basePhicDeduction = Math.Min(basePhicDeduction, phicSettings.MaximumDeduction.Value);
-
-                return (decimal)phicSettings.EmployerPercentageShare / 100 * basePhicDeduction;
+                return phicSettings.PercentageForComputation * phicSettings.EmployerPercentageShareForComputation * deductionBasis;
             }
 
             private decimal? ComputePagIbig(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds)
