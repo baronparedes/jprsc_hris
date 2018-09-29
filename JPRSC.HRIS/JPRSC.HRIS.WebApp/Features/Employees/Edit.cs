@@ -256,6 +256,13 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                         .Must(BeUniquePagIbig)
                         .WithMessage("PagIbig {PropertyValue} is already taken.");
                 });
+
+                When(c => !String.IsNullOrWhiteSpace(c.ATMAccountNumber) && c.ATMAccountNumber != "0", () =>
+                {
+                    RuleFor(c => c.ATMAccountNumber)
+                        .Must(BeUniqueATMAccountNumber)
+                        .WithMessage("ATM Account Number {PropertyValue} is already taken.");
+                });
             }
 
             private bool BeUniquePagIbig(Command command, string pagIbig)
@@ -281,6 +288,11 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             private bool BeUniqueCompanyIdNumber(Command command, string companyIdNumber)
             {
                 return !_db.Employees.Any(e => e.Id != command.Id && e.CompanyIdNumber == companyIdNumber);
+            }
+
+            private bool BeUniqueATMAccountNumber(Command command, string atmAccountNumber)
+            {
+                return !_db.Employees.Any(e => e.Id != command.Id && e.ATMAccountNumber == atmAccountNumber);
             }
         }
 

@@ -8,6 +8,7 @@
         vm.addEmployeeSubmit = addEmployeeSubmit;
         vm.addInProgress = false;
         vm.datepickerOptions = globalSettings.datepickerOptions;
+        vm.hasValidationErrors = false;
         vm.lookups = lookups;
         vm.validationErrors = {};
 
@@ -17,6 +18,7 @@
 
         function addEmployeeSubmit(e) {
             vm.addInProgress = true;
+            vm.hasValidationErrors = false;
 
             var action = '/Employees/Add';
             var data = $(angular.element(e.target)[0]).serialize();
@@ -27,6 +29,7 @@
             }, function (response) {
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
+                    vm.hasValidationErrors = true;
                 }
 
                 vm.addInProgress = false;

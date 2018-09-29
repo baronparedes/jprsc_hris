@@ -4,7 +4,7 @@
     ViewBag.Title = "Add a Employee";
 }
 
-<div class="page-content-wrapper">
+<div class="page-content-wrapper" ng-controller="AddEmployeeCtrl as vm">
     <div class="page-content">
         <div class="page-bar">
             <ul class="page-breadcrumb">
@@ -18,6 +18,10 @@
         <h1 class="page-title">
             Add Employee
         </h1>
+        <div ng-show="vm.hasValidationErrors" class="alert alert-danger alert-disimissable ng-hide">
+            Unable to add employee. Please go through the tabs to check the specific error/s.
+            <button type="button" data-dismiss="alert" aria-hidden="true" class="close"></button>
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 <div class="portlet light bordered">
@@ -27,7 +31,7 @@
                             <span class="caption-subject font-red-sunglo bold uppercase">Add Employee</span>
                         </div>
                     </div>
-                    <div class="portlet-body form" ng-controller="AddEmployeeCtrl as vm">
+                    <div class="portlet-body form">
                         <form class="form-horizontal" role="form" method="post" ng-submit="vm.addEmployeeSubmit($event)">
                             @Html.AntiForgeryToken()
                             <div class="form-body">
