@@ -42,37 +42,45 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var dateFormatted = $"{DateTime.Now:MM/dd/yyyy}";
-                var existingForProcessingBatch = await _db
+                var existingForProcessingBatchCount = await _db
                     .ForProcessingBatches
-                    .SingleOrDefaultAsync(fpb => fpb.ClientId == command.ClientId && fpb.DateFormatted == dateFormatted);
+                    .CountAsync(fpb => fpb.ClientId == command.ClientId && fpb.DateFormatted == dateFormatted);
+
+                var client = await _db.Clients.SingleOrDefaultAsync(c => !c.DeletedOn.HasValue && c.Id == command.ClientId);
+                var batchName = GetBatchName(dateFormatted, client, existingForProcessingBatchCount);
 
                 var now = DateTime.UtcNow;
-
-                if (existingForProcessingBatch != null)
+                
+                var forProcessingBatch = new ForProcessingBatch
                 {
-                    existingForProcessingBatch.EmployeeIds = command.EmployeeIds;
-                    existingForProcessingBatch.ModifiedOn = now;
-                    existingForProcessingBatch.ProcessedOn = now;
-                }
-                else
-                {
-                    var client = await _db.Clients.SingleOrDefaultAsync(c => !c.DeletedOn.HasValue && c.Id == command.ClientId);
-
-                    var forProcessingBatch = new ForProcessingBatch
-                    {
-                        AddedOn = now,
-                        ClientId = command.ClientId,
-                        DateFormatted = dateFormatted,
-                        EmployeeIds = command.EmployeeIds,
-                        Name = $"{dateFormatted} {client.Name}",
-                        ProcessedOn = now
-                    };
-                    _db.ForProcessingBatches.Add(forProcessingBatch);
-                }
+                    AddedOn = now,
+                    ClientId = command.ClientId,
+                    DateFormatted = dateFormatted,
+                    EmployeeIds = command.EmployeeIds,
+                    Name = batchName,
+                    ProcessedOn = now
+                };
+                _db.ForProcessingBatches.Add(forProcessingBatch);
 
                 await _db.SaveChangesAsync();
 
                 return Unit.Value;
+            }
+
+            private string GetBatchName(string dateFormatted, Client client, int existingForProcessingBatchCount)
+            {
+                string name = null;
+
+                if (existingForProcessingBatchCount == 0)
+                {
+                    name = $"{dateFormatted} {client.Name}";
+                }
+                else
+                {
+                    name = $"{dateFormatted} {client.Name} - {existingForProcessingBatchCount}";
+                }
+
+                return name;
             }
         }
     }
