@@ -193,7 +193,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         payrollRecord.PHICValueEmployer = ComputePHICEmployer(phicDeductionBasis, phicSettings);
                     }
 
-                    if (shouldDeductPagIbig) payrollRecord.PagIbigValue = ComputePagIbig(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
+                    if (shouldDeductPagIbig)
+                    {
+                        var pagIbigDeductionBasis = GetPagIbigDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
+                        payrollRecord.PagIbigValue = ComputePagIbig(pagIbigDeductionBasis);
+                    }
+
                     if (shouldDeductTax) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
 
                     payrollProcessBatch.PayrollRecords.Add(payrollRecord);
@@ -291,6 +296,20 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return deductionBasis;
             }
 
+            private decimal GetPagIbigDeductionBasis(Employee employee, Client client, List<DailyTimeRecord> dailyTimeRecordsForPreviousPayrollProcessBatches, IEnumerable<DailyTimeRecord> employeeDtrsForPayrollPeriod, List<Overtime> overtimesForPreviousPayrollProcessBatches, List<Overtime> overtimesForPayrollPeriod, List<EarningDeductionRecord> earningDeductionRecordsForPreviousPayrollProcessBatches, IEnumerable<EarningDeductionRecord> employeeEdrsForPayrollPeriod)
+            {
+                var deductionBasis = 0m;
+
+                if (client.PagIbigBasic == true) deductionBasis += dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.DaysWorkedValue.GetValueOrDefault() + dtr.HoursWorkedValue.GetValueOrDefault()) + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.DaysWorkedValue.GetValueOrDefault() + dtr.HoursWorkedValue.GetValueOrDefault());
+                if (client.PagIbigCola == true) deductionBasis += dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.COLADailyValue.GetValueOrDefault() + dtr.COLAHourlyValue.GetValueOrDefault() + dtr.COLAHourlyOTValue.GetValueOrDefault()) + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLADailyValue.GetValueOrDefault() + dtr.COLAHourlyValue.GetValueOrDefault() + dtr.COLAHourlyOTValue.GetValueOrDefault());
+                if (client.PagIbigOvertime == true) deductionBasis += overtimesForPreviousPayrollProcessBatches.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()) + overtimesForPayrollPeriod.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault());
+                if (client.PagIbigEarnings == true) deductionBasis += earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount.GetValueOrDefault()) + employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount.GetValueOrDefault());
+                if (client.PagIbigDeductions == true) deductionBasis -= earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount.GetValueOrDefault()) + employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount.GetValueOrDefault());
+                if (client.PagIbigUndertime == true) deductionBasis -= dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.HoursLateValue.GetValueOrDefault() + dtr.HoursUndertimeValue.GetValueOrDefault()) + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursLateValue.GetValueOrDefault() + dtr.HoursUndertimeValue.GetValueOrDefault());
+
+                return deductionBasis;
+            }
+
             private decimal? ComputeSSSEmployee(decimal deductionBasis, IEnumerable<SSSRecord> sssRecords)
             {
                 SSSRecord matchingRange = null;
@@ -343,9 +362,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return phicSettings.PercentageForComputation * phicSettings.EmployerPercentageShareForComputation * deductionBasis;
             }
 
-            private decimal? ComputePagIbig(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds)
+            private decimal ComputePagIbig(decimal deductionBasis)
             {
-                return 100;
+                return deductionBasis < 5000 ?
+                    0.02m * deductionBasis :
+                    100;
             }
 
             private decimal? ComputeTax(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds)
