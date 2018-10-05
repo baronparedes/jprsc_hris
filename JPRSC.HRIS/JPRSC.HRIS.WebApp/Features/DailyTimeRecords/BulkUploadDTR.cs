@@ -274,7 +274,14 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                         if (payPercentage.IncludeCOLA == true)
                         {
-                            colaHourlyOTValue += (decimal?)hours * employee.COLAHourly;
+                            var multiplier =
+                                payPercentage.Percentage >= 200 && payPercentage.Percentage < 300 ? 2 :
+                                payPercentage.Percentage >= 300 && payPercentage.Percentage < 400 ? 3 :
+                                payPercentage.Percentage >= 400 && payPercentage.Percentage < 500 ? 4 :
+                                payPercentage.Percentage >= 500 && payPercentage.Percentage < 600 ? 5 :
+                                1;
+
+                            colaHourlyOTValue += (decimal?)hours * employee.COLAHourly * multiplier;
                         }
                     }
 
