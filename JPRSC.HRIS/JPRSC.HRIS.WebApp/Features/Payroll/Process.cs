@@ -179,27 +179,27 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         earningDeductionRecordsForPreviousPayrollProcessBatches = await GetEarningDeductionRecordsForPreviousPayrollProcessBatches(employee, previousPayrollProcessBatchesInMonth);
                     }
 
-                    if (shouldDeductSSS)
+                    if (shouldDeductSSS && employee.SSSExempt != true)
                     {
                         var sssDeductionBasis = GetSSSDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                         payrollRecord.SSSValueEmployee = ComputeSSSEmployee(sssDeductionBasis, sssRecords);
                         payrollRecord.SSSValueEmployer = ComputeSSSEmployer(sssDeductionBasis, sssRecords);
                     }
 
-                    if (shouldDeductPHIC)
+                    if (shouldDeductPHIC && employee.PhilHealthExempt != true)
                     {
                         var phicDeductionBasis = GetPHICDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                         payrollRecord.PHICValueEmployee = ComputePHICEmployee(phicDeductionBasis, phicSettings);
                         payrollRecord.PHICValueEmployer = ComputePHICEmployer(phicDeductionBasis, phicSettings);
                     }
 
-                    if (shouldDeductPagIbig)
+                    if (shouldDeductPagIbig && employee.PagIbigExempt != true)
                     {
                         var pagIbigDeductionBasis = GetPagIbigDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                         payrollRecord.PagIbigValue = ComputePagIbig(pagIbigDeductionBasis);
                     }
 
-                    if (shouldDeductTax) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
+                    if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
 
                     payrollProcessBatch.PayrollRecords.Add(payrollRecord);
                 }

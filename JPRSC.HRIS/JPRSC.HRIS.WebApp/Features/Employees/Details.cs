@@ -64,6 +64,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public decimal? MonthlyRate { get; set; }
             public decimal? COLAHourly { get; set; }
             public decimal? COLADaily { get; set; }
+            public decimal? COLAMonthly { get; set; }
+            public bool? SSSExempt { get; set; }
             public bool? TaxExempt { get; set; }
             public bool? PagIbigExempt { get; set; }
             public bool? ThirteenthMonthExempt { get; set; }

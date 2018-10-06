@@ -354,6 +354,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201810060313281_AddCOLAMonthly.Designer.cs">
       <DependentUpon>201810060313281_AddCOLAMonthly.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201810060327222_AddSSSExempt.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201810060327222_AddSSSExempt.Designer.cs">
+      <DependentUpon>201810060327222_AddSSSExempt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -612,6 +616,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201810060313281_AddCOLAMonthly.resx">
       <DependentUpon>201810060313281_AddCOLAMonthly.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201810060327222_AddSSSExempt.resx">
+      <DependentUpon>201810060327222_AddSSSExempt.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

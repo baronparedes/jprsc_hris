@@ -53,6 +53,7 @@ namespace JPRSC.HRIS.Models
         public string ResignStatus { get; set; }
         public string SalaryStatus { get; set; }
         public string SSS { get; set; }
+        public bool? SSSExempt { get; set; }
         public bool? TaxExempt { get; set; }
         public TaxStatus TaxStatus { get; set; }
         public int? TaxStatusId { get; set; }

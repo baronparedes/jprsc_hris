@@ -79,6 +79,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public decimal? COLADaily { get; set; }
             public decimal? COLAMonthly { get; set; }
             public decimal? MonthlyRate { get; set; }
+            public bool? SSSExempt { get; set; }
             public bool? TaxExempt { get; set; }
             public bool? PagIbigExempt { get; set; }
             public bool? ThirteenthMonthExempt { get; set; }
@@ -342,6 +343,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     ResignStatus = command.ResignStatus,
                     SalaryStatus = command.SalaryStatus,
                     SSS = command.SSS,
+                    SSSExempt = command.SSSExempt,
                     SubmittedBarangayClearance = command.SubmittedBarangayClearance.GetValueOrDefault(),
                     SubmittedBirthCertificate = command.SubmittedBirthCertificate.GetValueOrDefault(),
                     SubmittedBirthCertificateOfChildren = command.SubmittedBirthCertificateOfChildren.GetValueOrDefault(),
