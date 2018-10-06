@@ -16,6 +16,7 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
         {
             public decimal? COLADaily { get; set; }
             public decimal? COLAHourly { get; set; }
+            public decimal? COLAMonthly { get; set; }
             public decimal? DailyRate { get; set; }
             public string EmployeeCode { get; set; }
             public string FirstName { get; set; }
@@ -45,8 +46,9 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
             {
                 var employee = await _db.Employees.SingleAsync(r => r.Id == command.Id);
 
-                employee.COLADaily = command.COLADaily;
-                employee.COLAHourly = command.COLAHourly;
+                employee.COLADaily = command.COLADaily.GetValueOrDefault();
+                employee.COLAHourly = command.COLAHourly.GetValueOrDefault();
+                employee.COLAMonthly = command.COLAMonthly.GetValueOrDefault();
                 employee.DailyRate = command.DailyRate;
                 employee.HourlyRate = command.HourlyRate;
                 employee.ModifiedOn = DateTime.UtcNow;

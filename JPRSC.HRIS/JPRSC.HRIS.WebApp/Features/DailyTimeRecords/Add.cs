@@ -181,6 +181,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     existingDailyTimeRecord.COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily);
                     existingDailyTimeRecord.COLAHourlyValue = GetValue(command.HoursWorked, employee.COLAHourly);
                     existingDailyTimeRecord.COLAHourlyOTValue = colaHourlyOTValue;
+                    existingDailyTimeRecord.COLAMonthlyValue = client.PayrollCode == PayrollCode.Monthly ? GetValue(command.DaysWorked, employee.COLAMonthly) : null;
                     existingDailyTimeRecord.DailyRate = employee.DailyRate;
                     existingDailyTimeRecord.DaysWorked = command.DaysWorked;
                     existingDailyTimeRecord.DaysWorkedValue = GetValue(command.DaysWorked, client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate);
@@ -202,6 +203,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily),
                         COLAHourlyValue = GetValue(command.HoursWorked, employee.COLAHourly),
                         COLAHourlyOTValue = colaHourlyOTValue,
+                        COLAMonthlyValue = client.PayrollCode == PayrollCode.Monthly ? GetValue(command.DaysWorked, employee.COLAMonthly) : null,
                         DailyRate = employee.DailyRate,
                         DaysWorked = command.DaysWorked,
                         DaysWorkedValue = GetValue(command.DaysWorked, client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate),

@@ -78,7 +78,7 @@
                 <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.HoursLateValue.GetValueOrDefault())</td>
                 <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.HoursUndertime.GetValueOrDefault() * 60)</td>
                 <td>@String.Format("{0:n}", payrollReportItem.DailyTimeRecord.HoursLate.GetValueOrDefault() * 60)</td>
-                <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.COLADailyValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.COLAHourlyValue.GetValueOrDefault())</td>
+                <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.COLADailyValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.COLAHourlyValue.GetValueOrDefault() + payrollReportItem.PayrollRecord.COLAMonthlyValue.GetValueOrDefault())</td>
                 <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.EarningsValue.GetValueOrDefault())</td>
                 <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalEarningsValue)</strong></td>
                 <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.DeductionsValue.GetValueOrDefault())</td>
@@ -133,7 +133,7 @@
             <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault()))</td>
             <td>@String.Empty</td>
             <td>@String.Empty</td>
-            <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault()))</td>
+            <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault() + p.COLAMonthlyValue.GetValueOrDefault()))</td>
             <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
             <td><strong>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.TotalEarningsValue))</strong></td>
             <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.DeductionsValue.GetValueOrDefault()))</td>

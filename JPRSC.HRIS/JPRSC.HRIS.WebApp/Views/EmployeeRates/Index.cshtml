@@ -68,6 +68,7 @@
                                         <th>Monthly Rate</th>
                                         <th>COLA Hourly</th>
                                         <th>COLA Daily</th>
+                                        <th>COLA Monthly</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -95,6 +96,10 @@
                                         <td>
                                             <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaDaily | number:2}}</span>
                                             <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaDaily" />
+                                        </td>
+                                        <td>
+                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaMonthly | number:2}}</span>
+                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaMonthly" />
                                         </td>
                                         <td>
                                             <a ng-show="!employee.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.editEmployeeRateClicked(employee)">Edit</a>

@@ -46,6 +46,7 @@
                 employee.monthlyRate = employee.copy.monthlyRate;
                 employee.colaHourly = employee.copy.colaHourly;
                 employee.colaDaily = employee.copy.colaDaily;
+                employee.colaMonthly = employee.copy.colaMonthly;
                 employee.isEditing = false;
             }, function (response) {
                 if (response.status == 400) {

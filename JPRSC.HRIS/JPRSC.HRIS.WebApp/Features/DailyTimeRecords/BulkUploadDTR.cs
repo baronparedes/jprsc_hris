@@ -307,6 +307,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         existingDailyTimeRecord.COLADailyValue = (decimal?)daysOrMonthsWorked * employee.COLADaily;
                         existingDailyTimeRecord.COLAHourlyValue = (decimal?)hoursWorked * employee.COLAHourly;
                         existingDailyTimeRecord.COLAHourlyOTValue = colaHourlyOTValue;
+                        existingDailyTimeRecord.COLAMonthlyValue = client.PayrollCode == PayrollCode.Monthly ? (decimal?)daysOrMonthsWorked * employee.COLAMonthly : null;
                         existingDailyTimeRecord.DailyRate = employee.DailyRate;
                         existingDailyTimeRecord.DaysWorked = daysOrMonthsWorked;
                         existingDailyTimeRecord.DaysWorkedValue = (decimal?)daysOrMonthsWorked * (client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate);
@@ -328,6 +329,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             COLADailyValue = (decimal?)daysOrMonthsWorked * employee.COLADaily,
                             COLAHourlyValue = (decimal?)hoursWorked * employee.COLAHourly,
                             COLAHourlyOTValue = colaHourlyOTValue,
+                            COLAMonthlyValue = client.PayrollCode == PayrollCode.Monthly ? (decimal?)daysOrMonthsWorked * employee.COLAMonthly : null,
                             DailyRate = employee.DailyRate,
                             DaysWorked = daysOrMonthsWorked,
                             DaysWorkedValue = (decimal?)daysOrMonthsWorked * (client.PayrollCode == PayrollCode.Monthly ? employee.MonthlyRate : employee.DailyRate),
@@ -377,6 +379,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 if (!employee.HourlyRate.HasValue || employee.HourlyRate <= 0) missingRates.Add("Hourly Rate");
                 if (!employee.COLADaily.HasValue || employee.COLADaily <= 0) missingRates.Add("COLA Daily");
                 if (!employee.COLAHourly.HasValue || employee.COLAHourly <= 0) missingRates.Add("COLA Hourly");
+                if (client.PayrollCode == PayrollCode.Monthly && !employee.COLAMonthly.HasValue) missingRates.Add("COLA Monthly");
 
                 if (!missingRates.Any()) return null;
 

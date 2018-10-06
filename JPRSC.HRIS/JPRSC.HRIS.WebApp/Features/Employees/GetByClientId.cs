@@ -26,6 +26,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             {
                 public decimal? COLADaily { get; set; }
                 public decimal? COLAHourly { get; set; }
+                public decimal? COLAMonthly { get; set; }
                 public string CompanyName { get; set; }
                 public decimal? DailyRate { get; set; }
                 public string EmployeeCode { get; set; }

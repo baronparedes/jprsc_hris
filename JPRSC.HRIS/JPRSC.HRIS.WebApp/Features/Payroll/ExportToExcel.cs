@@ -227,7 +227,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.HoursUndertimeValue.GetValueOrDefault() + p.HoursLateValue.GetValueOrDefault())));
                     totals.Add(String.Empty);
                     totals.Add(String.Empty);
-                    totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault())));
+                    totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.COLADailyValue.GetValueOrDefault() + p.COLAHourlyValue.GetValueOrDefault() + p.COLAMonthlyValue.GetValueOrDefault())));
                     totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.EarningsValue.GetValueOrDefault())));
                     totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalEarningsValue)));
                     totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.DeductionsValue.GetValueOrDefault())));
@@ -393,7 +393,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("UT/Tardy", "UT/Tardy", p => String.Format("{0:n}", p.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + p.PayrollRecord.HoursLateValue.GetValueOrDefault())));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Undertime Minutes", "UndertimeMinutes", p => String.Format("{0:n}", p.DailyTimeRecord.HoursUndertime.GetValueOrDefault() * 60)));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Tardiness Minutes", "TardinessMinutes", p => String.Format("{0:n}", p.DailyTimeRecord.HoursLate.GetValueOrDefault() * 60)));
-                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("COLA", "COLA", p => String.Format("{0:n}", p.PayrollRecord.COLADailyValue.GetValueOrDefault() + p.PayrollRecord.COLAHourlyValue.GetValueOrDefault())));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("COLA", "COLA", p => String.Format("{0:n}", p.PayrollRecord.COLADailyValue.GetValueOrDefault() + p.PayrollRecord.COLAHourlyValue.GetValueOrDefault() + p.PayrollRecord.COLAMonthlyValue.GetValueOrDefault())));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Earnings", "Earnings", p => String.Format("{0:n}", p.PayrollRecord.EarningsValue.GetValueOrDefault())));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Total Earnings", "TotalEarnings", p => String.Format("{0:n}", p.PayrollRecord.TotalEarningsValue)));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Deductions", "Deductions", p => String.Format("{0:n}", p.PayrollRecord.DeductionsValue.GetValueOrDefault())));
@@ -455,7 +455,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Department", "Department", p => String.Format("{0}", p.PayrollRecord.Employee.Department?.Name)),
                     new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Basic pay", "BasicPay", p => String.Format("P{0:n}", p.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + p.PayrollRecord.HoursWorkedValue.GetValueOrDefault())),
                     new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Overtime", "Overtime", p => String.Format("P{0:n}", p.PayrollRecord.OvertimeValue.GetValueOrDefault())),
-                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("COLA", "COLA", p => String.Format("P{0:n}", p.PayrollRecord.COLADailyValue.GetValueOrDefault() + p.PayrollRecord.COLAHourlyValue.GetValueOrDefault())),
+                    new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("COLA", "COLA", p => String.Format("P{0:n}", p.PayrollRecord.COLADailyValue.GetValueOrDefault() + p.PayrollRecord.COLAHourlyValue.GetValueOrDefault() + p.PayrollRecord.COLAMonthlyValue.GetValueOrDefault())),
                     new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("OtherEarnings", "OtherEarnings", p => String.Format("P{0:n}", p.PayrollRecord.EarningsValue.GetValueOrDefault())),
                     new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("TotalEarnings", "TotalEarnings", p => String.Format("P{0:n}", p.PayrollRecord.TotalEarningsValue))
                 };

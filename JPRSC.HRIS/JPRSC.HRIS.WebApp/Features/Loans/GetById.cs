@@ -33,6 +33,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 public Client Client { get; set; }
                 public decimal? COLADaily { get; set; }
                 public decimal? COLAHourly { get; set; }
+                public decimal? COLAMonthly { get; set; }
                 public decimal? DailyRate { get; set; }
                 public string EmployeeCode { get; set; }
                 public string FirstName { get; set; }

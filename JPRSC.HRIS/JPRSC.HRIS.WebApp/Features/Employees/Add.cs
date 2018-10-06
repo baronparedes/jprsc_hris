@@ -77,6 +77,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public decimal? DailyRate { get; set; }
             public decimal? COLAHourly { get; set; }
             public decimal? COLADaily { get; set; }
+            public decimal? COLAMonthly { get; set; }
             public decimal? MonthlyRate { get; set; }
             public bool? TaxExempt { get; set; }
             public bool? PagIbigExempt { get; set; }
@@ -310,6 +311,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     ClientId = command.ClientId,
                     COLADaily = command.COLADaily.GetValueOrDefault(),
                     COLAHourly = command.COLAHourly.GetValueOrDefault(),
+                    COLAMonthly = command.COLAMonthly.GetValueOrDefault(),
                     CompanyId = currentUser.Company?.Id,
                     CompanyIdNumber = command.CompanyIdNumber,
                     DailyRate = command.DailyRate.GetValueOrDefault(),

@@ -350,6 +350,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201809220308241_AddPHICMinMaxDeduction.Designer.cs">
       <DependentUpon>201809220308241_AddPHICMinMaxDeduction.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201810060313281_AddCOLAMonthly.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201810060313281_AddCOLAMonthly.Designer.cs">
+      <DependentUpon>201810060313281_AddCOLAMonthly.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -605,6 +609,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201809220308241_AddPHICMinMaxDeduction.resx">
       <DependentUpon>201809220308241_AddPHICMinMaxDeduction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201810060313281_AddCOLAMonthly.resx">
+      <DependentUpon>201810060313281_AddCOLAMonthly.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
