@@ -211,9 +211,6 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
             public CommandValidator()
             {
-                RuleFor(c => c.EmployeeCode)
-                    .MustBeANumber();
-
                 RuleFor(c => c.FirstName)
                     .NotEmpty();
 
@@ -327,7 +324,6 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.DateResigned = command.DateResigned;
                 employee.DepartmentId = command.DepartmentId;
                 employee.Email = command.Email;
-                employee.EmployeeCode = command.EmployeeCode;
                 employee.EmployeeStatus = command.EmployeeStatus;
                 employee.FirstName = command.FirstName;
                 employee.Gender = command.Gender;
