@@ -463,6 +463,13 @@
     <Compile Include="Features\SSSRecords\Search.cs" />
     <Compile Include="Features\SSSRecords\_Controller.cs" />
     <Compile Include="Features\SSSRecords\_MappingProfile.cs" />
+    <Compile Include="Features\SystemSettings\Add.cs" />
+    <Compile Include="Features\SystemSettings\Delete.cs" />
+    <Compile Include="Features\SystemSettings\Edit.cs" />
+    <Compile Include="Features\SystemSettings\Index.cs" />
+    <Compile Include="Features\SystemSettings\Search.cs" />
+    <Compile Include="Features\SystemSettings\_Controller.cs" />
+    <Compile Include="Features\SystemSettings\_MappingProfile.cs" />
     <Compile Include="Features\TaxStatuses\Add.cs" />
     <Compile Include="Features\TaxStatuses\Delete.cs" />
     <Compile Include="Features\TaxStatuses\Edit.cs" />
@@ -6063,6 +6070,9 @@
     <Content Include="wwwroot\scripts\sssRecords\add.js" />
     <Content Include="wwwroot\scripts\sssRecords\edit.js" />
     <Content Include="wwwroot\scripts\sssRecords\index.js" />
+    <Content Include="wwwroot\scripts\systemSettings\add.js" />
+    <Content Include="wwwroot\scripts\systemSettings\edit.js" />
+    <Content Include="wwwroot\scripts\systemSettings\index.js" />
     <Content Include="wwwroot\scripts\taxStatuses\add.js" />
     <Content Include="wwwroot\scripts\taxStatuses\edit.js" />
     <Content Include="wwwroot\scripts\taxStatuses\index.js" />
@@ -7066,6 +7076,9 @@
     <Content Include="Views\Payroll\ForProcessingQueue.cshtml" />
     <Content Include="Views\Payroll\PayrollReportTable.cshtml" />
     <Content Include="Views\Payroll\PayslipReportTable.cshtml" />
+    <Content Include="Views\SystemSettings\Add.cshtml" />
+    <Content Include="Views\SystemSettings\Edit.cshtml" />
+    <Content Include="Views\SystemSettings\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

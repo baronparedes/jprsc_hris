@@ -358,6 +358,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201810060327222_AddSSSExempt.Designer.cs">
       <DependentUpon>201810060327222_AddSSSExempt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201810060444363_AddSystemSettings.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201810060444363_AddSystemSettings.Designer.cs">
+      <DependentUpon>201810060444363_AddSystemSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -417,6 +421,7 @@
     <Compile Include="Models\ResignStatus.cs" />
     <Compile Include="Models\SalaryStatus.cs" />
     <Compile Include="Models\SSSRecord.cs" />
+    <Compile Include="Models\SystemSettings.cs" />
     <Compile Include="Models\TaxRange.cs" />
     <Compile Include="Models\TaxStatus.cs" />
     <Compile Include="Models\TaxTable.cs" />
@@ -619,6 +624,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201810060327222_AddSSSExempt.resx">
       <DependentUpon>201810060327222_AddSSSExempt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201810060444363_AddSystemSettings.resx">
+      <DependentUpon>201810060444363_AddSystemSettings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

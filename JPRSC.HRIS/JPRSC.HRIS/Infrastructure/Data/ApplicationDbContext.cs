@@ -34,6 +34,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<PhicRecord> PhicRecords { get; set; }
         public DbSet<Religion> Religions { get; set; }
         public DbSet<SSSRecord> SSSRecords { get; set; }
+        public DbSet<SystemSettings> SystemSettings { get; set; }
         public DbSet<TaxRange> TaxRanges { get; set; }
         public DbSet<TaxStatus> TaxStatuses { get; set; }
 

@@ -148,6 +148,10 @@ namespace JPRSC.HRIS.Models
 
         // Audit trail
         [Display(Name = "Audit Trails")]
-        AuditTrailDefault = 2600
+        AuditTrailDefault = 2600,
+
+        // System settings
+        [Display(Name = "System Settings")]
+        SystemSettingsDefault = 2700
     }
 }

@@ -1,0 +1,51 @@
+﻿@model JPRSC.HRIS.WebApp.Features.SystemSettings.Edit.Command
+
+@{
+    ViewBag.Title = "Edit System Settings";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Edit System Settings</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Edit System Settings
+        </h1>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-gear font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Edit System Settings</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form" ng-controller="EditSystemSettingsCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
+                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.editSystemSettingsSubmit($event)">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="form-body">
+                                @*@Html.TextBoxHorizontalFormGroup("MinimumNetPay")*@
+                            </div>
+                            <div class="form-actions right">
+                                <button type="submit" class="btn green">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/systemSettings")
+}
