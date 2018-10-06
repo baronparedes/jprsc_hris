@@ -134,14 +134,13 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     DeductedPHIC = shouldDeductPHIC,
                     DeductedSSS = shouldDeductSSS,
                     DeductedTax = shouldDeductTax,
-                    PayrollPeriodMonth = client.PayrollPeriodMonth,
                     PayrollPeriod = command.PayrollPeriod,
                     PayrollPeriodFrom = command.PayrollPeriodFrom,
                     PayrollPeriodTo = command.PayrollPeriodTo
                 };
 
                 var previousPayrollProcessBatchesInMonth = await _db.PayrollProcessBatches
-                    .Where(ppb => ppb.ClientId == client.Id && ppb.PayrollPeriodMonth == client.PayrollPeriodMonth && ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year && ppb.PayrollPeriod < command.PayrollPeriod)
+                    .Where(ppb => ppb.ClientId == client.Id && ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year && ppb.PayrollPeriod < command.PayrollPeriod)
                     .ToListAsync();
 
                 foreach (var employee in clientEmployees)

@@ -39,6 +39,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public PayrollCode? PayrollCode { get; set; }
                 public DateTime? PayrollPeriodFrom { get; set; }
                 public Month? PayrollPeriodMonth { get; set; }
+                public string PayrollPeriodMonthString => PayrollPeriodMonth?.ToString();
                 public DateTime? PayrollPeriodTo { get; set; }
                 public TaxTable? TaxTable { get; set; }
                 public bool? ZeroBasic { get; set; }
@@ -51,6 +52,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public int? NextPayrollPeriod => CurrentPayrollPeriod == NumberOfPayrollPeriodsAMonth ? 1 : CurrentPayrollPeriod += 1;
                 public DateTime? NextPayrollPeriodFrom => PayrollPeriodFrom.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value);
                 public DateTime? NextPayrollPeriodTo => PayrollPeriodTo.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value);
+                public Month? NextPayrollPeriodMonth => !PayrollPeriodMonth.HasValue ? (Month?)null : (int)PayrollPeriodMonth == 120 ? (Month)10 : (Month)((int)PayrollPeriodMonth.Value + 10);
             }
 
             public class PayrollProcessBatch
@@ -183,6 +185,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         {
             public int? PayrollProcessBatchId { get; set; }
             public int? PayrollPeriod { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
             public DateTime? PayrollPeriodFrom { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
         }
@@ -197,12 +200,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 RuleFor(c => c.PayrollPeriod)
                     .NotEmpty();
 
+                RuleFor(c => c.PayrollPeriodMonth)
+                    .NotEmpty();
+
                 RuleFor(c => c.PayrollPeriodFrom)
                     .NotEmpty();
 
                 RuleFor(c => c.PayrollPeriodTo)
                     .NotEmpty();
-
             }
         }
 
@@ -229,12 +234,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 payrollProcessBatch.EndProcessedOn = now;
                 payrollProcessBatch.ModifiedOn = now;
+                payrollProcessBatch.PayrollPeriodMonth = command.PayrollPeriodMonth;
 
                 var client = await _db
                     .Clients
                     .SingleOrDefaultAsync(c => c.Id == payrollProcessBatch.ClientId && !c.DeletedOn.HasValue);
 
                 client.CurrentPayrollPeriod = command.PayrollPeriod;
+                client.PayrollPeriodMonth = command.PayrollPeriodMonth;
                 client.PayrollPeriodFrom = command.PayrollPeriodFrom;
                 client.PayrollPeriodTo = command.PayrollPeriodTo;
                 client.ModifiedOn = now;

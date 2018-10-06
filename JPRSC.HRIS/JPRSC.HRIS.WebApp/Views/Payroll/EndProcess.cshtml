@@ -119,6 +119,12 @@
                                             <p class="form-control-static">{{vm.client.payrollPeriodTo | date: 'mediumDate'}}</p>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Payroll Period Month</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <p class="form-control-static">{{vm.client.payrollPeriodMonthString}}</p>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -144,6 +150,25 @@
                                                    uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                                    is-open="vm.nextPayrollPeriodToIsOpen" ng-click="vm.nextPayrollPeriodToIsOpen = true">
                                             <input type="hidden" name="PayrollPeriodTo" value="{{vm.client.nextPayrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-7 col-lg-6 control-label">Next Payroll Period Month</label>
+                                        <div class="col-md-5 col-lg-6">
+                                            <select class="form-control" name="PayrollPeriodMonth" ng-model="vm.client.nextPayrollPeriodMonth">
+                                                <option value="@((int)Month.January)">@Month.January.ToString()</option>
+                                                <option value="@((int)Month.February)">@Month.February.ToString()</option>
+                                                <option value="@((int)Month.March)">@Month.March.ToString()</option>
+                                                <option value="@((int)Month.April)">@Month.April.ToString()</option>
+                                                <option value="@((int)Month.May)">@Month.May.ToString()</option>
+                                                <option value="@((int)Month.June)">@Month.June.ToString()</option>
+                                                <option value="@((int)Month.July)">@Month.July.ToString()</option>
+                                                <option value="@((int)Month.August)">@Month.August.ToString()</option>
+                                                <option value="@((int)Month.September)">@Month.September.ToString()</option>
+                                                <option value="@((int)Month.October)">@Month.October.ToString()</option>
+                                                <option value="@((int)Month.November)">@Month.November.ToString()</option>
+                                                <option value="@((int)Month.December)">@Month.December.ToString()</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
