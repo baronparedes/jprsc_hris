@@ -436,6 +436,7 @@
     <Compile Include="Features\Payroll\ForProcessing.cs" />
     <Compile Include="Features\Payroll\Index.cs" />
     <Compile Include="Features\Payroll\BankReport.cs" />
+    <Compile Include="Features\Payroll\NetPayHelper.cs" />
     <Compile Include="Features\Payroll\PayslipReport.cs" />
     <Compile Include="Features\Payroll\Process.cs" />
     <Compile Include="Features\Payroll\PayrollReport.cs" />

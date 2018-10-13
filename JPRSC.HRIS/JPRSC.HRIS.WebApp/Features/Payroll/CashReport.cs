@@ -70,7 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 public decimal TotalEarningsValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAHourlyOTValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
                 public decimal TotalDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
-                public decimal NetPayValue => TotalEarningsValue - TotalDeductionsValue;
+                public decimal NetPayValue { get; set; }
             }
 
             public class Employee
@@ -181,6 +181,13 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .OrderBy(pr => pr.Employee.LastName)
                     .ThenBy(pr => pr.Employee.FirstName)
                     .ProjectToListAsync<QueryResult.PayrollRecord>();
+
+                var systemSettings = await _db.SystemSettings.SingleAsync();
+
+                foreach (var payrollRecord in payrollRecords)
+                {
+                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings.MinimumNetPay.Value, payrollRecord.TotalEarningsValue, payrollRecord.TotalDeductionsValue, payrollRecord.LoanPaymentValue.GetValueOrDefault());
+                }
 
                 return new QueryResult
                 {

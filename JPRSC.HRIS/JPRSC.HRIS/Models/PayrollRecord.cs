@@ -38,6 +38,7 @@ namespace JPRSC.HRIS.Models
 
         public decimal TotalEarningsValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAMonthlyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
         public decimal TotalDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
-        public decimal NetPayValue => TotalEarningsValue - TotalDeductionsValue;
+        //public decimal NetPayValue => TotalEarningsValue - TotalDeductionsValue;
+        public decimal NetPayValue { get; set; }
     }
 }
