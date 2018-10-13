@@ -152,6 +152,10 @@ namespace JPRSC.HRIS.Models
 
         // System settings
         [Display(Name = "System Settings")]
-        SystemSettingsDefault = 2700
+        SystemSettingsDefault = 2700,
+
+        // Reports
+        [Display(Name = "Reports Module")]
+        ReportsModuleDefault = 2800
     }
 }

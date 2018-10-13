@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Reports";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>Reports</li>
+            </ul>
+        </div>
+        <h1 class="page-title">
+            Reports
+        </h1>
+        @Html.RenderSuccessNotification()
+        <div class="row" ng-controller="ReportIndexCtrl as vm">
+            <div class="col-sm-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-red-sunglo">
+                            <i class="fa fa-file-o font-red-sunglo"></i>
+                            <span class="caption-subject font-red-sunglo bold uppercase">Reports</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Report</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>PHIC</td>
+                                        <td>
+                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateReport('PHIC')">Generate</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>SSS</td>
+                                        <td>
+                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateReport('SSS')">Generate</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/scriptbundles/reports")
+}

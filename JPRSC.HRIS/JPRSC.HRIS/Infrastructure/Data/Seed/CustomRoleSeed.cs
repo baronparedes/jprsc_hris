@@ -60,7 +60,8 @@ namespace JPRSC.HRIS.Infrastructure.Data.Seed
                 Permission.EarningDeductionRecordDefault,
                 Permission.ReportsDefault,
                 Permission.AuditTrailDefault,
-                Permission.SystemSettingsDefault
+                Permission.SystemSettingsDefault,
+                Permission.ReportsModuleDefault
             });
 
             var defaultRole = new CustomRole

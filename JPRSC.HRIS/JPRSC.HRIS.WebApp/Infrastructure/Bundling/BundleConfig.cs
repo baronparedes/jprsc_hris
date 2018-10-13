@@ -29,6 +29,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
             AddPayrollBundles(bundles);
             AddPhicRecordBundles(bundles);
             AddReligionBundles(bundles);
+            AddReportBundles(bundles);
             AddSSSRecordBundles(bundles);
             AddSystemSettingsBundles(bundles);
             AddTaxStatusBundles(bundles);
@@ -256,6 +257,12 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/religions/add.js",
                 "~/wwwroot/scripts/religions/edit.js",
                 "~/wwwroot/scripts/religions/index.js");
+        }
+
+        private static void AddReportBundles(BundleCollection bundles)
+        {
+            bundles.AddScriptBundle("~/scriptbundles/reports",
+                "~/wwwroot/scripts/reports/index.js");
         }
 
         private static void AddSSSRecordBundles(BundleCollection bundles)
