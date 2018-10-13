@@ -36,8 +36,8 @@ namespace JPRSC.HRIS.Models
 
 
 
-        public decimal BasicPayValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAMonthlyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
-        public decimal TotalEarningsValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAMonthlyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
+        public decimal BasicPayValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault();
+        public decimal TotalEarningsValue => BasicPayValue + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAMonthlyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
         public decimal TotalGovDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + TaxValue.GetValueOrDefault();
         public decimal TotalDeductionsValue => TotalGovDeductionsValue + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
         public decimal NetPayValue { get; set; }

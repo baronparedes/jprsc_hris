@@ -68,8 +68,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 public decimal? LoanPaymentValue { get; set; }
 
-                public decimal BasicPayValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAHourlyOTValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
-                public decimal TotalEarningsValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAHourlyOTValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
+                public decimal BasicPayValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault();
+                public decimal TotalEarningsValue => BasicPayValue + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAHourlyOTValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
                 public decimal TotalGovDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + TaxValue.GetValueOrDefault();
                 public decimal TotalDeductionsValue => TotalGovDeductionsValue + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
                 public decimal NetPayValue { get; set; }
