@@ -2,7 +2,6 @@
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
-using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading;
@@ -20,6 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
         public class Command : IRequest
         {
             public int Id { get; set; }
+            public decimal? MinimumDeductionOfContribution { get; set; }
             public decimal? MinimumNetPay { get; set; }
         }
 
@@ -42,10 +42,15 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
                 {
                     command = new Command
                     {
+                        MinimumDeductionOfContribution = 1000,
                         MinimumNetPay = 2000
                     };
                 }
-                else if (!command.MinimumNetPay.HasValue) command.MinimumNetPay = 2000;
+                else
+                {
+                    if (!command.MinimumDeductionOfContribution.HasValue) command.MinimumDeductionOfContribution = 1000;
+                    if (!command.MinimumNetPay.HasValue) command.MinimumNetPay = 2000;
+                }
 
                 return command;
             }
@@ -74,12 +79,14 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
                 var systemSettings = await _db.SystemSettings.SingleOrDefaultAsync(r => r.Id == command.Id);
                 if (systemSettings != null)
                 {
+                    systemSettings.MinimumDeductionOfContribution = command.MinimumDeductionOfContribution;
                     systemSettings.MinimumNetPay = command.MinimumNetPay;
                 }
                 else
                 {
                     _db.SystemSettings.Add(new Models.SystemSettings
                     {
+                        MinimumDeductionOfContribution = command.MinimumDeductionOfContribution,
                         MinimumNetPay = command.MinimumNetPay
                     });
                 }

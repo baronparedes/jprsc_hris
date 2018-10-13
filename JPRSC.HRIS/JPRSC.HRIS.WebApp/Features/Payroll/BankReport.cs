@@ -68,8 +68,10 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 public decimal? LoanPaymentValue { get; set; }
 
+                public decimal BasicPayValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAHourlyOTValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
                 public decimal TotalEarningsValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault() + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAHourlyOTValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
-                public decimal TotalDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
+                public decimal TotalGovDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + TaxValue.GetValueOrDefault();
+                public decimal TotalDeductionsValue => TotalGovDeductionsValue + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
                 public decimal NetPayValue { get; set; }
             }
 
@@ -188,7 +190,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 foreach (var payrollRecord in payrollRecords)
                 {
-                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings.MinimumNetPay.Value, payrollRecord.TotalEarningsValue, payrollRecord.TotalDeductionsValue, payrollRecord.LoanPaymentValue.GetValueOrDefault());
+                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault());
                 }
 
                 return new QueryResult

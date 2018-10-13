@@ -106,6 +106,7 @@
     <Compile Include="Infrastructure\Data\ApplicationDbContext.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CompanyProfileConfiguration.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CustomRoleConfiguration.cs" />
+    <Compile Include="Infrastructure\Data\EntityConfiguration\PayrollRecordConfiguration.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201712190413596_Initial.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201712190413596_Initial.Designer.cs">
       <DependentUpon>201712190413596_Initial.cs</DependentUpon>
@@ -361,6 +362,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201810060444363_AddSystemSettings.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201810060444363_AddSystemSettings.Designer.cs">
       <DependentUpon>201810060444363_AddSystemSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201810130240597_AddMinimumDeductionOfContribution.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201810130240597_AddMinimumDeductionOfContribution.Designer.cs">
+      <DependentUpon>201810130240597_AddMinimumDeductionOfContribution.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
@@ -627,6 +632,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201810060444363_AddSystemSettings.resx">
       <DependentUpon>201810060444363_AddSystemSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201810130240597_AddMinimumDeductionOfContribution.resx">
+      <DependentUpon>201810130240597_AddMinimumDeductionOfContribution.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

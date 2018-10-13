@@ -105,7 +105,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 foreach (var payrollRecord in payrollRecords)
                 {
-                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings.MinimumNetPay.GetValueOrDefault(), payrollRecord.TotalEarningsValue, payrollRecord.TotalDeductionsValue, payrollRecord.LoanPaymentValue.GetValueOrDefault());
+                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault());
 
                     var payrollReportItem = new QueryResult.PayrollReportItem();
                     payrollReportItem.PayrollRecord = payrollRecord;

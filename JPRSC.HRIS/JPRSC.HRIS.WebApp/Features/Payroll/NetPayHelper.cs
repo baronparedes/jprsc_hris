@@ -2,13 +2,17 @@
 {
     public class NetPayHelper
     {
-        public static decimal GetNetPay(decimal minimumNetPay, decimal totalEarnings, decimal totalDeductions, decimal deductionsFromLoans)
+        public static decimal GetNetPay(Models.SystemSettings systemSettings, decimal basicPay, decimal totalEarnings, decimal totalGovDeductions, decimal deductionsFromDeductions, decimal deductionsFromLoans)
         {
+            var totalDeductions = basicPay >= systemSettings.MinimumDeductionOfContribution.Value ?
+                totalGovDeductions + deductionsFromDeductions + deductionsFromLoans :
+                deductionsFromDeductions + deductionsFromLoans;
+
             var netPay = totalEarnings - totalDeductions;
-            if (totalDeductions <= 0 || netPay >= minimumNetPay) return netPay;
+            if (totalDeductions <= 0 || netPay >= systemSettings.MinimumNetPay.Value) return netPay;
 
             var netPayWithoutLoans = totalEarnings - (totalDeductions - deductionsFromLoans);
-            if (netPayWithoutLoans >= minimumNetPay) return netPayWithoutLoans;
+            if (netPayWithoutLoans >= systemSettings.MinimumNetPay.Value) return netPayWithoutLoans;
 
             var netPayWithoutAnyDeduction = totalEarnings;
             return netPayWithoutAnyDeduction;
