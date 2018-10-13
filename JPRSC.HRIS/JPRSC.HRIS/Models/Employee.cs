@@ -42,6 +42,8 @@ namespace JPRSC.HRIS.Models
         public decimal? MonthlyRate { get; set; }
         public string Nickname { get; set; }
         public ICollection<Overtime> Overtimes { get; set; } = new List<Overtime>();
+        public PagIbigRecord PagIbigRecord { get; set; }
+        public int? PagIbigRecordId { get; set; }
         public string PagIbig { get; set; }
         public bool? PagIbigExempt { get; set; }
         public string PhilHealth { get; set; }

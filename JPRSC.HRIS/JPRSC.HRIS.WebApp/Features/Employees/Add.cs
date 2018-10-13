@@ -29,6 +29,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> JobTitlesList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> PagIbigRecordsList { get; set; } = new List<SelectListItem>();
 
             // Employee Info
             public string CompanyIdNumber { get; set; }
@@ -73,6 +74,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public AccountType? AccountType { get; set; }
             public TaxStatus TaxStatus { get; set; }
             public int? TaxStatusId { get; set; }
+            public PagIbigRecord PagIbigRecord { get; set; }
+            public int? PagIbigRecordId { get; set; }
             public decimal? HourlyRate { get; set; }
             public decimal? DailyRate { get; set; }
             public decimal? COLAHourly { get; set; }
@@ -122,6 +125,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 command.DepartmentsList = await GetDepartmentsList();
                 command.TaxStatusesList = await GetTaxStatusesList();
                 command.JobTitlesList = await GetJobTitlesList();
+                command.PagIbigRecordsList = await GetPagIbigRecordsList();
 
                 return command;
             }
@@ -183,10 +187,23 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 var jobTitles = await _db.JobTitles.Where(d => !d.DeletedOn.HasValue).ToListAsync();
 
                 return jobTitles
-                    .Select(d => new SelectListItem
+                    .Select(j => new SelectListItem
                     {
-                        Text = d.Name,
-                        Value = d.Id.ToString()
+                        Text = j.Name,
+                        Value = j.Id.ToString()
+                    })
+                    .ToList();
+            }
+
+            private async Task<IList<SelectListItem>> GetPagIbigRecordsList()
+            {
+                var pagIbigRecords = await _db.PagIbigRecords.Where(d => !d.DeletedOn.HasValue).ToListAsync();
+
+                return pagIbigRecords
+                    .Select(p => new SelectListItem
+                    {
+                        Text = p.Code,
+                        Value = p.Id.ToString()
                     })
                     .ToList();
             }
@@ -334,6 +351,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     Nickname = command.Nickname,
                     PagIbig = command.PagIbig,
                     PagIbigExempt = command.PagIbigExempt,
+                    PagIbigRecordId = command.PagIbigRecordId,
                     PermanentAddress = command.PermanentAddress,
                     PhilHealth = command.PhilHealth,
                     PhilHealthExempt = command.PhilHealthExempt,

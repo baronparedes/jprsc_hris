@@ -29,6 +29,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public IList<SelectListItem> DepartmentsList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> TaxStatusesList { get; set; } = new List<SelectListItem>();
             public IList<SelectListItem> JobTitlesList { get; set; } = new List<SelectListItem>();
+            public IList<SelectListItem> PagIbigRecordsList { get; set; } = new List<SelectListItem>();
 
             public string EmployeeCode { get; set; }
             public string CompanyIdNumber { get; set; }
@@ -76,6 +77,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public AccountType? AccountType { get; set; }
             public TaxStatus TaxStatus { get; set; }
             public int? TaxStatusId { get; set; }
+            public PagIbigRecord PagIbigRecord { get; set; }
+            public int? PagIbigRecordId { get; set; }
             public decimal? HourlyRate { get; set; }
             public decimal? DailyRate { get; set; }
             public decimal? COLAHourly { get; set; }
@@ -119,19 +122,20 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 var command = await _db.Employees.Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
 
-                command.ReligionsList = await GetReligionsList(query);
-                command.ClientsList = await GetClientsList(query);
-                command.DepartmentsList = await GetDepartmentsList(query);
-                command.TaxStatusesList = await GetTaxStatusesList(query);
-                command.JobTitlesList = await GetJobTitlesList(query);
+                command.ReligionsList = await GetReligionsList(query, employee);
+                command.ClientsList = await GetClientsList(query, employee);
+                command.DepartmentsList = await GetDepartmentsList(query, employee);
+                command.TaxStatusesList = await GetTaxStatusesList(query, employee);
+                command.JobTitlesList = await GetJobTitlesList(query, employee);
+                command.PagIbigRecordsList = await GetPagIbigRecordsList(query, employee);
 
                 return command;
             }
 
-            private async Task<IList<SelectListItem>> GetReligionsList(Query query)
+            private async Task<IList<SelectListItem>> GetReligionsList(Query query, Employee employee)
             {
-                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
                 var religions = await _db.Religions.Where(r => !r.DeletedOn.HasValue).ToListAsync();
 
                 return religions
@@ -144,9 +148,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     .ToList();
             }
 
-            private async Task<IList<SelectListItem>> GetClientsList(Query query)
+            private async Task<IList<SelectListItem>> GetClientsList(Query query, Employee employee)
             {
-                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
                 var clients = await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync();
 
                 return clients
@@ -159,9 +162,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     .ToList();
             }
 
-            private async Task<IList<SelectListItem>> GetDepartmentsList(Query query)
+            private async Task<IList<SelectListItem>> GetDepartmentsList(Query query, Employee employee)
             {
-                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
                 var departments = await _db.Departments.Where(d => !d.DeletedOn.HasValue).ToListAsync();
 
                 return departments
@@ -174,9 +176,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     .ToList();
             }
 
-            private async Task<IList<SelectListItem>> GetTaxStatusesList(Query query)
+            private async Task<IList<SelectListItem>> GetTaxStatusesList(Query query, Employee employee)
             {
-                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
                 var taxStatuses = await _db.TaxStatuses.Where(ts => !ts.DeletedOn.HasValue).ToListAsync();
 
                 return taxStatuses
@@ -189,9 +190,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     .ToList();
             }
 
-            private async Task<IList<SelectListItem>> GetJobTitlesList(Query query)
+            private async Task<IList<SelectListItem>> GetJobTitlesList(Query query, Employee employee)
             {
-                var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
                 var jobTitles = await _db.JobTitles.Where(d => !d.DeletedOn.HasValue).ToListAsync();
 
                 return jobTitles
@@ -200,6 +200,20 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                         Text = j.Name,
                         Value = j.Id.ToString(),
                         Selected = employee.JobTitleId == j.Id
+                    })
+                    .ToList();
+            }
+
+            private async Task<IList<SelectListItem>> GetPagIbigRecordsList(Query query, Employee employee)
+            {
+                var pagIbigRecords = await _db.PagIbigRecords.Where(d => !d.DeletedOn.HasValue).ToListAsync();
+
+                return pagIbigRecords
+                    .Select(p => new SelectListItem
+                    {
+                        Text = p.Code,
+                        Value = p.Id.ToString(),
+                        Selected = employee.PagIbigRecordId == p.Id
                     })
                     .ToList();
             }
@@ -337,6 +351,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.Nickname = command.Nickname;
                 employee.PagIbig = command.PagIbig;
                 employee.PagIbigExempt = command.PagIbigExempt;
+                employee.PagIbigRecordId = command.PagIbigRecordId;
                 employee.PermanentAddress = command.PermanentAddress;
                 employee.PhilHealth = command.PhilHealth;
                 employee.PhilHealthExempt = command.PhilHealthExempt;

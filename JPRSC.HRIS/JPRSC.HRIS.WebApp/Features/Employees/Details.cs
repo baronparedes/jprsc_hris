@@ -59,6 +59,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public string ATMAccountNumber { get; set; }
             public AccountType? AccountType { get; set; }
             public string TaxStatusCode { get; set; }
+            public string PagIbigRecordCode { get; set; }
             public decimal? HourlyRate { get; set; }
             public decimal? DailyRate { get; set; }
             public decimal? MonthlyRate { get; set; }
