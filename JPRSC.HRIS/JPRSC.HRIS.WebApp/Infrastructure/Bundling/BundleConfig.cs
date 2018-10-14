@@ -262,6 +262,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
         private static void AddReportBundles(BundleCollection bundles)
         {
             bundles.AddScriptBundle("~/scriptbundles/reports",
+                "~/wwwroot/scripts/reports/generateModal.js",
                 "~/wwwroot/scripts/reports/index.js");
         }
 

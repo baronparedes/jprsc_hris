@@ -457,8 +457,10 @@
     <Compile Include="Features\Religions\Search.cs" />
     <Compile Include="Features\Religions\_Controller.cs" />
     <Compile Include="Features\Religions\_MappingProfile.cs" />
+    <Compile Include="Features\Reports\Generate.cs" />
     <Compile Include="Features\Reports\Index.cs" />
     <Compile Include="Features\Reports\_Controller.cs" />
+    <Compile Include="Features\Reports\_MappingProfile.cs" />
     <Compile Include="Features\SSSRecords\Add.cs" />
     <Compile Include="Features\SSSRecords\Delete.cs" />
     <Compile Include="Features\SSSRecords\Edit.cs" />
@@ -6070,6 +6072,7 @@
     <Content Include="wwwroot\scripts\religions\add.js" />
     <Content Include="wwwroot\scripts\religions\edit.js" />
     <Content Include="wwwroot\scripts\religions\index.js" />
+    <Content Include="wwwroot\scripts\reports\generateModal.js" />
     <Content Include="wwwroot\scripts\reports\index.js" />
     <Content Include="wwwroot\scripts\sssRecords\add.js" />
     <Content Include="wwwroot\scripts\sssRecords\edit.js" />

@@ -16,6 +16,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         {
             _mediator = mediator;
         }
+        
+        [HttpGet]
+        public async Task<ActionResult> Generate(Generate.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+        }
 
         [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)

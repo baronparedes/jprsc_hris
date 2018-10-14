@@ -1,4 +1,5 @@
-﻿@{
+﻿@model JPRSC.HRIS.WebApp.Features.Reports.Index.QueryResult
+@{
     ViewBag.Title = "Reports";
 }
 
@@ -17,7 +18,7 @@
             Reports
         </h1>
         @Html.RenderSuccessNotification()
-        <div class="row" ng-controller="ReportIndexCtrl as vm">
+        <div class="row" ng-controller="ReportIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
                 <div class="portlet light bordered">
                     <div class="portlet-title">
@@ -39,13 +40,13 @@
                                     <tr>
                                         <td>PHIC</td>
                                         <td>
-                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateReport('PHIC')">Generate</a>
+                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('PHIC')">Generate</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>SSS</td>
                                         <td>
-                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateReport('SSS')">Generate</a>
+                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('SSS')">Generate</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -55,6 +56,54 @@
                 </div>
             </div>
         </div>
+        @if (AuthorizeHelper.IsAuthorized(Permission.ReportsModuleDefault))
+        {
+            <script type="text/ng-template" id="generateReportModal.html">
+                <form class="form-horizontal" role="form" method="post" id="generateForm">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Generate Report</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-body">
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.clientId }">
+                                <label class="col-md-4 col-lg-3 control-label">Client</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
+                                    <select class="form-control" ng-model="vm.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
+                                    <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Next Payroll Period Month</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="PayrollPeriodMonth" ng-model="vm.payrollPeriodMonth">
+                                        <option value="-1">All Months</option>
+                                        <option value="@((int)Month.January)">@Month.January.ToString()</option>
+                                        <option value="@((int)Month.February)">@Month.February.ToString()</option>
+                                        <option value="@((int)Month.March)">@Month.March.ToString()</option>
+                                        <option value="@((int)Month.April)">@Month.April.ToString()</option>
+                                        <option value="@((int)Month.May)">@Month.May.ToString()</option>
+                                        <option value="@((int)Month.June)">@Month.June.ToString()</option>
+                                        <option value="@((int)Month.July)">@Month.July.ToString()</option>
+                                        <option value="@((int)Month.August)">@Month.August.ToString()</option>
+                                        <option value="@((int)Month.September)">@Month.September.ToString()</option>
+                                        <option value="@((int)Month.October)">@Month.October.ToString()</option>
+                                        <option value="@((int)Month.November)">@Month.November.ToString()</option>
+                                        <option value="@((int)Month.December)">@Month.December.ToString()</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.generateInProgress"></i>
+                        <a ng-href="/Reports/Generate?reportType={{vm.reportType}}&clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        @*<button type="button" class="btn green" ng-click="vm.generateSubmit()" ng-disabled="vm.generateInProgress">Process</button>*@
+                        <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
+                    </div>
+                </form>
+            </script>
+        }
     </div>
 </div>
 
