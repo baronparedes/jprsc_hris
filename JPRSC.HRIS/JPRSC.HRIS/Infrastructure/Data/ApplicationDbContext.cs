@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using JPRSC.HRIS.Models;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace JPRSC.HRIS.Infrastructure.Data
 {
@@ -41,6 +42,9 @@ namespace JPRSC.HRIS.Infrastructure.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.AddFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+            modelBuilder.Conventions.Remove<DecimalPropertyConvention>();
+            modelBuilder.Conventions.Add(new DecimalPropertyConvention(18, 4));
 
             base.OnModelCreating(modelBuilder);
         }

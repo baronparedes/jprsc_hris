@@ -371,6 +371,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201810130343126_AddEmployeePagIbigRecord.Designer.cs">
       <DependentUpon>201810130343126_AddEmployeePagIbigRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201810200305227_ChangeDecimalPrecision.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201810200305227_ChangeDecimalPrecision.Designer.cs">
+      <DependentUpon>201810200305227_ChangeDecimalPrecision.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -642,6 +646,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201810130343126_AddEmployeePagIbigRecord.resx">
       <DependentUpon>201810130343126_AddEmployeePagIbigRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201810200305227_ChangeDecimalPrecision.resx">
+      <DependentUpon>201810200305227_ChangeDecimalPrecision.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
