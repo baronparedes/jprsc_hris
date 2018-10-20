@@ -91,12 +91,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var clientEmployeeIds = clientEmployees.Select(e => e.Id).ToList();
 
-                //var dailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords
-                //    .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo)
-                //    .ToListAsync();
-
                 var dailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords
-                    .Where(dtr => dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo)
+                    .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo)
                     .ToListAsync();
 
                 var overtimesForPayrollPeriod = await _db.Overtimes
