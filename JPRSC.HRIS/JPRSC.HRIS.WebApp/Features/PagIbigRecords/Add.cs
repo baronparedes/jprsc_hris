@@ -15,10 +15,10 @@ namespace JPRSC.HRIS.WebApp.Features.PagIbigRecords
             public bool? ApplyToSalary { get; set; }
             public string Code { get; set; }
             public string Description { get; set; }
-            public decimal? EmployeeAmount { get; set; }
+            public decimal? DeductionAmount { get; set; }
             public double? EmployeePercentage { get; set; }
-            public decimal? EmployerAmount { get; set; }
             public double? EmployerPercentage { get; set; }
+            public decimal? MinimumDeduction { get; set; }
             public string Name { get; set; }
         }
 
@@ -28,6 +28,22 @@ namespace JPRSC.HRIS.WebApp.Features.PagIbigRecords
             {
                 RuleFor(c => c.Code)
                     .NotEmpty();
+
+                RuleFor(c => c.DeductionAmount)
+                    .NotEmpty()
+                    .GreaterThan(0);
+
+                RuleFor(c => c.EmployeePercentage)
+                    .NotEmpty()
+                    .GreaterThan(0);
+
+                RuleFor(c => c.EmployerPercentage)
+                    .NotEmpty()
+                    .GreaterThan(0);
+
+                RuleFor(c => c.MinimumDeduction)
+                    .NotEmpty()
+                    .GreaterThan(0);
             }
         }
 
@@ -50,9 +66,9 @@ namespace JPRSC.HRIS.WebApp.Features.PagIbigRecords
                     ApplyToSalary = command.ApplyToSalary,
                     Code = command.Code,
                     Description = command.Description,
-                    EmployeeAmount = command.EmployeeAmount,
+                    DeductionAmount = command.DeductionAmount,
                     EmployeePercentage = command.EmployeePercentage,
-                    EmployerAmount = command.EmployerAmount,
+                    MinimumDeduction = command.MinimumDeduction,
                     EmployerPercentage = command.EmployerPercentage,
                     Name = command.Name
                 };

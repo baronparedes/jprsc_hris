@@ -29,16 +29,15 @@ namespace JPRSC.HRIS.Models
         public decimal? SSSValueEmployer { get; set; }
         public decimal? PHICValueEmployee { get; set; }
         public decimal? PHICValueEmployer { get; set; }
-        public decimal? PagIbigValue { get; set; }
+        public decimal? PagIbigValueEmployee { get; set; }
+        public decimal? PagIbigValueEmployer { get; set; }
         public decimal? TaxValue { get; set; }
 
         public decimal? LoanPaymentValue { get; set; }
 
-
-
         public decimal BasicPayValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault();
         public decimal TotalEarningsValue => BasicPayValue + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAMonthlyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
-        public decimal TotalGovDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValue.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + TaxValue.GetValueOrDefault();
+        public decimal TotalGovDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValueEmployee.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + TaxValue.GetValueOrDefault();
         public decimal TotalDeductionsValue => TotalGovDeductionsValue + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
         public decimal NetPayValue { get; set; }
     }

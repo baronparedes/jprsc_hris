@@ -251,7 +251,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     if (payrollReportResult.PayrollProcessBatchResult.DeductedPagIbig == true)
                     {
-                        totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.PagIbigValue.GetValueOrDefault())));
+                        totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.PagIbigValueEmployee.GetValueOrDefault())));
                     }
 
                     if (payrollReportResult.PayrollProcessBatchResult.DeductedPHIC == true)
@@ -417,7 +417,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 if (deductedPagIbig == true)
                 {
-                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Pag-Ibig", "PagIbig", p => String.Format("{0:n}", p.PayrollRecord.PagIbigValue.GetValueOrDefault())));
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Pag-Ibig", "PagIbig", p => String.Format("{0:n}", p.PayrollRecord.PagIbigValueEmployee.GetValueOrDefault())));
                 }
 
                 if (deductedPHIC == true)
@@ -467,7 +467,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 if (deductedPagIbig == true)
                 {
-                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("PagIbig", "PagIbig", p => String.Format("P{0:n}", p.PayrollRecord.PagIbigValue.GetValueOrDefault())));
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("PagIbig", "PagIbig", p => String.Format("P{0:n}", p.PayrollRecord.PagIbigValueEmployee.GetValueOrDefault())));
                 }
 
                 if (deductedPHIC == true)

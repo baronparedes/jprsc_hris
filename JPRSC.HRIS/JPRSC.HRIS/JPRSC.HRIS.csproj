@@ -375,6 +375,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201810200305227_ChangeDecimalPrecision.Designer.cs">
       <DependentUpon>201810200305227_ChangeDecimalPrecision.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201810200415203_ForPagIbigComputation.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201810200415203_ForPagIbigComputation.Designer.cs">
+      <DependentUpon>201810200415203_ForPagIbigComputation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -649,6 +653,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201810200305227_ChangeDecimalPrecision.resx">
       <DependentUpon>201810200305227_ChangeDecimalPrecision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201810200415203_ForPagIbigComputation.resx">
+      <DependentUpon>201810200415203_ForPagIbigComputation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

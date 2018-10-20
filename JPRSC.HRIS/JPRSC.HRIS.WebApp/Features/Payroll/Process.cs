@@ -87,6 +87,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var clientEmployees = await _db.Employees
                     .Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId && e.DailyRate.HasValue)
+                    .Include(e => e.PagIbigRecord)
                     .ToListAsync();
 
                 var clientEmployeeIds = clientEmployees.Select(e => e.Id).ToList();
@@ -207,7 +208,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     if (shouldDeductPagIbig && employee.PagIbigExempt != true)
                     {
                         var pagIbigDeductionBasis = GetPagIbigDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
-                        payrollRecord.PagIbigValue = ComputePagIbig(pagIbigDeductionBasis);
+                        payrollRecord.PagIbigValueEmployee = ComputePagIbigEmployee(pagIbigDeductionBasis, employee.PagIbigRecord);
+                        payrollRecord.PagIbigValueEmployer = ComputePagIbigEmployer(pagIbigDeductionBasis, employee.PagIbigRecord);
                     }
 
                     if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
@@ -373,11 +375,32 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return phicSettings.PercentageForComputation * phicSettings.EmployerPercentageShareForComputation * deductionBasis;
             }
 
-            private decimal ComputePagIbig(decimal deductionBasis)
+            private decimal ComputePagIbigEmployee(decimal deductionBasis, PagIbigRecord pagIbigRecord)
             {
-                return deductionBasis < 5000 ?
-                    0.02m * deductionBasis :
-                    100;
+                if (pagIbigRecord == null)
+                {
+                    return deductionBasis < 5000 ?
+                        0.02m * deductionBasis :
+                        100;
+                }
+
+                return deductionBasis < pagIbigRecord.MinimumDeduction.Value ?
+                    deductionBasis * (decimal)pagIbigRecord.EmployeePercentage.Value / 100 :
+                    pagIbigRecord.DeductionAmount.Value;
+            }
+
+            private decimal ComputePagIbigEmployer(decimal deductionBasis, PagIbigRecord pagIbigRecord)
+            {
+                if (pagIbigRecord == null)
+                {
+                    return deductionBasis < 5000 ?
+                        0.02m * deductionBasis :
+                        100;
+                }
+
+                return deductionBasis < pagIbigRecord.MinimumDeduction.Value ?
+                    deductionBasis * (decimal)pagIbigRecord.EmployerPercentage.Value / 100 :
+                    pagIbigRecord.DeductionAmount.Value;
             }
 
             private decimal? ComputeTax(Employee employee, Client client, IEnumerable<DailyTimeRecord> employeeDtrs, IEnumerable<Overtime> employeeOts, IEnumerable<EarningDeductionRecord> employeeEds)
