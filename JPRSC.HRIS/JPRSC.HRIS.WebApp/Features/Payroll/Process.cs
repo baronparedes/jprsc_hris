@@ -91,8 +91,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var clientEmployeeIds = clientEmployees.Select(e => e.Id).ToList();
 
+                //var dailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords
+                //    .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo)
+                //    .ToListAsync();
+
                 var dailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords
-                    .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo)
+                    .Where(dtr => dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo)
                     .ToListAsync();
 
                 var overtimesForPayrollPeriod = await _db.Overtimes
@@ -139,9 +143,20 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     PayrollPeriodTo = command.PayrollPeriodTo
                 };
 
-                var previousPayrollProcessBatchesInMonth = await _db.PayrollProcessBatches
+                var previousPayrollProcessBatchesInMonthBasis = await _db.PayrollProcessBatches
                     .Where(ppb => ppb.ClientId == client.Id && ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year && ppb.PayrollPeriod < command.PayrollPeriod)
+                    .OrderByDescending(ppb => ppb.PayrollPeriodFrom)
                     .ToListAsync();
+
+                var previousPayrollProcessBatchesInMonth = new List<PayrollProcessBatch>();
+                {
+                    foreach (var batch in previousPayrollProcessBatchesInMonthBasis)
+                    {
+                        if (previousPayrollProcessBatchesInMonth.Any(ppb => ppb.PayrollPeriod == batch.PayrollPeriod)) continue;
+
+                        previousPayrollProcessBatchesInMonth.Add(batch);
+                    }
+                }
 
                 foreach (var employee in clientEmployees)
                 {
