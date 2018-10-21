@@ -96,7 +96,7 @@
                 }
                 @if (Model.Item1.PayrollProcessBatchResult.DeductedPagIbig == true)
                 {
-                    <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.PagIbigValue.GetValueOrDefault())</td>
+                    <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.PagIbigValueEmployee.GetValueOrDefault())</td>
                 }
                 @if (Model.Item1.PayrollProcessBatchResult.DeductedPHIC == true)
                 {
@@ -151,7 +151,7 @@
             }
             @if (Model.Item1.PayrollProcessBatchResult.DeductedPagIbig == true)
             {
-                <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.PagIbigValue.GetValueOrDefault()))</td>
+                <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.PagIbigValueEmployee.GetValueOrDefault()))</td>
             }
             @if (Model.Item1.PayrollProcessBatchResult.DeductedPHIC == true)
             {

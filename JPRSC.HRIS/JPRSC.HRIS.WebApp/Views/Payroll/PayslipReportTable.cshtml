@@ -57,7 +57,7 @@
                         <td>
                             @if (Model.Item1.PayrollProcessBatchResult.DeductedPagIbig == true)
                             {
-                                @String.Format("(P{0:n})", payslipRecord.PayrollRecord.PagIbigValue.GetValueOrDefault())
+                                @String.Format("(P{0:n})", payslipRecord.PayrollRecord.PagIbigValueEmployee.GetValueOrDefault())
                             }
                         </td>
                         <td>&nbsp;</td>
