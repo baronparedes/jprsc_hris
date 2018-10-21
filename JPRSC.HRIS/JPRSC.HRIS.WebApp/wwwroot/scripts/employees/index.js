@@ -1,15 +1,16 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('EmployeeIndexCtrl', ['$http', '$scope', '$timeout', EmployeeIndexCtrl]);
+        .controller('EmployeeIndexCtrl', ['$http', '$scope', '$timeout', '$uibModal', EmployeeIndexCtrl]);
 
-    function EmployeeIndexCtrl($http, $scope, $timeout) {
+    function EmployeeIndexCtrl($http, $scope, $timeout, $uibModal) {
         var vm = this;
         vm.clients = [];
         vm.employees = [];
         vm.lastPageNumber = 1;
         vm.nextClicked = nextClicked;
         vm.previousClicked = previousClicked;
+        vm.rehireAndTransferClicked = rehireAndTransferClicked;
         vm.searchClicked = searchClicked;
         vm.searchModel = { pageNumber: 1 };
         vm.searchInProgress = false;
@@ -40,6 +41,33 @@
 
         function onSearchModelChange(newValue, oldValue) {
             searchClicked();
+        };
+
+        function rehireAndTransferClicked(employee) {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'rehireTransferModal.html',
+                controller: 'RehireTransferModalCtrl',
+                controllerAs: 'vm',
+                resolve: {
+                    params: function () {
+                        return {
+                            clients: vm.clients,
+                            employee: employee
+                        }
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (result) {
+                searchClicked();
+
+                alert('Successfully transferred!');
+            }, function () {
+                searchClicked();
+            });
         };
 
         function searchClicked() {

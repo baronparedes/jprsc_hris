@@ -379,6 +379,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201810200415203_ForPagIbigComputation.Designer.cs">
       <DependentUpon>201810200415203_ForPagIbigComputation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201810210345426_AddRehireTransferEvent.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201810210345426_AddRehireTransferEvent.Designer.cs">
+      <DependentUpon>201810210345426_AddRehireTransferEvent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -434,6 +438,7 @@
     <Compile Include="Models\PhicRecord.cs" />
     <Compile Include="Models\ForProcessingBatch.cs" />
     <Compile Include="Models\Region.cs" />
+    <Compile Include="Models\RehireTransferEvent.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\ResignStatus.cs" />
     <Compile Include="Models\SalaryStatus.cs" />
@@ -656,6 +661,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201810200415203_ForPagIbigComputation.resx">
       <DependentUpon>201810200415203_ForPagIbigComputation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201810210345426_AddRehireTransferEvent.resx">
+      <DependentUpon>201810210345426_AddRehireTransferEvent.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

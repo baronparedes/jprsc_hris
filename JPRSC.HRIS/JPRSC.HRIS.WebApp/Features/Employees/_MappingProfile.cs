@@ -10,6 +10,10 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             CreateMap<Client, Index.QueryResult.Client>();
             CreateMap<Employee, Search.QueryResult.Employee>();
             CreateMap<Employee, Edit.Command>();
+
+            CreateMap<Client, Details.QueryResult.Client>();
+            CreateMap<RehireTransferEvent, Details.QueryResult.RehireTransferEvent>();
+            CreateMap<Employee, Details.QueryResult>();
         }
     }
 }

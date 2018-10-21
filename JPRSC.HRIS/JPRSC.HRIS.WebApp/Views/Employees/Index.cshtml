@@ -91,6 +91,7 @@
                                             <a href="{{'/Employees/Details?employeeId=' + employee.id}}" class="btn btn-primary btn-sm">Details</a>
                                             @if (AuthorizeHelper.IsAuthorized(Permission.EmployeeEdit))
                                             {
+                                                <a href="" ng-click="vm.rehireAndTransferClicked(employee)" class="btn btn-primary btn-sm">Rehire and Transfer</a>
                                                 <a href="{{'/Employees/Edit?employeeId=' + employee.id}}" class="btn btn-primary btn-sm">Edit</a>
                                             }
                                             @if (AuthorizeHelper.IsAuthorized(Permission.EmployeeDelete))
@@ -122,6 +123,41 @@
                     </div>
                 </div>
             </div>
+
+            @if (AuthorizeHelper.IsAuthorized(Permission.EmployeeEdit))
+            {
+                <script type="text/ng-template" id="rehireTransferModal.html">
+                    <form class="form-horizontal" role="form" method="post" id="rehireTransferForm">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Rehire and Transfer</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-body">
+                                <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
+                                <div class="form-group">
+                                    <label class="col-md-4 col-lg-3 control-label">Employee</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static">{{vm.employee.lastName}}, {{vm.employee.firstName}} {{vm.employee.middleName}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.clientId }">
+                                    <label class="col-md-4 col-lg-3 control-label">To Client</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
+                                        <select class="form-control" ng-model="vm.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
+                                        <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.rehireTransferProgress"></i>
+                            <button type="button" class="btn green" ng-click="vm.rehireTransferSubmit()" ng-disabled="vm.rehireTransferProgress">Transfer</button>
+                            <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.rehireTransferProgress">Cancel</a>
+                        </div>
+                    </form>
+                </script>
+            }
         </div>
     </div>
 </div>

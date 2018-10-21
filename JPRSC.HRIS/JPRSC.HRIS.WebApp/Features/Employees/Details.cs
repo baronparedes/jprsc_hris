@@ -3,6 +3,8 @@ using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
 using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -89,6 +91,23 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public bool? SubmittedDiplomaOrTCR { get; set; }
             public bool? SubmittedPreEmploymentMedicalResult { get; set; }
             public bool? SubmittedSSSLoanVerification { get; set; }
+
+            public IList<RehireTransferEvent> RehireTransferEvents { get; set; } = new List<RehireTransferEvent>();
+
+            public class RehireTransferEvent
+            {
+                public DateTime RehireTransferDateLocal { get; set; }
+                public int? EmployeeId { get; set; }
+                public Client Client { get; set; }
+                public int? ClientId { get; set; }
+            }
+
+            public class Client
+            {
+                public string Code { get; set; }
+                public int Id { get; set; }
+                public string Name { get; set; }
+            }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
@@ -102,10 +121,19 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
-                return await _db
+                var queryResult = await _db
                     .Employees
+                    .Include(e => e.RehireTransferEvents)
+                    .Include(e => e.RehireTransferEvents.Select(rte => rte.Client))
                     .Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue)
                     .ProjectToSingleAsync<QueryResult>();
+
+                if (queryResult.RehireTransferEvents.Any())
+                {
+                    queryResult.RehireTransferEvents = queryResult.RehireTransferEvents.OrderBy(rte => rte.RehireTransferDateLocal).ToList();
+                }
+
+                return queryResult;
             }
         }
     }

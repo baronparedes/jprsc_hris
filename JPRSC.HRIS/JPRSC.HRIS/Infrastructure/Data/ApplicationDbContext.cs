@@ -33,6 +33,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<PayrollProcessBatch> PayrollProcessBatches { get; set; }
         public DbSet<PayrollRecord> PayrollRecords { get; set; }
         public DbSet<PhicRecord> PhicRecords { get; set; }
+        public DbSet<RehireTransferEvent> RehireTransferEvents { get; set; }
         public DbSet<Religion> Religions { get; set; }
         public DbSet<SSSRecord> SSSRecords { get; set; }
         public DbSet<SystemSettings> SystemSettings { get; set; }

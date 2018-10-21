@@ -50,6 +50,7 @@ namespace JPRSC.HRIS.Models
         public bool? PhilHealthExempt { get; set; }
         public string Position { get; set; }
         public Region? Region { get; set; }
+        public ICollection<RehireTransferEvent> RehireTransferEvents { get; set; } = new List<RehireTransferEvent>();
         public Religion Religion { get; set; }
         public int? ReligionId { get; set; }
         public string ResignStatus { get; set; }

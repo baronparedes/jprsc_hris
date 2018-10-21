@@ -108,6 +108,17 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             return View(result);
         }
 
+        [AuthorizePermission(Permission.EmployeeEdit)]
+        [HttpPost]
+        public async Task<ActionResult> RehireTransfer(RehireTransfer.Command command)
+        {
+            var commandResult = await _mediator.Send(command);
+
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully transferred employee {commandResult.FirstName} {commandResult.LastName}.");
+
+            return RedirectToAction(nameof(Index));
+        }
+
         [AuthorizePermission(Permission.EmployeeDefault)]
         [HttpGet]
         public async Task<ActionResult> Search(Search.Query query)

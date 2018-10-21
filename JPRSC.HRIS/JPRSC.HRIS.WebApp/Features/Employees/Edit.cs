@@ -327,7 +327,6 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 employee.Citizenship = command.Citizenship;
                 employee.CityAddress = command.CityAddress;
                 employee.CivilStatus = command.CivilStatus;
-                employee.ClientId = command.ClientId;
                 employee.COLADaily = command.COLADaily.GetValueOrDefault();
                 employee.COLAHourly = command.COLAHourly.GetValueOrDefault();
                 employee.COLAMonthly = command.COLAMonthly.GetValueOrDefault();

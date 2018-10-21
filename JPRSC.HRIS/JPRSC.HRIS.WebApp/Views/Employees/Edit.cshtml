@@ -71,7 +71,6 @@
                                         @Html.TextBoxHorizontalFormGroup("PhilHealth")
                                     </uib-tab>
                                     <uib-tab index="1" heading="Company Info">
-                                        @Html.DropdownHorizontalFormGroup(Model.ClientsList, "ClientId", "Client")
                                         <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.dateHired }">
                                             <label class="col-md-3 col-lg-2 control-label">Date Hired</label>
                                             <div class="col-md-9 col-lg-10">
