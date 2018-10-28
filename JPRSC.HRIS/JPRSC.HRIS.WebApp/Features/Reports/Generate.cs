@@ -110,7 +110,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 var lines = new List<IList<string>>();
 
-                var header = new List<string> { "Company PHIC No.", "Employee PHIC No.", "Last Name", "First Name", "Middle Initial", "Net pay", "Date Generated", "PHIC Employer Share", "PHIC Employee Share" };
+                var header = new List<string> { "Company PHIC No.", String.Empty, "Employee PHIC No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "PHIC Employer Share", "PHIC Employee Share" };
                 lines.Add(header);
 
                 var payrollProcessBatchesPerMonth = payrollProcessBatches
@@ -133,12 +133,16 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         var sampleEmployee = employeePayrollRecords.First().Employee;
                         
                         line.Add(companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.PhilHealth);
+                        line.Add(String.Empty);
                         line.Add(sampleEmployee.PhilHealth);
                         line.Add(sampleEmployee.LastName);
                         line.Add(sampleEmployee.FirstName);
+                        line.Add(String.Empty);
                         line.Add(String.IsNullOrWhiteSpace(sampleEmployee.MiddleName) ? null : sampleEmployee.MiddleName.Trim().First().ToString());
                         line.Add(String.Format("{0:n}", netPayValue));
+                        line.Add(String.Empty);
                         line.Add(String.Format("{0:M/d/yyyy}", DateTime.Now));
+                        line.Add(String.Empty);
                         line.Add(String.Format("{0:n}", employeePayrollRecords.Sum(pr => pr.PHICValueEmployer.GetValueOrDefault())));
                         line.Add(String.Format("{0:n}", employeePayrollRecords.Sum(pr => pr.PHICValueEmployee.GetValueOrDefault())));
 
@@ -157,7 +161,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 var lines = new List<IList<string>>();
 
-                var header = new List<string> { "Company SSS No.", "Employee SSS No.", "Last Name", "First Name", "Middle Initial", "Net pay", "Date Generated", "SSS Employer Share", "SSS Employee Share" };
+                var header = new List<string> { "Company SSS No.", String.Empty, "Employee SSS No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "SSS Employer Share", "SSS Employee Share" };
                 lines.Add(header);
 
                 var payrollProcessBatchesPerMonth = payrollProcessBatches
@@ -179,13 +183,17 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
-                        line.Add(companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId).SSS);
+                        line.Add(companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.SSS);
+                        line.Add(String.Empty);
                         line.Add(sampleEmployee.SSS);
                         line.Add(sampleEmployee.LastName);
                         line.Add(sampleEmployee.FirstName);
+                        line.Add(String.Empty);
                         line.Add(String.IsNullOrWhiteSpace(sampleEmployee.MiddleName) ? null : sampleEmployee.MiddleName.Trim().First().ToString());
                         line.Add(String.Format("{0:n}", netPayValue));
+                        line.Add(String.Empty);
                         line.Add(String.Format("{0:M/d/yyyy}", DateTime.Now));
+                        line.Add(String.Empty);
                         line.Add(String.Format("{0:n}", employeePayrollRecords.Sum(pr => pr.SSSValueEmployer.GetValueOrDefault())));
                         line.Add(String.Format("{0:n}", employeePayrollRecords.Sum(pr => pr.SSSValueEmployee.GetValueOrDefault())));
 
