@@ -39,18 +39,6 @@
                                     <select class="form-control" ng-model="vm.dailyTimeRecordPayrollPeriodBasis" ng-disabled="vm.payrollPeriodSelectionDisabled" ng-options="payrollPeriod.text for payrollPeriod in vm.payrollPeriods track by payrollPeriod.value" ng-change="vm.payrollPeriodChanged()"></select>
                                 </div>
                             </div>
-                            @*<div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label">Search Employees</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
-                                        <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
-                                    </span>
-                                    <input type="text" class="form-control" ng-disabled="!vm.searchModel.client.id" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
-                                </div>
-                            </div>
-                        </div>*@
                         </div>
                     </div>
                 </form>

@@ -21,23 +21,39 @@
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="PayrollIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
-                @*<div class="note note-info" ng-show="!vm.searchModel.client.value || !vm.searchModel.client.value.length">
-                <p>Please select a client.</p>
-            </div>
-            <form role="form">
-                <div class="form-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label">Client</label>
-                                <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id">
-                                    <option value="?" selected="selected">Select client</option>
-                                </select>
+                <form role="form">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id" ng-change="vm.clientChanged()">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Month</label>
+                                    <select class="form-control" ng-model="vm.searchModel.payrollPeriodMonth" ng-change="vm.payrollPeriodMonthChanged()">
+                                        <option value="-1">All Months</option>
+                                        <option value="@((int)Month.January)">@Month.January.ToString()</option>
+                                        <option value="@((int)Month.February)">@Month.February.ToString()</option>
+                                        <option value="@((int)Month.March)">@Month.March.ToString()</option>
+                                        <option value="@((int)Month.April)">@Month.April.ToString()</option>
+                                        <option value="@((int)Month.May)">@Month.May.ToString()</option>
+                                        <option value="@((int)Month.June)">@Month.June.ToString()</option>
+                                        <option value="@((int)Month.July)">@Month.July.ToString()</option>
+                                        <option value="@((int)Month.August)">@Month.August.ToString()</option>
+                                        <option value="@((int)Month.September)">@Month.September.ToString()</option>
+                                        <option value="@((int)Month.October)">@Month.October.ToString()</option>
+                                        <option value="@((int)Month.November)">@Month.November.ToString()</option>
+                                        <option value="@((int)Month.December)">@Month.December.ToString()</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>*@
+                </form>
                 @if (AuthorizeHelper.IsAuthorized(Permission.PayrollProcess))
                 {
                     <div class="row">
@@ -60,24 +76,11 @@
                     </div>
                     <div class="portlet-body">
                         <div class="table-scrollable">
-                            @*<div class="btn-group open">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                                <i class="fa fa-ellipsis-horizontal"></i> Reports
-                                <i class="fa fa-angle-down"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{{'/Payroll/Report?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank" class="btn btn-primary btn-sm">Report View</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;"> Dropdown link </a>
-                                </li>
-                            </ul>
-                        </div>*@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th>Client</th>
+                                        <th>Month</th>
                                         <th>Payroll Period</th>
                                         <th>Payroll Period From</th>
                                         <th>Payroll Period To</th>
@@ -88,6 +91,7 @@
                                 <tbody>
                                     <tr ng-repeat="payrollProcessBatch in vm.payrollProcessBatches track by payrollProcessBatch.id">
                                         <td>{{payrollProcessBatch.client.name}}</td>
+                                        <td>{{payrollProcessBatch.monthText}}</td>
                                         <td>{{payrollProcessBatch.payrollPeriod}}</td>
                                         <td>{{payrollProcessBatch.payrollPeriodFrom | date: 'mediumDate'}}</td>
                                         <td>{{payrollProcessBatch.payrollPeriodTo | date: 'mediumDate'}}</td>

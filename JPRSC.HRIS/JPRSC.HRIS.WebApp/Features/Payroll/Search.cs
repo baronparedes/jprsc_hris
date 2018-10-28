@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
     {
         public class Query : IRequest<QueryResult>
         {
+            public int? ClientId { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
@@ -39,9 +42,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public DateTime? EndProcessedOn { get; set; }
                 public int? PayrollPeriod { get; set; }
                 public DateTime? PayrollPeriodFrom { get; set; }
+                public Month? PayrollPeriodMonth { get; set; }
                 public DateTime? PayrollPeriodTo { get; set; }
 
                 public bool IsEndProcessed => EndProcessedOn.HasValue;
+                public string MonthText => PayrollPeriodMonth.HasValue ? PayrollPeriodMonth.Value.ToString() : null;
             }
 
             public class Client
@@ -65,9 +70,23 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
             public async Task<QueryResult> Handle(Query query, CancellationToken cancellationToken)
             {
-                var payrollProcessBatches = await _db
+                var dbQuery = _db
                     .PayrollProcessBatches
-                    .Where(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue)
+                    .Where(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue);
+
+                if (query.ClientId.HasValue && query.ClientId.Value > 0)
+                {
+                    dbQuery = dbQuery
+                        .Where(ppb => ppb.ClientId == query.ClientId);
+                }
+
+                if (query.PayrollPeriodMonth.HasValue && query.PayrollPeriodMonth.Value > 0)
+                {
+                    dbQuery = dbQuery
+                        .Where(ppb => ppb.PayrollPeriodMonth == query.PayrollPeriodMonth);
+                }
+
+                var payrollProcessBatches = await dbQuery
                     .OrderByDescending(ppb => ppb.AddedOn)
                     .ProjectToListAsync<QueryResult.PayrollProcessBatch>();
 
