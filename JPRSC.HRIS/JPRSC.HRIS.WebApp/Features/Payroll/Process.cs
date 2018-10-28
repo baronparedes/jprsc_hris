@@ -377,12 +377,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
             private decimal ComputePagIbigEmployee(decimal deductionBasis, PagIbigRecord pagIbigRecord)
             {
-                if (pagIbigRecord == null)
-                {
-                    return deductionBasis < 5000 ?
-                        0.02m * deductionBasis :
-                        100;
-                }
+                if (pagIbigRecord == null) return 0;
 
                 return deductionBasis < pagIbigRecord.MinimumDeduction.Value ?
                     deductionBasis * (decimal)pagIbigRecord.EmployeePercentage.Value / 100 :
@@ -391,12 +386,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
             private decimal ComputePagIbigEmployer(decimal deductionBasis, PagIbigRecord pagIbigRecord)
             {
-                if (pagIbigRecord == null)
-                {
-                    return deductionBasis < 5000 ?
-                        0.02m * deductionBasis :
-                        100;
-                }
+                if (pagIbigRecord == null) return 0;
 
                 return deductionBasis < pagIbigRecord.MinimumDeduction.Value ?
                     deductionBasis * (decimal)pagIbigRecord.EmployerPercentage.Value / 100 :
