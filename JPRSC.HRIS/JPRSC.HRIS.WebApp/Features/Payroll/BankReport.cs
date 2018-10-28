@@ -187,13 +187,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 payrollRecords.RemoveAll(pr => String.IsNullOrWhiteSpace(pr.Employee.ATMAccountNumber) || pr.Employee.ATMAccountNumber == "0");
 
-                var systemSettings = await _db.SystemSettings.SingleAsync();
-
-                foreach (var payrollRecord in payrollRecords)
-                {
-                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault());
-                }
-
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,

@@ -185,13 +185,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .ThenBy(pr => pr.Employee.FirstName)
                     .ProjectToListAsync<QueryResult.PayrollRecord>();
 
-                var systemSettings = await _db.SystemSettings.SingleAsync();
-
-                foreach (var payrollRecord in payrollRecords)
-                {
-                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault());
-                }
-
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,

@@ -155,6 +155,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     }
                 }
 
+                var systemSettings = await _db.SystemSettings.SingleAsync();
+
                 foreach (var employee in clientEmployees)
                 {
                     var employeeDtrsForPayrollPeriod = dailyTimeRecordsForPayrollPeriod.Where(dtr => dtr.EmployeeId == employee.Id);
@@ -213,6 +215,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     }
 
                     if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
+
+                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault());
 
                     payrollProcessBatch.PayrollRecords.Add(payrollRecord);
                 }

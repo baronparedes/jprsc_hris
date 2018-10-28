@@ -106,7 +106,6 @@
     <Compile Include="Infrastructure\Data\ApplicationDbContext.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CompanyProfileConfiguration.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CustomRoleConfiguration.cs" />
-    <Compile Include="Infrastructure\Data\EntityConfiguration\PayrollRecordConfiguration.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201712190413596_Initial.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201712190413596_Initial.Designer.cs">
       <DependentUpon>201712190413596_Initial.cs</DependentUpon>
@@ -382,6 +381,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201810210345426_AddRehireTransferEvent.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201810210345426_AddRehireTransferEvent.Designer.cs">
       <DependentUpon>201810210345426_AddRehireTransferEvent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201810281347232_AddPayrollRecordNetPayValue.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201810281347232_AddPayrollRecordNetPayValue.Designer.cs">
+      <DependentUpon>201810281347232_AddPayrollRecordNetPayValue.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
@@ -664,6 +667,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201810210345426_AddRehireTransferEvent.resx">
       <DependentUpon>201810210345426_AddRehireTransferEvent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201810281347232_AddPayrollRecordNetPayValue.resx">
+      <DependentUpon>201810281347232_AddPayrollRecordNetPayValue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
