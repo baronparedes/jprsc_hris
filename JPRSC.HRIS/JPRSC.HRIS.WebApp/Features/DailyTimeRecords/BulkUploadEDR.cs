@@ -24,6 +24,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public int? ClientId { get; set; }
             public HttpPostedFileBase File { get; set; }
             public DateTime? PayrollPeriodFrom { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
             public int? PayrollProcessBatchPayrollPeriodBasisId { get; set; }
         }
@@ -113,7 +114,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var allEmployeesOfClient = await _db.Employees.AsNoTracking().Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
                 var allEmployeesOfClientIds = allEmployeesOfClient.Select(e => e.Id).ToList();
 
-                var allEmployeeEarningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords.Where(edr => allEmployeesOfClientIds.Contains(edr.EmployeeId.Value) && !edr.DeletedOn.HasValue && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
+                var allEmployeeEarningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords.Where(edr => allEmployeesOfClientIds.Contains(edr.EmployeeId.Value) && !edr.DeletedOn.HasValue && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
 
                 var csvData = GetCSVData(command);
                 var columnToEarningDeductionMap = await GetColumnToEarningDeductionMap(csvData.Item1);
@@ -221,6 +222,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                                 EarningDeductionId = entry.Value.Id,
                                 EmployeeId = employee.Id,
                                 PayrollPeriodFrom = command.PayrollPeriodFrom,
+                                PayrollPeriodMonth = command.PayrollPeriodMonth,
                                 PayrollPeriodTo = command.PayrollPeriodTo
                             };
                             earningDeductionRecordsToAdd.Add(earningDeductionRecord);

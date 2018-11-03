@@ -10,11 +10,22 @@
         vm.clientChanged = clientChanged;
         vm.clients = params.clients;
         vm.datepickerOptions = globalSettings.datepickerOptions;
+        vm.payrollPeriodMonth = '10';
         vm.processSubmit = processSubmit;
         vm.validationErrors = {};
 
         $timeout(function () {
-            vm.client = vm.clients[0];
+            if (!vm.clients[0].id) {
+                vm.clients.splice(0, 1);
+            }
+
+            if (params.client) {
+                vm.client = params.client;
+            }
+            else {
+                vm.client = vm.clients[0];
+            }
+
             clientChanged();
         });
 

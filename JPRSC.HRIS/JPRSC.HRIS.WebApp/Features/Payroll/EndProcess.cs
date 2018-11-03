@@ -185,7 +185,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         {
             public int? PayrollProcessBatchId { get; set; }
             public int? PayrollPeriod { get; set; }
-            public Month? PayrollPeriodMonth { get; set; }
             public DateTime? PayrollPeriodFrom { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
         }
@@ -198,9 +197,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .NotEmpty();
 
                 RuleFor(c => c.PayrollPeriod)
-                    .NotEmpty();
-
-                RuleFor(c => c.PayrollPeriodMonth)
                     .NotEmpty();
 
                 RuleFor(c => c.PayrollPeriodFrom)
@@ -234,14 +230,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 payrollProcessBatch.EndProcessedOn = now;
                 payrollProcessBatch.ModifiedOn = now;
-                payrollProcessBatch.PayrollPeriodMonth = command.PayrollPeriodMonth;
 
                 var client = await _db
                     .Clients
                     .SingleOrDefaultAsync(c => c.Id == payrollProcessBatch.ClientId && !c.DeletedOn.HasValue);
 
                 client.CurrentPayrollPeriod = command.PayrollPeriod;
-                client.PayrollPeriodMonth = command.PayrollPeriodMonth;
                 client.PayrollPeriodFrom = command.PayrollPeriodFrom;
                 client.PayrollPeriodTo = command.PayrollPeriodTo;
                 client.ModifiedOn = now;

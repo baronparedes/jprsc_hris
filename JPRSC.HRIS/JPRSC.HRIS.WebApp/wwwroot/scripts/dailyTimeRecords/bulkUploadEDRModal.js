@@ -8,6 +8,7 @@
         vm.cancel = cancel;
         vm.client = params.client;
         vm.lookups = lookups;
+        vm.payrollPeriodMonth = params.payrollPeriodMonth;
         vm.uploadInProgress = false;
         vm.validationErrors = {};
 

@@ -40,7 +40,8 @@
                 resolve: {
                     params: function () {
                         return {
-                            clients: vm.clients
+                            clients: vm.clients,
+                            client: vm.searchModel.client
                         }
                     }
                 }

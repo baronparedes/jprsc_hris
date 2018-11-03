@@ -27,16 +27,35 @@
                 <form role="form">
                     <div class="form-body">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label">Client</label>
                                     <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label">Payroll Period</label>
                                     <select class="form-control" ng-model="vm.dailyTimeRecordPayrollPeriodBasis" ng-disabled="vm.payrollPeriodSelectionDisabled" ng-options="payrollPeriod.text for payrollPeriod in vm.payrollPeriods track by payrollPeriod.value" ng-change="vm.payrollPeriodChanged()"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Payroll Period Month</label>
+                                    <select class="form-control" ng-model="vm.searchModel.payrollPeriodMonth" ng-change="vm.payrollPeriodMonthChanged()">
+                                        <option value="@((int)Month.January)">@Month.January.ToString()</option>
+                                        <option value="@((int)Month.February)">@Month.February.ToString()</option>
+                                        <option value="@((int)Month.March)">@Month.March.ToString()</option>
+                                        <option value="@((int)Month.April)">@Month.April.ToString()</option>
+                                        <option value="@((int)Month.May)">@Month.May.ToString()</option>
+                                        <option value="@((int)Month.June)">@Month.June.ToString()</option>
+                                        <option value="@((int)Month.July)">@Month.July.ToString()</option>
+                                        <option value="@((int)Month.August)">@Month.August.ToString()</option>
+                                        <option value="@((int)Month.September)">@Month.September.ToString()</option>
+                                        <option value="@((int)Month.October)">@Month.October.ToString()</option>
+                                        <option value="@((int)Month.November)">@Month.November.ToString()</option>
+                                        <option value="@((int)Month.December)">@Month.December.ToString()</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -113,6 +132,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-body">
+                            <input type="hidden" name="PayrollPeriodMonth" value="{{vm.payrollPeriodMonth}}" />
                             <div class="form-group">
                                 <label class="col-md-3 col-lg-2 control-label">Employee</label>
                                 <div class="col-md-9 col-lg-10">
@@ -315,6 +335,7 @@
                             <p>The entire operation has been aborted. Please make the necessary changes and try again.</p>
                         </div>
                         <div class="form-body">
+                            <input type="hidden" name="PayrollPeriodMonth" value="{{vm.payrollPeriodMonth}}" />
                             <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodFrom }">
                                 <label class="col-md-3 col-lg-2 control-label">Payroll Period From</label>
@@ -369,6 +390,7 @@
                             <p>The entire operation has been aborted. Please make the necessary changes and try again.</p>
                         </div>
                         <div class="form-body">
+                            <input type="hidden" name="PayrollPeriodMonth" value="{{vm.payrollPeriodMonth}}" />
                             <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
                             <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodFrom }">
                                 <label class="col-md-3 col-lg-2 control-label">Payroll Period From</label>

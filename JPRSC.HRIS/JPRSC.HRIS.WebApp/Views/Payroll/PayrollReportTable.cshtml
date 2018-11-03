@@ -53,6 +53,12 @@
                     <th>@loanType.Code</th>
                 }
             }
+            <th class="detail hidden">SSS Deduction Basis</th>
+            <th class="detail hidden">PHIC Deductin Basis</th>
+            <th class="detail hidden">PagIbig Deduction Basis</th>
+            <th class="detail hidden">Gov Deductions Deducted</th>
+            <th class="detail hidden">Loans Deducted</th>
+            <th class="detail hidden">Anything Deducted</th>
             <th>Net Pay</th>
         </tr>
     </thead>
@@ -111,6 +117,12 @@
                         <td>@String.Format("{0:n}", payrollReportItem.Loans.Where(l => l.LoanTypeId == loanType.Id).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
                     }
                 }
+                <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.PayrollRecord.SSSDeductionBasis.GetValueOrDefault())</td>
+                <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.PayrollRecord.PHICDeductionBasis.GetValueOrDefault())</td>
+                <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.PayrollRecord.PagIbigDeductionBasis.GetValueOrDefault())</td>
+                <td class="detail hidden">@String.Format("{0}", payrollReportItem.PayrollRecord.GovDeductionsDeducted ? "yes" : "no")</td>
+                <td class="detail hidden">@String.Format("{0}", payrollReportItem.PayrollRecord.LoansDeducted ? "yes" : "no")</td>
+                <td class="detail hidden">@String.Format("{0}", payrollReportItem.PayrollRecord.AnythingDeducted ? "yes" : "no")</td>
                 <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.NetPayValue)</strong></td>
             </tr>
         }
@@ -165,6 +177,12 @@
                     <td>@String.Format("{0:n}", Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
                 }
             }
+            <td class="detail hidden">@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.SSSDeductionBasis.GetValueOrDefault()))</td>
+            <td class="detail hidden">@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.PHICDeductionBasis.GetValueOrDefault()))</td>
+            <td class="detail hidden">@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.PagIbigDeductionBasis.GetValueOrDefault()))</td>
+            <td class="detail hidden">@String.Empty</td>
+            <td class="detail hidden">@String.Empty</td>
+            <td class="detail hidden">@String.Empty</td>
             <td><strong>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue))</strong></td>
         </tr>
     </tbody>

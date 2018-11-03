@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using Newtonsoft.Json;
 using System;
@@ -22,6 +23,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public string SearchTerm { get; set; }
             public int? ClientId { get; set; }
             public int? DailyTimeRecordPayrollPeriodBasisId { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
 
             public string SearchLikeTerm
             {
@@ -73,6 +75,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 public decimal? MonthlyRate { get; set; }
                 public int Id { get; set; }
                 public DateTime? PayrollPeriodFrom { get; set; }
+                public Month? PayrollPeriodMonth { get; set; }
+                public string PayrollPeriodMonthFormatted => PayrollPeriodMonth.HasValue ? PayrollPeriodMonth.Value.ToString() : null;
                 public DateTime? PayrollPeriodTo { get; set; }
             }
         }
@@ -103,6 +107,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     dbQuery = dbQuery
                         .Where(dtr => DbFunctions.Like(dtr.Employee.FirstName, query.SearchLikeTerm) ||
                             DbFunctions.Like(dtr.Employee.LastName, query.SearchLikeTerm));
+                }
+
+                if (query.PayrollPeriodMonth.HasValue)
+                {
+                    dbQuery = dbQuery
+                        .Where(dtr => dtr.PayrollPeriodMonth == query.PayrollPeriodMonth);
                 }
 
                 if (query.DailyTimeRecordPayrollPeriodBasisId.HasValue)

@@ -25,6 +25,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public int? ClientId { get; set; }
             public HttpPostedFileBase File { get; set; }
             public DateTime? PayrollPeriodFrom { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
             public int? PayrollProcessBatchPayrollPeriodBasisId { get; set; }
         }
@@ -117,8 +118,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var allEmployeesOfClient = await _db.Employees.AsNoTracking().Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
                 var allEmployeesOfClientIds = allEmployeesOfClient.Select(e => e.Id).ToList();
 
-                var allEmployeeDailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords.Where(dtr => allEmployeesOfClientIds.Contains(dtr.EmployeeId.Value) && !dtr.DeletedOn.HasValue && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
-                var allEmployeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => allEmployeesOfClientIds.Contains(ot.EmployeeId.Value) && !ot.DeletedOn.HasValue && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo).ToListAsync();
+                var allEmployeeDailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords.Where(dtr => allEmployeesOfClientIds.Contains(dtr.EmployeeId.Value) && !dtr.DeletedOn.HasValue && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
+                var allEmployeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => allEmployeesOfClientIds.Contains(ot.EmployeeId.Value) && !ot.DeletedOn.HasValue && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
 
                 var csvData = GetCSVData(command);
                 var columnToPayPercentageMap = await GetColumnToPayPercentageMap(csvData.Item1);
@@ -267,6 +268,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                                 PayPercentageName = payPercentage.Name,
                                 PayPercentagePercentage = payPercentage.Percentage,
                                 PayrollPeriodFrom = command.PayrollPeriodFrom,
+                                PayrollPeriodMonth = command.PayrollPeriodMonth,
                                 PayrollPeriodTo = command.PayrollPeriodTo
                             };
                             overtimesToAdd.Add(overtime);
@@ -343,6 +345,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             HoursWorkedValue = (decimal?)hoursWorked * employee.HourlyRate,
                             MonthlyRate = employee.MonthlyRate,
                             PayrollPeriodFrom = command.PayrollPeriodFrom,
+                            PayrollPeriodMonth = command.PayrollPeriodMonth,
                             PayrollPeriodTo = command.PayrollPeriodTo
                         };
                         _db.DailyTimeRecords.Add(dailyTimeRecord);
@@ -389,38 +392,6 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     LastName = employee.LastName,
                     Reason = $"{employee.EmployeeCode}: {String.Join(", ", missingRates)}"
                 };
-            }
-
-            private async Task<Overtime> GetOvertime(Command command, DateTime addedOrModifiedOn, Employee employee, PayPercentage payRate)
-            {
-                Overtime theOvertime = null;
-
-                var existingOvertime = await _db
-                    .Overtimes
-                    .SingleOrDefaultAsync(o => !o.DeletedOn.HasValue && o.EmployeeId == employee.Id && o.PayrollPeriodFrom == command.PayrollPeriodFrom && o.PayrollPeriodTo == command.PayrollPeriodTo && o.PayPercentageId == payRate.Id);
-
-                if (existingOvertime != null)
-                {
-                    theOvertime = existingOvertime;
-                    theOvertime.ModifiedOn = addedOrModifiedOn;
-                    theOvertime.PayPercentageName = payRate.Name;
-                    theOvertime.PayPercentagePercentage = payRate.Percentage;
-                }
-                else
-                {
-                    theOvertime = new Overtime
-                    {
-                        AddedOn = addedOrModifiedOn,
-                        EmployeeId = employee.Id,
-                        PayPercentageId = payRate.Id,
-                        PayPercentageName = payRate.Name,
-                        PayPercentagePercentage = payRate.Percentage,
-                        PayrollPeriodFrom = command.PayrollPeriodFrom,
-                        PayrollPeriodTo = command.PayrollPeriodTo
-                    };
-                }
-
-                return theOvertime;
             }
 
             private Tuple<IList<string>, IList<IList<string>>> GetCSVData(Command command)

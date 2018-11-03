@@ -35,6 +35,13 @@ namespace JPRSC.HRIS.Models
 
         public decimal? LoanPaymentValue { get; set; }
 
+        public decimal? SSSDeductionBasis { get; set; }
+        public decimal? PHICDeductionBasis { get; set; }
+        public decimal? PagIbigDeductionBasis { get; set; }
+        public bool GovDeductionsDeducted { get; set; }
+        public bool LoansDeducted { get; set; }
+        public bool AnythingDeducted { get; set; }
+
         public decimal BasicPayValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault();
         public decimal TotalEarningsValue => BasicPayValue + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAMonthlyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();
         public decimal TotalGovDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValueEmployee.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + TaxValue.GetValueOrDefault();

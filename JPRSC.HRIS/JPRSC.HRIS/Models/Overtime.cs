@@ -18,6 +18,7 @@ namespace JPRSC.HRIS.Models
         public string PayPercentageName { get; set; }
         public double? PayPercentagePercentage { get; set; }
         public DateTime? PayrollPeriodFrom { get; set; }
+        public Month? PayrollPeriodMonth { get; set; }
         public DateTime? PayrollPeriodTo { get; set; }
         public string Reference { get; set; }
         public DateTime? To { get; set; }

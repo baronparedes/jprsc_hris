@@ -18,6 +18,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         {
             public int? ClientId { get; set; }
             public DateTime? PayrollPeriodFrom { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
             public int? PayrollPeriod { get; set; }
         }
@@ -93,15 +94,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var clientEmployeeIds = clientEmployees.Select(e => e.Id).ToList();
 
                 var dailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords
-                    .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo)
+                    .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth)
                     .ToListAsync();
 
                 var overtimesForPayrollPeriod = await _db.Overtimes
-                    .Where(ot => !ot.DeletedOn.HasValue && ot.EmployeeId.HasValue && clientEmployeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo)
+                    .Where(ot => !ot.DeletedOn.HasValue && ot.EmployeeId.HasValue && clientEmployeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth)
                     .ToListAsync();
 
                 var earningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords
-                    .Where(edr => !edr.DeletedOn.HasValue && edr.EmployeeId.HasValue && clientEmployeeIds.Contains(edr.EmployeeId.Value) && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo)
+                    .Where(edr => !edr.DeletedOn.HasValue && edr.EmployeeId.HasValue && clientEmployeeIds.Contains(edr.EmployeeId.Value) && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.PayrollPeriodMonth == command.PayrollPeriodMonth)
                     .Include(edr => edr.EarningDeduction)
                     .ToListAsync();
 
@@ -120,7 +121,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var shouldDeductTax = client.TaxPayrollPeriods.Contains(command.PayrollPeriod.Value);
 
                 var existingPayrollProcessBatch = await _db.PayrollProcessBatches
-                    .FirstOrDefaultAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue && ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo);
+                    .FirstOrDefaultAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue && ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo && ppb.PayrollPeriodMonth == command.PayrollPeriodMonth);
 
                 if (existingPayrollProcessBatch != null)
                 {
@@ -137,23 +138,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     DeductedTax = shouldDeductTax,
                     PayrollPeriod = command.PayrollPeriod,
                     PayrollPeriodFrom = command.PayrollPeriodFrom,
+                    PayrollPeriodMonth = command.PayrollPeriodMonth,
                     PayrollPeriodTo = command.PayrollPeriodTo
                 };
 
-                var previousPayrollProcessBatchesInMonthBasis = await _db.PayrollProcessBatches
-                    .Where(ppb => ppb.ClientId == client.Id && ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year && ppb.PayrollPeriod < command.PayrollPeriod)
+                var previousPayrollProcessBatchesInMonth = await _db.PayrollProcessBatches
+                    .Where(ppb => ppb.ClientId == client.Id && ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year && ppb.PayrollPeriod < command.PayrollPeriod && ppb.PayrollPeriodMonth == command.PayrollPeriodMonth)
                     .OrderByDescending(ppb => ppb.PayrollPeriodFrom)
                     .ToListAsync();
-
-                var previousPayrollProcessBatchesInMonth = new List<PayrollProcessBatch>();
-                {
-                    foreach (var batch in previousPayrollProcessBatchesInMonthBasis)
-                    {
-                        if (previousPayrollProcessBatchesInMonth.Any(ppb => ppb.PayrollPeriod == batch.PayrollPeriod)) continue;
-
-                        previousPayrollProcessBatchesInMonth.Add(batch);
-                    }
-                }
 
                 var systemSettings = await _db.SystemSettings.SingleAsync();
 
@@ -196,6 +188,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     if (shouldDeductSSS && employee.SSSExempt != true)
                     {
                         var sssDeductionBasis = GetSSSDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
+                        payrollRecord.SSSDeductionBasis = sssDeductionBasis;
                         payrollRecord.SSSValueEmployee = ComputeSSSEmployee(sssDeductionBasis, sssRecords);
                         payrollRecord.SSSValueEmployer = ComputeSSSEmployer(sssDeductionBasis, sssRecords);
                     }
@@ -203,6 +196,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     if (shouldDeductPHIC && employee.PhilHealthExempt != true)
                     {
                         var phicDeductionBasis = GetPHICDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
+                        payrollRecord.PHICDeductionBasis = phicDeductionBasis;
                         payrollRecord.PHICValueEmployee = ComputePHICEmployee(phicDeductionBasis, phicSettings);
                         payrollRecord.PHICValueEmployer = ComputePHICEmployer(phicDeductionBasis, phicSettings);
                     }
@@ -210,13 +204,17 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     if (shouldDeductPagIbig && employee.PagIbigExempt != true)
                     {
                         var pagIbigDeductionBasis = GetPagIbigDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
+                        payrollRecord.PagIbigDeductionBasis = pagIbigDeductionBasis;
                         payrollRecord.PagIbigValueEmployee = ComputePagIbigEmployee(pagIbigDeductionBasis, employee.PagIbigRecord);
                         payrollRecord.PagIbigValueEmployer = ComputePagIbigEmployer(pagIbigDeductionBasis, employee.PagIbigRecord);
                     }
 
                     if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
 
-                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault());
+                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault(), out bool govDeductionsDeducted, out bool loansDeducted, out bool anythingDeducted);
+                    payrollRecord.GovDeductionsDeducted = govDeductionsDeducted;
+                    payrollRecord.LoansDeducted = loansDeducted;
+                    payrollRecord.AnythingDeducted = anythingDeducted;
 
                     payrollProcessBatch.PayrollRecords.Add(payrollRecord);
                 }

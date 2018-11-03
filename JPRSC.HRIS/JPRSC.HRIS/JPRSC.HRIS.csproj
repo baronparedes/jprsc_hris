@@ -386,6 +386,14 @@
     <Compile Include="Infrastructure\Data\Migrations\201810281347232_AddPayrollRecordNetPayValue.Designer.cs">
       <DependentUpon>201810281347232_AddPayrollRecordNetPayValue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201811031111119_AddPayrollPeriodMonth.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201811031111119_AddPayrollPeriodMonth.Designer.cs">
+      <DependentUpon>201811031111119_AddPayrollPeriodMonth.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201811031218527_AddPayrollRecordDeductionFields.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201811031218527_AddPayrollRecordDeductionFields.Designer.cs">
+      <DependentUpon>201811031218527_AddPayrollRecordDeductionFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -670,6 +678,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201810281347232_AddPayrollRecordNetPayValue.resx">
       <DependentUpon>201810281347232_AddPayrollRecordNetPayValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201811031111119_AddPayrollPeriodMonth.resx">
+      <DependentUpon>201811031111119_AddPayrollPeriodMonth.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201811031218527_AddPayrollRecordDeductionFields.resx">
+      <DependentUpon>201811031218527_AddPayrollRecordDeductionFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

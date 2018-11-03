@@ -29,6 +29,7 @@
         vm.otRateChanged = otRateChanged;
         vm.overtimes = [];
         vm.payRates = params.payRates;
+        vm.payrollPeriodMonth = params.payrollPeriodMonth;
         vm.payrollPeriods = [];
         vm.payrollPeriodSelectionDisabled = true;
         vm.validationErrors = {};

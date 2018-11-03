@@ -274,6 +274,16 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         }
                     }
 
+                    if (query.ViewDetailed == true)
+                    {
+                        totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.SSSDeductionBasis.GetValueOrDefault())));
+                        totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.PHICDeductionBasis.GetValueOrDefault())));
+                        totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.PagIbigDeductionBasis.GetValueOrDefault())));
+                        totals.Add(String.Empty);
+                        totals.Add(String.Empty);
+                        totals.Add(String.Empty);
+                    }
+
                     totals.Add(String.Format("{0:n}", payrollReportResult.PayrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue)));
 
                     lines.Add(totals);
@@ -438,6 +448,16 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     {
                         columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{loanType.Code}", $"{loanType.Code}", p => String.Format("{0:n}", p.Loans.Where(lt => lt.LoanTypeId == loanType.Id).Sum(l => l.DeductionAmount.GetValueOrDefault()).ToString() ?? "0.00")));
                     }
+                }
+
+                if (viewDetailed == true)
+                {
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("SSS Deduction Basis", "SSSDeductionBasis", p => String.Format("{0:n}", p.PayrollRecord.SSSDeductionBasis.GetValueOrDefault())));
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("PHIC Deduction Basis", "PHICDeductionBasis", p => String.Format("{0:n}", p.PayrollRecord.PHICDeductionBasis.GetValueOrDefault())));
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("PagIbig Deduction Basis", "PagIbigDeductionBasis", p => String.Format("{0:n}", p.PayrollRecord.PagIbigDeductionBasis.GetValueOrDefault())));
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Gov Deductions Deducted", "GovDeductionsDeducted", p => p.PayrollRecord.GovDeductionsDeducted ? "yes" : "no"));
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Loans Deducted", "LoansDeducted", p => p.PayrollRecord.LoansDeducted ? "yes" : "no"));
+                    columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Anything Deducted", "AnythingDeducted", p => p.PayrollRecord.AnythingDeducted ? "yes" : "no"));
                 }
 
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Net Pay", "NetPay", p => String.Format("{0:n}", p.PayrollRecord.NetPayValue)));

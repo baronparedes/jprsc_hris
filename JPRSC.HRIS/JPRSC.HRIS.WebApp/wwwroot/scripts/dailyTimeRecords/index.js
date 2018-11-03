@@ -13,11 +13,13 @@
         vm.dailyTimeRecords = [];
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.payrollPeriodChanged = payrollPeriodChanged;
+        vm.payrollPeriodMonthChanged = payrollPeriodMonthChanged;
         vm.searchClicked = searchClicked;
-        vm.searchModel = {};
+        vm.searchModel = { payrollPeriodMonth: '10' };
         vm.searchInProgress = false;
 
         $timeout(function () {
+            //vm.searchModel = { payrollPeriodMonth: '10' };
             vm.clients = vm.serverModel.clients;
             vm.clients.splice(0, 0, { id: null, code: '-- Select a client --' });
             vm.searchModel.client = vm.clients[0];
@@ -44,7 +46,8 @@
                             client: vm.searchModel.client,
                             employees: vm.employees,
                             earningDeductions: vm.earningDeductions,
-                            payRates: vm.payRates
+                            payRates: vm.payRates,
+                            payrollPeriodMonth: vm.searchModel.payrollPeriodMonth
                         }
                     }
                 }
@@ -69,7 +72,8 @@
                 resolve: {
                     params: function () {
                         return {
-                            client: vm.searchModel.client
+                            client: vm.searchModel.client,
+                            payrollPeriodMonth: vm.searchModel.payrollPeriodMonth
                         }
                     }
                 }
@@ -94,7 +98,8 @@
                 resolve: {
                     params: function () {
                         return {
-                            client: vm.searchModel.client
+                            client: vm.searchModel.client,
+                            payrollPeriodMonth: vm.searchModel.payrollPeriodMonth
                         }
                     }
                 }
@@ -118,6 +123,10 @@
         };
 
         function payrollPeriodChanged() {
+            searchClicked();
+        };
+
+        function payrollPeriodMonthChanged() {
             searchClicked();
         };
 
