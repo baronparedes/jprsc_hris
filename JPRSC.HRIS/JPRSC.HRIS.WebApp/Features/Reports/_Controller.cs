@@ -22,7 +22,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         {
             var result = await _mediator.Send(query);
 
-            return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+            if (query.Destination == "Excel")
+            {
+                return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+            }
+            else
+            {
+                return View("GenericReport", result);
+            }
         }
 
         [HttpGet]

@@ -7089,6 +7089,7 @@
     <Content Include="Views\SystemSettings\Edit.cshtml" />
     <Content Include="Views\SystemSettings\Index.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\GenericReport.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -97,7 +97,7 @@
                     </div>
                     <div class="modal-footer">
                         <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.generateInProgress"></i>
-                        <a ng-href="/Reports/Generate?reportType={{vm.reportType}}&clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-href="/Reports/Generate?reportType={{vm.reportType}}&clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
                     </div>
                 </form>

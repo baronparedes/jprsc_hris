@@ -18,14 +18,23 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         public class Query : IRequest<QueryResult>
         {
             public int? ClientId { get; set; }
+            public string Destination { get; set; }
+            public string DisplayMode { get; set; }
             public int? PayrollPeriodMonth { get; set; }
             public string ReportType { get; set; }
         }
 
         public class QueryResult
         {
+            public int? ClientId { get; set; }
+            public string ClientName { get; set; }
+            public string DisplayMode { get; set; }
             public byte[] FileContent { get; set; }
             public string Filename { get; set; }
+            public IList<IList<string>> Lines { get; set; } = new List<IList<string>>();
+            public int? PayrollPeriodMonth { get; set; }
+            public Month? PayrollPeriodMonthMonth { get; set; }
+            public string ReportType { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
@@ -70,36 +79,63 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 var reportFileContent = _excelBuilder.BuildExcelFile(lines);
 
-                var reportFileNameBuilder = new StringBuilder(64);
-                reportFileNameBuilder.Append($"{query.ReportType} Report - ");
-
-                if (query.ClientId == -1)
+                if (query.Destination == "Excel")
                 {
-                    reportFileNameBuilder.Append("All Clients");
+                    var reportFileNameBuilder = new StringBuilder(64);
+                    reportFileNameBuilder.Append($"{query.ReportType} Report - ");
+
+                    if (query.ClientId == -1)
+                    {
+                        reportFileNameBuilder.Append("All Clients");
+                    }
+                    else
+                    {
+                        reportFileNameBuilder.Append(clients.Single().Name);
+                    }
+
+                    reportFileNameBuilder.Append(" - ");
+
+                    if (query.PayrollPeriodMonth == -1)
+                    {
+                        reportFileNameBuilder.Append("All Payroll Period Months");
+                    }
+                    else
+                    {
+                        reportFileNameBuilder.Append($"{(Month)query.PayrollPeriodMonth.Value}");
+                    }
+
+                    reportFileNameBuilder.Append(".xlsx");
+
+                    return new QueryResult
+                    {
+                        FileContent = reportFileContent,
+                        Filename = reportFileNameBuilder.ToString()
+                    };
                 }
                 else
                 {
-                    reportFileNameBuilder.Append(clients.Single().Name);
+                    var clientName = String.Empty;
+                    if (query.ClientId.HasValue && query.ClientId.Value > 0)
+                    {
+                        clientName = (await _db.Clients.SingleAsync(c => c.Id == query.ClientId)).Name;
+                    }
+
+                    Month? payrollPeriodMonth = null;
+                    if (query.PayrollPeriodMonth.HasValue && query.PayrollPeriodMonth.Value > 0)
+                    {
+                        payrollPeriodMonth = (Month)query.PayrollPeriodMonth.Value;
+                    }
+
+                    return new QueryResult
+                    {
+                        ClientId = query.ClientId,
+                        ClientName = clientName,
+                        Lines = lines,
+                        PayrollPeriodMonth = query.PayrollPeriodMonth,
+                        PayrollPeriodMonthMonth = payrollPeriodMonth,
+                        ReportType = query.ReportType
+                    };
                 }
-
-                reportFileNameBuilder.Append(" - ");
-
-                if (query.PayrollPeriodMonth == -1)
-                {
-                    reportFileNameBuilder.Append("All Payroll Period Months");
-                }
-                else
-                {
-                    reportFileNameBuilder.Append($"{(Month)query.PayrollPeriodMonth.Value}");
-                }
-
-                reportFileNameBuilder.Append(".xlsx");
-
-                return new QueryResult
-                {
-                    FileContent = reportFileContent,
-                    Filename = reportFileNameBuilder.ToString()
-                };
             }
 
             private async Task<IList<IList<string>>> GetPHICReportLines(IList<PayrollProcessBatch> payrollProcessBatches)
