@@ -28,17 +28,38 @@
                         </div>
                     </div>
                     <div class="portlet-body form" ng-controller="EditSystemSettingsCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
-                        <form class="form-horizontal" role="form" method="post" ng-submit="vm.editSystemSettingsSubmit($event)">
-                            @Html.AntiForgeryToken()
-                            @Html.HiddenFor(m => m.Id)
-                            <div class="form-body">
-                                @Html.TextBoxHorizontalFormGroup("MinimumNetPay")
-                                @Html.TextBoxHorizontalFormGroup("MinimumDeductionOfContribution")
-                            </div>
-                            <div class="form-actions right">
-                                <button type="submit" class="btn green">Save</button>
-                            </div>
-                        </form>
+                        <uib-tabset active="active">
+                            <uib-tab index="0" heading="Contribution Info">
+                                <form class="form-horizontal" role="form" method="post" ng-submit="vm.editSystemSettingsSubmit($event)">
+                                    @Html.AntiForgeryToken()
+                                    @Html.HiddenFor(m => m.Id)
+                                    <div class="form-body">
+                                        @Html.TextBoxHorizontalFormGroup("MinimumNetPay")
+                                        @Html.TextBoxHorizontalFormGroup("MinimumDeductionOfContribution")
+                                    </div>
+                                    <div class="form-actions right">
+                                        <button type="submit" class="btn green">Save</button>
+                                    </div>
+                                </form>
+                            </uib-tab>
+                            @*<uib-tab index="1" heading="SMTP Settings">
+                                <form class="form-horizontal" role="form" method="post" ng-submit="vm.editSMTPSettingsSubmit($event)">
+                                    @Html.AntiForgeryToken()
+                                    @Html.HiddenFor(m => m.Id)
+                                    <div class="form-body">
+                                        @Html.TextBoxHorizontalFormGroup("EmailAddress")
+                                        @Html.TextBoxHorizontalFormGroup("Password")
+                                        @Html.TextBoxHorizontalFormGroup("Port")
+                                        @Html.TextBoxHorizontalFormGroup("Host")
+                                        @Html.TextBoxHorizontalFormGroup("TestEmailAddress")
+                                        @Html.CheckboxHorizontalFormGroup("EnableSendingEmails")
+                                    </div>
+                                    <div class="form-actions right">
+                                        <button type="submit" class="btn green">Save</button>
+                                    </div>
+                                </form>
+                            </uib-tab>*@
+                        </uib-tabset>
                     </div>
                 </div>
             </div>

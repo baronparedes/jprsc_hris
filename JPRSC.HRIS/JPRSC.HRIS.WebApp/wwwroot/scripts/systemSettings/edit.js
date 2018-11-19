@@ -5,6 +5,7 @@
 
     function EditSystemSettingsCtrl($http, $timeout, $window) {
         var vm = this;
+        vm.editSMTPSettingsSubmit = editSMTPSettingsSubmit;
         vm.editSystemSettingsSubmit = editSystemSettingsSubmit;
         vm.phicRecord = {};
         vm.validationErrors = {};
@@ -12,6 +13,10 @@
         $timeout(function () {
             vm.phicRecord = vm.serverModel;
         });
+
+        function editSMTPSettingsSubmit(e) {
+            alert('WIP');
+        };
 
         function editSystemSettingsSubmit(e) {
             var action = '/SystemSettings/Edit';
