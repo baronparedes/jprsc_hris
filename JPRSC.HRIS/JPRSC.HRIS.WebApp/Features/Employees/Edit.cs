@@ -275,6 +275,10 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     RuleFor(c => c.ATMAccountNumber)
                         .Must(BeUniqueATMAccountNumber)
                         .WithMessage("ATM Account Number {PropertyValue} is already taken.");
+
+                    RuleFor(c => c.ATMAccountNumber)
+                        .Matches("^[a-zA-Z][a-zA-Z0-9]*$")
+                        .WithMessage("Special characters are not allowed.");
                 });
             }
 
