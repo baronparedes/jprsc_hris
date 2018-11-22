@@ -248,8 +248,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 client.ModifiedOn = now;
 
                 await _db.SaveChangesAsync();
-
-                //await CreatePayslipFiles(command);
+                
+                await CreatePayslipFiles(command);
 
                 return new CommandResult();
             }
@@ -265,6 +265,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var tupledCollection = Tuple.Create(payslipReportQueryResult, payslipReportQueryResult.PayslipRecords);
 
+                var saveDirectoryBase = HttpContext.Current.Server.MapPath("~/wwwroot/payslips/");
+                var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{command.PayrollProcessBatchId}/");
+
+                if (!Directory.Exists(saveDirectoryForBatch))
+                {
+                    Directory.CreateDirectory(saveDirectoryForBatch);
+                }
+
                 foreach (var payslipRecord in tupledCollection.Item2)
                 {
                     var tupledIndividual = Tuple.Create(payslipReportQueryResult, payslipRecord);
@@ -274,14 +282,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     var converter = new HtmlToPdf();
                     converter.Options.PdfPageOrientation = PdfPageOrientation.Landscape;
                     var doc = converter.ConvertHtmlString(partialRendered);
-
-                    var saveDirectoryBase = HttpContext.Current.Server.MapPath("~/wwwroot/payslips/");
-                    var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{command.PayrollProcessBatchId}/");
-
-                    if (!Directory.Exists(saveDirectoryForBatch))
-                    {
-                        Directory.CreateDirectory(saveDirectoryForBatch);
-                    }
 
                     var saveFileName = Path.Combine(saveDirectoryForBatch, $"{payslipRecord.PayrollRecord.EmployeeId}.pdf");
 

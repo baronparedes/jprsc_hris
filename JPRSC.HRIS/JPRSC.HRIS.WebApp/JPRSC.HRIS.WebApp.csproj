@@ -476,6 +476,7 @@
     <Compile Include="Features\SSSRecords\_MappingProfile.cs" />
     <Compile Include="Features\SystemSettings\Add.cs" />
     <Compile Include="Features\SystemSettings\Delete.cs" />
+    <Compile Include="Features\SystemSettings\EditSMTP.cs" />
     <Compile Include="Features\SystemSettings\Edit.cs" />
     <Compile Include="Features\SystemSettings\Index.cs" />
     <Compile Include="Features\SystemSettings\Search.cs" />

@@ -42,23 +42,25 @@
                                     </div>
                                 </form>
                             </uib-tab>
-                            @*<uib-tab index="1" heading="SMTP Settings">
+                            <uib-tab index="1" heading="SMTP Settings">
                                 <form class="form-horizontal" role="form" method="post" ng-submit="vm.editSMTPSettingsSubmit($event)">
                                     @Html.AntiForgeryToken()
                                     @Html.HiddenFor(m => m.Id)
+                                    <input type="hidden" name="IsTesting" value="{{vm.isTesting}}" />
                                     <div class="form-body">
                                         @Html.TextBoxHorizontalFormGroup("EmailAddress")
-                                        @Html.TextBoxHorizontalFormGroup("Password")
+                                        @Html.PasswordBoxHorizontalFormGroup("Password")
                                         @Html.TextBoxHorizontalFormGroup("Port")
                                         @Html.TextBoxHorizontalFormGroup("Host")
                                         @Html.TextBoxHorizontalFormGroup("TestEmailAddress")
                                         @Html.CheckboxHorizontalFormGroup("EnableSendingEmails")
                                     </div>
                                     <div class="form-actions right">
+                                        <button type="submit" class="btn green" ng-click="vm.testClicked()">Test Send</button>
                                         <button type="submit" class="btn green">Save</button>
                                     </div>
                                 </form>
-                            </uib-tab>*@
+                            </uib-tab>
                         </uib-tabset>
                     </div>
                 </div>

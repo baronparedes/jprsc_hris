@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using FluentValidation;
-using JPRSC.HRIS.Infrastructure.Data;
-using MediatR;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using FluentValidation;
+using JPRSC.HRIS.Infrastructure.Data;
+using MediatR;
 
 namespace JPRSC.HRIS.WebApp.Features.SystemSettings
 {
@@ -22,6 +22,7 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
             public decimal? MinimumDeductionOfContribution { get; set; }
             public decimal? MinimumNetPay { get; set; }
 
+            // Used only to render the view
             public string EmailAddress { get; set; }
             public string Password { get; set; }
             public string Port { get; set; }
@@ -68,6 +69,9 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
             public CommandValidator()
             {
                 RuleFor(c => c.MinimumNetPay)
+                    .NotEmpty();
+
+                RuleFor(c => c.MinimumDeductionOfContribution)
                     .NotEmpty();
             }
         }

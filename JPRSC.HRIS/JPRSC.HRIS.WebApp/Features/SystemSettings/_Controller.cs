@@ -38,5 +38,19 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
 
             return Json("success");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditSMTP(EditSMTP.Command command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return JsonValidationError();
+            }
+
+            await _mediator.Send(command);
+
+            return Json("success");
+        }
     }
 }
