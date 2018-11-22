@@ -52,7 +52,9 @@
         };
 
         function clientChanged() {
-            vm.payrollPeriod = vm.client.currentPayrollPeriod;
+            if (vm.client) {
+                vm.payrollPeriod = vm.client.currentPayrollPeriod;
+            }
         };
     };
 }());

@@ -1,15 +1,19 @@
-﻿using AutoMapper;
-using FluentValidation;
-using JPRSC.HRIS.Infrastructure.Data;
-using JPRSC.HRIS.Models;
-using MediatR;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
+using AutoMapper;
+using FluentValidation;
+using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
+using MediatR;
+using Newtonsoft.Json;
+using SelectPdf;
 
 namespace JPRSC.HRIS.WebApp.Features.Payroll
 {
@@ -183,6 +187,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         public class Command : IRequest<CommandResult>
         {
+            public AppController AppController { get; set; }
             public int? PayrollProcessBatchId { get; set; }
             public int? PayrollPeriod { get; set; }
             public DateTime? PayrollPeriodFrom { get; set; }
@@ -214,10 +219,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         public class CommandHandler : IRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMediator _mediator;
 
-            public CommandHandler(ApplicationDbContext db)
+            public CommandHandler(ApplicationDbContext db, IMediator mediator)
             {
                 _db = db;
+                _mediator = mediator;
             }
 
             public async Task<CommandResult> Handle(Command command, CancellationToken cancellationToken)
@@ -242,7 +249,45 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 await _db.SaveChangesAsync();
 
+                //await CreatePayslipFiles(command);
+
                 return new CommandResult();
+            }
+
+            private async Task CreatePayslipFiles(Command command)
+            {
+                var payslipReportQuery = new PayslipReport.Query
+                {
+                    PayrollProcessBatchId = command.PayrollProcessBatchId
+                };
+
+                var payslipReportQueryResult = await _mediator.Send(payslipReportQuery);
+
+                var tupledCollection = Tuple.Create(payslipReportQueryResult, payslipReportQueryResult.PayslipRecords);
+
+                foreach (var payslipRecord in tupledCollection.Item2)
+                {
+                    var tupledIndividual = Tuple.Create(payslipReportQueryResult, payslipRecord);
+
+                    var partialRendered = command.AppController.RenderPartialToString("PayslipReportTableIndividual", tupledIndividual);
+
+                    var converter = new HtmlToPdf();
+                    converter.Options.PdfPageOrientation = PdfPageOrientation.Landscape;
+                    var doc = converter.ConvertHtmlString(partialRendered);
+
+                    var saveDirectoryBase = HttpContext.Current.Server.MapPath("~/wwwroot/payslips/");
+                    var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{command.PayrollProcessBatchId}/");
+
+                    if (!Directory.Exists(saveDirectoryForBatch))
+                    {
+                        Directory.CreateDirectory(saveDirectoryForBatch);
+                    }
+
+                    var saveFileName = Path.Combine(saveDirectoryForBatch, $"{payslipRecord.PayrollRecord.EmployeeId}.pdf");
+
+                    doc.Save(saveFileName);
+                    doc.Close();
+                }
             }
         }
     }

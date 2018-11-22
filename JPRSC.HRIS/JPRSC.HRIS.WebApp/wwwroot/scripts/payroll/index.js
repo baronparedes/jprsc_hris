@@ -12,6 +12,7 @@
         vm.searchClicked = searchClicked;
         vm.searchModel = { payrollPeriodMonth: '-1' };
         vm.searchInProgress = false;
+        vm.sendPayslipClicked = sendPayslipClicked;
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
@@ -67,6 +68,23 @@
             $http.get('/Payroll/Search', { params: vm.searchModel }).then(function (response) {
                 vm.payrollProcessBatches = response.data.payrollProcessBatches;
                 vm.searchInProgress = false;
+            });
+        };
+
+        function sendPayslipClicked(payrollProcessBatch) {
+            if (!navigator.onLine) {
+                alert('Send payslip failed. There is no internet connection.');
+                return;
+            }
+
+            console.log('sendPayslipClicked');
+
+            $http.post('/Payroll/SendPayslip', { payrollProcessBatchId: payrollProcessBatch.id }).then(function (response) {
+                alert('Payslips sent.');
+            }, function (response) {
+                if (response.status == 400) {
+                    vm.validationErrors = response.data;
+                }
             });
         };
     };

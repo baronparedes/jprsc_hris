@@ -104,14 +104,16 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         [AuthorizePermission(Permission.PayrollEndProcess)]
         [HttpPost]
-        public async Task<ActionResult> EndProcessCommand(EndProcess.Command query)
+        public async Task<ActionResult> EndProcessCommand(EndProcess.Command command)
         {
             if (!ModelState.IsValid)
             {
                 return JsonValidationError();
             }
 
-            var result = await _mediator.Send(query);
+            command.AppController = this;
+
+            var result = await _mediator.Send(command);
 
             return JsonCamelCase(result);
         }
@@ -245,6 +247,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             var queryResult = await _mediator.Send(query);
 
             return JsonCamelCase(queryResult);
+        }
+
+        [AuthorizePermission(Permission.PayrollDefault)]
+        [HttpPost]
+        public async Task<ActionResult> SendPayslip(SendPayslip.Command command)
+        {
+            var commandResult = await _mediator.Send(command);
+
+            return Json("success");
         }
     }
 }

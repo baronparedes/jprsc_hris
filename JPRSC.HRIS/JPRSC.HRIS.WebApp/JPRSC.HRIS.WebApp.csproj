@@ -133,6 +133,9 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=18.4.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <HintPath>..\packages\Select.HtmlToPdf.18.4.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
+    </Reference>
     <Reference Include="SendGrid, Version=9.8.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
       <HintPath>..\packages\Sendgrid.9.9.0\lib\net452\SendGrid.dll</HintPath>
     </Reference>
@@ -425,6 +428,7 @@
     <Compile Include="Features\Payroll\CheckReport.cs" />
     <Compile Include="Features\Payroll\CashHoldReport.cs" />
     <Compile Include="Features\Payroll\CashReport.cs" />
+    <Compile Include="Features\Payroll\SendPayslip.cs" />
     <Compile Include="Features\Payroll\DeleteForProcessingBatch.cs" />
     <Compile Include="Features\Payroll\ExportQueueToEDRExcel.cs" />
     <Compile Include="Features\Payroll\ExportQueueToDTRExcel.cs" />
@@ -7092,6 +7096,7 @@
     <Content Include="Views\Reports\Index.cshtml" />
     <Content Include="Views\Reports\PHICReport.cshtml" />
     <Content Include="Views\Reports\SSSReport.cshtml" />
+    <Content Include="Views\Payroll\PayslipReportTableIndividual.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

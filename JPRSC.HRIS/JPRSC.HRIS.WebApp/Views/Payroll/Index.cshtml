@@ -127,6 +127,9 @@
                                                     <li>
                                                         <a href="{{'/Payroll/CheckReport?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank">Check</a>
                                                     </li>
+                                                    @*<li ng-if="payrollProcessBatch.isEndProcessed">
+                                                        <a href="" ng-click="vm.sendPayslipClicked(payrollProcessBatch)">Send payslip</a>
+                                                    </li>*@
                                                 </ul>
                                             </div>
 
@@ -167,7 +170,7 @@
                                         <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodFrom }">
                                     <label class="col-md-4 col-lg-3 control-label">Payroll Period From</label>
                                     <div class="col-md-8 col-lg-9">
                                         <input type="text" class="form-control" ng-model="vm.payrollPeriodFrom"
@@ -177,7 +180,7 @@
                                         <span ng-show="vm.validationErrors.payrollPeriodFrom" class="help-block">{{vm.validationErrors.payrollPeriodFrom.join(' ')}}</span>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodTo }">
                                     <label class="col-md-4 col-lg-3 control-label">Payroll Period To</label>
                                     <div class="col-md-8 col-lg-9">
                                         <input type="text" class="form-control" ng-model="vm.payrollPeriodTo"
