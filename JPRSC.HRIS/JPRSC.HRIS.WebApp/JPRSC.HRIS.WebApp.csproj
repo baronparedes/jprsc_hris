@@ -458,7 +458,8 @@
     <Compile Include="Features\Religions\Search.cs" />
     <Compile Include="Features\Religions\_Controller.cs" />
     <Compile Include="Features\Religions\_MappingProfile.cs" />
-    <Compile Include="Features\Reports\Generate.cs" />
+    <Compile Include="Features\Reports\GenerateSSS.cs" />
+    <Compile Include="Features\Reports\GeneratePHIC.cs" />
     <Compile Include="Features\Reports\Index.cs" />
     <Compile Include="Features\Reports\_Controller.cs" />
     <Compile Include="Features\Reports\_MappingProfile.cs" />
@@ -7089,7 +7090,8 @@
     <Content Include="Views\SystemSettings\Edit.cshtml" />
     <Content Include="Views\SystemSettings\Index.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
-    <Content Include="Views\Reports\GenericReport.cshtml" />
+    <Content Include="Views\Reports\PHICReport.cshtml" />
+    <Content Include="Views\Reports\SSSReport.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

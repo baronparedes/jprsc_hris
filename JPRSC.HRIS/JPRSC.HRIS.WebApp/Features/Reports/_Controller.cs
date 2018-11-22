@@ -18,7 +18,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         }
         
         [HttpGet]
-        public async Task<ActionResult> Generate(Generate.Query query)
+        public async Task<ActionResult> GeneratePHIC(GeneratePHIC.Query query)
         {
             var result = await _mediator.Send(query);
 
@@ -28,7 +28,22 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             }
             else
             {
-                return View("GenericReport", result);
+                return View("PHICReport", result);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GenerateSSS(GenerateSSS.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            if (query.Destination == "Excel")
+            {
+                return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+            }
+            else
+            {
+                return View("SSSReport", result);
             }
         }
 

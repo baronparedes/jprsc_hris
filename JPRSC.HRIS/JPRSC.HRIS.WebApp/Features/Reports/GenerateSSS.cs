@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Reports
 {
-    public class Generate
+    public class GenerateSSS
     {
         public class Query : IRequest<QueryResult>
         {
@@ -21,7 +21,6 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public string Destination { get; set; }
             public string DisplayMode { get; set; }
             public int? PayrollPeriodMonth { get; set; }
-            public string ReportType { get; set; }
         }
 
         public class QueryResult
@@ -34,7 +33,40 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public IList<IList<string>> Lines { get; set; } = new List<IList<string>>();
             public int? PayrollPeriodMonth { get; set; }
             public Month? PayrollPeriodMonthMonth { get; set; }
-            public string ReportType { get; set; }
+            public IList<SSSRecord> SSSRecords { get; set; } = new List<SSSRecord>();
+
+            public class SSSRecord
+            {
+                public string CompanySSS { get; set; }
+                public Employee Employee { get; set; }
+                public decimal NetPayValue { get; set; }
+                public decimal TotalSSSEmployee { get; set; }
+                public decimal TotalSSSEmployer { get; set; }
+
+                public IList<string> DisplayLine
+                {
+                    get
+                    {
+                        var line = new List<string>();
+
+                        line.Add(CompanySSS);
+                        line.Add(String.Empty);
+                        line.Add(Employee.SSS);
+                        line.Add(Employee.LastName);
+                        line.Add(Employee.FirstName);
+                        line.Add(String.Empty);
+                        line.Add(String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : Employee.MiddleName.Trim().First().ToString());
+                        line.Add(String.Format("{0:n}", NetPayValue));
+                        line.Add(String.Empty);
+                        line.Add(String.Format("{0:M/d/yyyy}", DateTime.Now));
+                        line.Add(String.Empty);
+                        line.Add(String.Format("{0:n}", TotalSSSEmployer));
+                        line.Add(String.Format("{0:n}", TotalSSSEmployee));
+
+                        return line;
+                    }
+                }
+            }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
@@ -53,6 +85,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                _systemSettings = await _db.SystemSettings.SingleAsync();
+
                 var clients = query.ClientId == -1 ?
                     await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync() :
                     await _db.Clients.Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
@@ -63,26 +97,27 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     await _db.PayrollProcessBatches
                         .Include(ppb => ppb.PayrollRecords)
                         .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
                         .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value))
                         .ToListAsync() :
                     await _db.PayrollProcessBatches
                         .Include(ppb => ppb.PayrollRecords)
                         .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
                         .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == query.PayrollPeriodMonth)
                         .ToListAsync();
 
-                _systemSettings = await _db.SystemSettings.SingleAsync();
-
-                var lines = query.ReportType == "PHIC" ?
-                    await GetPHICReportLines(payrollProcessBatches) :
-                    await GetSSSReportLines(payrollProcessBatches);
-
-                var reportFileContent = _excelBuilder.BuildExcelFile(lines);
+                var sssRecords = await GetSSSRecords(payrollProcessBatches);
 
                 if (query.Destination == "Excel")
                 {
+                    var excelLines = sssRecords.Select(pr => pr.DisplayLine).ToList();
+                    excelLines.Insert(0, new List<string> { "Company SSS No.", String.Empty, "Employee SSS No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "SSS Employer Share", "SSS Employee Share" });
+
+                    var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
+
                     var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"{query.ReportType} Report - ");
+                    reportFileNameBuilder.Append($"SSS Report - ");
 
                     if (query.ClientId == -1)
                     {
@@ -130,24 +165,21 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         ClientId = query.ClientId,
                         ClientName = clientName,
-                        Lines = lines,
+                        DisplayMode = query.DisplayMode,
+                        SSSRecords = sssRecords,
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
-                        PayrollPeriodMonthMonth = payrollPeriodMonth,
-                        ReportType = query.ReportType
+                        PayrollPeriodMonthMonth = payrollPeriodMonth
                     };
-                }
+                }                
             }
-
-            private async Task<IList<IList<string>>> GetPHICReportLines(IList<PayrollProcessBatch> payrollProcessBatches)
+            
+            private async Task<IList<QueryResult.SSSRecord>> GetSSSRecords(IList<PayrollProcessBatch> payrollProcessBatches)
             {
                 var allPayrollRecords = payrollProcessBatches.SelectMany(ppb => ppb.PayrollRecords).ToList();
                 var distinctCompanyIds = allPayrollRecords.Select(pr => pr.Employee).Select(e => e.CompanyId).Distinct();
                 var companies = await _db.Companies.Where(c => !c.DeletedOn.HasValue && distinctCompanyIds.Contains(c.Id)).ToListAsync();
 
-                var lines = new List<IList<string>>();
-
-                var header = new List<string> { "Company PHIC No.", String.Empty, "Employee PHIC No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "PHIC Employer Share", "PHIC Employee Share" };
-                lines.Add(header);
+                var sssRecords = new List<QueryResult.SSSRecord>();
 
                 var payrollProcessBatchesPerMonth = payrollProcessBatches
                     .GroupBy(ppb => ppb.PayrollPeriodMonth)
@@ -158,11 +190,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     var payrollRecordsInBatchPerEmployee = batch
                         .SelectMany(ppb => ppb.PayrollRecords)
                         .GroupBy(pr => pr.EmployeeId)
+                        .OrderBy(pr => pr.First().Employee.LastName)
+                        .ThenBy(pr => pr.First().Employee.FirstName)
                         .ToList();
 
                     foreach (var employeePayrollRecords in payrollRecordsInBatchPerEmployee)
                     {
-                        var line = new List<string>();
+                        var sssRecord = new QueryResult.SSSRecord();
 
                         var netPayValue = 0m;
 
@@ -176,26 +210,18 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         }
 
                         var sampleEmployee = employeePayrollRecords.First().Employee;
-                        
-                        line.Add(companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.PhilHealth);
-                        line.Add(String.Empty);
-                        line.Add(sampleEmployee.PhilHealth);
-                        line.Add(sampleEmployee.LastName);
-                        line.Add(sampleEmployee.FirstName);
-                        line.Add(String.Empty);
-                        line.Add(String.IsNullOrWhiteSpace(sampleEmployee.MiddleName) ? null : sampleEmployee.MiddleName.Trim().First().ToString());
-                        line.Add(String.Format("{0:n}", netPayValue));
-                        line.Add(String.Empty);
-                        line.Add(String.Format("{0:M/d/yyyy}", DateTime.Now));
-                        line.Add(String.Empty);
-                        line.Add(String.Format("{0:n}", employeePayrollRecords.Sum(pr => pr.PHICValueEmployer.GetValueOrDefault())));
-                        line.Add(String.Format("{0:n}", employeePayrollRecords.Sum(pr => pr.PHICValueEmployee.GetValueOrDefault())));
 
-                        lines.Add(line);
+                        sssRecord.CompanySSS = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.SSS;
+                        sssRecord.Employee = sampleEmployee;
+                        sssRecord.NetPayValue = netPayValue;
+                        sssRecord.TotalSSSEmployee = employeePayrollRecords.Sum(pr => pr.SSSValueEmployee.GetValueOrDefault());
+                        sssRecord.TotalSSSEmployer = employeePayrollRecords.Sum(pr => pr.SSSValueEmployer.GetValueOrDefault());
+
+                        sssRecords.Add(sssRecord);
                     }
                 }
 
-                return lines;
+                return sssRecords;
             }
 
             private async Task<IList<IList<string>>> GetSSSReportLines(IList<PayrollProcessBatch> payrollProcessBatches)
@@ -218,6 +244,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     var payrollRecordsInBatchPerEmployee = batch
                         .SelectMany(ppb => ppb.PayrollRecords)
                         .GroupBy(pr => pr.EmployeeId)
+                        .OrderBy(pr => pr.First().Employee.LastName)
+                        .ThenBy(pr => pr.First().Employee.FirstName)
                         .ToList();
 
                     foreach (var employeePayrollRecords in payrollRecordsInBatchPerEmployee)
