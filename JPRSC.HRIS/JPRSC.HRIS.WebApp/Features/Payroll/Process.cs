@@ -171,7 +171,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         HoursLateValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursLateValue.GetValueOrDefault()),
                         HoursUndertimeValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursUndertimeValue.GetValueOrDefault()),
                         HoursWorkedValue = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.HoursWorkedValue.GetValueOrDefault()),
-                        LoanPaymentValue = employeeLoans.Any() ? employeeLoans.Sum(l => l.RemainingBalance.GetValueOrDefault() > l.DeductionAmount.GetValueOrDefault() ? l.DeductionAmount.GetValueOrDefault() : l.RemainingBalance.GetValueOrDefault()) : 0,
                         OvertimeValue = employeeOtsForPayrollPeriod.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault())
                     };
 
@@ -218,11 +217,16 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     payrollRecord.DeductionBasis = deductionBasis;
 
                     payrollProcessBatch.PayrollRecords.Add(payrollRecord);
-                }
 
-                foreach (var loan in loans)
-                {
-                    loan.RemainingBalance -= loan.DeductionAmount.GetValueOrDefault();
+                    if (loansDeducted)
+                    {
+                        payrollRecord.LoanPaymentValue = employeeLoans.Sum(l => l.RemainingBalance.GetValueOrDefault() > l.DeductionAmount.GetValueOrDefault() ? l.DeductionAmount.GetValueOrDefault() : l.RemainingBalance.GetValueOrDefault());
+
+                        foreach (var loan in employeeLoans)
+                        {
+                            loan.RemainingBalance -= loan.DeductionAmount.GetValueOrDefault();
+                        }
+                    }
                 }
 
                 _db.PayrollProcessBatches.Add(payrollProcessBatch);

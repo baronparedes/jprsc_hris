@@ -35,6 +35,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             {
                 var payrollProcessBatch = await _db
                     .PayrollProcessBatches
+                    .Include(ppb => ppb.PayrollRecords)
                     .SingleOrDefaultAsync(ppb => ppb.Id == command.PayrollProcessBatchId && !ppb.DeletedOn.HasValue && !ppb.EndProcessedOn.HasValue);
 
                 using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
@@ -77,9 +78,16 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                     .ToListAsync();
 
-                foreach (var loan in loans)
+                foreach (var payrollRecord in payrollProcessBatch.PayrollRecords)
                 {
-                    loan.RemainingBalance += loan.DeductionAmount.GetValueOrDefault();
+                    if (!payrollRecord.LoansDeducted) continue;
+
+                    var employeeLoans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId);
+
+                    foreach (var loan in employeeLoans)
+                    {
+                        loan.RemainingBalance += loan.DeductionAmount.GetValueOrDefault();
+                    }
                 }
 
                 _db.PayrollProcessBatches.Remove(payrollProcessBatch);
