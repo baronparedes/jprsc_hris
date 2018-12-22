@@ -462,6 +462,8 @@
     <Compile Include="Features\Religions\Search.cs" />
     <Compile Include="Features\Religions\_Controller.cs" />
     <Compile Include="Features\Religions\_MappingProfile.cs" />
+    <Compile Include="Features\Reports\GeneratePHICLoan.cs" />
+    <Compile Include="Features\Reports\GenerateSSSLoan.cs" />
     <Compile Include="Features\Reports\GenerateSSS.cs" />
     <Compile Include="Features\Reports\GeneratePHIC.cs" />
     <Compile Include="Features\Reports\Index.cs" />
@@ -7098,6 +7100,8 @@
     <Content Include="Views\Reports\PHICReport.cshtml" />
     <Content Include="Views\Reports\SSSReport.cshtml" />
     <Content Include="Views\Payroll\PayslipReportTableIndividual.cshtml" />
+    <Content Include="Views\Reports\PHICLoanReport.cshtml" />
+    <Content Include="Views\Reports\SSSLoanReport.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

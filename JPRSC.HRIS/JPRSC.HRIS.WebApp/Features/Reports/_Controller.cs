@@ -33,6 +33,21 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         }
 
         [HttpGet]
+        public async Task<ActionResult> GeneratePHICLoan(GeneratePHICLoan.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            if (query.Destination == "Excel")
+            {
+                return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+            }
+            else
+            {
+                return View("PHICLoanReport", result);
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GenerateSSS(GenerateSSS.Query query)
         {
             var result = await _mediator.Send(query);
@@ -44,6 +59,21 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             else
             {
                 return View("SSSReport", result);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GenerateSSSLoan(GenerateSSSLoan.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            if (query.Destination == "Excel")
+            {
+                return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+            }
+            else
+            {
+                return View("SSSLoanReport", result);
             }
         }
 

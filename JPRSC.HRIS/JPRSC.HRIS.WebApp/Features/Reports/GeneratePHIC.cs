@@ -225,68 +225,6 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 return phicRecords;
             }
-
-            private async Task<IList<IList<string>>> GetSSSReportLines(IList<PayrollProcessBatch> payrollProcessBatches)
-            {
-                var allPayrollRecords = payrollProcessBatches.SelectMany(ppb => ppb.PayrollRecords).ToList();
-                var distinctCompanyIds = allPayrollRecords.Select(pr => pr.Employee).Select(e => e.CompanyId).Distinct();
-                var companies = await _db.Companies.Where(c => !c.DeletedOn.HasValue && distinctCompanyIds.Contains(c.Id)).ToListAsync();
-
-                var lines = new List<IList<string>>();
-
-                var header = new List<string> { "Company SSS No.", String.Empty, "Employee SSS No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "SSS Employer Share", "SSS Employee Share" };
-                lines.Add(header);
-
-                var payrollProcessBatchesPerMonth = payrollProcessBatches
-                    .GroupBy(ppb => ppb.PayrollPeriodMonth)
-                    .ToList();
-
-                foreach (var batch in payrollProcessBatchesPerMonth)
-                {
-                    var payrollRecordsInBatchPerEmployee = batch
-                        .SelectMany(ppb => ppb.PayrollRecords)
-                        .GroupBy(pr => pr.EmployeeId)
-                        .OrderBy(pr => pr.First().Employee.LastName)
-                        .ThenBy(pr => pr.First().Employee.FirstName)
-                        .ToList();
-
-                    foreach (var employeePayrollRecords in payrollRecordsInBatchPerEmployee)
-                    {
-                        var line = new List<string>();
-
-                        var netPayValue = 0m;
-
-                        if (employeePayrollRecords.Any(pr => pr.AddedOn < new DateTime(2018, 10, 30)))
-                        {
-                            netPayValue = NetPayHelper.GetNetPay(_systemSettings, employeePayrollRecords.Sum(pr => pr.BasicPayValue), employeePayrollRecords.Sum(pr => pr.TotalEarningsValue), employeePayrollRecords.Sum(pr => pr.TotalGovDeductionsValue), employeePayrollRecords.Sum(pr => pr.DeductionsValue.GetValueOrDefault()), employeePayrollRecords.Sum(pr => pr.LoanPaymentValue.GetValueOrDefault()), out decimal deductionBasis);
-                        }
-                        else
-                        {
-                            netPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
-                        }
-
-                        var sampleEmployee = employeePayrollRecords.First().Employee;
-
-                        line.Add(companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.SSS);
-                        line.Add(String.Empty);
-                        line.Add(sampleEmployee.SSS);
-                        line.Add(sampleEmployee.LastName);
-                        line.Add(sampleEmployee.FirstName);
-                        line.Add(String.Empty);
-                        line.Add(String.IsNullOrWhiteSpace(sampleEmployee.MiddleName) ? null : sampleEmployee.MiddleName.Trim().First().ToString());
-                        line.Add(String.Format("{0:n}", netPayValue));
-                        line.Add(String.Empty);
-                        line.Add(String.Format("{0:M/d/yyyy}", DateTime.Now));
-                        line.Add(String.Empty);
-                        line.Add(String.Format("{0:n}", employeePayrollRecords.Sum(pr => pr.SSSValueEmployer.GetValueOrDefault())));
-                        line.Add(String.Format("{0:n}", employeePayrollRecords.Sum(pr => pr.SSSValueEmployee.GetValueOrDefault())));
-
-                        lines.Add(line);
-                    }
-                }
-
-                return lines;
-            }
         }
     }
 }

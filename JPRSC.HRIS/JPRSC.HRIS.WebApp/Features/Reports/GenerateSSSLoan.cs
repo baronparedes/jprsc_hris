@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Reports
 {
-    public class GenerateSSS
+    public class GenerateSSSLoan
     {
         public class Query : IRequest<QueryResult>
         {
@@ -37,32 +37,27 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
             public class SSSRecord
             {
-                public string CompanySSS { get; set; }
-                public decimal DeductionBasis { get; set; }
                 public Employee Employee { get; set; }
-                public decimal NetPayValue { get; set; }
-                public decimal TotalSSSEmployee { get; set; }
-                public decimal TotalSSSEmployer { get; set; }
 
                 public IList<string> DisplayLine
                 {
                     get
                     {
                         var line = new List<string>();
-
-                        line.Add(CompanySSS);
-                        line.Add(String.Empty);
+                        
                         line.Add(Employee.SSS);
                         line.Add(Employee.LastName);
                         line.Add(Employee.FirstName);
-                        line.Add(String.Empty);
                         line.Add(String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : Employee.MiddleName.Trim().First().ToString());
-                        line.Add(String.Format("{0:n}", DeductionBasis));
                         line.Add(String.Empty);
-                        line.Add(String.Format("{0:M/d/yyyy}", DateTime.Now));
                         line.Add(String.Empty);
-                        line.Add(String.Format("{0:n}", TotalSSSEmployer));
-                        line.Add(String.Format("{0:n}", TotalSSSEmployee));
+                        line.Add(String.Empty);
+                        line.Add(String.Empty);
+                        line.Add(String.Empty);
+                        line.Add(String.Empty);
+                        line.Add(String.Empty);
+                        line.Add(String.Empty);
+                        line.Add(String.Empty);
 
                         return line;
                     }
@@ -113,7 +108,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 if (query.Destination == "Excel")
                 {
                     var excelLines = sssRecords.Select(pr => pr.DisplayLine).ToList();
-                    excelLines.Insert(0, new List<string> { "Company SSS No.", String.Empty, "Employee SSS No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "SSS Employer Share", "SSS Employee Share" });
+                    excelLines.Insert(0, new List<string> { "Employee SSS No.", "Last Name", "First Name", "Middle Initial", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Amount Paid", "AMPSDG", "Status", "Effective Date" });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
@@ -211,13 +206,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         }
 
                         var sampleEmployee = employeePayrollRecords.First().Employee;
-
-                        sssRecord.CompanySSS = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.SSS;
-                        sssRecord.DeductionBasis = employeePayrollRecords.Sum(pr => pr.DeductionBasis);
+                        
                         sssRecord.Employee = sampleEmployee;
-                        sssRecord.NetPayValue = netPayValue;
-                        sssRecord.TotalSSSEmployee = employeePayrollRecords.Sum(pr => pr.SSSValueEmployee.GetValueOrDefault());
-                        sssRecord.TotalSSSEmployer = employeePayrollRecords.Sum(pr => pr.SSSValueEmployer.GetValueOrDefault());
 
                         sssRecords.Add(sssRecord);
                     }

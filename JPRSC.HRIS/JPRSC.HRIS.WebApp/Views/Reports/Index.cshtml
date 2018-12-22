@@ -49,6 +49,18 @@
                                             <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('SSS')">Generate</a>
                                         </td>
                                     </tr>
+                                    @*<tr>
+                                        <td>PHIC Loan</td>
+                                        <td>
+                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('PHICLoan')">Generate</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>SSS Loan</td>
+                                        <td>
+                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('SSSLoan')">Generate</a>
+                                        </td>
+                                    </tr>*@
                                 </tbody>
                             </table>
                         </div>
@@ -99,6 +111,8 @@
                         <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.generateInProgress"></i>
                         <a ng-show="vm.reportType == 'PHIC'" ng-href="/Reports/GeneratePHIC?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a ng-show="vm.reportType == 'SSS'" ng-href="/Reports/GenerateSSS?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-show="vm.reportType == 'PHICLoan'" ng-href="/Reports/GeneratePHICLoan?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-show="vm.reportType == 'SSSLoan'" ng-href="/Reports/GenerateSSSLoan?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
                     </div>
                 </form>
