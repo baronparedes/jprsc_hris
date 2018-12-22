@@ -398,6 +398,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201811221606087_AddSMTPSettings.Designer.cs">
       <DependentUpon>201811221606087_AddSMTPSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201812220250154_AddPayrollRecordDeductionBasis.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201812220250154_AddPayrollRecordDeductionBasis.Designer.cs">
+      <DependentUpon>201812220250154_AddPayrollRecordDeductionBasis.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -691,6 +695,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201811221606087_AddSMTPSettings.resx">
       <DependentUpon>201811221606087_AddSMTPSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201812220250154_AddPayrollRecordDeductionBasis.resx">
+      <DependentUpon>201812220250154_AddPayrollRecordDeductionBasis.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

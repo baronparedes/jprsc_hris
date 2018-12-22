@@ -38,6 +38,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public class SSSRecord
             {
                 public string CompanySSS { get; set; }
+                public decimal DeductionBasis { get; set; }
                 public Employee Employee { get; set; }
                 public decimal NetPayValue { get; set; }
                 public decimal TotalSSSEmployee { get; set; }
@@ -56,7 +57,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         line.Add(Employee.FirstName);
                         line.Add(String.Empty);
                         line.Add(String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : Employee.MiddleName.Trim().First().ToString());
-                        line.Add(String.Format("{0:n}", NetPayValue));
+                        line.Add(String.Format("{0:n}", DeductionBasis));
                         line.Add(String.Empty);
                         line.Add(String.Format("{0:M/d/yyyy}", DateTime.Now));
                         line.Add(String.Empty);
@@ -202,7 +203,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                         if (employeePayrollRecords.Any(pr => pr.AddedOn < new DateTime(2018, 10, 30)))
                         {
-                            netPayValue = NetPayHelper.GetNetPay(_systemSettings, employeePayrollRecords.Sum(pr => pr.BasicPayValue), employeePayrollRecords.Sum(pr => pr.TotalEarningsValue), employeePayrollRecords.Sum(pr => pr.TotalGovDeductionsValue), employeePayrollRecords.Sum(pr => pr.DeductionsValue.GetValueOrDefault()), employeePayrollRecords.Sum(pr => pr.LoanPaymentValue.GetValueOrDefault()));
+                            netPayValue = NetPayHelper.GetNetPay(_systemSettings, employeePayrollRecords.Sum(pr => pr.BasicPayValue), employeePayrollRecords.Sum(pr => pr.TotalEarningsValue), employeePayrollRecords.Sum(pr => pr.TotalGovDeductionsValue), employeePayrollRecords.Sum(pr => pr.DeductionsValue.GetValueOrDefault()), employeePayrollRecords.Sum(pr => pr.LoanPaymentValue.GetValueOrDefault()), out decimal deductionBasis);
                         }
                         else
                         {
@@ -212,6 +213,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
                         sssRecord.CompanySSS = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.SSS;
+                        sssRecord.DeductionBasis = employeePayrollRecords.Sum(pr => pr.DeductionBasis);
                         sssRecord.Employee = sampleEmployee;
                         sssRecord.NetPayValue = netPayValue;
                         sssRecord.TotalSSSEmployee = employeePayrollRecords.Sum(pr => pr.SSSValueEmployee.GetValueOrDefault());
@@ -256,7 +258,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                         if (employeePayrollRecords.Any(pr => pr.AddedOn < new DateTime(2018, 10, 30)))
                         {
-                            netPayValue = NetPayHelper.GetNetPay(_systemSettings, employeePayrollRecords.Sum(pr => pr.BasicPayValue), employeePayrollRecords.Sum(pr => pr.TotalEarningsValue), employeePayrollRecords.Sum(pr => pr.TotalGovDeductionsValue), employeePayrollRecords.Sum(pr => pr.DeductionsValue.GetValueOrDefault()), employeePayrollRecords.Sum(pr => pr.LoanPaymentValue.GetValueOrDefault()));
+                            netPayValue = NetPayHelper.GetNetPay(_systemSettings, employeePayrollRecords.Sum(pr => pr.BasicPayValue), employeePayrollRecords.Sum(pr => pr.TotalEarningsValue), employeePayrollRecords.Sum(pr => pr.TotalGovDeductionsValue), employeePayrollRecords.Sum(pr => pr.DeductionsValue.GetValueOrDefault()), employeePayrollRecords.Sum(pr => pr.LoanPaymentValue.GetValueOrDefault()), out decimal deductionBasis);
                         }
                         else
                         {

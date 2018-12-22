@@ -41,6 +41,7 @@ namespace JPRSC.HRIS.Models
         public bool GovDeductionsDeducted { get; set; }
         public bool LoansDeducted { get; set; }
         public bool AnythingDeducted { get; set; }
+        public decimal DeductionBasis { get; set; }
 
         public decimal BasicPayValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault();
         public decimal TotalEarningsValue => BasicPayValue + OvertimeValue.GetValueOrDefault() - HoursUndertimeValue.GetValueOrDefault() - HoursLateValue.GetValueOrDefault() + COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAMonthlyValue.GetValueOrDefault() + EarningsValue.GetValueOrDefault();

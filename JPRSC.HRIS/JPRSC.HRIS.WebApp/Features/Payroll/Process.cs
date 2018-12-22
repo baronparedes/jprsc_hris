@@ -211,10 +211,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
 
-                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault(), out bool govDeductionsDeducted, out bool loansDeducted, out bool anythingDeducted);
+                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault(), out bool govDeductionsDeducted, out bool loansDeducted, out bool anythingDeducted, out decimal deductionBasis);
                     payrollRecord.GovDeductionsDeducted = govDeductionsDeducted;
                     payrollRecord.LoansDeducted = loansDeducted;
                     payrollRecord.AnythingDeducted = anythingDeducted;
+                    payrollRecord.DeductionBasis = deductionBasis;
 
                     payrollProcessBatch.PayrollRecords.Add(payrollRecord);
                 }

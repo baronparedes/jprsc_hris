@@ -193,7 +193,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 {
                     if (payrollRecord.AddedOn < new DateTime(2018, 10, 30))
                     {
-                        payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault());
+                        payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault(), out decimal deductionBasis);
                     }
                 }
 

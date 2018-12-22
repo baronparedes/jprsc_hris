@@ -78,7 +78,7 @@
                                     <th>First Name</th>
                                     <th>&nbsp;</th>
                                     <th>Middle Initial</th>
-                                    <th>Net pay</th>
+                                    <th>Deduction Basis</th>
                                     <th>&nbsp;</th>
                                     <th>Date Generated</th>
                                     <th>&nbsp;</th>
@@ -96,6 +96,21 @@
                                         }
                                     </tr>
                                 }
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.DeductionBasis))</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.TotalSSSEmployer))</td>
+                                    <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.TotalSSSEmployee))</td>
+                                </tr>
                             </tbody>
                         </table>
                     }
@@ -138,6 +153,21 @@
                                             }
                                         </tr>
                                     }
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.DeductionBasis))</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalSSSEmployer))</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalSSSEmployee))</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         }

@@ -86,9 +86,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                             email.Body = $"Payslip for {payrollRecord.Employee.FirstName} {payrollRecord.Employee.LastName}";
 
                             var saveFileName = Path.Combine(saveDirectoryForBatch, $"{payrollRecord.EmployeeId}.pdf");
-
-                            // TODO: Attach
-                            // See https://stackoverflow.com/questions/5034503/adding-an-attachment-to-email-using-c-sharp
+                            email.Attachments.Add(new Attachment(saveFileName));
 
                             client.Send(email);
                         }
