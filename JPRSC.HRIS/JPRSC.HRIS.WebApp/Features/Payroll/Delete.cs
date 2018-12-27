@@ -35,7 +35,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             {
                 var payrollProcessBatch = await _db
                     .PayrollProcessBatches
-                    .Include(ppb => ppb.PayrollRecords)
                     .SingleOrDefaultAsync(ppb => ppb.Id == command.PayrollProcessBatchId && !ppb.DeletedOn.HasValue && !ppb.EndProcessedOn.HasValue);
 
                 using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
@@ -78,7 +77,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                     .ToListAsync();
 
-                foreach (var payrollRecord in payrollProcessBatch.PayrollRecords)
+                var payrollRecords = await _db
+                    .PayrollRecords
+                    .Where(pr => pr.PayrollProcessBatchId == payrollProcessBatch.Id)
+                    .ToListAsync();
+
+                foreach (var payrollRecord in payrollRecords)
                 {
                     if (!payrollRecord.LoansDeducted) continue;
 
