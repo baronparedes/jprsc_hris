@@ -210,7 +210,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
 
-                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault(), out bool govDeductionsDeducted, out bool loansDeducted, out bool anythingDeducted, out decimal deductionBasis);
+                    var sampleLoanPaymentValue = employeeLoans.Sum(l => l.RemainingBalance.GetValueOrDefault() > l.DeductionAmount.GetValueOrDefault() ? l.DeductionAmount.GetValueOrDefault() : l.RemainingBalance.GetValueOrDefault());
+
+                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), sampleLoanPaymentValue, out bool govDeductionsDeducted, out bool loansDeducted, out bool anythingDeducted, out decimal deductionBasis);
                     payrollRecord.GovDeductionsDeducted = govDeductionsDeducted;
                     payrollRecord.LoansDeducted = loansDeducted;
                     payrollRecord.AnythingDeducted = anythingDeducted;
@@ -220,7 +222,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                     if (loansDeducted)
                     {
-                        payrollRecord.LoanPaymentValue = employeeLoans.Sum(l => l.RemainingBalance.GetValueOrDefault() > l.DeductionAmount.GetValueOrDefault() ? l.DeductionAmount.GetValueOrDefault() : l.RemainingBalance.GetValueOrDefault());
+                        payrollRecord.LoanPaymentValue = sampleLoanPaymentValue;
 
                         foreach (var loan in employeeLoans)
                         {
