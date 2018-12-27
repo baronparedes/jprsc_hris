@@ -207,7 +207,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             existingEarningDeductionRecordIdsToDelete.AddRange(existingEarningDeductionRecordsToDelete.Select(edr => edr.Id));
                         }
 
-                        var existingEarningDeductionRecord = allEmployeeEarningDeductionRecordsForPayrollPeriod.SingleOrDefault(edr => edr.EmployeeId == employee.Id && edr.EarningDeductionId == entry.Value.Id);
+                        var existingEarningDeductionRecord = allEmployeeEarningDeductionRecordsForPayrollPeriod.SingleOrDefault(edr => edr.EmployeeId == employee.Id && edr.Amount > 0 && edr.EarningDeductionId == entry.Value.Id);
                         if (existingEarningDeductionRecord != null)
                         {
                             existingEarningDeductionRecord.Amount = amount;
