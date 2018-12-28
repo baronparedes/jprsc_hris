@@ -60,16 +60,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         "WHERE edr.PayrollPeriodFrom = @PayrollPeriodFrom AND edr.PayrollPeriodTo = @PayrollPeriodTo AND e.ClientId = @ClientId";
                     await connection.ExecuteAsync(deleteEarningDeductionRecords, new { PayrollPeriodFrom = payrollProcessBatch.PayrollPeriodFrom, PayrollPeriodTo = payrollProcessBatch.PayrollPeriodTo, ClientId = payrollProcessBatch.ClientId });
                 }
-
-                using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
-                {
-                    var deletePayrollRecords = "DELETE FROM PayrollRecords WHERE PayrollProcessBatchId = @PayrollProcessBatchId";
-                    await connection.ExecuteAsync(deletePayrollRecords, new { PayrollProcessBatchId = command.PayrollProcessBatchId });
-                }
                 
                 var clientEmployeeIds = await _db
                     .Employees
-                    .Where(e => e.ClientId == payrollProcessBatch.ClientId)
+                    .AsNoTracking()
+                    .Where(e => !e.DeletedOn.HasValue && e.ClientId == payrollProcessBatch.ClientId && e.DailyRate.HasValue)
                     .Select(e => e.Id)
                     .ToListAsync();
 
@@ -77,8 +72,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                     .ToListAsync();
 
+                loans = loans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
+
                 var payrollRecords = await _db
                     .PayrollRecords
+                    .AsNoTracking()
                     .Where(pr => pr.PayrollProcessBatchId == payrollProcessBatch.Id)
                     .ToListAsync();
 
@@ -92,6 +90,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     {
                         loan.RemainingBalance += loan.DeductionAmount.GetValueOrDefault();
                     }
+                }
+
+                using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
+                {
+                    var deletePayrollRecords = "DELETE FROM PayrollRecords WHERE PayrollProcessBatchId = @PayrollProcessBatchId";
+                    await connection.ExecuteAsync(deletePayrollRecords, new { PayrollProcessBatchId = command.PayrollProcessBatchId });
                 }
 
                 _db.PayrollProcessBatches.Remove(payrollProcessBatch);
