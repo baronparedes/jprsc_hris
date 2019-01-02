@@ -114,6 +114,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 {
                     var excelLines = phicRecords.Select(pr => pr.DisplayLine).ToList();
                     excelLines.Insert(0, new List<string> { "Company PHIC No.", String.Empty, "Employee PHIC No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "PHIC Employer Share", "PHIC Employee Share" });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.DeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployer)), String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployee)) });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 

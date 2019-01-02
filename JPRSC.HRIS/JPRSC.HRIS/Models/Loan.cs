@@ -7,6 +7,7 @@ namespace JPRSC.HRIS.Models
     public class Loan
     {
         public DateTime AddedOn { get; set; }
+        public decimal? AmountPaid { get; set; }
         public decimal? DeductionAmount { get; set; }
         public DateTime? DeletedOn { get; set; }
         public Employee Employee { get; set; }

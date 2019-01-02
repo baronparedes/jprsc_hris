@@ -78,6 +78,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 var loan = new Loan
                 {
                     AddedOn = DateTime.UtcNow,
+                    AmountPaid = 0,
                     DeductionAmount = command.DeductionAmount,
                     EmployeeId = command.EmployeeId,
                     LoanDate = command.LoanDate,

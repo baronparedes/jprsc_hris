@@ -37,7 +37,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
             public class PHICRecord
             {
-                public Employee Employee { get; set; }
+                public Loan Loan { get; set; }
 
                 public IList<string> DisplayLine
                 {
@@ -45,16 +45,16 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         var line = new List<string>();
 
-                        line.Add(Employee.PhilHealth);
-                        line.Add(Employee.LastName);
-                        line.Add(Employee.FirstName);
-                        line.Add(String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : Employee.MiddleName.Trim());
+                        line.Add(Loan.Employee.PhilHealth);
+                        line.Add(Loan.Employee.LastName);
+                        line.Add(Loan.Employee.FirstName);
+                        line.Add(String.IsNullOrWhiteSpace(Loan.Employee.MiddleName) ? null : Loan.Employee.MiddleName.Trim());
                         line.Add(String.Empty);
+                        line.Add(String.Format("{0:M/d/yyyy}", Loan.LoanDate));
+                        line.Add(String.Format("{0:n}", Loan.PrincipalAmount));
                         line.Add(String.Empty);
-                        line.Add(String.Empty);
-                        line.Add(String.Empty);
-                        line.Add(String.Empty);
-                        line.Add(String.Empty);
+                        line.Add(String.Format("{0:n}", Loan.RemainingBalanceForDisplay));
+                        line.Add(String.Format("{0:n}", Loan.AmountPaid));
                         line.Add(String.Empty);
                         line.Add(String.Empty);
                         line.Add(String.Empty);
@@ -103,17 +103,18 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == query.PayrollPeriodMonth)
                         .ToListAsync();
 
-                var phicRecords = await GetPHICRecords(payrollProcessBatches);
+                var phicRecords = await GetLoanPHICRecords(payrollProcessBatches);
 
                 if (query.Destination == "Excel")
                 {
                     var excelLines = phicRecords.Select(pr => pr.DisplayLine).ToList();
-                    excelLines.Insert(0, new List<string> { "Company PHIC No.", String.Empty, "Employee PHIC No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "PHIC Employer Share", "PHIC Employee Share" });
+                    excelLines.Insert(0, new List<string> { "Employee PHIC No.", "Last Name", "First Name", "Middle Initial", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Amount Paid", "AMPSDG", "Status", "Effective Date" });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", phicRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
                     var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"PHIC Report - ");
+                    reportFileNameBuilder.Append($"PHIC Loan Report - ");
 
                     if (query.ClientId == -1)
                     {
@@ -168,41 +169,35 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     };
                 }                
             }
-            
-            private async Task<IList<QueryResult.PHICRecord>> GetPHICRecords(IList<PayrollProcessBatch> payrollProcessBatches)
+
+            private async Task<IList<QueryResult.PHICRecord>> GetLoanPHICRecords(IList<PayrollProcessBatch> payrollProcessBatches)
             {
-                var allPayrollRecords = payrollProcessBatches.SelectMany(ppb => ppb.PayrollRecords).ToList();
-                var distinctCompanyIds = allPayrollRecords.Select(pr => pr.Employee).Select(e => e.CompanyId).Distinct();
-                var companies = await _db.Companies.Where(c => !c.DeletedOn.HasValue && distinctCompanyIds.Contains(c.Id)).ToListAsync();
+                var allLoans = new List<Loan>();
 
-                var phicRecords = new List<QueryResult.PHICRecord>();
-
-                var payrollProcessBatchesPerMonth = payrollProcessBatches
-                    .GroupBy(ppb => ppb.PayrollPeriodMonth)
-                    .ToList();
-
-                foreach (var batch in payrollProcessBatchesPerMonth)
+                foreach (var payrollProcessBatch in payrollProcessBatches)
                 {
-                    var payrollRecordsInBatchPerEmployee = batch
-                        .SelectMany(ppb => ppb.PayrollRecords)
-                        .GroupBy(pr => pr.EmployeeId)
-                        .OrderBy(pr => pr.First().Employee.LastName)
-                        .ThenBy(pr => pr.First().Employee.FirstName)
-                        .ToList();
+                    var clientEmployeeIds = await _db
+                        .Employees
+                        .AsNoTracking()
+                        .Where(e => !e.DeletedOn.HasValue && e.ClientId == payrollProcessBatch.ClientId && e.DailyRate.HasValue)
+                        .Select(e => e.Id)
+                        .ToListAsync();
 
-                    foreach (var employeePayrollRecords in payrollRecordsInBatchPerEmployee)
-                    {
-                        var phicRecord = new QueryResult.PHICRecord();
+                    var loans = await _db.Loans
+                        .Include(l => l.Employee)
+                        .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                        .ToListAsync();
 
-                        var sampleEmployee = employeePayrollRecords.First().Employee;
-                        
-                        phicRecord.Employee = sampleEmployee;
+                    loans = loans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
 
-                        phicRecords.Add(phicRecord);
-                    }
+                    allLoans.AddRange(loans);
                 }
 
-                return phicRecords;
+                return allLoans.Select(l => new QueryResult.PHICRecord
+                {
+                    Loan = l
+                })
+                .ToList();
             }
         }
     }

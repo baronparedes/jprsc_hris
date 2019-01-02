@@ -114,6 +114,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 {
                     var excelLines = sssRecords.Select(pr => pr.DisplayLine).ToList();
                     excelLines.Insert(0, new List<string> { "Company SSS No.", String.Empty, "Employee SSS No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "SSS Employer Share", "SSS Employee Share" });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.DeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.TotalSSSEmployer)), String.Format("{0:n}", sssRecords.Sum(sr => sr.TotalSSSEmployee)) });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 

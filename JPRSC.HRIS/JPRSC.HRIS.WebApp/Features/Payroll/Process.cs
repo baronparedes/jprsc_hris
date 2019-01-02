@@ -227,6 +227,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         foreach (var loan in employeeLoans)
                         {
                             loan.RemainingBalance -= loan.DeductionAmount.GetValueOrDefault();
+                            loan.AmountPaid += loan.DeductionAmount.GetValueOrDefault();
                         }
                     }
                 }

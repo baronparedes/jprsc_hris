@@ -103,10 +103,10 @@
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
+                                    <td>@String.Format("{0:n}", Model.PHICRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault()))</td>
                                     <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
+                                    <td>@String.Format("{0:n}", Model.PHICRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.PHICRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault()))</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
@@ -116,12 +116,12 @@
                     }
                     else if (Model.DisplayMode == "Branch")
                     {
-                        foreach (var phicRecord in Model.PHICRecords.Where(pr => pr.Employee.Department == null))
+                        foreach (var phicRecord in Model.PHICRecords.Where(pr => pr.Loan.Employee.Department == null))
                         {
-                            phicRecord.Employee.Department = new Department { Id = 0, Name = "No Branch" };
+                            phicRecord.Loan.Employee.Department = new Department { Id = 0, Name = "No Branch" };
                         }
 
-                        var groupedByBranch = Model.PHICRecords.GroupBy(pr => new { pr.Employee.Department.Id, pr.Employee.Department.Name });
+                        var groupedByBranch = Model.PHICRecords.GroupBy(pr => new { pr.Loan.Employee.Department.Id, pr.Loan.Employee.Department.Name });
                         foreach (var group in groupedByBranch.OrderBy(g => g.Key.Name))
                         {
                             <h2>@group.Key.Name</h2>
@@ -160,10 +160,10 @@
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault()))</td>
                                         <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault()))</td>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
