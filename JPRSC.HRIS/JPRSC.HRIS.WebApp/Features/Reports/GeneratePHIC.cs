@@ -38,7 +38,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public class PHICRecord
             {
                 public string CompanyPhilHealth { get; set; }
-                public decimal DeductionBasis { get; set; }
+                public decimal PHICDeductionBasis { get; set; }
                 public Employee Employee { get; set; }
                 public decimal NetPayValue { get; set; }
                 public decimal TotalPHICEmployee { get; set; }
@@ -57,7 +57,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         line.Add(Employee.FirstName);
                         line.Add(String.Empty);
                         line.Add(String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : Employee.MiddleName.Trim());
-                        line.Add(String.Format("{0:n}", DeductionBasis));
+                        line.Add(String.Format("{0:n}", PHICDeductionBasis));
                         line.Add(String.Empty);
                         line.Add(String.Format("{0:M/d/yyyy}", DateTime.Now));
                         line.Add(String.Empty);
@@ -114,7 +114,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 {
                     var excelLines = phicRecords.Select(pr => pr.DisplayLine).ToList();
                     excelLines.Insert(0, new List<string> { "Company PHIC No.", String.Empty, "Employee PHIC No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "PHIC Employer Share", "PHIC Employee Share" });
-                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.DeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployer)), String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployee)) });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.PHICDeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployer)), String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployee)) });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
@@ -214,7 +214,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
                         phicRecord.CompanyPhilHealth = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.PhilHealth;
-                        phicRecord.DeductionBasis = employeePayrollRecords.Sum(pr => pr.DeductionBasis);
+                        phicRecord.PHICDeductionBasis = employeePayrollRecords.Sum(pr => pr.PHICDeductionBasis.GetValueOrDefault());
                         phicRecord.Employee = sampleEmployee;
                         phicRecord.NetPayValue = netPayValue;
                         phicRecord.TotalPHICEmployee = employeePayrollRecords.Sum(pr => pr.PHICValueEmployee.GetValueOrDefault());
