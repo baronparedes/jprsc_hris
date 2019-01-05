@@ -47,6 +47,7 @@
                             <input type="hidden" name="PayrollProcessBatchId" value="@Model.PayrollProcessBatchId" />
                             <input type="hidden" name="ReportType" value="Payroll" />
                             <input type="hidden" name="ViewDetailed" id="ViewDetailed" value="false" />
+                            <input type="hidden" name="DisplayMode" value="@Model.DisplayMode" />
                             <button type="submit" class="btn btn-primary" style="margin-right: 20px;">Download Excel</button>
                         </form>
                         @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
