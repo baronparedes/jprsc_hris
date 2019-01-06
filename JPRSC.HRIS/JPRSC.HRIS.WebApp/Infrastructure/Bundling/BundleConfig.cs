@@ -264,6 +264,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
         {
             bundles.AddScriptBundle("~/scriptbundles/reports",
                 "~/wwwroot/scripts/reports/generateModal.js",
+                "~/wwwroot/scripts/reports/generateSingleLoanTypeModal.js",
                 "~/wwwroot/scripts/reports/index.js");
         }
 

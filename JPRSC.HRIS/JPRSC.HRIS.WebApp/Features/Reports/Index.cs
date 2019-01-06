@@ -19,6 +19,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         public class QueryResult
         {
             public IList<Client> Clients { get; set; } = new List<Client>();
+            public IList<LoanType> LoanTypes { get; set; } = new List<LoanType>();
 
             public class Client
             {
@@ -40,6 +41,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 public TaxTable? TaxTable { get; set; }
                 public bool? ZeroBasic { get; set; }
             }
+
+            public class LoanType
+            {
+                public string Code { get; set; }
+                public string Description { get; set; }
+                public int Id { get; set; }
+            }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
@@ -57,9 +65,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     .Where(c => !c.DeletedOn.HasValue)
                     .ProjectToListAsync<QueryResult.Client>();
 
+                var loanTypes = await _db.LoanTypes
+                    .Where(c => !c.DeletedOn.HasValue)
+                    .ProjectToListAsync<QueryResult.LoanType>();
+
                 return new QueryResult
                 {
-                    Clients = clients
+                    Clients = clients,
+                    LoanTypes = loanTypes
                 };
             }
         }

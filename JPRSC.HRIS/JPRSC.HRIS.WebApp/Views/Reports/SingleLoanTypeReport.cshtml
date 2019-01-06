@@ -1,4 +1,4 @@
-﻿@model JPRSC.HRIS.WebApp.Features.Reports.GenerateSSSLoan.QueryResult
+﻿@model JPRSC.HRIS.WebApp.Features.Reports.GenerateSingleLoanType.QueryResult
 @{
     Layout = null;
 }
@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>SSS Loan Report for @String.Format("{0}", String.IsNullOrWhiteSpace(Model.ClientName) ? "All Clients" : Model.ClientName))</title>
+    <title>@Model.LoanTypeResult.Code Report for @String.Format("{0}", String.IsNullOrWhiteSpace(Model.ClientName) ? "All Clients" : Model.ClientName)</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
     <style>
@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h3>Job Placement Resources Services Cooperative</h3>
-                <h4>SSS Loan Report for @String.Format("{0}", String.IsNullOrWhiteSpace(Model.ClientName) ? "All Clients" : Model.ClientName))</h4>
+                <h4>@Model.LoanTypeResult.Code Report for @String.Format("{0}", String.IsNullOrWhiteSpace(Model.ClientName) ? "All Clients" : Model.ClientName)</h4>
                 @if (Model.PayrollPeriodMonthMonth.HasValue)
                 {
                     <h5>For payroll period month @Model.PayrollPeriodMonthMonth.ToString()</h5>
@@ -34,10 +34,10 @@
                 {
                     <ht>For all payroll period months</ht>
                 }
-                <h5>@(Model.SSSRecords.Count - 1) record/s total</h5>
+                <h5>@(Model.LoanRecords.Count - 1) record/s total</h5>
             </div>
         </div>
-        @if (!Model.SSSRecords.Any())
+        @if (!Model.LoanRecords.Any())
         {
             <div class="row">
                 <div class="col-sm-12">
@@ -87,7 +87,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var sssRecord in Model.SSSRecords)
+                                @foreach (var sssRecord in Model.LoanRecords)
                                 {
                                     <tr>
                                         @foreach (var cell in sssRecord.DisplayLine)
@@ -103,10 +103,10 @@
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
-                                    <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.LoanRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault()))</td>
                                     <td>&nbsp;</td>
-                                    <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.LoanRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.LoanRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault()))</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
@@ -116,12 +116,12 @@
                     }
                     else if (Model.DisplayMode == "Branch")
                     {
-                        foreach (var sssRecord in Model.SSSRecords.Where(pr => pr.Loan.Employee.Department == null))
+                        foreach (var sssRecord in Model.LoanRecords.Where(pr => pr.Loan.Employee.Department == null))
                         {
                             sssRecord.Loan.Employee.Department = new Department { Id = 0, Name = "No Branch" };
                         }
 
-                        var groupedByBranch = Model.SSSRecords.GroupBy(pr => new { pr.Loan.Employee.Department.Id, pr.Loan.Employee.Department.Name });
+                        var groupedByBranch = Model.LoanRecords.GroupBy(pr => new { pr.Loan.Employee.Department.Id, pr.Loan.Employee.Department.Name });
                         foreach (var group in groupedByBranch.OrderBy(g => g.Key.Name))
                         {
                             <h2>@group.Key.Name</h2>

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Reports
 {
-    public class GeneratePHICLoan
+    public class GenerateLoanLedger
     {
         public class Query : IRequest<QueryResult>
         {
@@ -33,9 +33,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public IList<IList<string>> Lines { get; set; } = new List<IList<string>>();
             public int? PayrollPeriodMonth { get; set; }
             public Month? PayrollPeriodMonthMonth { get; set; }
-            public IList<PHICRecord> PHICRecords { get; set; } = new List<PHICRecord>();
+            public IList<SSSRecord> SSSRecords { get; set; } = new List<SSSRecord>();
 
-            public class PHICRecord
+            public class SSSRecord
             {
                 public Loan Loan { get; set; }
 
@@ -45,11 +45,11 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         var line = new List<string>();
 
-                        line.Add(Loan.Employee.PhilHealth);
+                        line.Add(Loan.Employee.SSS);
                         line.Add(Loan.Employee.LastName);
                         line.Add(Loan.Employee.FirstName);
-                        line.Add(String.IsNullOrWhiteSpace(Loan.Employee.MiddleName) ? null : Loan.Employee.MiddleName.Trim());
-                        line.Add(String.Empty);
+                        line.Add(String.IsNullOrWhiteSpace(Loan.Employee.MiddleName) ? null : Loan.Employee.MiddleName.Trim().First().ToString());
+                        line.Add(String.Format("{0}", Loan.LoanType.Code));
                         line.Add(String.Format("{0:M/d/yyyy}", Loan.LoanDate));
                         line.Add(String.Format("{0:n}", Loan.PrincipalAmount));
                         line.Add(String.Empty);
@@ -103,18 +103,18 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == query.PayrollPeriodMonth)
                         .ToListAsync();
 
-                var phicRecords = await GetLoanPHICRecords(payrollProcessBatches);
+                var sssRecords = await GetLoanSSSRecords(payrollProcessBatches);
 
                 if (query.Destination == "Excel")
                 {
-                    var excelLines = phicRecords.Select(pr => pr.DisplayLine).ToList();
-                    excelLines.Insert(0, new List<string> { "Employee PHIC No.", "Last Name", "First Name", "Middle Initial", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Amount Paid", "AMPSDG", "Status", "Effective Date" });
-                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", phicRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
+                    var excelLines = sssRecords.Select(pr => pr.DisplayLine).ToList();
+                    excelLines.Insert(0, new List<string> { "Employee SSS No.", "Last Name", "First Name", "Middle Initial", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Amount Paid", "AMPSDG", "Status", "Effective Date" });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", sssRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
                     var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"PHIC Loan Report - ");
+                    reportFileNameBuilder.Append($"Loan Ledger Report - ");
 
                     if (query.ClientId == -1)
                     {
@@ -163,14 +163,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         ClientId = query.ClientId,
                         ClientName = clientName,
                         DisplayMode = query.DisplayMode,
-                        PHICRecords = phicRecords,
+                        SSSRecords = sssRecords,
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
                         PayrollPeriodMonthMonth = payrollPeriodMonth
                     };
-                }                
+                }
             }
 
-            private async Task<IList<QueryResult.PHICRecord>> GetLoanPHICRecords(IList<PayrollProcessBatch> payrollProcessBatches)
+            private async Task<IList<QueryResult.SSSRecord>> GetLoanSSSRecords(IList<PayrollProcessBatch> payrollProcessBatches)
             {
                 var allLoans = new List<Loan>();
 
@@ -185,6 +185,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                     var loans = await _db.Loans
                         .Include(l => l.Employee)
+                        .Include(l => l.LoanType)
                         .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                         .ToListAsync();
 
@@ -193,7 +194,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     allLoans.AddRange(loans);
                 }
 
-                return allLoans.Select(l => new QueryResult.PHICRecord
+                return allLoans.Select(l => new QueryResult.SSSRecord
                 {
                     Loan = l
                 })

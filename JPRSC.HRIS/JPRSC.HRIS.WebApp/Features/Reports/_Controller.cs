@@ -33,21 +33,6 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         }
 
         [HttpGet]
-        public async Task<ActionResult> GeneratePHICLoan(GeneratePHICLoan.Query query)
-        {
-            var result = await _mediator.Send(query);
-
-            if (query.Destination == "Excel")
-            {
-                return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
-            }
-            else
-            {
-                return View("PHICLoanReport", result);
-            }
-        }
-
-        [HttpGet]
         public async Task<ActionResult> GenerateSSS(GenerateSSS.Query query)
         {
             var result = await _mediator.Send(query);
@@ -63,7 +48,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         }
 
         [HttpGet]
-        public async Task<ActionResult> GenerateSSSLoan(GenerateSSSLoan.Query query)
+        public async Task<ActionResult> GenerateLoanLedger(GenerateLoanLedger.Query query)
         {
             var result = await _mediator.Send(query);
 
@@ -73,7 +58,22 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             }
             else
             {
-                return View("SSSLoanReport", result);
+                return View("LoanLedgerReport", result);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GenerateSingleLoanType(GenerateSingleLoanType.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            if (query.Destination == "Excel")
+            {
+                return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+            }
+            else
+            {
+                return View("SingleLoanTypeReport", result);
             }
         }
 

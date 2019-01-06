@@ -1,4 +1,5 @@
-﻿using JPRSC.HRIS.Infrastructure.Data;
+﻿using AutoMapper;
+using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Features.Payroll;
 using JPRSC.HRIS.WebApp.Infrastructure.Excel;
@@ -13,13 +14,14 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Reports
 {
-    public class GenerateSSSLoan
+    public class GenerateSingleLoanType
     {
         public class Query : IRequest<QueryResult>
         {
             public int? ClientId { get; set; }
             public string Destination { get; set; }
             public string DisplayMode { get; set; }
+            public int LoanTypeId { get; set; }
             public int? PayrollPeriodMonth { get; set; }
         }
 
@@ -31,11 +33,19 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public byte[] FileContent { get; set; }
             public string Filename { get; set; }
             public IList<IList<string>> Lines { get; set; } = new List<IList<string>>();
+            public LoanType LoanTypeResult { get; set; }
             public int? PayrollPeriodMonth { get; set; }
             public Month? PayrollPeriodMonthMonth { get; set; }
-            public IList<SSSRecord> SSSRecords { get; set; } = new List<SSSRecord>();
+            public IList<LoanRecord> LoanRecords { get; set; } = new List<LoanRecord>();
 
-            public class SSSRecord
+            public class LoanType
+            {
+                public string Code { get; set; }
+                public string Description { get; set; }
+                public int Id { get; set; }
+            }
+
+            public class LoanRecord
             {
                 public Loan Loan { get; set; }
 
@@ -49,7 +59,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         line.Add(Loan.Employee.LastName);
                         line.Add(Loan.Employee.FirstName);
                         line.Add(String.IsNullOrWhiteSpace(Loan.Employee.MiddleName) ? null : Loan.Employee.MiddleName.Trim().First().ToString());
-                        line.Add(String.Empty);
+                        line.Add(String.Format("{0}", Loan.LoanType.Code));
                         line.Add(String.Format("{0:M/d/yyyy}", Loan.LoanDate));
                         line.Add(String.Format("{0:n}", Loan.PrincipalAmount));
                         line.Add(String.Empty);
@@ -103,7 +113,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == query.PayrollPeriodMonth)
                         .ToListAsync();
 
-                var sssRecords = await GetLoanSSSRecords(payrollProcessBatches);
+                var loanType = await _db.LoanTypes.Where(l => l.Id == query.LoanTypeId).ProjectToSingleAsync<QueryResult.LoanType>();
+
+                var sssRecords = await GetLoanRecords(query, payrollProcessBatches);
 
                 if (query.Destination == "Excel")
                 {
@@ -114,7 +126,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
                     var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"SSS Loan Report - ");
+                    reportFileNameBuilder.Append($"{loanType.Code} Report - ");
 
                     if (query.ClientId == -1)
                     {
@@ -141,7 +153,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     return new QueryResult
                     {
                         FileContent = reportFileContent,
-                        Filename = reportFileNameBuilder.ToString()
+                        Filename = reportFileNameBuilder.ToString(),
+                        LoanTypeResult = loanType
                     };
                 }
                 else
@@ -163,14 +176,15 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         ClientId = query.ClientId,
                         ClientName = clientName,
                         DisplayMode = query.DisplayMode,
-                        SSSRecords = sssRecords,
+                        LoanTypeResult = loanType,
+                        LoanRecords = sssRecords,
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
                         PayrollPeriodMonthMonth = payrollPeriodMonth
                     };
                 }
             }
 
-            private async Task<IList<QueryResult.SSSRecord>> GetLoanSSSRecords(IList<PayrollProcessBatch> payrollProcessBatches)
+            private async Task<IList<QueryResult.LoanRecord>> GetLoanRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)
             {
                 var allLoans = new List<Loan>();
 
@@ -185,7 +199,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                     var loans = await _db.Loans
                         .Include(l => l.Employee)
-                        .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                        .Include(l => l.LoanType)
+                        .Where(l => l.LoanTypeId == query.LoanTypeId && !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                         .ToListAsync();
 
                     loans = loans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
@@ -193,7 +208,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     allLoans.AddRange(loans);
                 }
 
-                return allLoans.Select(l => new QueryResult.SSSRecord
+                return allLoans.Select(l => new QueryResult.LoanRecord
                 {
                     Loan = l
                 })
