@@ -318,11 +318,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 totals.Add(String.Format("{0:n}", payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault())));
 
-                foreach (var loanType in payrollReportResult.LoanTypes)
+                if (payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()) > 0)
                 {
-                    if (payrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                    foreach (var loanType in payrollReportResult.LoanTypes)
                     {
-                        totals.Add(String.Format("{0:n}", payrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault())));
+                        if (payrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                        {
+                            totals.Add(String.Format("{0:n}", payrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault())));
+                        }
                     }
                 }
 
@@ -475,11 +478,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Loan Payments", "LoanPayments", p => String.Format("{0:n}", p.PayrollRecord.LoanPaymentValue.GetValueOrDefault())));
                 
-                foreach (var loanType in payrollReportResult.LoanTypes)
+                if (payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()) > 0)
                 {
-                    if (payrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                    foreach (var loanType in payrollReportResult.LoanTypes)
                     {
-                        columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{loanType.Code}", $"{loanType.Code}", p => String.Format("{0:n}", p.Loans.Where(lt => lt.LoanTypeId == loanType.Id).Sum(l => l.DeductionAmount.GetValueOrDefault()).ToString() ?? "0.00")));
+                        if (payrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                        {
+                            columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{loanType.Code}", $"{loanType.Code}", p => String.Format("{0:n}", p.Loans.Where(lt => lt.LoanTypeId == loanType.Id).Sum(l => l.DeductionAmount.GetValueOrDefault()).ToString() ?? "0.00")));
+                        }
                     }
                 }
 
