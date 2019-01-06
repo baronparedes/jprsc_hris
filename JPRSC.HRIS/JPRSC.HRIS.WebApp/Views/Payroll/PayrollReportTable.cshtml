@@ -93,7 +93,7 @@
                 {
                     if (Model.Item2.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault()) > 0)
                     {
-                        <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.EarningDeductionRecords.SingleOrDefault(edr => edr.EarningDeductionId == earningDeduction.Id && edr.Amount > 0)?.Amount.GetValueOrDefault().ToString() ?? "0.00")</td>
+                        <td class="detail hidden">@String.Format("{0:n}", payrollReportItem.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id && edr.Amount > 0).Sum(edr => edr.Amount.GetValueOrDefault()).ToString() ?? "0.00")</td>
                     }
                 }
                 @if (Model.Item1.PayrollProcessBatchResult.DeductedSSS == true)
