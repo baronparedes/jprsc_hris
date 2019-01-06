@@ -1,9 +1,9 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('LoanIndexCtrl', ['$http', '$timeout', '$uibModal', '$scope', 'globalSettings', LoanIndexCtrl]);
+        .controller('LoanIndexCtrl', ['$http', '$timeout', '$uibModal', '$scope', '$window', 'globalSettings', LoanIndexCtrl]);
 
-    function LoanIndexCtrl($http, $timeout, $uibModal, $scope, globalSettings) {
+    function LoanIndexCtrl($http, $timeout, $uibModal, $scope, $window, globalSettings) {
         var vm = this;
         vm.addLoanClicked = addLoanClicked;
         vm.currencySymbol = 'P';
@@ -16,6 +16,7 @@
         vm.searchClicked = searchClicked;
         vm.searchModel = {};
         vm.searchInProgress = false;
+        vm.zeroOutSubmit = zeroOutSubmit;
 
         $scope.$watch('vm.searchModel', onSearchModelChange, true);
 
@@ -104,6 +105,22 @@
             $http.get('/Loans/Search', { params: vm.searchModel }).then(function (response) {
                 vm.loans = response.data.loans;
                 vm.searchInProgress = false;
+            });
+        };
+
+        function zeroOutSubmit(e) {
+            if (!confirm('Are you sure you want to zero out this loan?')) return;
+
+            var action = '/Loans/ZeroOut';
+            var data = $(angular.element(e.target)[0]).serialize();
+            var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
+
+            $http.post(action, data, config).then(function (response) {
+                $window.location = '/Loans/Index';
+            }, function (response) {
+                if (response.status == 400) {
+                    vm.validationErrors = response.data;
+                }
             });
         };
     };

@@ -109,7 +109,7 @@
                                             }
                                             @if (AuthorizeHelper.IsAuthorized(Permission.LoanZeroOut))
                                             {
-                                                <form action="/Loans/ZeroOut" method="post" style="display: inline-block;" ng-if="!loan.isZeroedOut">
+                                                <form role="form" method="post" style="display: inline-block;" ng-if="!loan.isZeroedOut" ng-submit="vm.zeroOutSubmit($event)">
                                                     @Html.AntiForgeryToken()
                                                     <input type="hidden" name="LoanId" value="{{loan.id}}" />
                                                     <button type="submit" class="btn btn-danger btn-sm">Zero Out</button>
