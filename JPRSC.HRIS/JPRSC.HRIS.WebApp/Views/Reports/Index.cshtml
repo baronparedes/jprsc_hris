@@ -50,6 +50,12 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td>Pag Ibig</td>
+                                        <td>
+                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('PagIbig')">Generate</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td>Loan Ledger</td>
                                         <td>
                                             <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('LoanLedger')">Generate</a>
@@ -111,6 +117,7 @@
                         <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.generateInProgress"></i>
                         <a ng-show="vm.reportType == 'PHIC'" ng-href="/Reports/GeneratePHIC?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a ng-show="vm.reportType == 'SSS'" ng-href="/Reports/GenerateSSS?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-show="vm.reportType == 'PagIbig'" ng-href="/Reports/GeneratePagIbig?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a ng-show="vm.reportType == 'LoanLedger'" ng-href="/Reports/GenerateLoanLedger?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
                     </div>

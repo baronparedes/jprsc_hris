@@ -462,6 +462,7 @@
     <Compile Include="Features\Religions\Search.cs" />
     <Compile Include="Features\Religions\_Controller.cs" />
     <Compile Include="Features\Religions\_MappingProfile.cs" />
+    <Compile Include="Features\Reports\GeneratePagIbig.cs" />
     <Compile Include="Features\Reports\GenerateSingleLoanType.cs" />
     <Compile Include="Features\Reports\GenerateLoanLedger.cs" />
     <Compile Include="Features\Reports\GenerateSSS.cs" />
@@ -7103,6 +7104,7 @@
     <Content Include="Views\Payroll\PayslipReportTableIndividual.cshtml" />
     <Content Include="Views\Reports\LoanLedgerReport.cshtml" />
     <Content Include="Views\Reports\SingleLoanTypeReport.cshtml" />
+    <Content Include="Views\Reports\PagIbigReport.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

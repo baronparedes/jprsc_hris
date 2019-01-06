@@ -16,7 +16,22 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         {
             _mediator = mediator;
         }
-        
+
+        [HttpGet]
+        public async Task<ActionResult> GeneratePagIbig(GeneratePagIbig.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            if (query.Destination == "Excel")
+            {
+                return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+            }
+            else
+            {
+                return View("PagIbigReport", result);
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult> GeneratePHIC(GeneratePHIC.Query query)
         {
