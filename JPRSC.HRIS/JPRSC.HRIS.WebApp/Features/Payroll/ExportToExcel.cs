@@ -448,7 +448,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     {
                         if (payrollReportItems.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault()) > 0)
                         {
-                            columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{earningDeduction.Code}", $"{earningDeduction.Code}", p => String.Format("{0:n}", p.EarningDeductionRecords.SingleOrDefault(edr => edr.EarningDeductionId == earningDeduction.Id)?.Amount.GetValueOrDefault().ToString() ?? "0.00")));
+                            columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{earningDeduction.Code}", $"{earningDeduction.Code}", p => String.Format("{0:n}", p.EarningDeductionRecords.SingleOrDefault(edr => edr.EarningDeductionId == earningDeduction.Id && edr.Amount > 0)?.Amount.GetValueOrDefault().ToString() ?? "0.00")));
                         }
                     }
                 }
