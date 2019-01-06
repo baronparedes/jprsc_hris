@@ -83,6 +83,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public IEnumerable<EmployeeResult> UnprocessedItems { get; set; } = new List<EmployeeResult>();
             public IEnumerable<EmployeeResult> SkippedItems { get; set; } = new List<EmployeeResult>();
             public IEnumerable<EmployeeResult> MissingRates { get; set; } = new List<EmployeeResult>();
+            public bool HasDuplicateEmployeeCodes { get; set; }
             public int ProcessedItemsCount { get; set; }
 
             public class EmployeeResult
@@ -121,7 +122,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var allEmployeeDailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords.Where(dtr => allEmployeesOfClientIds.Contains(dtr.EmployeeId.Value) && !dtr.DeletedOn.HasValue && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
                 var allEmployeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => allEmployeesOfClientIds.Contains(ot.EmployeeId.Value) && !ot.DeletedOn.HasValue && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
 
-                var csvData = GetCSVData(command);
+                var csvData = GetCSVData(command, out bool hasDuplicateEmployeeCodes);
                 var columnToPayPercentageMap = await GetColumnToPayPercentageMap(csvData.Item1);
                 var processedItemsCount = 0;
 
@@ -129,8 +130,6 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 skippedItems.AddRange(allEmployeesOfClient.Where(e => String.IsNullOrWhiteSpace(e.EmployeeCode)).Select(e => new CommandResult.EmployeeResult { FirstName = e.FirstName, LastName = e.LastName, Reason = "No employee code" }));
 
                 var missingRates = new List<CommandResult.EmployeeResult>();
-
-                var emptyEmployeeCode = csvData.Item2.Count(r => String.IsNullOrWhiteSpace(r[0]));
 
                 // Upload behavior: all-or-nothing
                 foreach (var line in csvData.Item2)
@@ -362,7 +361,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     UnprocessedItems = unprocessedItems,
                     ProcessedItemsCount = unprocessedItems.Any() ? 0 : processedItemsCount,
                     SkippedItems = skippedItems,
-                    MissingRates = missingRates
+                    MissingRates = missingRates,
+                    HasDuplicateEmployeeCodes = hasDuplicateEmployeeCodes
                 };
             }
 
@@ -394,8 +394,10 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 };
             }
 
-            private Tuple<IList<string>, IList<IList<string>>> GetCSVData(Command command)
+            private Tuple<IList<string>, IList<IList<string>>> GetCSVData(Command command, out bool hasDuplicateEmployeeCodes)
             {
+                hasDuplicateEmployeeCodes = false;
+
                 IList<string> header = new List<string>();
                 IList<IList<string>> body = new List<IList<string>>();
                 var headerPopulated = false;
@@ -431,6 +433,10 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     {
                         reversedBody.Add(body[i]);
                         employeeCodes.Add(employeeCode);
+                    }
+                    else
+                    {
+                        hasDuplicateEmployeeCodes = true;
                     }
                 }
 

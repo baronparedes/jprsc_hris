@@ -42,8 +42,12 @@
                             if (!vm.unprocessedItems.length) {
                                 var successMessage = `Successfully processed ${data.processedItemsCount} employee record/s.`;
 
+                                if (data.hasDuplicateEmployeeCodes) {
+                                    successMessage += '\nDetected some problems in the CSV file.';
+                                }
+
                                 if (data.skippedItems && data.skippedItems.length) {
-                                    var skipMessage = ' Skipping employees with no employee code: ';
+                                    var skipMessage = '\nSkipping employees with no employee code: ';
                                     for (var i = 0; i < data.skippedItems.length; i++) {
                                         var currentSkippedItem = data.skippedItems[i];
                                         skipMessage += `${currentSkippedItem.lastName}, ${currentSkippedItem.firstName}`;
