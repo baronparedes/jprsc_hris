@@ -1,4 +1,7 @@
 ﻿@model Tuple<JPRSC.HRIS.WebApp.Features.Payroll.PayrollReport.QueryResult, IEnumerable<JPRSC.HRIS.WebApp.Features.Payroll.PayrollReport.QueryResult.PayrollReportItem>>
+@{ 
+    var shouldShowLoanColumns = Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()) > 0;
+}
 
 <table class="table table-striped table-bordered payroll-table">
     <thead>
@@ -46,7 +49,8 @@
                 <th>PHIC</th>
             }
             <th>Loan Payments</th>
-            @if (Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()) > 0)
+            @*<th>@Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault())</th>*@
+            @if (shouldShowLoanColumns)
             {
                 foreach (var loanType in Model.Item1.LoanTypes)
                 {
@@ -113,13 +117,27 @@
                 }
 
                 <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
-                @if (payrollReportItem.PayrollRecord.LoanPaymentValue.GetValueOrDefault() > 0)
+                @if (shouldShowLoanColumns)
                 {
-                    foreach (var loanType in Model.Item1.LoanTypes)
+                    if (payrollReportItem.PayrollRecord.LoanPaymentValue.GetValueOrDefault() > 0)
                     {
-                        if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                        foreach (var loanType in Model.Item1.LoanTypes)
                         {
-                            <td>@String.Format("{0:n}", payrollReportItem.Loans.Where(l => l.LoanTypeId == loanType.Id).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
+                            if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                            {
+                                <td>@String.Format("{0:n}", payrollReportItem.Loans.Where(l => l.LoanTypeId == loanType.Id).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var loanType in Model.Item1.LoanTypes)
+                        {
+                            if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                            {
+                                <td>@String.Format("{0:n}", 0)</td>
+                            }
+                            
                         }
                     }
                 }
