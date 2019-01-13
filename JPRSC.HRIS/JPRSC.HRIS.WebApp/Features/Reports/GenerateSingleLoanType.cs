@@ -115,13 +115,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 var loanType = await _db.LoanTypes.Where(l => l.Id == query.LoanTypeId).ProjectToSingleAsync<QueryResult.LoanType>();
 
-                var sssRecords = await GetLoanRecords(query, payrollProcessBatches);
+                var loanRecords = await GetLoanRecords(query, payrollProcessBatches);
 
                 if (query.Destination == "Excel")
                 {
-                    var excelLines = sssRecords.Select(pr => pr.DisplayLine).ToList();
+                    var excelLines = loanRecords.Select(pr => pr.DisplayLine).ToList();
                     excelLines.Insert(0, new List<string> { "Employee SSS No.", "Last Name", "First Name", "Middle Initial", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Amount Paid", "AMPSDG", "Status", "Effective Date" });
-                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", sssRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
@@ -177,7 +177,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         ClientName = clientName,
                         DisplayMode = query.DisplayMode,
                         LoanTypeResult = loanType,
-                        LoanRecords = sssRecords,
+                        LoanRecords = loanRecords,
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
                         PayrollPeriodMonthMonth = payrollPeriodMonth
                     };
@@ -208,11 +208,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     allLoans.AddRange(loans);
                 }
 
-                return allLoans.Select(l => new QueryResult.LoanRecord
-                {
-                    Loan = l
-                })
-                .ToList();
+                return allLoans
+                    .OrderBy(l => l.Employee.LastName)
+                    .ThenBy(l => l.Employee.FirstName)
+                    .Select(l => new QueryResult.LoanRecord
+                    {
+                        Loan = l
+                    })
+                    .ToList();
             }
         }
     }

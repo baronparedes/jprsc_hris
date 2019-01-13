@@ -224,7 +224,10 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     }
                 }
 
-                return phicRecords;
+                return phicRecords
+                    .OrderBy(p => p.Employee.LastName)
+                    .ThenBy(p => p.Employee.FirstName)
+                    .ToList();
             }
         }
     }

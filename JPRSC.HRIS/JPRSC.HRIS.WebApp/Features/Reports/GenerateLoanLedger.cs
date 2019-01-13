@@ -194,11 +194,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     allLoans.AddRange(loans);
                 }
 
-                return allLoans.Select(l => new QueryResult.SSSRecord
-                {
-                    Loan = l
-                })
-                .ToList();
+                return allLoans
+                    .OrderBy(l => l.Employee.LastName)
+                    .ThenBy(l => l.Employee.FirstName)
+                    .Select(l => new QueryResult.SSSRecord
+                    {
+                        Loan = l
+                    })
+                    .ToList();
             }
         }
     }
