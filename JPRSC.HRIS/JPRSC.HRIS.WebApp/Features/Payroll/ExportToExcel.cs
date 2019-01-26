@@ -536,7 +536,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 if (deductedTax == true)
                 {
-                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Tax", "Tax", p => String.Format("P{0:n}", p.PayrollRecord.TaxValue.GetValueOrDefault())));
+                    columns.Add(new ColumnInfo<PayslipReport.QueryResult.PayslipRecord>("Tax", "Tax", p => String.Format("P{0:n}", p.PayrollRecord.TaxValueEmployee.GetValueOrDefault())));
                 }
 
                 columns.AddRange(new List<ColumnInfo<PayslipReport.QueryResult.PayslipRecord>>

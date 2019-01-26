@@ -104,7 +104,7 @@
                     <td>
                         @if (Model.Item1.PayrollProcessBatchResult.DeductedTax == true)
                         {
-                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.TaxValue.GetValueOrDefault())
+                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.TaxValueEmployee.GetValueOrDefault())
                         }
                     </td>
                     <td>&nbsp;</td>

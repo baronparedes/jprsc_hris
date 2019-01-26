@@ -219,6 +219,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         [AuthorizePermission(Permission.PayrollDefault)]
         [HttpGet]
+        public async Task<ActionResult> PayrollSummaryReport(PayrollSummaryReport.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            return View(result);
+        }
+
+        [AuthorizePermission(Permission.PayrollDefault)]
+        [HttpGet]
         public async Task<ActionResult> PayslipReport(PayslipReport.Query query)
         {
             var result = await _mediator.Send(query);

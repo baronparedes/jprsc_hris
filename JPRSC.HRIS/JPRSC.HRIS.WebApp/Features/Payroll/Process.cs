@@ -208,7 +208,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         payrollRecord.PagIbigValueEmployer = ComputePagIbigEmployer(pagIbigDeductionBasis, employee.PagIbigRecord);
                     }
 
-                    if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValue = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
+                    if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValueEmployee = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
 
                     var sampleLoanPaymentValue = employeeLoans.Sum(l => l.RemainingBalance.GetValueOrDefault() > l.DeductionAmount.GetValueOrDefault() ? l.DeductionAmount.GetValueOrDefault() : l.RemainingBalance.GetValueOrDefault());
 

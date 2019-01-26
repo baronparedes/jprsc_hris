@@ -1,0 +1,161 @@
+﻿@model JPRSC.HRIS.WebApp.Features.Payroll.PayrollSummaryReport.QueryResult
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Payroll Summary Report for @Model.PayrollProcessBatchResult.Client.Name</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'PT Serif', serif;
+        }
+
+        .payroll-table td {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Job Placement Resources Services Cooperative</h3>
+                <h4>Payroll Summary Report for @Model.PayrollProcessBatchResult.Client.Name</h4>
+                <h5>For the period @Model.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.PayrollProcessBatchResult.PayrollPeriodToFormatted (@Model.PayrollProcessBatchResult.PayrollPeriodFormatted payroll period)</h5>
+                @*<h5>@Model.PayrollReportItems.Count() record/s total</h5>*@
+            </div>
+        </div>
+        @if (!Model.PayrollReportItems.Any())
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <p class="lead">No records found.</p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-xs-6">
+                    <table class="table">
+                        <tr>
+                            <td colspan="2"><span style="font-size: 1.2em; font-weight: bold;">Earnings</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Basic Pay</strong></td>
+                            <td>@String.Format("{0:n}", Model.TotalBasicPay)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>COLA</strong></td>
+                            <td>@String.Format("{0:n}", Model.TotalCOLA)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Undertime/Late/Absences</strong></td>
+                            <td>@String.Format("({0:n})", Model.TotalUndertime)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Overtime</strong></td>
+                            <td>@String.Format("{0:n}", Model.TotalOvertimes)</td>
+                        </tr>
+                        @foreach (var overtime in Model.TotalOvertimesPerType)
+                        {
+                            <tr>
+                                <td style="padding-left: 30px;">@overtime.PayPercentage.Name</td>
+                                <td>@String.Format("{0:n}", overtime.NumberOfHoursValue)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td><strong>Earnings</strong></td>
+                            <td>@String.Format("{0:n}", Model.TotalEarnings)</td>
+                        </tr>
+                        @foreach (var earning in Model.TotalEarningsPerType)
+                        {
+                            <tr>
+                                <td style="padding-left: 30px;">@earning.EarningDeduction.Code</td>
+                                <td>@String.Format("{0:n}", earning.Amount)</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <div class="col-xs-6">
+                    <table class="table">
+                        <tr>
+                            <td colspan="2"><span style="font-size: 1.2em; font-weight: bold;">Deductions</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deductions</strong></td>
+                            <td>@String.Format("{0:n}", Model.TotalDeductions)</td>
+                        </tr>
+                        @foreach (var deduction in Model.TotalDeductionsPerType)
+                        {
+                            <tr>
+                                <td style="padding-left: 30px;">@deduction.EarningDeduction.Code</td>
+                                <td>@String.Format("{0:n}", deduction.Amount)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>SSS Employer Share</td>
+                            <td>@String.Format("{0:n}", Model.TotalSSSEmployer)</td>
+                        </tr>
+                        <tr>
+                            <td>PHIC Employer Share</td>
+                            <td>@String.Format("{0:n}", Model.TotalPHICEmployer)</td>
+                        </tr>
+                        <tr>
+                            <td>Pag-Ibig Employer Share</td>
+                            <td>@String.Format("{0:n}", Model.TotalPagIbigEmployer)</td>
+                        </tr>
+                        <tr>
+                            <td>Tax Employer Share</td>
+                            <td>@String.Format("{0:n}", Model.TotalTaxEmployer)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table">
+                        <tr>
+                            <td><strong>Total Earnings</strong></td>
+                            <td>@String.Format("{0:n}", Model.TotalEarnings)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Deductions</strong></td>
+                            <td>@String.Format("{0:n}", Model.TotalDeductions)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contributions</strong></td>
+                            <td>@String.Format("({0:n})", Model.TotalContributions)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left: 30px;">Tax Withheld</td>
+                            <td>@String.Format("{0:n}", Model.TotalTaxEmployee)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left: 30px;">SSS Premium</td>
+                            <td>@String.Format("{0:n}", Model.TotalSSSEmployee)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left: 30px;">PHIC Premium</td>
+                            <td>@String.Format("{0:n}", Model.TotalPHICEmployee)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left: 30px;">Pag-Ibig Premium</td>
+                            <td>@String.Format("{0:n}", Model.TotalPagIbigEmployee)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>
