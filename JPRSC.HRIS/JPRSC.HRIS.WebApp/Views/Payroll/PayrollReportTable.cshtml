@@ -54,7 +54,7 @@
             {
                 foreach (var loanType in Model.Item1.LoanTypes)
                 {
-                    if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                    if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
                     {
                         <th>@loanType.Code</th>
                     }
@@ -123,9 +123,9 @@
                     {
                         foreach (var loanType in Model.Item1.LoanTypes)
                         {
-                            if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                            if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
                             {
-                                <td>@String.Format("{0:n}", payrollReportItem.Loans.Where(l => l.LoanTypeId == loanType.Id).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
+                                <td>@String.Format("{0:n}", payrollReportItem.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
                             }
                         }
                     }
@@ -133,7 +133,7 @@
                     {
                         foreach (var loanType in Model.Item1.LoanTypes)
                         {
-                            if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                            if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
                             {
                                 <td>@String.Format("{0:n}", 0)</td>
                             }
@@ -198,9 +198,9 @@
             {
                 foreach (var loanType in Model.Item1.LoanTypes)
                 {
-                    if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                    if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
                     {
-                        <td>@String.Format("{0:n}", Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
+                        <td>@String.Format("{0:n}", Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0)).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
                     }
                 }
             }            
