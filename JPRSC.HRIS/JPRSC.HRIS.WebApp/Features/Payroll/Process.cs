@@ -142,10 +142,22 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     PayrollPeriodTo = command.PayrollPeriodTo
                 };
 
-                var previousPayrollProcessBatchesInMonth = await _db.PayrollProcessBatches
-                    .Where(ppb => ppb.ClientId == client.Id && ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year && ppb.PayrollPeriod < command.PayrollPeriod && ppb.PayrollPeriodMonth == command.PayrollPeriodMonth)
-                    .OrderByDescending(ppb => ppb.PayrollPeriodFrom)
-                    .ToListAsync();
+                var previousPayrollProcessBatchesInMonth = new List<PayrollProcessBatch>();
+
+                if (command.PayrollPeriodMonth != Month.January)
+                {
+                    previousPayrollProcessBatchesInMonth = await _db.PayrollProcessBatches
+                        .Where(ppb => ppb.ClientId == client.Id && ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year && ppb.PayrollPeriod < command.PayrollPeriod && ppb.PayrollPeriodMonth == command.PayrollPeriodMonth)
+                        .OrderByDescending(ppb => ppb.PayrollPeriodFrom)
+                        .ToListAsync();
+                }
+                else
+                {
+                    previousPayrollProcessBatchesInMonth = await _db.PayrollProcessBatches
+                        .Where(ppb => ppb.ClientId == client.Id && (ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year || (ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year - 1 && ppb.PayrollPeriodFrom.Value.Month == 12)) && ppb.PayrollPeriod < command.PayrollPeriod && ppb.PayrollPeriodMonth == command.PayrollPeriodMonth)
+                        .OrderByDescending(ppb => ppb.PayrollPeriodFrom)
+                        .ToListAsync();
+                }                
 
                 var systemSettings = await _db.SystemSettings.SingleAsync();
 
