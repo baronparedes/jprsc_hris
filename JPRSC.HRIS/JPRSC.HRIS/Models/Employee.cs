@@ -36,6 +36,7 @@ namespace JPRSC.HRIS.Models
         public int Id { get; set; }
         public bool? IsActive { get; set; }
         public string LastName { get; set; }
+        public bool? LoanExempt { get; set; }
         public ICollection<Loan> Loans { get; set; } = new List<Loan>();
         public string MiddleName { get; set; }
         public DateTime? ModifiedOn { get; set; }

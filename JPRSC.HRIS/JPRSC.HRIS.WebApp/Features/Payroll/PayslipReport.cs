@@ -102,17 +102,10 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Where(l => !l.DeletedOn.HasValue && employeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                     .ToListAsync();
 
-                var systemSettings = await _db.SystemSettings.SingleAsync();
-
                 var payslipRecords = new List<QueryResult.PayslipRecord>(payrollRecords.Count);
 
                 foreach (var payrollRecord in payrollRecords)
                 {
-                    if (payrollRecord.AddedOn < new DateTime(2018, 10, 30))
-                    {
-                        payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault(), out decimal deductionBasis);
-                    }
-
                     var payslipRecord = new QueryResult.PayslipRecord();
                     payslipRecord.PayrollProcessBatchResult = payrollProcessBatchResult;
                     payslipRecord.PayrollRecord = payrollRecord;

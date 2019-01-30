@@ -101,6 +101,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public decimal? HourlyRate { get; set; }
                 public int Id { get; set; }
                 public string LastName { get; set; }
+                public bool? LoanExempt { get; set; }
                 public string MiddleName { get; set; }
                 public DateTime? ModifiedOn { get; set; }
                 public decimal? MonthlyRate { get; set; }
@@ -186,16 +187,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .ProjectToListAsync<QueryResult.PayrollRecord>();
 
                 payrollRecords.RemoveAll(pr => String.IsNullOrWhiteSpace(pr.Employee.ATMAccountNumber) || pr.Employee.ATMAccountNumber == "0");
-
-                var systemSettings = await _db.SystemSettings.SingleAsync();
-
-                foreach (var payrollRecord in payrollRecords)
-                {
-                    if (payrollRecord.AddedOn < new DateTime(2018, 10, 30))
-                    {
-                        payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), payrollRecord.LoanPaymentValue.GetValueOrDefault(), out decimal deductionBasis);
-                    }
-                }
 
                 return new QueryResult
                 {

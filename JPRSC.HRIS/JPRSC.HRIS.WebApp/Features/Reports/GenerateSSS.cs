@@ -198,25 +198,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                     foreach (var employeePayrollRecords in payrollRecordsInBatchPerEmployee)
                     {
-                        var sssRecord = new QueryResult.SSSRecord();
-
-                        var netPayValue = 0m;
-
-                        if (employeePayrollRecords.Any(pr => pr.AddedOn < new DateTime(2018, 10, 30)))
-                        {
-                            netPayValue = NetPayHelper.GetNetPay(_systemSettings, employeePayrollRecords.Sum(pr => pr.BasicPayValue), employeePayrollRecords.Sum(pr => pr.TotalEarningsValue), employeePayrollRecords.Sum(pr => pr.TotalGovDeductionsValue), employeePayrollRecords.Sum(pr => pr.DeductionsValue.GetValueOrDefault()), employeePayrollRecords.Sum(pr => pr.LoanPaymentValue.GetValueOrDefault()), out decimal deductionBasis);
-                        }
-                        else
-                        {
-                            netPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
-                        }
-
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
+                        var sssRecord = new QueryResult.SSSRecord();
                         sssRecord.CompanySSS = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.SSS;
                         sssRecord.SSSDeductionBasis = employeePayrollRecords.Sum(pr => pr.SSSDeductionBasis.GetValueOrDefault());
                         sssRecord.Employee = sampleEmployee;
-                        sssRecord.NetPayValue = netPayValue;
+                        sssRecord.NetPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
                         sssRecord.TotalSSSEmployee = employeePayrollRecords.Sum(pr => pr.SSSValueEmployee.GetValueOrDefault());
                         sssRecord.TotalSSSEmployer = employeePayrollRecords.Sum(pr => pr.SSSValueEmployer.GetValueOrDefault());
 

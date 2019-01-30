@@ -198,25 +198,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                     foreach (var employeePayrollRecords in payrollRecordsInBatchPerEmployee)
                     {
-                        var phicRecord = new QueryResult.PHICRecord();
-
-                        var netPayValue = 0m;
-
-                        if (employeePayrollRecords.Any(pr => pr.AddedOn < new DateTime(2018, 10, 30)))
-                        {
-                            netPayValue = NetPayHelper.GetNetPay(_systemSettings, employeePayrollRecords.Sum(pr => pr.BasicPayValue), employeePayrollRecords.Sum(pr => pr.TotalEarningsValue), employeePayrollRecords.Sum(pr => pr.TotalGovDeductionsValue), employeePayrollRecords.Sum(pr => pr.DeductionsValue.GetValueOrDefault()), employeePayrollRecords.Sum(pr => pr.LoanPaymentValue.GetValueOrDefault()), out decimal deductionBasis);
-                        }
-                        else
-                        {
-                            netPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
-                        }
-
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
+                        var phicRecord = new QueryResult.PHICRecord();
                         phicRecord.CompanyPhilHealth = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.PhilHealth;
                         phicRecord.PHICDeductionBasis = employeePayrollRecords.Sum(pr => pr.PHICDeductionBasis.GetValueOrDefault());
                         phicRecord.Employee = sampleEmployee;
-                        phicRecord.NetPayValue = netPayValue;
+                        phicRecord.NetPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
                         phicRecord.TotalPHICEmployee = employeePayrollRecords.Sum(pr => pr.PHICValueEmployee.GetValueOrDefault());
                         phicRecord.TotalPHICEmployer = employeePayrollRecords.Sum(pr => pr.PHICValueEmployer.GetValueOrDefault());
 

@@ -87,6 +87,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public bool? PagIbigExempt { get; set; }
             public bool? ThirteenthMonthExempt { get; set; }
             public bool? PhilHealthExempt { get; set; }
+            public bool? LoanExempt { get; set; }
             public string SalaryStatus { get; set; }
 
             // Submitted Files
@@ -350,6 +351,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     IsActive = command.IsActive,
                     JobTitleId = command.JobTitleId,
                     LastName = command.LastName,
+                    LoanExempt = command.LoanExempt,
                     MiddleName = command.MiddleName,
                     MonthlyRate = command.MonthlyRate.GetValueOrDefault(),
                     Nickname = command.Nickname,

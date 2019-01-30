@@ -410,6 +410,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201901260227135_AddTaxValueEmployer.Designer.cs">
       <DependentUpon>201901260227135_AddTaxValueEmployer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201901300243233_AddLoanExempt.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201901300243233_AddLoanExempt.Designer.cs">
+      <DependentUpon>201901300243233_AddLoanExempt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -712,6 +716,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201901260227135_AddTaxValueEmployer.resx">
       <DependentUpon>201901260227135_AddTaxValueEmployer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201901300243233_AddLoanExempt.resx">
+      <DependentUpon>201901300243233_AddLoanExempt.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

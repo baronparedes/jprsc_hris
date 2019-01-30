@@ -221,29 +221,44 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     }
 
                     if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValueEmployee = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
-
-                    var sampleLoanPaymentValue = employeeLoans.Sum(l => l.RemainingBalance.GetValueOrDefault() > l.DeductionAmount.GetValueOrDefault() ? l.DeductionAmount.GetValueOrDefault() : l.RemainingBalance.GetValueOrDefault());
-
-                    payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), sampleLoanPaymentValue, out bool govDeductionsDeducted, out bool loansDeducted, out bool anythingDeducted, out decimal deductionBasis);
-                    payrollRecord.GovDeductionsDeducted = govDeductionsDeducted;
-                    payrollRecord.LoansDeducted = loansDeducted;
-                    payrollRecord.AnythingDeducted = anythingDeducted;
-                    payrollRecord.DeductionBasis = deductionBasis;
-
-                    payrollProcessBatch.PayrollRecords.Add(payrollRecord);
-
-                    if (loansDeducted)
+                                        
+                    if (employee.LoanExempt != true)
                     {
-                        payrollRecord.LoanPaymentValue = sampleLoanPaymentValue;
+                        var sampleLoanPaymentValue = employeeLoans.Sum(l => l.RemainingBalance.GetValueOrDefault() > l.DeductionAmount.GetValueOrDefault() ? l.DeductionAmount.GetValueOrDefault() : l.RemainingBalance.GetValueOrDefault());
 
-                        foreach (var loan in employeeLoans)
+                        payrollRecord.NetPayValue = NetPayHelper.GetNetPay(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), sampleLoanPaymentValue, out bool govDeductionsDeducted, out bool loansDeducted, out bool anythingDeducted, out decimal deductionBasis);
+
+                        payrollRecord.GovDeductionsDeducted = govDeductionsDeducted;
+                        payrollRecord.LoansDeducted = loansDeducted;
+                        payrollRecord.AnythingDeducted = anythingDeducted;
+                        payrollRecord.DeductionBasis = deductionBasis;
+
+                        payrollProcessBatch.PayrollRecords.Add(payrollRecord);
+
+                        if (loansDeducted)
                         {
-                            loan.RemainingBalance -= loan.DeductionAmount.GetValueOrDefault();
+                            payrollRecord.LoanPaymentValue = sampleLoanPaymentValue;
 
-                            if (!loan.AmountPaid.HasValue) loan.AmountPaid = 0;
+                            foreach (var loan in employeeLoans)
+                            {
+                                loan.RemainingBalance -= loan.DeductionAmount.GetValueOrDefault();
 
-                            loan.AmountPaid += loan.DeductionAmount.GetValueOrDefault();
+                                if (!loan.AmountPaid.HasValue) loan.AmountPaid = 0;
+
+                                loan.AmountPaid += loan.DeductionAmount.GetValueOrDefault();
+                            }
                         }
+                    }
+                    else
+                    {
+                        payrollRecord.NetPayValue = NetPayHelper.GetNetPayLoanExempt(systemSettings, payrollRecord.BasicPayValue, payrollRecord.TotalEarningsValue, payrollRecord.TotalGovDeductionsValue, payrollRecord.DeductionsValue.GetValueOrDefault(), out bool govDeductionsDeducted, out bool anythingDeducted, out decimal deductionBasis);
+
+                        payrollRecord.GovDeductionsDeducted = govDeductionsDeducted;
+                        payrollRecord.LoansDeducted = false;
+                        payrollRecord.AnythingDeducted = anythingDeducted;
+                        payrollRecord.DeductionBasis = deductionBasis;
+
+                        payrollProcessBatch.PayrollRecords.Add(payrollRecord);
                     }
                 }
 
