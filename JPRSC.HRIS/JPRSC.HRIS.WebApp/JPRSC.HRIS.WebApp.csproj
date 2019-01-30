@@ -7081,7 +7081,6 @@
     <Content Include="Views\Payroll\BankReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Views\Employees\Details.cshtml" />
     <Content Include="Views\Payroll\CashHoldReport.cshtml" />
     <Content Include="Views\Payroll\CashReport.cshtml" />
@@ -7105,6 +7104,9 @@
     <Content Include="Views\Reports\SingleLoanTypeReport.cshtml" />
     <Content Include="Views\Reports\PagIbigReport.cshtml" />
     <Content Include="Views\Payroll\PayrollSummaryReport.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\Local IIS.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
