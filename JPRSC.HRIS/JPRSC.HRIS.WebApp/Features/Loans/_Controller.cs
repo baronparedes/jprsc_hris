@@ -38,7 +38,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             return Json("success");
         }
 
-        [AuthorizePermission(Permission.LoanDefault)]
+        [AuthorizePermission(Permission.LoanAdd)]
         [HttpGet]
         public async Task<ActionResult> Edit(Edit.Query query)
         {
@@ -47,9 +47,8 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             return View(command);
         }
 
-        [AuthorizePermission(Permission.LoanDefault)]
+        [AuthorizePermission(Permission.LoanAdd)]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Edit.Command command)
         {
             if (!ModelState.IsValid)
@@ -58,8 +57,6 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             }
 
             await _mediator.Send(command);
-
-            NotificationHelper.CreateSuccessNotification(this, $"Successfully edited loan.");
 
             return Json("success");
         }

@@ -6058,6 +6058,7 @@
     <Content Include="wwwroot\scripts\jobTitles\edit.js" />
     <Content Include="wwwroot\scripts\jobTitles\index.js" />
     <Content Include="wwwroot\scripts\loans\add.js" />
+    <Content Include="wwwroot\scripts\loans\editModal.js" />
     <Content Include="wwwroot\scripts\loans\detailsModal.js" />
     <Content Include="wwwroot\scripts\loans\addModal.js" />
     <Content Include="wwwroot\scripts\loans\edit.js" />

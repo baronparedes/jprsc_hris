@@ -9,6 +9,7 @@
         vm.currencySymbol = 'P';
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.detailsClicked = detailsClicked;
+        vm.editClicked = editClicked;
         vm.getInterestAmount = getInterestAmount;
         vm.loans = [];
         vm.loanTypes = [];
@@ -47,6 +48,40 @@
                             clients: vm.clients,
                             loanTypesList: vm.loanTypesList,
                             nextTransactionNumber: vm.nextTransactionNumber
+                        };
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (result) {
+                searchClicked();
+            });
+        };
+
+        function editClicked(loan) {
+            var client = {};
+
+            for (var i = 0; i < vm.clients.length; i++) {
+                var currentClient = vm.clients[i];
+
+                if (currentClient.id === loan.employee.clientId) {
+                    client = currentClient;
+                    break;
+                }
+            }
+
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'editLoanModal.html',
+                controller: 'EditLoanModalCtrl',
+                controllerAs: 'vm',
+                resolve: {
+                    params: function () {
+                        return {
+                            client: client,
+                            loan: loan
                         };
                     }
                 }

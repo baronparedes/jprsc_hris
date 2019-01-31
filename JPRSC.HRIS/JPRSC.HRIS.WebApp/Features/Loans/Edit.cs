@@ -3,6 +3,7 @@ using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading;
@@ -19,7 +20,9 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
         public class Command : IRequest
         {
+            public decimal? DeductionAmount { get; set; }
             public int Id { get; set; }
+            public string LoanPayrollPeriod { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Command>
@@ -41,7 +44,11 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
         {
             public CommandValidator()
             {
+                RuleFor(c => c.DeductionAmount)
+                    .NotEmpty();
 
+                RuleFor(c => c.LoanPayrollPeriod)
+                    .NotEmpty();
             }
         }
 
@@ -57,8 +64,9 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             public async Task<Unit> Handle(Command command, CancellationToken token)
             {
                 var loan = await _db.Loans.SingleAsync(r => r.Id == command.Id);
-
+                loan.DeductionAmount = command.DeductionAmount;
                 loan.ModifiedOn = DateTime.UtcNow;
+                loan.LoanPayrollPeriod = command.LoanPayrollPeriod;
 
                 await _db.SaveChangesAsync();
 

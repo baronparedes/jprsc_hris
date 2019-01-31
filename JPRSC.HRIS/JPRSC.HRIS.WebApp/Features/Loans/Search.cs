@@ -38,6 +38,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
             public class Employee
             {
+                public int? ClientId { get; set; }
                 public decimal? COLADaily { get; set; }
                 public decimal? COLAHourly { get; set; }
                 public decimal? COLAMonthly { get; set; }
@@ -62,6 +63,8 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 public LoanType LoanType { get; set; }
                 public int? LoanTypeId { get; set; }
                 public int? PayrollPeriod { get; set; }
+                public string LoanPayrollPeriod { get; set; }
+                public IList<int> LoanPayrollPeriods => String.IsNullOrWhiteSpace(LoanPayrollPeriod) ? new List<int>() : LoanPayrollPeriod.Split(',').Select(p => Convert.ToInt32(p)).ToList();
                 public decimal? PrincipalAmount { get; set; }
                 public decimal? RemainingBalance { get; set; }
                 public decimal? RemainingBalanceForDisplay => !RemainingBalance.HasValue ? (decimal?)null : Math.Max(0, RemainingBalance.Value);

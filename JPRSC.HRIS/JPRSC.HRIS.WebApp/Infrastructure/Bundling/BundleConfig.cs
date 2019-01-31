@@ -194,6 +194,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/loans/addModal.js",
                 "~/wwwroot/scripts/loans/detailsModal.js",
                 "~/wwwroot/scripts/loans/edit.js",
+                "~/wwwroot/scripts/loans/editModal.js",
                 "~/wwwroot/scripts/loans/index.js");
         }
 
