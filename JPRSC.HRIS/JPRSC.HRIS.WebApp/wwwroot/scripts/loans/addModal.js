@@ -31,18 +31,47 @@
         function addLoanSubmit(e) {
             vm.addInProgress = true;
 
-            var action = '/Loans/Add';
-            var data = $(angular.element(e.target)[0]).serialize();
-            var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
+            var loanType = {};
 
-            $http.post(action, data, config).then(function (response) {
-                $uibModalInstance.close();
-            }, function (response) {
-                if (response.status == 400) {
-                    vm.validationErrors = response.data;
+            for (var i = 0; i < vm.loanTypesList.length; i++) {
+                var currentLoanType = vm.loanTypesList[i];
+
+                if (parseInt(currentLoanType.value) === parseInt(vm.loanTypeId.value)) {
+                    loanType = currentLoanType;
+                    break;
+                }
+            }
+
+            var checkExistingParams = {
+                employeeId: vm.employee.id,
+                loanTypeId: parseInt(loanType.value)
+            };
+
+            $http.get('/Loans/CheckExisting', { params: checkExistingParams }).then(function (response) {
+                var shouldAdd = true;
+
+                if (response.data.hasExisting) {
+                    shouldAdd = confirm(`${vm.employee.lastName}, ${vm.employee.firstName} still has an existing loan for ${loanType.text}. Do you want to proceed anyway?`);
                 }
 
-                vm.addInProgress = false;
+                if (shouldAdd) {
+                    var action = '/Loans/Add';
+                    var data = $(angular.element(e.target)[0]).serialize();
+                    var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
+
+                    $http.post(action, data, config).then(function (response) {
+                        $uibModalInstance.close();
+                    }, function (response) {
+                        if (response.status == 400) {
+                            vm.validationErrors = response.data;
+                        }
+
+                        vm.addInProgress = false;
+                    });
+                }
+                else {
+                    vm.addInProgress = false;
+                }
             });
         };
 

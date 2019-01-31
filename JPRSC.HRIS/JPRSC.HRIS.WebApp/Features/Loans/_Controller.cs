@@ -38,6 +38,15 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             return Json("success");
         }
 
+        [AuthorizePermission(Permission.LoanDefault)]
+        [HttpGet]
+        public async Task<ActionResult> CheckExisting(CheckExisting.Query query)
+        {
+            var queryResult = await _mediator.Send(query);
+
+            return JsonCamelCase(queryResult);
+        }
+
         [AuthorizePermission(Permission.LoanAdd)]
         [HttpGet]
         public async Task<ActionResult> Edit(Edit.Query query)

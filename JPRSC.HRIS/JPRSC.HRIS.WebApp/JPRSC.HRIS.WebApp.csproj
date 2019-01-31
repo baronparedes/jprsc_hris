@@ -395,6 +395,7 @@
     <Compile Include="Features\JobTitles\_MappingProfile.cs" />
     <Compile Include="Features\Loans\Add.cs" />
     <Compile Include="Features\Loans\GetById.cs" />
+    <Compile Include="Features\Loans\CheckExisting.cs" />
     <Compile Include="Features\Loans\ZeroOut.cs" />
     <Compile Include="Features\Loans\Edit.cs" />
     <Compile Include="Features\Loans\Index.cs" />
