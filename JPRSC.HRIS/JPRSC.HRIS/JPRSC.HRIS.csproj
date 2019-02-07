@@ -414,6 +414,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201901300243233_AddLoanExempt.Designer.cs">
       <DependentUpon>201901300243233_AddLoanExempt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201902070427237_AddClientExemptionFields.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201902070427237_AddClientExemptionFields.Designer.cs">
+      <DependentUpon>201902070427237_AddClientExemptionFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -719,6 +723,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201901300243233_AddLoanExempt.resx">
       <DependentUpon>201901300243233_AddLoanExempt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201902070427237_AddClientExemptionFields.resx">
+      <DependentUpon>201902070427237_AddClientExemptionFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

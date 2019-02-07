@@ -71,6 +71,11 @@
                                         @Html.DropdownHorizontalFormGroup("months", "PayrollPeriodMonth")
                                         @Html.TextBoxHorizontalFormGroup("CurrentPayrollPeriod")
                                         @Html.CheckboxHorizontalFormGroup("ZeroBasic")
+                                        @Html.CheckboxHorizontalFormGroup("TaxExempt")
+                                        @Html.CheckboxHorizontalFormGroup("SSSExempt")
+                                        @Html.CheckboxHorizontalFormGroup("PHICExempt")
+                                        @Html.CheckboxHorizontalFormGroup("PagIbigExempt")
+                                        @Html.CheckboxHorizontalFormGroup("LoanExempt")
                                     </uib-tab>
                                     <uib-tab index="1" heading="SSS">
                                         <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.sssPayrollPeriod }">

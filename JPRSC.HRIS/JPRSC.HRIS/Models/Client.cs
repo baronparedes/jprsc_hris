@@ -58,5 +58,11 @@ namespace JPRSC.HRIS.Models
         public bool? ZeroBasic { get; set; }
 
         public ICollection<PayrollProcessBatch> PayrollProcessBatches { get; set; } = new List<PayrollProcessBatch>();
+
+        public bool? LoanExempt { get; set; }
+        public bool? PagIbigExempt { get; set; }
+        public bool? PHICExempt { get; set; }
+        public bool? SSSExempt { get; set; }
+        public bool? TaxExempt { get; set; }
     }
 }

@@ -196,7 +196,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         earningDeductionRecordsForPreviousPayrollProcessBatches = await GetEarningDeductionRecordsForPreviousPayrollProcessBatches(employee, previousPayrollProcessBatchesInMonth);
                     }
 
-                    if (shouldDeductSSS && employee.SSSExempt != true)
+                    if (shouldDeductSSS && client.SSSExempt != true && employee.SSSExempt != true)
                     {
                         var sssDeductionBasis = GetSSSDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                         payrollRecord.SSSDeductionBasis = sssDeductionBasis;
@@ -204,7 +204,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         payrollRecord.SSSValueEmployer = ComputeSSSEmployer(sssDeductionBasis, sssRecords);
                     }
 
-                    if (shouldDeductPHIC && employee.PhilHealthExempt != true)
+                    if (shouldDeductPHIC && client.PHICExempt != true && employee.PhilHealthExempt != true)
                     {
                         var phicDeductionBasis = GetPHICDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                         payrollRecord.PHICDeductionBasis = phicDeductionBasis;
@@ -212,7 +212,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         payrollRecord.PHICValueEmployer = ComputePHICEmployer(phicDeductionBasis, phicSettings);
                     }
 
-                    if (shouldDeductPagIbig && employee.PagIbigExempt != true)
+                    if (shouldDeductPagIbig && client.PHICExempt != true && employee.PagIbigExempt != true)
                     {
                         var pagIbigDeductionBasis = GetPagIbigDeductionBasis(employee, client, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                         payrollRecord.PagIbigDeductionBasis = pagIbigDeductionBasis;
@@ -220,9 +220,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         payrollRecord.PagIbigValueEmployer = ComputePagIbigEmployer(pagIbigDeductionBasis, employee.PagIbigRecord);
                     }
 
-                    if (shouldDeductTax && employee.TaxExempt != true) payrollRecord.TaxValueEmployee = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
+                    if (shouldDeductTax && client.TaxExempt != true && employee.TaxExempt != true) payrollRecord.TaxValueEmployee = ComputeTax(employee, client, employeeDtrsForPayrollPeriod, employeeOtsForPayrollPeriod, employeeEdrsForPayrollPeriod);
                                         
-                    if (employee.LoanExempt != true)
+                    if (client.LoanExempt != true && employee.LoanExempt != true)
                     {
                         var sampleLoanPaymentValue = employeeLoans.Sum(l => l.RemainingBalance.GetValueOrDefault() > l.DeductionAmount.GetValueOrDefault() ? l.DeductionAmount.GetValueOrDefault() : l.RemainingBalance.GetValueOrDefault());
 

@@ -58,6 +58,12 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             public bool? TaxEarnings { get; set; }
             public bool? TaxDeductions { get; set; }
             public bool? TaxUndertime { get; set; }
+
+            public bool? LoanExempt { get; set; }
+            public bool? PagIbigExempt { get; set; }
+            public bool? PHICExempt { get; set; }
+            public bool? SSSExempt { get; set; }
+            public bool? TaxExempt { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -88,9 +94,11 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                     DaysPerWeek = command.DaysPerWeek,
                     Description = command.Description,
                     HoursPerDay = command.HoursPerDay,
+                    LoanExempt = command.LoanExempt,
                     Name = command.Name,
                     NumberOfPayrollPeriodsAMonth = command.NumberOfPayrollPeriodsAMonth,
                     NumberOfWorkingDaysForThisPayrollPeriod = command.NumberOfWorkingDaysForThisPayrollPeriod,
+                    PagIbigExempt = command.PagIbigExempt,
                     PagIbigBasic = command.PagIbigBasic.GetValueOrDefault(),
                     PagIbigCola = command.PagIbigCola.GetValueOrDefault(),
                     PagIbigOvertime = command.PagIbigOvertime.GetValueOrDefault(),
@@ -102,6 +110,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                     PayrollPeriodFrom = command.PayrollPeriodFrom,
                     PayrollPeriodMonth = command.PayrollPeriodMonth,
                     PayrollPeriodTo = command.PayrollPeriodTo,
+                    PHICExempt = command.PHICExempt,
                     PHICBasic = command.PHICBasic.GetValueOrDefault(),
                     PHICCola = command.PHICCola.GetValueOrDefault(),
                     PHICOvertime = command.PHICOvertime.GetValueOrDefault(),
@@ -109,6 +118,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                     PHICDeductions = command.PHICEarnings.GetValueOrDefault(),
                     PHICUndertime = command.PHICEarnings.GetValueOrDefault(),
                     PHICPayrollPeriod = command.PHICPayrollPeriod,
+                    SSSExempt = command.SSSExempt,
                     SSSBasic = command.SSSBasic.GetValueOrDefault(),
                     SSSCola = command.SSSCola.GetValueOrDefault(),
                     SSSOvertime = command.SSSOvertime.GetValueOrDefault(),
@@ -116,6 +126,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                     SSSDeductions = command.SSSEarnings.GetValueOrDefault(),
                     SSSUndertime = command.SSSEarnings.GetValueOrDefault(),
                     SSSPayrollPeriod = command.SSSPayrollPeriod,
+                    TaxExempt = command.TaxExempt,
                     TaxBasic = command.TaxBasic.GetValueOrDefault(),
                     TaxCola = command.TaxCola.GetValueOrDefault(),
                     TaxOvertime = command.TaxOvertime.GetValueOrDefault(),

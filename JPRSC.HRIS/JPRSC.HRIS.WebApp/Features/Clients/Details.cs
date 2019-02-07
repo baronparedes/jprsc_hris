@@ -65,6 +65,12 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             public bool? TaxEarnings { get; set; }
             public bool? TaxDeductions { get; set; }
             public bool? TaxUndertime { get; set; }
+
+            public bool? LoanExempt { get; set; }
+            public bool? PagIbigExempt { get; set; }
+            public bool? PHICExempt { get; set; }
+            public bool? SSSExempt { get; set; }
+            public bool? TaxExempt { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
