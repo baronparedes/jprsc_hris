@@ -43,6 +43,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 public decimal NetPayValue { get; set; }
                 public decimal TotalPHICEmployee { get; set; }
                 public decimal TotalPHICEmployer { get; set; }
+                public decimal ShareTotal => TotalPHICEmployee + TotalPHICEmployer;
 
                 public IList<string> DisplayLine
                 {
@@ -63,6 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         line.Add(String.Empty);
                         line.Add(String.Format("{0:n}", TotalPHICEmployer));
                         line.Add(String.Format("{0:n}", TotalPHICEmployee));
+                        line.Add(String.Format("{0:n}", ShareTotal));
 
                         return line;
                     }
@@ -113,8 +115,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 if (query.Destination == "Excel")
                 {
                     var excelLines = phicRecords.Select(pr => pr.DisplayLine).ToList();
-                    excelLines.Insert(0, new List<string> { "Company PHIC No.", String.Empty, "Employee PHIC No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "PHIC Employer Share", "PHIC Employee Share" });
-                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.PHICDeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployer)), String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployee)) });
+                    excelLines.Insert(0, new List<string> { "Company PHIC No.", String.Empty, "Employee PHIC No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "PHIC Employer Share", "PHIC Employee Share", "Share Total" });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.PHICDeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployer)), String.Format("{0:n}", phicRecords.Sum(sr => sr.TotalPHICEmployee)), String.Format("{0:n}", phicRecords.Sum(sr => sr.ShareTotal)) });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 

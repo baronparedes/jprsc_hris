@@ -43,6 +43,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 public decimal NetPayValue { get; set; }
                 public decimal TotalSSSEmployee { get; set; }
                 public decimal TotalSSSEmployer { get; set; }
+                public decimal ShareTotal => TotalSSSEmployee + TotalSSSEmployer;
 
                 public IList<string> DisplayLine
                 {
@@ -63,6 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         line.Add(String.Empty);
                         line.Add(String.Format("{0:n}", TotalSSSEmployer));
                         line.Add(String.Format("{0:n}", TotalSSSEmployee));
+                        line.Add(String.Format("{0:n}", ShareTotal));
 
                         return line;
                     }
@@ -113,8 +115,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 if (query.Destination == "Excel")
                 {
                     var excelLines = sssRecords.Select(pr => pr.DisplayLine).ToList();
-                    excelLines.Insert(0, new List<string> { "Company SSS No.", String.Empty, "Employee SSS No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "SSS Employer Share", "SSS Employee Share" });
-                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.SSSDeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.TotalSSSEmployer)), String.Format("{0:n}", sssRecords.Sum(sr => sr.TotalSSSEmployee)) });
+                    excelLines.Insert(0, new List<string> { "Company SSS No.", String.Empty, "Employee SSS No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "SSS Employer Share", "SSS Employee Share", "Share Total" });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.SSSDeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", sssRecords.Sum(sr => sr.TotalSSSEmployer)), String.Format("{0:n}", sssRecords.Sum(sr => sr.TotalSSSEmployee)), String.Format("{0:n}", sssRecords.Sum(sr => sr.ShareTotal)) });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 

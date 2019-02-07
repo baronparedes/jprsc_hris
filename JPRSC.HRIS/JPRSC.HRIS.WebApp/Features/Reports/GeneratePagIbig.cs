@@ -43,6 +43,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 public decimal NetPayValue { get; set; }
                 public decimal TotalPagIbigEmployee { get; set; }
                 public decimal TotalPagIbigEmployer { get; set; }
+                public decimal ShareTotal => TotalPagIbigEmployee + TotalPagIbigEmployer;
 
                 public IList<string> DisplayLine
                 {
@@ -63,6 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         line.Add(String.Empty);
                         line.Add(String.Format("{0:n}", TotalPagIbigEmployer));
                         line.Add(String.Format("{0:n}", TotalPagIbigEmployee));
+                        line.Add(String.Format("{0:n}", ShareTotal));
 
                         return line;
                     }
@@ -113,8 +115,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 if (query.Destination == "Excel")
                 {
                     var excelLines = pagIbigRecords.Select(pr => pr.DisplayLine).ToList();
-                    excelLines.Insert(0, new List<string> { "Company PagIbig No.", String.Empty, "Employee PagIbig No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "PagIbig Employer Share", "PagIbig Employee Share" });
-                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", pagIbigRecords.Sum(sr => sr.PagIbigDeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", pagIbigRecords.Sum(sr => sr.TotalPagIbigEmployer)), String.Format("{0:n}", pagIbigRecords.Sum(sr => sr.TotalPagIbigEmployee)) });
+                    excelLines.Insert(0, new List<string> { "Company PagIbig No.", String.Empty, "Employee PagIbig No.", "Last Name", "First Name", String.Empty, "Middle Initial", "Net pay", String.Empty, "Date Generated", String.Empty, "PagIbig Employer Share", "PagIbig Employee Share", "Share Total" });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", pagIbigRecords.Sum(sr => sr.PagIbigDeductionBasis)), String.Empty, String.Empty, String.Empty, String.Format("{0:n}", pagIbigRecords.Sum(sr => sr.TotalPagIbigEmployer)), String.Format("{0:n}", pagIbigRecords.Sum(sr => sr.TotalPagIbigEmployee)), String.Format("{0:n}", pagIbigRecords.Sum(sr => sr.ShareTotal)) });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 

@@ -84,6 +84,7 @@
                                     <th>&nbsp;</th>
                                     <th>PHIC Employer Share</th>
                                     <th>PHIC Employee Share</th>
+                                    <th>Share Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -110,6 +111,7 @@
                                     <td>&nbsp;</td>
                                     <td>@String.Format("{0:n}", Model.PHICRecords.Sum(sr => sr.TotalPHICEmployer))</td>
                                     <td>@String.Format("{0:n}", Model.PHICRecords.Sum(sr => sr.TotalPHICEmployee))</td>
+                                    <td>@String.Format("{0:n}", Model.PHICRecords.Sum(sr => sr.ShareTotal))</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -141,6 +143,7 @@
                                         <th>&nbsp;</th>
                                         <th>PHIC Employer Share</th>
                                         <th>PHIC Employee Share</th>
+                                        <th>Share Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -167,6 +170,7 @@
                                         <td>&nbsp;</td>
                                         <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalPHICEmployer))</td>
                                         <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalPHICEmployee))</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.ShareTotal))</td>
                                     </tr>
                                 </tbody>
                             </table>

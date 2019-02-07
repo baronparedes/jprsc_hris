@@ -84,6 +84,7 @@
                                     <th>&nbsp;</th>
                                     <th>SSS Employer Share</th>
                                     <th>SSS Employee Share</th>
+                                    <th>Share Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -110,6 +111,7 @@
                                     <td>&nbsp;</td>
                                     <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.TotalSSSEmployer))</td>
                                     <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.TotalSSSEmployee))</td>
+                                    <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.ShareTotal))</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -141,6 +143,7 @@
                                         <th>&nbsp;</th>
                                         <th>SSS Employer Share</th>
                                         <th>SSS Employee Share</th>
+                                        <th>Share Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -167,6 +170,7 @@
                                         <td>&nbsp;</td>
                                         <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalSSSEmployer))</td>
                                         <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalSSSEmployee))</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.ShareTotal))</td>
                                     </tr>
                                 </tbody>
                             </table>

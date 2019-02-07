@@ -84,6 +84,7 @@
                                     <th>&nbsp;</th>
                                     <th>PagIbig Employer Share</th>
                                     <th>PagIbig Employee Share</th>
+                                    <th>Share Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -110,6 +111,7 @@
                                     <td>&nbsp;</td>
                                     <td>@String.Format("{0:n}", Model.PagIbigRecords.Sum(sr => sr.TotalPagIbigEmployer))</td>
                                     <td>@String.Format("{0:n}", Model.PagIbigRecords.Sum(sr => sr.TotalPagIbigEmployee))</td>
+                                    <td>@String.Format("{0:n}", Model.PagIbigRecords.Sum(sr => sr.ShareTotal))</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -141,6 +143,7 @@
                                         <th>&nbsp;</th>
                                         <th>PagIbig Employer Share</th>
                                         <th>PagIbig Employee Share</th>
+                                        <th>Share Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -167,6 +170,7 @@
                                         <td>&nbsp;</td>
                                         <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalPagIbigEmployer))</td>
                                         <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalPagIbigEmployee))</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.ShareTotal))</td>
                                     </tr>
                                 </tbody>
                             </table>
