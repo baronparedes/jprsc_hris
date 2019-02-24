@@ -122,7 +122,8 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                 }
 
                 var loans = await dbQuery
-                    .OrderBy(l => l.Id)
+                    .OrderBy(l => l.Employee.LastName)
+                    .ThenBy(l => l.Employee.FirstName)
                     .PageBy(pageNumber, pageSize)
                     .ProjectToListAsync<QueryResult.Loan>();
 

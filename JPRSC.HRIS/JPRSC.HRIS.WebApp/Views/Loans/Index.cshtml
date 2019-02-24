@@ -77,8 +77,8 @@
                                 <thead>
                                     <tr>
                                         <td>Employee Code</td>
-                                        <td>First Name</td>
                                         <td>Last Name</td>
+                                        <td>First Name</td>
                                         <td>Loan Type</td>
                                         <td>Loan Date</td>
                                         <td>Principal Amount</td>
@@ -91,8 +91,8 @@
                                 <tbody>
                                     <tr ng-repeat="loan in vm.loans track by loan.id">
                                         <td>{{loan.employee.employeeCode}}</td>
-                                        <td>{{loan.employee.firstName}}</td>
                                         <td>{{loan.employee.lastName}}</td>
+                                        <td>{{loan.employee.firstName}}</td>
                                         <td>{{loan.loanType.code}}</td>
                                         <td>{{loan.loanDate | date:'mediumDate' }}</td>
                                         <td>{{vm.currencySymbol}}{{loan.principalAmount | number:2 }}</td>
