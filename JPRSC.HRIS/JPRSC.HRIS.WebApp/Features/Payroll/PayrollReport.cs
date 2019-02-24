@@ -97,7 +97,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Loans
                     .Include(l => l.LoanType)
                     .AsNoTracking()
-                    .Where(l => !l.DeletedOn.HasValue && employeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                    .Where(l => !l.DeletedOn.HasValue && employeeIds.Contains(l.EmployeeId.Value) && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                     .ToListAsync();
 
                 var payrollReportItems = new List<QueryResult.PayrollReportItem>(payrollRecords.Count);
