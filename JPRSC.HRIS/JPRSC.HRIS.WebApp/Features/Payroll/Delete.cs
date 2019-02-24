@@ -84,9 +84,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 {
                     if (!payrollRecord.LoansDeducted) continue;
 
-                    var employeeLoans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId);
+                    var employeeActiveLoans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId && !l.ZeroedOutOn.HasValue);
 
-                    foreach (var loan in employeeLoans)
+                    foreach (var loan in employeeActiveLoans)
                     {
                         loan.RemainingBalance += loan.DeductionAmount.GetValueOrDefault();
                         loan.AmountPaid -= loan.DeductionAmount.GetValueOrDefault();

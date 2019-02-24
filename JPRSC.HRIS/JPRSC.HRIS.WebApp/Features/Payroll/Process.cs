@@ -243,6 +243,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                             {
                                 loan.RemainingBalance -= loan.DeductionAmount.GetValueOrDefault();
 
+                                if (loan.RemainingBalance <= 0)
+                                {
+                                    loan.ZeroedOutOn = now;
+                                }
+
                                 if (!loan.AmountPaid.HasValue) loan.AmountPaid = 0;
 
                                 loan.AmountPaid += loan.DeductionAmount.GetValueOrDefault();
