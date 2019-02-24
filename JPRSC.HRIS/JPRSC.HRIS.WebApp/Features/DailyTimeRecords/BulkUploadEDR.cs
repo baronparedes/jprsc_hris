@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -270,7 +271,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     while (!csvreader.EndOfStream)
                     {
                         var line = csvreader.ReadLine();
-                        var lineAsColumns = line.Split(',');
+                        var lineAsColumns = GetLineAsColumns(line);
 
                         if (!headerPopulated)
                         {
@@ -305,6 +306,40 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             private bool IsBlankLine(IEnumerable<string> items)
             {
                 return items.All(i => String.IsNullOrWhiteSpace(i));
+            }
+
+            private string[] GetLineAsColumns(string line)
+            {
+                if (!line.Contains("\"")) return line.Split(',');
+
+                var inQuotedSubstring = false;
+                var formattedLineBuilder = new StringBuilder(64);
+
+                foreach (var c in line)
+                {
+                    if (c == '"')
+                    {
+                        inQuotedSubstring = !inQuotedSubstring;
+                        continue;
+                    }
+                    else if (c == ',')
+                    {
+                        if (inQuotedSubstring)
+                        {
+                            formattedLineBuilder.Append(" ");
+                        }
+                        else
+                        {
+                            formattedLineBuilder.Append(c);
+                        }
+                    }
+                    else
+                    {
+                        formattedLineBuilder.Append(c);
+                    }
+                }
+
+                return formattedLineBuilder.ToString().Split(',');
             }
 
             private async Task<Dictionary<int, EarningDeduction>> GetColumnToEarningDeductionMap(IList<string> header)
