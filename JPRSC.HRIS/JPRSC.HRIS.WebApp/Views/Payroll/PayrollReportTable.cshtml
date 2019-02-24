@@ -28,7 +28,6 @@
             <th>Earnings</th>
             <th>Total Earnings</th>
             <th>Deductions</th>
-            <th>Total Deductions</th>
             @foreach (var earningDeduction in Model.Item1.EarningDeductions)
             {
                 if (Model.Item2.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault()) > 0)
@@ -66,6 +65,7 @@
             <th class="detail hidden">Gov Deductions Deducted</th>
             <th class="detail hidden">Loans Deducted</th>
             <th class="detail hidden">Anything Deducted</th>
+            <th>Total Deductions</th>
             <th>Net Pay</th>
         </tr>
     </thead>
@@ -95,7 +95,6 @@
                 <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.EarningsValue.GetValueOrDefault())</td>
                 <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalEarningsValue)</strong></td>
                 <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.DeductionsValue.GetValueOrDefault())</td>
-                <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalDeductionsValue)</strong></td>
                 @foreach (var earningDeduction in Model.Item1.EarningDeductions)
                 {
                     if (Model.Item2.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault()) > 0)
@@ -147,6 +146,7 @@
                 <td class="detail hidden">@String.Format("{0}", payrollReportItem.PayrollRecord.GovDeductionsDeducted ? "yes" : "no")</td>
                 <td class="detail hidden">@String.Format("{0}", payrollReportItem.PayrollRecord.LoansDeducted ? "yes" : "no")</td>
                 <td class="detail hidden">@String.Format("{0}", payrollReportItem.PayrollRecord.AnythingDeducted ? "yes" : "no")</td>
+                <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.TotalDeductionsValue)</strong></td>
                 <td><strong>@String.Format("{0:n}", payrollReportItem.PayrollRecord.NetPayValue)</strong></td>
             </tr>
         }

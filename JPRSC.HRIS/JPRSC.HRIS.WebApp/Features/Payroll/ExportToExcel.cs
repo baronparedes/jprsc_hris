@@ -283,7 +283,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 totals.Add(String.Format("{0:n}", payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.EarningsValue.GetValueOrDefault())));
                 totals.Add(String.Format("{0:n}", payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalEarningsValue)));
                 totals.Add(String.Format("{0:n}", payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.DeductionsValue.GetValueOrDefault())));
-                totals.Add(String.Format("{0:n}", payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue)));
 
                 if (query.ViewDetailed == true)
                 {
@@ -339,6 +338,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     totals.Add(String.Empty);
                 }
 
+                totals.Add(String.Format("{0:n}", payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue)));
                 totals.Add(String.Format("{0:n}", payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue)));
 
                 lines.Add(totals);
@@ -443,7 +443,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Earnings", "Earnings", p => String.Format("{0:n}", p.PayrollRecord.EarningsValue.GetValueOrDefault())));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Total Earnings", "TotalEarnings", p => String.Format("{0:n}", p.PayrollRecord.TotalEarningsValue)));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Deductions", "Deductions", p => String.Format("{0:n}", p.PayrollRecord.DeductionsValue.GetValueOrDefault())));
-                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Total Deductions", "TotalDeductions", p => String.Format("{0:n}", p.PayrollRecord.TotalDeductionsValue)));
 
                 if (viewDetailed == true)
                 {
@@ -499,6 +498,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Anything Deducted", "AnythingDeducted", p => p.PayrollRecord.AnythingDeducted ? "yes" : "no"));
                 }
 
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Total Deductions", "TotalDeductions", p => String.Format("{0:n}", p.PayrollRecord.TotalDeductionsValue)));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Net Pay", "NetPay", p => String.Format("{0:n}", p.PayrollRecord.NetPayValue)));
 
                 return columns;
