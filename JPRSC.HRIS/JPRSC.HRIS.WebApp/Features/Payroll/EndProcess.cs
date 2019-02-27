@@ -247,6 +247,37 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 client.PayrollPeriodTo = command.PayrollPeriodTo;
                 client.ModifiedOn = now;
 
+                var clientEmployeeIds = await _db
+                    .Employees
+                    .AsNoTracking()
+                    .Where(e => !e.DeletedOn.HasValue && e.ClientId == payrollProcessBatch.ClientId && e.DailyRate.HasValue)
+                    .Select(e => e.Id)
+                    .ToListAsync();
+
+                var zeroBalanceActiveLoans = await _db.Loans
+                    .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && l.RemainingBalance <= 0 && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                    .ToListAsync();
+
+                zeroBalanceActiveLoans = zeroBalanceActiveLoans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
+
+                var payrollRecords = await _db
+                    .PayrollRecords
+                    .AsNoTracking()
+                    .Where(pr => pr.PayrollProcessBatchId == payrollProcessBatch.Id)
+                    .ToListAsync();
+
+                foreach (var payrollRecord in payrollRecords)
+                {
+                    if (!payrollRecord.LoansDeducted) continue;
+
+                    var employeeZeroBalanceActiveLoans = zeroBalanceActiveLoans.Where(l => l.EmployeeId == payrollRecord.EmployeeId);
+
+                    foreach (var loan in employeeZeroBalanceActiveLoans)
+                    {
+                        loan.ZeroedOutOn = now;
+                    }
+                }
+
                 await _db.SaveChangesAsync();
                 
                 await CreatePayslipFiles(command);

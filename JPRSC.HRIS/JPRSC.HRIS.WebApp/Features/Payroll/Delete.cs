@@ -68,11 +68,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Select(e => e.Id)
                     .ToListAsync();
 
-                var loans = await _db.Loans
+                var activeLoans = await _db.Loans
                     .Where(l => !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                     .ToListAsync();
 
-                loans = loans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
+                activeLoans = activeLoans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
 
                 var payrollRecords = await _db
                     .PayrollRecords
@@ -84,9 +84,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 {
                     if (!payrollRecord.LoansDeducted) continue;
 
-                    var employeeActiveLoans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId && !l.ZeroedOutOn.HasValue);
+                    var employeeLoans = activeLoans.Where(l => l.EmployeeId == payrollRecord.EmployeeId);
 
-                    foreach (var loan in employeeActiveLoans)
+                    foreach (var loan in employeeLoans)
                     {
                         loan.RemainingBalance += loan.DeductionAmount.GetValueOrDefault();
                         loan.AmountPaid -= loan.DeductionAmount.GetValueOrDefault();
