@@ -13,6 +13,7 @@
         vm.getInterestAmount = getInterestAmount;
         vm.loans = [];
         vm.loanTypes = [];
+        vm.makeActiveSubmit = makeActiveSubmit;
         vm.nextTransactionNumber = '';
         vm.searchClicked = searchClicked;
         vm.searchModel = {};
@@ -114,6 +115,22 @@
             if (!loan.principalAmount || loan.principalAmount <= 0 || !loan.interestRate || loan.interestRate <= 0) return 0;
 
             return loan.principalAmount * (loan.interestRate / 100);
+        };
+
+        function makeActiveSubmit(e) {
+            if (!confirm('Are you sure you want to activate this loan?')) return;
+
+            var action = '/Loans/MakeActive';
+            var data = $(angular.element(e.target)[0]).serialize();
+            var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
+
+            $http.post(action, data, config).then(function (response) {
+                $window.location = '/Loans/Index';
+            }, function (response) {
+                if (response.status == 400) {
+                    vm.validationErrors = response.data;
+                }
+            });
         };
 
         function onSearchModelChange(newValue, oldValue) {

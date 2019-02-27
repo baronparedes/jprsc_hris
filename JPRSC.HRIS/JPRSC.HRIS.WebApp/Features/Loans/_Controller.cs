@@ -88,6 +88,18 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             return View(result);
         }
 
+        [AuthorizePermission(Permission.LoanZeroOut)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MakeActive(MakeActive.Command command)
+        {
+            var commandResult = await _mediator.Send(command);
+
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully activated loan.");
+
+            return RedirectToAction(nameof(Index));
+        }
+
         [AuthorizePermission(Permission.LoanDefault)]
         [HttpGet]
         public async Task<ActionResult> Search(Search.Query query)
