@@ -109,7 +109,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     payrollReportItem.DailyTimeRecord = dailyTimeRecords.SingleOrDefault(dtr => dtr.EmployeeId == payrollRecord.EmployeeId);
                     payrollReportItem.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
                     payrollReportItem.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
-                    payrollReportItem.Loans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId).ToList();
+                    payrollReportItem.Loans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId && l.LastDeductedOn == payrollRecord.AddedOn).ToList();
 
                     payrollReportItems.Add(payrollReportItem);
                 }

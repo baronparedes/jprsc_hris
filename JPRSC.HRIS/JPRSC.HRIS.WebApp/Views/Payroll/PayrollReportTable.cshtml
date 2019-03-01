@@ -53,7 +53,7 @@
             {
                 foreach (var loanType in Model.Item1.LoanTypes)
                 {
-                    if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                    if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
                     {
                         <th>@loanType.Code</th>
                     }
@@ -118,6 +118,15 @@
                 <td>@String.Format("{0:n}", payrollReportItem.PayrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
                 @if (shouldShowLoanColumns)
                 {
+                    @*foreach (var loanType in Model.Item1.LoanTypes)
+                    {
+                        if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                        {
+                            <th>@loanType.Code</th>
+                        }
+                    }*@
+
+
                     if (payrollReportItem.PayrollRecord.LoanPaymentValue.GetValueOrDefault() > 0)
                     {
                         foreach (var loanType in Model.Item1.LoanTypes)
@@ -132,7 +141,7 @@
                     {
                         foreach (var loanType in Model.Item1.LoanTypes)
                         {
-                            if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                            if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
                             {
                                 <td>@String.Format("{0:n}", 0)</td>
                             }

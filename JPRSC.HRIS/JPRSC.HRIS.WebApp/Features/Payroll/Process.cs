@@ -246,6 +246,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                                 if (!loan.AmountPaid.HasValue) loan.AmountPaid = 0;
 
                                 loan.AmountPaid += loan.DeductionAmount.GetValueOrDefault();
+                                loan.LastDeductedOn = now;
                             }
                         }
                     }

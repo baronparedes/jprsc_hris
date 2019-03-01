@@ -481,9 +481,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 {
                     foreach (var loanType in payrollReportResult.LoanTypes)
                     {
-                        if (payrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                        if (payrollReportItems.SelectMany(p => p.Loans.Where(l => l.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
                         {
-                            columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{loanType.Code}", $"{loanType.Code}", p => String.Format("{0:n}", p.Loans.Where(l => l.LoanTypeId == loanType.Id && l.RemainingBalance.GetValueOrDefault() > 0).Sum(l => l.DeductionAmount.GetValueOrDefault()).ToString() ?? "0.00")));
+                            columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>($"{loanType.Code}", $"{loanType.Code}", p => String.Format("{0:n}", p.Loans.Where(l => l.LoanTypeId == loanType.Id).Sum(l => l.DeductionAmount.GetValueOrDefault()).ToString() ?? "0.00")));
                         }
                     }
                 }
