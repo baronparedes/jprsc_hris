@@ -15,7 +15,6 @@ namespace JPRSC.HRIS.Models
         public int Id { get; set; }
         [Obsolete]
         public decimal? InterestAmount { get; set; }
-        public DateTime? LastDeductedOn { get; set; }
         public DateTime? LoanDate { get; set; }
         public string LoanPayrollPeriod { get; set; }
         public IList<int> LoanPayrollPeriods => String.IsNullOrWhiteSpace(LoanPayrollPeriod) ? new List<int>() : LoanPayrollPeriod.Split(',').Select(p => Convert.ToInt32(p)).ToList();

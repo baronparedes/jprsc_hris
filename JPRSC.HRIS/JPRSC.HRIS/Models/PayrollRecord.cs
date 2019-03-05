@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace JPRSC.HRIS.Models
 {
@@ -49,5 +50,7 @@ namespace JPRSC.HRIS.Models
         public decimal TotalGovDeductionsValue => SSSValueEmployee.GetValueOrDefault() + PagIbigValueEmployee.GetValueOrDefault() + PHICValueEmployee.GetValueOrDefault() + TaxValueEmployee.GetValueOrDefault();
         public decimal TotalDeductionsValue => TotalGovDeductionsValue + DeductionsValue.GetValueOrDefault() + LoanPaymentValue.GetValueOrDefault();
         public decimal NetPayValue { get; set; }
+
+        public IList<LoanDeduction> LoanDeductions { get; set; } = new List<LoanDeduction>();
     }
 }

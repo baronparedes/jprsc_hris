@@ -60,7 +60,22 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         "WHERE edr.PayrollPeriodFrom = @PayrollPeriodFrom AND edr.PayrollPeriodTo = @PayrollPeriodTo AND e.ClientId = @ClientId";
                     await connection.ExecuteAsync(deleteEarningDeductionRecords, new { PayrollPeriodFrom = payrollProcessBatch.PayrollPeriodFrom, PayrollPeriodTo = payrollProcessBatch.PayrollPeriodTo, ClientId = payrollProcessBatch.ClientId });
                 }
-                
+
+                var payrollRecords = await _db
+                    .PayrollRecords
+                    .AsNoTracking()
+                    .Where(pr => pr.PayrollProcessBatchId == payrollProcessBatch.Id)
+                    .ToListAsync();
+
+                var payrollRecordIds = payrollRecords.Select(pr => pr.Id).ToList();
+
+                using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
+                {
+                    var deleteLoanDeductions = "DELETE FROM LoanDeductions " +
+                        "WHERE PayrollRecordId IN @PayrollRecordIds";
+                    await connection.ExecuteAsync(deleteLoanDeductions, new { PayrollRecordIds = payrollRecordIds });
+                }
+
                 var clientEmployeeIds = await _db
                     .Employees
                     .AsNoTracking()
@@ -73,12 +88,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .ToListAsync();
 
                 activeLoans = activeLoans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
-
-                var payrollRecords = await _db
-                    .PayrollRecords
-                    .AsNoTracking()
-                    .Where(pr => pr.PayrollProcessBatchId == payrollProcessBatch.Id)
-                    .ToListAsync();
 
                 foreach (var payrollRecord in payrollRecords)
                 {

@@ -422,6 +422,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201903010635087_AddLoanLastDeductedOn.Designer.cs">
       <DependentUpon>201903010635087_AddLoanLastDeductedOn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201903050448183_AddLoanDeduction.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201903050448183_AddLoanDeduction.Designer.cs">
+      <DependentUpon>201903050448183_AddLoanDeduction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -466,6 +470,7 @@
     <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\JobTitle.cs" />
     <Compile Include="Models\Loan.cs" />
+    <Compile Include="Models\LoanDeduction.cs" />
     <Compile Include="Models\LoanType.cs" />
     <Compile Include="Models\Month.cs" />
     <Compile Include="Models\Overtime.cs" />
@@ -733,6 +738,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201903010635087_AddLoanLastDeductedOn.resx">
       <DependentUpon>201903010635087_AddLoanLastDeductedOn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201903050448183_AddLoanDeduction.resx">
+      <DependentUpon>201903050448183_AddLoanDeduction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

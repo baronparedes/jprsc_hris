@@ -44,7 +44,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public Models.DailyTimeRecord DailyTimeRecord { get; set; }
                 public IEnumerable<Models.Overtime> Overtimes { get; set; } = new List<Models.Overtime>();
                 public IEnumerable<Models.EarningDeductionRecord> EarningDeductionRecords { get; set; } = new List<Models.EarningDeductionRecord>();
-                public IEnumerable<Models.Loan> Loans { get; set; } = new List<Models.Loan>();
+                public IEnumerable<Models.LoanDeduction> Loans { get; set; } = new List<Models.LoanDeduction>();
             }
         }
 
@@ -59,11 +59,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
             public async Task<QueryResult> Handle(Query query, CancellationToken cancellationToken)
             {
-                var payrollProcessBatch = await _db.PayrollProcessBatches
+                var payrollProcessBatch = await _db
+                    .PayrollProcessBatches
+                    .AsNoTracking()
                     .Include(ppb => ppb.Client)
                     .SingleAsync(ppb => ppb.Id == query.PayrollProcessBatchId);
 
-                var payrollRecords = await _db.PayrollRecords
+                var payrollRecords = await _db
+                    .PayrollRecords
+                    .AsNoTracking()
                     .Include(pr => pr.Employee)
                     .Include(pr => pr.Employee.Department)
                     .Where(pr => pr.PayrollProcessBatchId == query.PayrollProcessBatchId)
@@ -81,23 +85,26 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var earningDeductionRecords = await _db
                     .EarningDeductionRecords
-                    .Include(edr => edr.EarningDeduction)
                     .AsNoTracking()
+                    .Include(edr => edr.EarningDeduction)
                     .Where(edr => !edr.DeletedOn.HasValue && employeeIds.Contains(edr.EmployeeId.Value) && edr.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && edr.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
                     .ToListAsync();
 
                 var overtimes = await _db
                     .Overtimes
-                    .Include(ot => ot.PayPercentage)
                     .AsNoTracking()
+                    .Include(ot => ot.PayPercentage)
                     .Where(ot => !ot.DeletedOn.HasValue && employeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && ot.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
                     .ToListAsync();
 
-                var loans = await _db
-                    .Loans
-                    .Include(l => l.LoanType)
+                var payrollRecordIds = payrollRecords.Select(pr => pr.Id).ToList();
+
+                var loanDeductions = await _db
+                    .LoanDeductions
                     .AsNoTracking()
-                    .Where(l => !l.DeletedOn.HasValue && employeeIds.Contains(l.EmployeeId.Value) && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                    .Include(ld => ld.Loan)
+                    .Include(ld => ld.Loan.LoanType)
+                    .Where(ld => ld.PayrollRecordId.HasValue && payrollRecordIds.Contains(ld.PayrollRecordId.Value))
                     .ToListAsync();
 
                 var payrollReportItems = new List<QueryResult.PayrollReportItem>(payrollRecords.Count);
@@ -109,7 +116,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     payrollReportItem.DailyTimeRecord = dailyTimeRecords.SingleOrDefault(dtr => dtr.EmployeeId == payrollRecord.EmployeeId);
                     payrollReportItem.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
                     payrollReportItem.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
-                    payrollReportItem.Loans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId && l.LastDeductedOn == payrollRecord.AddedOn).ToList();
+                    payrollReportItem.Loans = loanDeductions.Where(ld => ld.PayrollRecordId == payrollRecord.Id).ToList();
 
                     payrollReportItems.Add(payrollReportItem);
                 }
