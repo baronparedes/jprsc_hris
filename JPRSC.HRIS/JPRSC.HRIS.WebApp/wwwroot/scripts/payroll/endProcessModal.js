@@ -26,6 +26,7 @@
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
 
             $http.post(action, data, config).then(function (response) {
+                alert('Successfully End processed!');
                 $uibModalInstance.close();
 
                 vm.endProcessInProgress = false;

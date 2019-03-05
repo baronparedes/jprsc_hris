@@ -188,7 +188,10 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         public class Command : IRequest<CommandResult>
         {
             public AppController AppController { get; set; }
-            public int? PayrollProcessBatchId { get; set; }
+            public int? ClientId { get; set; }
+            public int? NextPayrollPeriod { get; set; }
+            public DateTime? NextPayrollPeriodFrom { get; set; }
+            public DateTime? NextPayrollPeriodTo { get; set; }
             public int? PayrollPeriod { get; set; }
             public DateTime? PayrollPeriodFrom { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
@@ -198,7 +201,16 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         {
             public CommandValidator()
             {
-                RuleFor(c => c.PayrollProcessBatchId)
+                RuleFor(c => c.ClientId)
+                    .NotEmpty();
+
+                RuleFor(c => c.NextPayrollPeriod)
+                    .NotEmpty();
+
+                RuleFor(c => c.NextPayrollPeriodFrom)
+                    .NotEmpty();
+
+                RuleFor(c => c.NextPayrollPeriodTo)
                     .NotEmpty();
 
                 RuleFor(c => c.PayrollPeriod)
@@ -231,9 +243,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             {
                 var now = DateTime.UtcNow;
 
+                var payrollPeriodFromDate = command.PayrollPeriodFrom.Value.Date;
+                var payrollPeriodToDate = command.PayrollPeriodTo.Value.Date;
+
                 var payrollProcessBatch = await _db
                     .PayrollProcessBatches
-                    .SingleOrDefaultAsync(ppb => ppb.Id == command.PayrollProcessBatchId && !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue);
+                    .SingleOrDefaultAsync(ppb => ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == payrollPeriodFromDate && ppb.PayrollPeriodTo == payrollPeriodToDate && ppb.PayrollPeriod == command.PayrollPeriod && !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue);
+
+                if (payrollProcessBatch == null) throw new Exception("Unable to find payroll process batch.");
 
                 payrollProcessBatch.EndProcessedOn = now;
                 payrollProcessBatch.ModifiedOn = now;
@@ -242,9 +259,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Clients
                     .SingleOrDefaultAsync(c => c.Id == payrollProcessBatch.ClientId && !c.DeletedOn.HasValue);
 
-                client.CurrentPayrollPeriod = command.PayrollPeriod;
-                client.PayrollPeriodFrom = command.PayrollPeriodFrom;
-                client.PayrollPeriodTo = command.PayrollPeriodTo;
+                client.CurrentPayrollPeriod = command.NextPayrollPeriod;
+                client.PayrollPeriodFrom = command.NextPayrollPeriodFrom;
+                client.PayrollPeriodTo = command.NextPayrollPeriodTo;
                 client.ModifiedOn = now;
 
                 var clientEmployeeIds = await _db
@@ -280,16 +297,16 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 await _db.SaveChangesAsync();
                 
-                await CreatePayslipFiles(command);
+                await CreatePayslipFiles(command, payrollProcessBatch);
 
                 return new CommandResult();
             }
 
-            private async Task CreatePayslipFiles(Command command)
+            private async Task CreatePayslipFiles(Command command, PayrollProcessBatch payrollProcessBatch)
             {
                 var payslipReportQuery = new PayslipReport.Query
                 {
-                    PayrollProcessBatchId = command.PayrollProcessBatchId
+                    PayrollProcessBatchId = payrollProcessBatch.Id
                 };
 
                 var payslipReportQueryResult = await _mediator.Send(payslipReportQuery);
@@ -297,7 +314,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var tupledCollection = Tuple.Create(payslipReportQueryResult, payslipReportQueryResult.PayslipRecords);
 
                 var saveDirectoryBase = HttpContext.Current.Server.MapPath("~/wwwroot/payslips/");
-                var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{command.PayrollProcessBatchId}/");
+                var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{payrollProcessBatch.Id}/");
 
                 if (!Directory.Exists(saveDirectoryForBatch))
                 {

@@ -104,18 +104,21 @@
                                     <div class="form-group">
                                         <label class="col-md-7 col-lg-6 control-label">Payroll Period</label>
                                         <div class="col-md-5 col-lg-6">
+                                            <input type="hidden" name="PayrollPeriod" value="{{vm.client.currentPayrollPeriod}}" />
                                             <p class="form-control-static">{{vm.client.currentPayrollPeriod}}</p>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-7 col-lg-6 control-label">Payroll Period From</label>
                                         <div class="col-md-5 col-lg-6">
+                                            <input type="hidden" name="PayrollPeriodFrom" value="{{vm.client.payrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                             <p class="form-control-static">{{vm.client.payrollPeriodFrom | date: 'mediumDate'}}</p>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-7 col-lg-6 control-label">Payroll Period To</label>
                                         <div class="col-md-5 col-lg-6">
+                                            <input type="hidden" name="PayrollPeriodTo" value="{{vm.client.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                             <p class="form-control-static">{{vm.client.payrollPeriodTo | date: 'mediumDate'}}</p>
                                         </div>
                                     </div>
@@ -124,7 +127,7 @@
                                     <div class="form-group">
                                         <label class="col-md-7 col-lg-6 control-label">Next Payroll Period</label>
                                         <div class="col-md-5 col-lg-6">
-                                            <input type="text" class="form-control" name="PayrollPeriod" ng-model="vm.client.nextPayrollPeriod" />
+                                            <input type="text" class="form-control" name="NextPayrollPeriod" ng-model="vm.client.nextPayrollPeriod" />
                                             <span ng-show="vm.validationErrors.payrollPeriod" class="help-block">{{vm.validationErrors.payrollPeriod.join(' ')}}</span>
                                         </div>
                                     </div>
@@ -134,7 +137,7 @@
                                             <input type="text" class="form-control" ng-model="vm.client.nextPayrollPeriodFrom"
                                                    uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                                    is-open="vm.nextPayrollPeriodFromIsOpen" ng-click="vm.nextPayrollPeriodFromIsOpen = true">
-                                            <input type="hidden" name="PayrollPeriodFrom" value="{{vm.client.nextPayrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                            <input type="hidden" name="NextPayrollPeriodFrom" value="{{vm.client.nextPayrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -143,7 +146,7 @@
                                             <input type="text" class="form-control" ng-model="vm.client.nextPayrollPeriodTo"
                                                    uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
                                                    is-open="vm.nextPayrollPeriodToIsOpen" ng-click="vm.nextPayrollPeriodToIsOpen = true">
-                                            <input type="hidden" name="PayrollPeriodTo" value="{{vm.client.nextPayrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
+                                            <input type="hidden" name="NextPayrollPeriodTo" value="{{vm.client.nextPayrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
                                         </div>
                                     </div>
                                 </div>

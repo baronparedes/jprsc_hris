@@ -13,7 +13,6 @@
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
-            console.log(vm.clients);
         });
 
         searchClicked();
