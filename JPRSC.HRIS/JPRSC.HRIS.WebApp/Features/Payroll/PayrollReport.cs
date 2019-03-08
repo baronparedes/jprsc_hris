@@ -107,7 +107,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Where(ld => ld.PayrollRecordId.HasValue && payrollRecordIds.Contains(ld.PayrollRecordId.Value))
                     .ToListAsync();
 
+                var loans = await _db
+                    .Loans
+                    .Include(l => l.LoanType)
+                    .AsNoTracking()
+                    .Where(l => !l.DeletedOn.HasValue && employeeIds.Contains(l.EmployeeId.Value) && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                    .ToListAsync();
+
                 var payrollReportItems = new List<QueryResult.PayrollReportItem>(payrollRecords.Count);
+                var marchFour2019 = new DateTime(2019, 3, 4);
 
                 foreach (var payrollRecord in payrollRecords)
                 {
@@ -116,7 +124,25 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     payrollReportItem.DailyTimeRecord = dailyTimeRecords.SingleOrDefault(dtr => dtr.EmployeeId == payrollRecord.EmployeeId);
                     payrollReportItem.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
                     payrollReportItem.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
-                    payrollReportItem.Loans = loanDeductions.Where(ld => ld.PayrollRecordId == payrollRecord.Id).ToList();
+
+                    if (payrollRecord.AddedOn < marchFour2019)
+                    {
+                        payrollReportItem.Loans = loans
+                            .Where(l => l.EmployeeId == payrollRecord.EmployeeId)
+                            .Select(l => new Models.LoanDeduction
+                            {
+                                DeductionAmount = l.DeductionAmount,
+                                Loan = l,
+                                LoanId = l.Id,
+                                PayrollRecord = payrollRecord,
+                                PayrollRecordId = payrollRecord.Id
+                            })
+                            .ToList();
+                    }
+                    else
+                    {
+                        payrollReportItem.Loans = loanDeductions.Where(ld => ld.PayrollRecordId == payrollRecord.Id).ToList();
+                    }
 
                     payrollReportItems.Add(payrollReportItem);
                 }

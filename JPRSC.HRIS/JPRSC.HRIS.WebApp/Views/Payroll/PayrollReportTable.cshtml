@@ -182,7 +182,6 @@
             <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.EarningsValue.GetValueOrDefault()))</td>
             <td><strong>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.TotalEarningsValue))</strong></td>
             <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.DeductionsValue.GetValueOrDefault()))</td>
-            <td><strong>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue))</strong></td>
             @foreach (var earningDeduction in Model.Item1.EarningDeductions)
             {
                 if (Model.Item2.SelectMany(p => p.EarningDeductionRecords.Where(edr => edr.EarningDeductionId == earningDeduction.Id)).Sum(edr => edr.Amount.GetValueOrDefault()) > 0)
@@ -203,13 +202,13 @@
                 <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.PHICValueEmployee.GetValueOrDefault()))</td>
             }
             <td>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()))</td>
-            @if (Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()) > 0)
+            @if (shouldShowLoanColumns)
             {
                 foreach (var loanType in Model.Item1.LoanTypes)
                 {
-                    if (Model.Item2.SelectMany(p => p.Loans.Where(l => l.Loan.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
+                    if (Model.Item2.Where(p => p.PayrollRecord.LoanPaymentValue.GetValueOrDefault() > 0).SelectMany(p => p.Loans.Where(l => l.Loan.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()) > 0)
                     {
-                        <td>@String.Format("{0:n}", Model.Item2.SelectMany(p => p.Loans.Where(l => l.Loan.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
+                        <td>@String.Format("{0:n}", Model.Item2.Where(p => p.PayrollRecord.LoanPaymentValue.GetValueOrDefault() > 0).SelectMany(p => p.Loans.Where(l => l.Loan.LoanTypeId == loanType.Id)).Sum(l => l.DeductionAmount.GetValueOrDefault()))</td>
                     }
                 }
             }            
@@ -219,6 +218,7 @@
             <td class="detail hidden">@String.Empty</td>
             <td class="detail hidden">@String.Empty</td>
             <td class="detail hidden">@String.Empty</td>
+            <td><strong>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.TotalDeductionsValue))</strong></td>
             <td><strong>@String.Format("{0:n}", Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.NetPayValue))</strong></td>
         </tr>
     </tbody>
