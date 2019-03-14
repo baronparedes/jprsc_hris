@@ -48,6 +48,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public class LoanRecord
             {
                 public Loan Loan { get; set; }
+                public decimal? DeductionAmount { get; set; }
 
                 public IList<string> DisplayLine
                 {
@@ -64,7 +65,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         line.Add(String.Format("{0:n}", Loan.PrincipalAmount));
                         line.Add(String.Empty);
                         line.Add(String.Format("{0:n}", Loan.RemainingBalanceForDisplay));
-                        line.Add(String.Format("{0:n}", Loan.AmountPaid));
+                        line.Add(String.Format("{0:n}", DeductionAmount));
                         line.Add(String.Empty);
                         line.Add(String.Empty);
                         line.Add(String.Empty);
@@ -121,7 +122,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 {
                     var excelLines = loanRecords.Select(pr => pr.DisplayLine).ToList();
                     excelLines.Insert(0, new List<string> { "Employee SSS No.", "Last Name", "First Name", "Middle Initial", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Monthly Amortization", "AMPSDG", "Status", "Effective Date" });
-                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", loanRecords.Sum(sr => sr.DeductionAmount.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
@@ -186,7 +187,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
             private async Task<IList<QueryResult.LoanRecord>> GetLoanRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)
             {
-                var allLoans = new List<Loan>();
+                var marchFour2019 = new DateTime(2019, 3, 4);
+
+                var allLoanDeductions = new List<LoanDeduction>();
 
                 foreach (var payrollProcessBatch in payrollProcessBatches)
                 {
@@ -197,23 +200,41 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         .Select(e => e.Id)
                         .ToListAsync();
 
-                    var loans = await _db.Loans
-                        .Include(l => l.Employee)
-                        .Include(l => l.LoanType)
-                        .Where(l => l.LoanTypeId == query.LoanTypeId && !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
-                        .ToListAsync();
+                    if (payrollProcessBatch.AddedOn < marchFour2019)
+                    {
+                        var loans = await _db.Loans
+                            .Include(l => l.Employee)
+                            .Include(l => l.LoanType)
+                            .Where(l => l.LoanTypeId == query.LoanTypeId && !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
+                            .ToListAsync();
 
-                    loans = loans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
+                        loans = loans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
 
-                    allLoans.AddRange(loans);
+                        allLoanDeductions.AddRange(loans.Select(l => new LoanDeduction { Loan = l, DeductionAmount = l.DeductionAmount }));
+                    }
+                    else
+                    {
+                        foreach (var payrollRecord in payrollProcessBatch.PayrollRecords)
+                        {
+                            var loanDeductions = await _db.LoanDeductions
+                                .Include(ld => ld.Loan)
+                                .Include(ld => ld.Loan.Employee)
+                                .Include(ld => ld.Loan.LoanType)
+                                .Where(ld => ld.PayrollRecordId.HasValue && ld.PayrollRecordId == payrollRecord.Id && ld.Loan.EmployeeId.HasValue && clientEmployeeIds.Contains(ld.Loan.EmployeeId.Value) && ld.Loan.LoanTypeId == query.LoanTypeId)
+                                .ToListAsync();
+
+                            allLoanDeductions.AddRange(loanDeductions);
+                        }
+                    }
                 }
 
-                return allLoans
-                    .OrderBy(l => l.Employee.LastName)
-                    .ThenBy(l => l.Employee.FirstName)
+                return allLoanDeductions
+                    .OrderBy(l => l.Loan.Employee.LastName)
+                    .ThenBy(l => l.Loan.Employee.FirstName)
                     .Select(l => new QueryResult.LoanRecord
                     {
-                        Loan = l
+                        Loan = l.Loan,
+                        DeductionAmount = l.DeductionAmount
                     })
                     .ToList();
             }
