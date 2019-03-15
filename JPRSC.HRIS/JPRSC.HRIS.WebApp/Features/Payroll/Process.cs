@@ -241,15 +241,17 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                             foreach (var loan in employeeLoans)
                             {
-                                loan.RemainingBalance -= loan.DeductionAmount.GetValueOrDefault();
+                                var deductionAmount = loan.RemainingBalance.GetValueOrDefault() > loan.DeductionAmount.GetValueOrDefault() ? loan.DeductionAmount.GetValueOrDefault() : loan.RemainingBalance.GetValueOrDefault();
+
+                                loan.RemainingBalance -= deductionAmount;
 
                                 if (!loan.AmountPaid.HasValue) loan.AmountPaid = 0;
 
-                                loan.AmountPaid += loan.DeductionAmount.GetValueOrDefault();
+                                loan.AmountPaid += deductionAmount;
 
                                 payrollRecord.LoanDeductions.Add(new LoanDeduction
                                 {
-                                    DeductionAmount = loan.DeductionAmount.GetValueOrDefault(),
+                                    DeductionAmount = deductionAmount,
                                     LoanId = loan.Id
                                 });
                             }

@@ -2,6 +2,7 @@
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
+using System;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
@@ -63,18 +64,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var payrollRecords = await _db
                     .PayrollRecords
-                    .AsNoTracking()
+                    .Include(pr => pr.LoanDeductions)
+                    .Include(pr => pr.LoanDeductions.Select(ld => ld.Loan))
                     .Where(pr => pr.PayrollProcessBatchId == payrollProcessBatch.Id)
                     .ToListAsync();
 
                 var payrollRecordIds = payrollRecords.Select(pr => pr.Id).ToList();
 
-                using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
-                {
-                    var deleteLoanDeductions = "DELETE FROM LoanDeductions " +
-                        "WHERE PayrollRecordId IN @PayrollRecordIds";
-                    await connection.ExecuteAsync(deleteLoanDeductions, new { PayrollRecordIds = payrollRecordIds });
-                }
+                var marchFour2019 = new DateTime(2019, 3, 4);
 
                 var clientEmployeeIds = await _db
                     .Employees
@@ -89,17 +86,48 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 activeLoans = activeLoans.Where(l => l.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value)).ToList();
 
+
                 foreach (var payrollRecord in payrollRecords)
                 {
                     if (!payrollRecord.LoansDeducted) continue;
 
-                    var employeeLoans = activeLoans.Where(l => l.EmployeeId == payrollRecord.EmployeeId);
-
-                    foreach (var loan in employeeLoans)
+                    if (payrollRecord.AddedOn < marchFour2019)
                     {
-                        loan.RemainingBalance += loan.DeductionAmount.GetValueOrDefault();
-                        loan.AmountPaid -= loan.DeductionAmount.GetValueOrDefault();
+                        var employeeLoans = activeLoans.Where(l => l.EmployeeId == payrollRecord.EmployeeId);
+
+                        foreach (var loan in employeeLoans)
+                        {
+                            loan.RemainingBalance += loan.DeductionAmount.GetValueOrDefault();
+                            loan.AmountPaid -= loan.DeductionAmount.GetValueOrDefault();
+                        }
                     }
+                    else
+                    {
+                        var loanDeductionsToReturn = payrollRecord
+                            .LoanDeductions
+                            .Where(l => !l.Loan.DeletedOn.HasValue && clientEmployeeIds.Contains(l.Loan.EmployeeId.Value) && !l.Loan.ZeroedOutOn.HasValue && l.Loan.StartDeductionDate.Value.Date <= payrollProcessBatch.PayrollPeriodTo.Value.Date && l.Loan.LoanPayrollPeriods.Contains(payrollProcessBatch.PayrollPeriod.Value))
+                            .ToList();
+
+                        foreach (var loanDeduction in payrollRecord.LoanDeductions)
+                        {
+                            if (!loanDeduction.Loan.RemainingBalance.HasValue) loanDeduction.Loan.RemainingBalance = 0;
+                            loanDeduction.Loan.RemainingBalance += loanDeduction.DeductionAmount.GetValueOrDefault();
+
+                            if (!loanDeduction.Loan.AmountPaid.HasValue) loanDeduction.Loan.AmountPaid = 0;
+                            loanDeduction.Loan.AmountPaid -= loanDeduction.DeductionAmount.GetValueOrDefault();
+                        }
+                    }
+                }
+
+                _db.PayrollProcessBatches.Remove(payrollProcessBatch);
+
+                await _db.SaveChangesAsync();
+
+                using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
+                {
+                    var deleteLoanDeductions = "DELETE FROM LoanDeductions " +
+                        "WHERE PayrollRecordId IN @PayrollRecordIds";
+                    await connection.ExecuteAsync(deleteLoanDeductions, new { PayrollRecordIds = payrollRecordIds });
                 }
 
                 using (var connection = new SqlConnection(ConnectionStrings.ApplicationDbContext))
@@ -107,10 +135,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     var deletePayrollRecords = "DELETE FROM PayrollRecords WHERE PayrollProcessBatchId = @PayrollProcessBatchId";
                     await connection.ExecuteAsync(deletePayrollRecords, new { PayrollProcessBatchId = command.PayrollProcessBatchId });
                 }
-
-                _db.PayrollProcessBatches.Remove(payrollProcessBatch);
-
-                await _db.SaveChangesAsync();
 
                 return new CommandResult();
             }
