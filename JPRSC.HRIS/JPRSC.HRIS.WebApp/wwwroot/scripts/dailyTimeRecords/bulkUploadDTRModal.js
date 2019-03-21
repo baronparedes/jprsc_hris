@@ -37,6 +37,16 @@
                     success: function (data) {
                         $scope.$apply(function () {
                             vm.validationErrors = {};
+
+                            if (data.hasDuplicateEmployeeCodes) {
+                                var message = `There are duplicate employee codes. Aborting operation.`;
+                                alert(message);
+
+                                $uibModalInstance.close();
+                                vm.uploadInProgress = false;
+                                return;
+                            }
+
                             vm.unprocessedItems = data.unprocessedItems;
 
                             if (!vm.unprocessedItems.length) {

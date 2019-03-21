@@ -123,6 +123,14 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var allEmployeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => allEmployeesOfClientIds.Contains(ot.EmployeeId.Value) && !ot.DeletedOn.HasValue && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
 
                 var csvData = GetCSVData(command, out bool hasDuplicateEmployeeCodes);
+                if (hasDuplicateEmployeeCodes)
+                {
+                    return new CommandResult
+                    {
+                        HasDuplicateEmployeeCodes = true
+                    };
+                }
+
                 var columnToPayPercentageMap = await GetColumnToPayPercentageMap(csvData.Item1);
                 var processedItemsCount = 0;
 

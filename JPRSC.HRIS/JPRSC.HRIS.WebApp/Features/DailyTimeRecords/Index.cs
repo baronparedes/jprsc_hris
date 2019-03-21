@@ -74,6 +74,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             {
                 var clients = await _db.Clients
                     .Where(c => !c.DeletedOn.HasValue)
+                    .OrderBy(c => c.Code)
                     .ProjectToListAsync<QueryResult.Client>();
 
                 var earningDeductions = await _db.EarningDeductions
