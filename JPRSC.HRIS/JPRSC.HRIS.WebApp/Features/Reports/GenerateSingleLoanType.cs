@@ -23,6 +23,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public string DisplayMode { get; set; }
             public int LoanTypeId { get; set; }
             public int? PayrollPeriodMonth { get; set; }
+            public int PayrollPeriodYear { get; set; }
         }
 
         public class QueryResult
@@ -37,6 +38,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public LoanType LoanTypeResult { get; set; }
             public int? PayrollPeriodMonth { get; set; }
             public Month? PayrollPeriodMonthMonth { get; set; }
+            public int PayrollPeriodYear { get; set; }
             public IList<LoanRecord> LoanRecords { get; set; } = new List<LoanRecord>();
 
             public class LoanType
@@ -182,7 +184,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         LoanTypeResult = loanType,
                         LoanRecords = loanRecords,
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
-                        PayrollPeriodMonthMonth = payrollPeriodMonth
+                        PayrollPeriodMonthMonth = payrollPeriodMonth,
+                        PayrollPeriodYear = query.PayrollPeriodYear
                     };
                 }
             }

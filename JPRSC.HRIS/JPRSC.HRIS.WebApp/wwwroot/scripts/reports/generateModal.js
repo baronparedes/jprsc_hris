@@ -8,6 +8,7 @@
         vm.cancel = cancel;
         vm.clients = params.clients;
         vm.payrollPeriodMonth = '-1';
+        vm.payrollPeriodYear = new Date().getFullYear().toString();
         vm.reportType = params.reportType;
         vm.validationErrors = {};
 

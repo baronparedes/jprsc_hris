@@ -21,6 +21,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public string Destination { get; set; }
             public string DisplayMode { get; set; }
             public int? PayrollPeriodMonth { get; set; }
+            public int PayrollPeriodYear { get; set; }
         }
 
         public class QueryResult
@@ -33,6 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public IList<IList<string>> Lines { get; set; } = new List<IList<string>>();
             public int? PayrollPeriodMonth { get; set; }
             public Month? PayrollPeriodMonthMonth { get; set; }
+            public int PayrollPeriodYear { get; set; }
             public IList<PagIbigRecord> PagIbigRecords { get; set; } = new List<PagIbigRecord>();
 
             public class PagIbigRecord
@@ -102,13 +104,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         .Include(ppb => ppb.PayrollRecords)
                         .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                         .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value))
+                        .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodFrom.Value.Year == query.PayrollPeriodYear)
                         .ToListAsync() :
                     await _db.PayrollProcessBatches
                         .Include(ppb => ppb.PayrollRecords)
                         .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                         .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == query.PayrollPeriodMonth)
+                        .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == query.PayrollPeriodMonth && ppb.PayrollPeriodFrom.Value.Year == query.PayrollPeriodYear)
                         .ToListAsync();
 
                 var pagIbigRecords = await GetPagIbigRecords(payrollProcessBatches);
@@ -173,7 +175,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         DisplayMode = query.DisplayMode,
                         PagIbigRecords = pagIbigRecords,
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
-                        PayrollPeriodMonthMonth = payrollPeriodMonth
+                        PayrollPeriodMonthMonth = payrollPeriodMonth,
+                        PayrollPeriodYear = query.PayrollPeriodYear
                     };
                 }                
             }

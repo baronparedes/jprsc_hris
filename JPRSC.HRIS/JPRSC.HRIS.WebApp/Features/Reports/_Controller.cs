@@ -93,6 +93,21 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         }
 
         [HttpGet]
+        public async Task<ActionResult> GenerateThirteenthMonth(GenerateThirteenthMonth.Query query)
+        {
+            var result = await _mediator.Send(query);
+
+            if (query.Destination == "Excel")
+            {
+                return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+            }
+            else
+            {
+                return View("ThirteenthMonthReport", result);
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> Index(Index.Query query)
         {
             var result = await _mediator.Send(query);

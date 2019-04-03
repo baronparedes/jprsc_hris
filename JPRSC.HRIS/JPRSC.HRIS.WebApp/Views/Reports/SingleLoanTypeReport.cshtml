@@ -28,11 +28,11 @@
                 <h4>@Model.LoanTypeResult.Code Report for @String.Format("{0}", String.IsNullOrWhiteSpace(Model.ClientName) ? "All Clients" : Model.ClientName)</h4>
                 @if (Model.PayrollPeriodMonthMonth.HasValue)
                 {
-                    <h5>For payroll period month @Model.PayrollPeriodMonthMonth.ToString()</h5>
+                    <h5>For payroll period month @Model.PayrollPeriodMonthMonth.ToString() @Model.PayrollPeriodYear</h5>
                 }
                 else
                 {
-                    <ht>For all payroll period months</ht>
+                    <h5>For all payroll period months @Model.PayrollPeriodYear</h5>
                 }
                 <h5>@(Model.LoanRecords.Count - 1) record/s total</h5>
             </div>
@@ -50,15 +50,15 @@
             <div class="row hidden-print">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <a href="@Url.Action("GenerateSingleLoanType", new { ClientId = Model.ClientId, LoanTypeId = Model.LoanTypeId, PayrollPeriodMonth = Model.PayrollPeriodMonth, Destination = "Excel" })" class="btn btn-primary" style="margin-right: 20px;">Download Excel</a>
+                        <a href="@Url.Action("GenerateSingleLoanType", new { ClientId = Model.ClientId, LoanTypeId = Model.LoanTypeId, PayrollPeriodMonth = Model.PayrollPeriodMonth, PayrollPeriodYear = Model.PayrollPeriodYear, Destination = "Excel" })" class="btn btn-primary" style="margin-right: 20px;">Download Excel</a>
                         @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
                         {
                             <button class="btn btn-primary" disabled="disabled">Sort by Name</button>
-                            <a href="@Url.Action("GenerateSingleLoanType", new { ClientId = Model.ClientId, LoanTypeId = Model.LoanTypeId, PayrollPeriodMonth = Model.PayrollPeriodMonth, DisplayMode = "Branch" })" class="btn btn-primary">Group by Branch</a>
+                            <a href="@Url.Action("GenerateSingleLoanType", new { ClientId = Model.ClientId, LoanTypeId = Model.LoanTypeId, PayrollPeriodMonth = Model.PayrollPeriodMonth, PayrollPeriodYear = Model.PayrollPeriodYear, DisplayMode = "Branch" })" class="btn btn-primary">Group by Branch</a>
                         }
                         else if (Model.DisplayMode == "Branch")
                         {
-                            <a href="@Url.Action("GenerateSingleLoanType", new { ClientId = Model.ClientId, LoanTypeId = Model.LoanTypeId, PayrollPeriodMonth = Model.PayrollPeriodMonth })" class="btn btn-primary">Sort by Name</a>
+                            <a href="@Url.Action("GenerateSingleLoanType", new { ClientId = Model.ClientId, LoanTypeId = Model.LoanTypeId, PayrollPeriodMonth = Model.PayrollPeriodMonth, PayrollPeriodYear = Model.PayrollPeriodYear })" class="btn btn-primary">Sort by Name</a>
                             <button class="btn btn-primary" disabled="disabled">Group by Branch</button>
                         }
                     </div>

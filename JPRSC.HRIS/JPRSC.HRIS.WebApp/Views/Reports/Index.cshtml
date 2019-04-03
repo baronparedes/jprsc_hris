@@ -1,6 +1,8 @@
 ﻿@model JPRSC.HRIS.WebApp.Features.Reports.Index.QueryResult
 @{
     ViewBag.Title = "Reports";
+    var currentYear = DateTime.Now.Year;
+    var minYear = currentYear - 10;
 }
 
 <div class="page-content-wrapper">
@@ -61,6 +63,12 @@
                                             <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('LoanLedger')">Generate</a>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td>13th Month</td>
+                                        <td>
+                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('ThirteenthMonth')">Generate</a>
+                                        </td>
+                                    </tr>
                                     <tr ng-repeat="loanType in vm.loanTypes">
                                         <td>{{loanType.code}}</td>
                                         <td>
@@ -91,7 +99,7 @@
                                     <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-hide="vm.reportType == 'ThirteenthMonth'">
                                 <label class="col-md-4 col-lg-3 control-label">Payroll Period Month</label>
                                 <div class="col-md-8 col-lg-9">
                                     <select class="form-control" name="PayrollPeriodMonth" ng-model="vm.payrollPeriodMonth">
@@ -111,14 +119,26 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Payroll Year</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="PayrollPeriodMonth" ng-model="vm.payrollPeriodYear">
+                                        @for (var i = currentYear; i > minYear; i--)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.generateInProgress"></i>
-                        <a ng-show="vm.reportType == 'PHIC'" ng-href="/Reports/GeneratePHIC?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-show="vm.reportType == 'SSS'" ng-href="/Reports/GenerateSSS?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-show="vm.reportType == 'PagIbig'" ng-href="/Reports/GeneratePagIbig?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-show="vm.reportType == 'LoanLedger'" ng-href="/Reports/GenerateLoanLedger?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'PHIC'" ng-href="/Reports/GeneratePHIC?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'SSS'" ng-href="/Reports/GenerateSSS?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'PagIbig'" ng-href="/Reports/GeneratePagIbig?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'LoanLedger'" ng-href="/Reports/GenerateLoanLedger?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'ThirteenthMonth'" ng-href="/Reports/GenerateThirteenthMonth?clientId={{vm.client.id}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
                     </div>
                 </form>
