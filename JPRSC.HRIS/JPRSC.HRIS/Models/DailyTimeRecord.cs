@@ -28,5 +28,9 @@ namespace JPRSC.HRIS.Models
         public DateTime? PayrollPeriodFrom { get; set; }
         public Month? PayrollPeriodMonth { get; set; }
         public DateTime? PayrollPeriodTo { get; set; }
+
+        public decimal TimeWorkedValue => DaysWorkedValue.GetValueOrDefault() + HoursWorkedValue.GetValueOrDefault();
+        public decimal COLATotalValue => COLADailyValue.GetValueOrDefault() + COLAHourlyValue.GetValueOrDefault() + COLAHourlyOTValue.GetValueOrDefault() + COLAMonthlyValue.GetValueOrDefault();
+        public decimal TimeNotWorkedValue => HoursLateValue.GetValueOrDefault() + HoursUndertimeValue.GetValueOrDefault();
     }
 }
