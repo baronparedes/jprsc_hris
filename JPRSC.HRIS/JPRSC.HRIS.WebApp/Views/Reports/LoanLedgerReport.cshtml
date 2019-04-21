@@ -34,7 +34,7 @@
                 {
                     <h5>For all payroll period months @Model.PayrollPeriodYear</h5>
                 }
-                <h5>@(Model.SSSRecords.Count - 1) record/s total</h5>
+                <h5>@Model.SSSRecords.Count record/s total</h5>
             </div>
         </div>
         @if (!Model.SSSRecords.Any())
@@ -79,8 +79,11 @@
                                     <th>Loan Date</th>
                                     <th>Loan Amount</th>
                                     <th>Penalty</th>
-                                    <th>Amount Due</th>
-                                    <th>Monthly Amortization</th>
+                                    <th>Remaining Balance</th>
+                                    <th>Deduction Amount</th>
+                                    <th>Amount Deducted</th>
+                                    <th>Date Deducted</th>
+                                    <th>Amount Deducted To Date</th>
                                     <th>AMPSDG</th>
                                     <th>Status</th>
                                     <th>Effective Date</th>
@@ -106,6 +109,9 @@
                                     <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault()))</td>
                                     <td>&nbsp;</td>
                                     <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.Loan.DeductionAmount.GetValueOrDefault()))</td>
+                                    <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.AmountDeducted))</td>
+                                    <td>&nbsp;</td>
                                     <td>@String.Format("{0:n}", Model.SSSRecords.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault()))</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
@@ -136,8 +142,11 @@
                                         <th>Loan Date</th>
                                         <th>Loan Amount</th>
                                         <th>Penalty</th>
-                                        <th>Amount Due</th>
-                                        <th>Monthly Amortization</th>
+                                        <th>Remaining Balance</th>
+                                        <th>Deduction Amount</th>
+                                        <th>Amount Deducted</th>
+                                        <th>Date Deducted</th>
+                                        <th>Amount Deducted To Date</th>
                                         <th>AMPSDG</th>
                                         <th>Status</th>
                                         <th>Effective Date</th>
@@ -163,6 +172,9 @@
                                         <td>@String.Format("{0:n}", group.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault()))</td>
                                         <td>&nbsp;</td>
                                         <td>@String.Format("{0:n}", group.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.Loan.DeductionAmount.GetValueOrDefault()))</td>
+                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.AmountDeducted))</td>
+                                        <td>&nbsp;</td>
                                         <td>@String.Format("{0:n}", group.Sum(sr => sr.Loan.AmountPaid.GetValueOrDefault()))</td>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
