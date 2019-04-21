@@ -70,7 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 public IDictionary<int, MonthRecord> MonthRecords { get; set; } = new Dictionary<int, MonthRecord>();
 
                 public decimal Half => Whole / 2.0m;
-                public decimal Whole => MonthRecords.Select(mr => mr.Value).Sum(v => v.Total);
+                public decimal Whole => MonthRecords.Select(mr => mr.Value).Sum(v => v.Total) / 12.0m;
                 public string ThirteenthMonthMode { get; set; }
 
                 public IList<IList<string>> DisplayLineCollection
