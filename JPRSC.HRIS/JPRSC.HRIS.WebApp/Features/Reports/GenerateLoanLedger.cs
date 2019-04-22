@@ -42,6 +42,10 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 public Loan Loan { get; set; }
                 public DateTime? DateDeducted { get; set; }
                 public decimal AmountDeducted { get; set; }
+                public string SSS { get; set; }
+                public string FirstName { get; set; }
+                public string LastName { get; set; }
+                public string MiddleName { get; set; }
 
                 public IList<string> DisplayLine
                 {
@@ -49,10 +53,10 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         var line = new List<string>();
 
-                        line.Add(Loan.Employee.SSS);
-                        line.Add(Loan.Employee.LastName);
-                        line.Add(Loan.Employee.FirstName);
-                        line.Add(String.IsNullOrWhiteSpace(Loan.Employee.MiddleName) ? null : Loan.Employee.MiddleName.Trim().First().ToString());
+                        line.Add(SSS);
+                        line.Add(LastName);
+                        line.Add(FirstName);
+                        line.Add(String.IsNullOrWhiteSpace(MiddleName) ? null : MiddleName.Trim().First().ToString());
                         line.Add(String.Format("{0}", Loan.LoanType.Code));
                         line.Add(String.Format("{0:M/d/yyyy}", Loan.LoanDate));
                         line.Add(String.Format("{0:n}", Loan.PrincipalAmount));
@@ -215,11 +219,27 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     records.AddRange(recordsTemp);
                 }
 
-                return records
+                records = records
                     .OrderBy(r => r.Loan.Employee.LastName)
                     .ThenBy(r => r.Loan.Employee.FirstName)
                     .ThenBy(r => r.Loan.LoanType.Code)
                     .ToList();
+
+                int currentEmployeeId = 0;
+
+                foreach (var record in records)
+                {
+                    if (record.Loan.Employee.Id != currentEmployeeId)
+                    {
+                        currentEmployeeId = record.Loan.Employee.Id;
+                        record.SSS = record.Loan.Employee.SSS;
+                        record.FirstName = record.Loan.Employee.FirstName;
+                        record.LastName = record.Loan.Employee.LastName;
+                        record.MiddleName = record.Loan.Employee.MiddleName;
+                    }
+                }
+
+                return records;
             }
         }
     }
