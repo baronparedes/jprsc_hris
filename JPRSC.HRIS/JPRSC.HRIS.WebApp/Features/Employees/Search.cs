@@ -78,7 +78,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                             DbFunctions.Like(e.TIN, query.SearchLikeTerm) ||
                             DbFunctions.Like(e.PhilHealth, query.SearchLikeTerm) ||
                             DbFunctions.Like(e.PagIbig, query.SearchLikeTerm) ||
-                            DbFunctions.Like(e.SSS, query.SearchLikeTerm));
+                            DbFunctions.Like(e.SSS, query.SearchLikeTerm) ||
+                            DbFunctions.Like(e.ATMAccountNumber, query.SearchLikeTerm));
                 }
 
                 if (query.ClientId.HasValue)
