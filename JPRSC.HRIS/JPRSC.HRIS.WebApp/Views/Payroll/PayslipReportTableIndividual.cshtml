@@ -142,16 +142,19 @@
                     <td>&nbsp;</td>
                 </tr>
 
-                @foreach (var loan in Model.Item2.Loans)
+                @if (Model.Item2.PayrollRecord.LoanPaymentValue.GetValueOrDefault() > 0)
                 {
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td></td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>@String.Format("{0} - (P{1:n})", loan.LoanType.Description, loan.DeductionAmount.GetValueOrDefault())</td>
-                        <td>&nbsp;</td>
-                    </tr>
+                    foreach (var loanDeduction in Model.Item2.LoanDeductions)
+                    {
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>@String.Format("{0} - (P{1:n})", loanDeduction.Loan.LoanType.Description, loanDeduction.DeductionAmount.GetValueOrDefault())</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    }
                 }
 
                 <tr>

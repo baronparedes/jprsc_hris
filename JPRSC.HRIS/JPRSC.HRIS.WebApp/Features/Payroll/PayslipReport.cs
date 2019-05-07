@@ -44,6 +44,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public IEnumerable<Models.Overtime> Overtimes { get; set; } = new List<Models.Overtime>();
                 public IEnumerable<Models.EarningDeductionRecord> EarningDeductionRecords { get; set; } = new List<Models.EarningDeductionRecord>();
                 public IEnumerable<Models.Loan> Loans { get; set; } = new List<Models.Loan>();
+                public IEnumerable<Models.LoanDeduction> LoanDeductions { get; set; }
                 public Models.PayrollProcessBatch PayrollProcessBatchResult { get; set; }
             }
         }
@@ -68,6 +69,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var payrollRecords = await _db.PayrollRecords
                     .Include(pr => pr.Employee)
                     .Include(pr => pr.Employee.Department)
+                    .Include(pr => pr.LoanDeductions)
+                    .Include(pr => pr.LoanDeductions.Select(ld => ld.Loan.LoanType))
                     .Where(pr => pr.PayrollProcessBatchId == query.PayrollProcessBatchId)
                     .OrderBy(pr => pr.Employee.LastName)
                     .ThenBy(pr => pr.Employee.FirstName)
@@ -102,6 +105,14 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Where(l => !l.DeletedOn.HasValue && employeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                     .ToListAsync();
 
+                var payrollRecordIds = payrollRecords.Select(pr => pr.Id).ToList();
+
+                //var loanDeductions = await _db
+                //    .LoanDeductions
+                //    .Include(ld => ld.Loan)
+                //    .AsNoTracking()
+                //    .Where(ld => payrollRecordIds.Contains(ld.)
+
                 var payslipRecords = new List<QueryResult.PayslipRecord>(payrollRecords.Count);
 
                 foreach (var payrollRecord in payrollRecords)
@@ -113,6 +124,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     payslipRecord.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
                     payslipRecord.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
                     payslipRecord.Loans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId).ToList();
+                    payslipRecord.LoanDeductions = payrollRecord.LoanDeductions;
 
                     payslipRecords.Add(payslipRecord);
                 }

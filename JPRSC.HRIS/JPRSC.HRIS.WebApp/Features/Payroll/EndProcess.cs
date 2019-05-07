@@ -248,6 +248,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var payrollProcessBatch = await _db
                     .PayrollProcessBatches
+                    .Include(ppb => ppb.Client)
                     .SingleOrDefaultAsync(ppb => ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == payrollPeriodFromDate && ppb.PayrollPeriodTo == payrollPeriodToDate && ppb.PayrollPeriod == command.PayrollPeriod && !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue);
 
                 if (payrollProcessBatch == null) throw new Exception("Unable to find payroll process batch.");
@@ -279,6 +280,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var payrollRecords = await _db
                     .PayrollRecords
+                    .Include(pr => pr.Employee)
                     .AsNoTracking()
                     .Where(pr => pr.PayrollProcessBatchId == payrollProcessBatch.Id)
                     .ToListAsync();
@@ -314,7 +316,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var tupledCollection = Tuple.Create(payslipReportQueryResult, payslipReportQueryResult.PayslipRecords);
 
                 var saveDirectoryBase = HttpContext.Current.Server.MapPath("~/wwwroot/payslips/");
-                var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{payrollProcessBatch.Id}/");
+                var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{payrollProcessBatch.Client.Code} - {payrollProcessBatch.PayrollPeriodFromFormatted} to {payrollProcessBatch.PayrollPeriodToFormatted}/");
 
                 if (!Directory.Exists(saveDirectoryForBatch))
                 {
@@ -331,7 +333,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     converter.Options.PdfPageOrientation = PdfPageOrientation.Landscape;
                     var doc = converter.ConvertHtmlString(partialRendered);
 
-                    var saveFileName = Path.Combine(saveDirectoryForBatch, $"{payslipRecord.PayrollRecord.EmployeeId}.pdf");
+                    var saveFileName = Path.Combine(saveDirectoryForBatch, $"{payslipRecord.PayrollRecord.Employee.LastName}, {payslipRecord.PayrollRecord.Employee.FirstName} {(String.IsNullOrWhiteSpace(payslipRecord.PayrollRecord.Employee.MiddleName) ? "" : payslipRecord.PayrollRecord.Employee.MiddleName.First().ToString())}.pdf");
 
                     doc.Save(saveFileName);
                     doc.Close();
