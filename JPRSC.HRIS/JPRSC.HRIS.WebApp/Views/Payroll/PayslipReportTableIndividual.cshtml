@@ -61,17 +61,25 @@
                     <td>&nbsp;</td>
                 </tr>
 
-                @foreach (var overtime in Model.Item2.Overtimes)
-                {
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td>@String.Format("{0} - P{1:n}", overtime.PayPercentageName.ToString(), overtime.NumberOfHoursValue.GetValueOrDefault())</td>
-                        <td>@String.Format("{0:n} hours", overtime.NumberOfHours.GetValueOrDefault())</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                }
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        @foreach (var overtime in Model.Item2.Overtimes)
+                        {
+                            <div>@String.Format("{0} - P{1:n}", overtime.PayPercentageName.ToString(), overtime.NumberOfHoursValue.GetValueOrDefault())</div>
+                        }
+
+                    </td>
+                    <td>
+                        @foreach (var overtime in Model.Item2.Overtimes)
+                        {
+                            <div>@String.Format("{0:n} hours", overtime.NumberOfHours.GetValueOrDefault())</div>
+                        }
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
 
                 <tr>
                     <td style="text-align: right;">COLA:</td>
