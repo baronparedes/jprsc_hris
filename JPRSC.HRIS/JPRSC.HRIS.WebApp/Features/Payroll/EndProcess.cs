@@ -333,7 +333,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     converter.Options.PdfPageOrientation = PdfPageOrientation.Landscape;
                     var doc = converter.ConvertHtmlString(partialRendered);
 
-                    var saveFileName = Path.Combine(saveDirectoryForBatch, $"{payslipRecord.PayrollRecord.Employee.LastName}, {payslipRecord.PayrollRecord.Employee.FirstName} {(String.IsNullOrWhiteSpace(payslipRecord.PayrollRecord.Employee.MiddleName) ? "" : payslipRecord.PayrollRecord.Employee.MiddleName.First().ToString())}.pdf");
+                    var saveFileName = Path.Combine(saveDirectoryForBatch, $"{payslipRecord.PayrollRecord.Employee.EmployeeCode} - {payslipRecord.PayrollRecord.Employee.LastName}, {payslipRecord.PayrollRecord.Employee.FirstName} {(String.IsNullOrWhiteSpace(payslipRecord.PayrollRecord.Employee.MiddleName) ? "" : payslipRecord.PayrollRecord.Employee.MiddleName.First().ToString())}.pdf");
 
                     doc.Save(saveFileName);
                     doc.Close();
