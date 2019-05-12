@@ -296,7 +296,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                                 payrollRecord.LoanDeductions.Add(new LoanDeduction
                                 {
                                     DeductionAmount = deductionAmount,
-                                    LoanId = loan.Id
+                                    LoanId = loan.Id,
+                                    NewRemainingBalance = loan.RemainingBalance,
+                                    NewAmountPaid = loan.AmountPaid
                                 });
                             }
                         }
