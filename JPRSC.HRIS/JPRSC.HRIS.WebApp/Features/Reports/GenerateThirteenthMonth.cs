@@ -1,4 +1,5 @@
-﻿using JPRSC.HRIS.Infrastructure.Configuration;
+﻿using FluentValidation;
+using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Features.Payroll;
@@ -22,6 +23,37 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public string Destination { get; set; }
             public string DisplayMode { get; set; }
             public int PayrollPeriodYear { get; set; }
+            public Month? FromPayrollPeriodMonth { get; set; }
+            public int? FromPayrollPeriod { get; set; }
+            public Month? ToPayrollPeriodMonth { get; set; }
+            public int? ToPayrollPeriod { get; set; }
+        }
+
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(q => q.FromPayrollPeriodMonth)
+                    .NotEmpty();
+
+                RuleFor(q => q.FromPayrollPeriod)
+                    .NotEmpty();
+
+                RuleFor(q => q.ToPayrollPeriodMonth)
+                    .NotEmpty();
+
+                RuleFor(q => q.ToPayrollPeriod)
+                    .NotEmpty();
+
+                RuleFor(q => q.FromPayrollPeriodMonth)
+                    .Must(BeBeforeToPayrollPeriodMonth)
+                    .WithMessage("From payroll period month should be before To payroll period month.");
+            }
+
+            private bool BeBeforeToPayrollPeriodMonth(Query query, Month? fromPayrollPeriodMonth)
+            {
+                return (int)fromPayrollPeriodMonth.Value <= (int)query.ToPayrollPeriodMonth.Value;
+            }
         }
 
         public class QueryResult
@@ -32,30 +64,15 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public string DisplayMode { get; set; }
             public byte[] FileContent { get; set; }
             public string Filename { get; set; }
-            public string ThirteenthMonthMode { get; set; }
             public IList<ThirteenthMonthRecord> ThirteenthMonthRecords { get; set; } = new List<ThirteenthMonthRecord>();
 
             public IList<string> GetTotals(IList<ThirteenthMonthRecord> thirteenthMonthRecords)
             {
                 var totals = new List<string> { String.Empty, "TOTAL" };
 
-                if (ThirteenthMonthMode == "December")
+                for (var i = 1; i < 13; i++)
                 {
-                    for (var i = 1; i < 13; i++)
-                    {
-                        totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Where(r => r.MonthRecords.ContainsKey(i)).Select(r => r.MonthRecords[i]).Sum(mr => mr.Total)));
-                    }
-                }
-                else if (ThirteenthMonthMode == "October")
-                {
-                    for (var i = 11; i < 13; i++)
-                    {
-                        totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Where(r => r.MonthRecords.ContainsKey(i)).Select(r => r.MonthRecords[i]).Sum(mr => mr.Total)));
-                    }
-                    for (var i = 1; i < 11; i++)
-                    {
-                        totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Where(r => r.MonthRecords.ContainsKey(i)).Select(r => r.MonthRecords[i]).Sum(mr => mr.Total)));
-                    }
+                    totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Where(r => r.MonthRecords.ContainsKey(i)).Select(r => r.MonthRecords[i]).Sum(mr => mr.Total)));
                 }
 
                 totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Sum(r => r.Half)));
@@ -226,16 +243,12 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             private readonly ApplicationDbContext _db;
             private readonly IExcelBuilder _excelBuilder;
             private readonly IMediator _mediator;
-            private readonly string _thirteenthMonthMode;
 
             public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMediator mediator)
             {
                 _db = db;
                 _excelBuilder = excelBuilder;
                 _mediator = mediator;
-
-                _thirteenthMonthMode = AppSettings.String("ThirteenthMonthMode");
-                if (_thirteenthMonthMode != "December" && _thirteenthMonthMode != "October") throw new Exception($"Unsupported thirteenth month mode: {_thirteenthMonthMode}");
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -246,26 +259,55 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 var clientIds = clients.Select(c => c.Id).ToList();
 
-                var startDate = DateTime.MinValue;
-                var endDate = DateTime.Now;
+                var startDate = new DateTime(query.PayrollPeriodYear, 1, 1);
+                var endDate = new DateTime(query.PayrollPeriodYear, 12, 31);
 
-                if (_thirteenthMonthMode == "December")
-                {
-                    startDate = new DateTime(query.PayrollPeriodYear, 1, 1);
-                    endDate = new DateTime(query.PayrollPeriodYear, 12, 31);
-                }
-                else if (_thirteenthMonthMode == "October")
-                {
-                    startDate = new DateTime(query.PayrollPeriodYear, 11, 1);
-                    endDate = new DateTime(query.PayrollPeriodYear + 1, 10, 31);
-                }
+                var fromPayrollPeriodMonthAsInt = (int)query.FromPayrollPeriodMonth.Value;
+                var toPayrollPeriodMonthAsInt = (int)query.ToPayrollPeriodMonth.Value;
 
-                var payrollProcessBatches = await _db.PayrollProcessBatches
+                var payrollProcessBatchesInBeginningMonth = await _db.PayrollProcessBatches
                     .Include(ppb => ppb.PayrollRecords)
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                    .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate && DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate)
+                    .Where(ppb => !ppb.DeletedOn.HasValue &&
+                        clientIds.Contains(ppb.ClientId.Value) &&
+                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                        DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate &&
+                        ppb.PayrollPeriodMonth == query.FromPayrollPeriodMonth.Value &&
+                        ppb.PayrollPeriod >= query.FromPayrollPeriod)
                     .ToListAsync();
+
+                var payrollProcessBatchesInEndingMonth = await _db.PayrollProcessBatches
+                    .Include(ppb => ppb.PayrollRecords)
+                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                    .Where(ppb => !ppb.DeletedOn.HasValue &&
+                        clientIds.Contains(ppb.ClientId.Value) &&
+                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                        DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate &&
+                        ppb.PayrollPeriodMonth == query.ToPayrollPeriodMonth.Value &&
+                        ppb.PayrollPeriod <= query.ToPayrollPeriod)
+                    .ToListAsync();
+
+                var payrollProcessBatchesInBetween = await _db.PayrollProcessBatches
+                    .Include(ppb => ppb.PayrollRecords)
+                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                    .Where(ppb => !ppb.DeletedOn.HasValue &&
+                        clientIds.Contains(ppb.ClientId.Value) &&
+                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                        DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate &&
+                        ppb.PayrollPeriodMonth > query.FromPayrollPeriodMonth &&
+                        ppb.PayrollPeriodMonth < query.ToPayrollPeriodMonth)
+                    .ToListAsync();
+
+                var payrollProcessBatches = payrollProcessBatchesInBeginningMonth
+                    .Concat(payrollProcessBatchesInBetween)
+                    .Concat(payrollProcessBatchesInEndingMonth)
+                    .GroupBy(ppb => ppb.Id)
+                    .Select(g => g.First())
+                    .OrderBy(ppb => ppb.Id)
+                    .ToList();
 
                 var thirteenthMonthRecords = GetThirteenthMonthRecords(payrollProcessBatches);
 
@@ -281,17 +323,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         }
                     }
 
-                    if (_thirteenthMonthMode == "December")
-                    {
-                        excelLines.Insert(0, new List<string> { "Employee Name", "Employee Code", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEPT", "OCT", "NOV", "DEC", "HALF", "13th Month Pay" });
-                    }
-                    else if (_thirteenthMonthMode == "October")
-                    {
-                        excelLines.Insert(0, new List<string> { "Employee Name", "Employee Code", "NOV", "DEC", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEPT", "OCT", "HALF", "13th Month Pay" });
-                    }
-
-                    excelLines.Add((new QueryResult { ThirteenthMonthMode = _thirteenthMonthMode }).GetTotals(thirteenthMonthRecords));
-
+                    excelLines.Insert(0, new List<string> { "Employee Name", "Employee Code", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEPT", "OCT", "NOV", "DEC", "HALF", "13th Month Pay" });
+                    
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
                     var reportFileNameBuilder = new StringBuilder(64);
@@ -331,7 +364,6 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         ClientId = query.ClientId,
                         ClientName = clientName,
                         DisplayMode = query.DisplayMode,
-                        ThirteenthMonthMode = _thirteenthMonthMode,
                         ThirteenthMonthRecords = thirteenthMonthRecords,
                         PayrollPeriodYear = query.PayrollPeriodYear
                     };
@@ -355,7 +387,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         if (!thirteenthMonthRecordsDictionary.ContainsKey(payrollRecord.EmployeeId.Value))
                         {
-                            thirteenthMonthRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.ThirteenthMonthRecord { Employee = payrollRecord.Employee, ThirteenthMonthMode = _thirteenthMonthMode });
+                            thirteenthMonthRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.ThirteenthMonthRecord { Employee = payrollRecord.Employee });
                         }
 
                         if (!thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.ContainsKey(i))

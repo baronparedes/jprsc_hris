@@ -7,6 +7,10 @@
         var vm = this;
         vm.cancel = cancel;
         vm.clients = params.clients;
+        vm.fromPayrollPeriod = '1';
+        vm.fromPayrollPeriodMonth = '10';
+        vm.toPayrollPeriod = '1';
+        vm.toPayrollPeriodMonth = '10';
         vm.payrollPeriodMonth = '-1';
         vm.payrollPeriodYear = new Date().getFullYear().toString();
         vm.reportType = params.reportType;

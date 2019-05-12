@@ -119,6 +119,60 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">
+                                <label class="col-md-4 col-lg-3 control-label">From Payroll Period Month</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="FromPayrollPeriodMonth" ng-model="vm.fromPayrollPeriodMonth">
+                                        <option value="@((int)Month.January)">@Month.January.ToString()</option>
+                                        <option value="@((int)Month.February)">@Month.February.ToString()</option>
+                                        <option value="@((int)Month.March)">@Month.March.ToString()</option>
+                                        <option value="@((int)Month.April)">@Month.April.ToString()</option>
+                                        <option value="@((int)Month.May)">@Month.May.ToString()</option>
+                                        <option value="@((int)Month.June)">@Month.June.ToString()</option>
+                                        <option value="@((int)Month.July)">@Month.July.ToString()</option>
+                                        <option value="@((int)Month.August)">@Month.August.ToString()</option>
+                                        <option value="@((int)Month.September)">@Month.September.ToString()</option>
+                                        <option value="@((int)Month.October)">@Month.October.ToString()</option>
+                                        <option value="@((int)Month.November)">@Month.November.ToString()</option>
+                                        <option value="@((int)Month.December)">@Month.December.ToString()</option>
+                                    </select>
+                                    <span ng-show="vm.validationErrors.fromPayrollPeriodMonth" class="help-block">{{vm.validationErrors.fromPayrollPeriodMonth.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">
+                                <label class="col-md-4 col-lg-3 control-label">From Payroll Period</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="FromPayrollPeriod" ng-model="vm.fromPayrollPeriod" />
+                                    <span ng-show="vm.validationErrors.fromPayrollPeriod" class="help-block">{{vm.validationErrors.fromPayrollPeriod.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">
+                                <label class="col-md-4 col-lg-3 control-label">To Payroll Period Month</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="ToPayrollPeriodMonth" ng-model="vm.toPayrollPeriodMonth">
+                                        <option value="@((int)Month.January)">@Month.January.ToString()</option>
+                                        <option value="@((int)Month.February)">@Month.February.ToString()</option>
+                                        <option value="@((int)Month.March)">@Month.March.ToString()</option>
+                                        <option value="@((int)Month.April)">@Month.April.ToString()</option>
+                                        <option value="@((int)Month.May)">@Month.May.ToString()</option>
+                                        <option value="@((int)Month.June)">@Month.June.ToString()</option>
+                                        <option value="@((int)Month.July)">@Month.July.ToString()</option>
+                                        <option value="@((int)Month.August)">@Month.August.ToString()</option>
+                                        <option value="@((int)Month.September)">@Month.September.ToString()</option>
+                                        <option value="@((int)Month.October)">@Month.October.ToString()</option>
+                                        <option value="@((int)Month.November)">@Month.November.ToString()</option>
+                                        <option value="@((int)Month.December)">@Month.December.ToString()</option>
+                                    </select>
+                                    <span ng-show="vm.validationErrors.toPayrollPeriodMonth" class="help-block">{{vm.validationErrors.toPayrollPeriodMonth.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">
+                                <label class="col-md-4 col-lg-3 control-label">To Payroll Period</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="text" class="form-control" name="ToPayrollPeriod" ng-model="vm.toPayrollPeriod" />
+                                    <span ng-show="vm.validationErrors.toPayrollPeriod" class="help-block">{{vm.validationErrors.toPayrollPeriod.join(' ')}}</span>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-md-4 col-lg-3 control-label">Payroll Year</label>
                                 <div class="col-md-8 col-lg-9">
@@ -138,7 +192,7 @@
                         <a ng-if="vm.reportType == 'SSS'" ng-href="/Reports/GenerateSSS?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a ng-if="vm.reportType == 'PagIbig'" ng-href="/Reports/GeneratePagIbig?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a ng-if="vm.reportType == 'LoanLedger'" ng-href="/Reports/GenerateLoanLedger?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-if="vm.reportType == 'ThirteenthMonth'" ng-href="/Reports/GenerateThirteenthMonth?clientId={{vm.client.id}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'ThirteenthMonth'" ng-href="/Reports/GenerateThirteenthMonth?clientId={{vm.client.id}}&payrollPeriodYear={{vm.payrollPeriodYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
                     </div>
                 </form>
