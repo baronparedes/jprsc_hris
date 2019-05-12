@@ -38,17 +38,17 @@
 
                                 <tr>
                                     <td style="height: 100px;">&nbsp;</td>
-                                    @if (Model.Item2.Overtimes.Any())
+                                    @if (Model.Item2.Overtimes.Where(ot => ot.NumberOfHoursValue.GetValueOrDefault() > 0).Any())
                                     {
                                         <td>
-                                            @foreach (var overtime in Model.Item2.Overtimes)
+                                            @foreach (var overtime in Model.Item2.Overtimes.Where(ot => ot.NumberOfHoursValue.GetValueOrDefault() > 0))
                                             {
                                                 <div>@String.Format("{0} - P{1:n}", overtime.PayPercentageName.ToString(), overtime.NumberOfHoursValue.GetValueOrDefault())</div>
                                             }
 
                                         </td>
                                         <td>
-                                            @foreach (var overtime in Model.Item2.Overtimes)
+                                            @foreach (var overtime in Model.Item2.Overtimes.Where(ot => ot.NumberOfHoursValue.GetValueOrDefault() > 0))
                                             {
                                                 <div>@String.Format("{0:n} hours", overtime.NumberOfHours.GetValueOrDefault())</div>
                                             }
@@ -74,10 +74,10 @@
 
                                 </tr>
                                 <tr>
-                                    <td style="height: 174px;">&nbsp;</td>
+                                    <td style="height: 177px;">&nbsp;</td>
                                     <td>
                                         @{
-                                            var earningItems = Model.Item2.EarningDeductionRecords.Where(e => e.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings);
+                                            var earningItems = Model.Item2.EarningDeductionRecords.Where(e => e.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings && e.Amount.GetValueOrDefault() > 0);
                                         }
                                         @if (earningItems.Any())
                                         {
@@ -220,7 +220,7 @@
                                     <td style="height: 60px;">&nbsp;</td>
                                     <td>
                                         @{
-                                            var deductionItems = Model.Item2.EarningDeductionRecords.Where(e => e.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions);
+                                            var deductionItems = Model.Item2.EarningDeductionRecords.Where(e => e.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions && e.Amount.GetValueOrDefault() > 0);
                                         }
                                         @if (deductionItems.Any())
                                         {
