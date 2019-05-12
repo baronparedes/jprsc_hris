@@ -18,3 +18,23 @@ div.page-logo > a:hover, div.page-logo > a:focus {
     max-height: calc(100vh - 365px);
     overflow-y: auto;
 }
+
+.table.no-outside-border {
+    border: none;
+}
+
+.table.no-outside-border > tbody > tr:first-child > td {
+    border-top: none;
+}
+
+    .table.no-outside-border > tbody > tr > td:first-child {
+        border-left: none;
+    }
+
+    .table.no-outside-border > tbody > tr > td:last-child {
+        border-right: none;
+    }
+
+    .table.no-outside-border > tbody > tr:last-child > td {
+        border-bottom: none;
+    }

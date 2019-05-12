@@ -2,186 +2,250 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <table class="table table-bordered table-condensed">
+        <table class="table table-bordered table-condensed" style="margin-bottom: 30px;">
             <tbody>
                 <tr>
-                    <td colspan="6" style="text-align: center;"><h4>Job Placement Resources Cooperative</h4></td>
+                    <td colspan="6" style="text-align: center;"><h5 style="margin: 0px;">Job Placement Resources Cooperative</h5></td>
                 </tr>
                 <tr>
                     <td colspan="6">Payroll period from @Model.Item1.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.Item1.PayrollProcessBatchResult.PayrollPeriodToFormatted</td>
                 </tr>
                 <tr>
-                    <td colspan="2">Name: @String.Format("{0}, {1} {2} ({3})", Model.Item2.PayrollRecord.Employee.LastName, Model.Item2.PayrollRecord.Employee.FirstName, Model.Item2.PayrollRecord.Employee.MiddleName, Model.Item2.PayrollRecord.Employee.EmployeeCode)</td>
-                    <td>@String.Format("Daily Rate: P{0:n}", Model.Item2.PayrollRecord.Employee.DailyRate.GetValueOrDefault())</td>
-                    <td>@String.Format("Hourly Rate: P{0:n}", Model.Item2.PayrollRecord.Employee.HourlyRate.GetValueOrDefault())</td>
-                    <td colspan="2">Department: @String.Format("{0}", Model.Item2.PayrollRecord.Employee.Department?.Name)</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>Earnings</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>Deductions</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">Basic pay:</td>
-                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + Model.Item2.PayrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
-                    <td style="text-align: left;">@String.Format("{0:n} days/(months) and {1:n} hours", Model.Item2.DailyTimeRecord.DaysWorked.GetValueOrDefault(), Model.Item2.DailyTimeRecord.HoursWorked.GetValueOrDefault())</td>
-                    <td style="text-align: right;">
-                        @if (Model.Item1.PayrollProcessBatchResult.DeductedSSS == true)
-                        {
-                            @Html.Raw("SSS:")
-                        }
-                    </td>
-                    <td>
-                        @if (Model.Item1.PayrollProcessBatchResult.DeductedSSS == true)
-                        {
-                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.SSSValueEmployee.GetValueOrDefault())
-                        }
-                    </td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">Overtime:</td>
-                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.OvertimeValue.GetValueOrDefault())</td>
-                    <td>&nbsp;</td>
-                    <td style="text-align: right;">
-                        @if (Model.Item1.PayrollProcessBatchResult.DeductedPagIbig == true)
-                        {
-                            @Html.Raw("PAGIBIG:")
-                        }
-                    </td>
-                    <td>
-                        @if (Model.Item1.PayrollProcessBatchResult.DeductedPagIbig == true)
-                        {
-                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.PagIbigValueEmployee.GetValueOrDefault())
-                        }
-                    </td>
-                    <td>&nbsp;</td>
-                </tr>
+                    <td colspan="3" style="padding: 0px;">
+                        <table class="table table-bordered table-condensed no-outside-border" style="margin-bottom: 0px;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">Name: @String.Format("{0}, {1} {2} ({3})", Model.Item2.PayrollRecord.Employee.LastName, Model.Item2.PayrollRecord.Employee.FirstName, Model.Item2.PayrollRecord.Employee.MiddleName, Model.Item2.PayrollRecord.Employee.EmployeeCode)</td>
+                                    <td>@String.Format("Daily Rate: P{0:n}", Model.Item2.PayrollRecord.Employee.DailyRate.GetValueOrDefault())</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>Earnings</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Basic pay:</td>
+                                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + Model.Item2.PayrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
+                                    <td style="text-align: left;">@String.Format("{0:n} days/(months) and {1:n} hours", Model.Item2.DailyTimeRecord.DaysWorked.GetValueOrDefault(), Model.Item2.DailyTimeRecord.HoursWorked.GetValueOrDefault())</td>
 
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>
-                        @foreach (var overtime in Model.Item2.Overtimes)
-                        {
-                            <div>@String.Format("{0} - P{1:n}", overtime.PayPercentageName.ToString(), overtime.NumberOfHoursValue.GetValueOrDefault())</div>
-                        }
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Overtime:</td>
+                                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.OvertimeValue.GetValueOrDefault())</td>
+                                    <td>&nbsp;</td>
 
-                    </td>
-                    <td>
-                        @foreach (var overtime in Model.Item2.Overtimes)
-                        {
-                            <div>@String.Format("{0:n} hours", overtime.NumberOfHours.GetValueOrDefault())</div>
-                        }
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
+                                </tr>
 
-                <tr>
-                    <td style="text-align: right;">COLA:</td>
-                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.COLADailyValue.GetValueOrDefault() + Model.Item2.PayrollRecord.COLAHourlyValue.GetValueOrDefault() + Model.Item2.PayrollRecord.COLAMonthlyValue.GetValueOrDefault())</td>
-                    <td>&nbsp;</td>
-                    <td style="text-align: right;">
-                        @if (Model.Item1.PayrollProcessBatchResult.DeductedPHIC == true)
-                        {
-                            @Html.Raw("PHIC:")
-                        }
-                    </td>
-                    <td>
-                        @if (Model.Item1.PayrollProcessBatchResult.DeductedPHIC == true)
-                        {
-                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.PHICValueEmployee.GetValueOrDefault())
-                        }
-                    </td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">Other earnings:</td>
-                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.EarningsValue.GetValueOrDefault())</td>
-                    <td>&nbsp;</td>
-                    <td style="text-align: right;">
-                        @if (Model.Item1.PayrollProcessBatchResult.DeductedTax == true)
-                        {
-                            @Html.Raw("Tax:")
-                        }
-                    </td>
-                    <td>
-                        @if (Model.Item1.PayrollProcessBatchResult.DeductedTax == true)
-                        {
-                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.TaxValueEmployee.GetValueOrDefault())
-                        }
-                    </td>
-                    <td>&nbsp;</td>
-                </tr>
+                                <tr>
+                                    <td style="height: 100px;">&nbsp;</td>
+                                    @if (Model.Item2.Overtimes.Any())
+                                    {
+                                        <td>
+                                            @foreach (var overtime in Model.Item2.Overtimes)
+                                            {
+                                                <div>@String.Format("{0} - P{1:n}", overtime.PayPercentageName.ToString(), overtime.NumberOfHoursValue.GetValueOrDefault())</div>
+                                            }
 
-                @foreach (var earnings in Model.Item2.EarningDeductionRecords)
-                {
-                    if (earnings.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings)
-                    {
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>@String.Format("{0} - P{1:n}", earnings.EarningDeduction.Code.ToString(), earnings.Amount.GetValueOrDefault())</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    }
-                }
+                                        </td>
+                                        <td>
+                                            @foreach (var overtime in Model.Item2.Overtimes)
+                                            {
+                                                <div>@String.Format("{0:n} hours", overtime.NumberOfHours.GetValueOrDefault())</div>
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td><div style="font-style: italic;">-- No Overtimes --</div></td>
+                                        <td>&nbsp;</td>
+                                    }
+                                </tr>
 
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>&nbsp;</td>
-                    <td style="text-align: right;">UT / Tardy:</td>
-                    <td>@String.Format("(P{0:n})", Model.Item2.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + Model.Item2.PayrollRecord.HoursLateValue.GetValueOrDefault())</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>&nbsp;</td>
-                    <td style="text-align: right;">Loan payment:</td>
-                    <td>@String.Format("(P{0:n})", Model.Item2.PayrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
-                    <td>&nbsp;</td>
-                </tr>
+                                <tr>
+                                    <td style="text-align: right;">COLA:</td>
+                                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.COLADailyValue.GetValueOrDefault() + Model.Item2.PayrollRecord.COLAHourlyValue.GetValueOrDefault() + Model.Item2.PayrollRecord.COLAMonthlyValue.GetValueOrDefault())</td>
+                                    <td>&nbsp;</td>
 
-                @if (Model.Item2.PayrollRecord.LoanPaymentValue.GetValueOrDefault() > 0)
-                {
-                    foreach (var loanDeduction in Model.Item2.LoanDeductions)
-                    {
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td></td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>@String.Format("{0} - (P{1:n})", loanDeduction.Loan.LoanType.Description, loanDeduction.DeductionAmount.GetValueOrDefault())</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    }
-                }
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Other earnings:</td>
+                                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.EarningsValue.GetValueOrDefault())</td>
+                                    <td>&nbsp;</td>
 
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>&nbsp;</td>
-                    <td style="text-align: right;">Other deductions:</td>
-                    <td>@String.Format("(P{0:n})", Model.Item2.PayrollRecord.DeductionsValue.GetValueOrDefault())</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">Total Earnings:</td>
-                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.TotalEarningsValue)</td>
-                    <td>&nbsp;</td>
-                    <td style="text-align: right;">Total Deductions:</td>
-                    <td>@String.Format("(P{0:n})", Model.Item2.PayrollRecord.TotalDeductionsValue)</td>
-                    <td>
-                        <span style="float: left">NET PAY:</span>
-                        <span style="float: right">@String.Format("P{0:n}", Model.Item2.PayrollRecord.NetPayValue)</span>
+                                </tr>
+                                <tr>
+                                    <td style="height: 174px;">&nbsp;</td>
+                                    <td>
+                                        @{
+                                            var earningItems = Model.Item2.EarningDeductionRecords.Where(e => e.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings);
+                                        }
+                                        @if (earningItems.Any())
+                                        {
+                                            foreach (var earnings in earningItems)
+                                            {
+                                                <div>@String.Format("{0} - P{1:n}", earnings.EarningDeduction.Code.ToString(), earnings.Amount.GetValueOrDefault())</div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div style="font-style: italic;">-- No Earnings --</div>
+                                        }
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Total Earnings:</td>
+                                    <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.TotalEarningsValue)</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td colspan="3" style="padding: 0px;">
+                        <table class="table table-bordered table-condensed no-outside-border" style="margin-bottom: 0px;">
+                            <tbody>
+                                <tr>
+                                    <td>@String.Format("Hourly Rate: P{0:n}", Model.Item2.PayrollRecord.Employee.HourlyRate.GetValueOrDefault())</td>
+                                    <td colspan="2">Department: @String.Format("{0}", Model.Item2.PayrollRecord.Employee.Department?.Name)</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>Deductions</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">
+                                        @if (Model.Item1.PayrollProcessBatchResult.DeductedSSS == true)
+                                        {
+                                            @Html.Raw("SSS:")
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (Model.Item1.PayrollProcessBatchResult.DeductedSSS == true)
+                                        {
+                                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.SSSValueEmployee.GetValueOrDefault())
+                                        }
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">
+                                        @if (Model.Item1.PayrollProcessBatchResult.DeductedPagIbig == true)
+                                        {
+                                            @Html.Raw("PAGIBIG:")
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (Model.Item1.PayrollProcessBatchResult.DeductedPagIbig == true)
+                                        {
+                                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.PagIbigValueEmployee.GetValueOrDefault())
+                                        }
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="height: 100px;">&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="text-align: right;">
+                                        @if (Model.Item1.PayrollProcessBatchResult.DeductedPHIC == true)
+                                        {
+                                            @Html.Raw("PHIC:")
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (Model.Item1.PayrollProcessBatchResult.DeductedPHIC == true)
+                                        {
+                                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.PHICValueEmployee.GetValueOrDefault())
+                                        }
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">
+                                        @if (Model.Item1.PayrollProcessBatchResult.DeductedTax == true)
+                                        {
+                                            @Html.Raw("Tax:")
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (Model.Item1.PayrollProcessBatchResult.DeductedTax == true)
+                                        {
+                                            @String.Format("(P{0:n})", Model.Item2.PayrollRecord.TaxValueEmployee.GetValueOrDefault())
+                                        }
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">UT / Tardy:</td>
+                                    <td>@String.Format("(P{0:n})", Model.Item2.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + Model.Item2.PayrollRecord.HoursLateValue.GetValueOrDefault())</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Loan payment:</td>
+                                    <td>@String.Format("(P{0:n})", Model.Item2.PayrollRecord.LoanPaymentValue.GetValueOrDefault())</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+
+                                @if (Model.Item2.PayrollRecord.LoanPaymentValue.GetValueOrDefault() > 0)
+                                {
+                                    foreach (var loanDeduction in Model.Item2.LoanDeductions)
+                                    {
+                                        <tr>
+                                            <td style="height: 60px;">&nbsp;</td>
+                                            <td>@String.Format("{0} - (P{1:n})", loanDeduction.Loan.LoanType.Description, loanDeduction.DeductionAmount.GetValueOrDefault())</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td style="height: 60px;">&nbsp;</td>
+                                        <td><div style="font-style: italic;">-- No loan payments --</div></td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                }
+
+                                <tr>
+                                    <td style="text-align: right;">Other deductions:</td>
+                                    <td>@String.Format("(P{0:n})", Model.Item2.PayrollRecord.DeductionsValue.GetValueOrDefault())</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="height: 60px;">&nbsp;</td>
+                                    <td>
+                                        @{
+                                            var deductionItems = Model.Item2.EarningDeductionRecords.Where(e => e.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions);
+                                        }
+                                        @if (deductionItems.Any())
+                                        {
+                                            foreach (var deductions in deductionItems)
+                                            {
+                                                <div>@String.Format("{0} - P{1:n}", deductions.EarningDeduction.Code.ToString(), deductions.Amount.GetValueOrDefault())</div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div style="font-style: italic;">-- No Deductions --</div>
+                                        }
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Total Deductions:</td>
+                                    <td>@String.Format("(P{0:n})", Model.Item2.PayrollRecord.TotalDeductionsValue)</td>
+                                    <td>
+                                        <span style="float: left">NET PAY:</span>
+                                        <span style="float: right">@String.Format("P{0:n}", Model.Item2.PayrollRecord.NetPayValue)</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
                 </tr>
             </tbody>
