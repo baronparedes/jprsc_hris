@@ -216,7 +216,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         AmountDeducted = payrollProcessBatch.EndProcessedOn.HasValue ? (loanDeductions.SingleOrDefault(ld => ld.LoanId == l.Id)?.DeductionAmount).GetValueOrDefault() : 0m
                     });
 
-                    records.AddRange(recordsTemp);
+                    records.AddRange(recordsTemp.Where(r => r.AmountDeducted > 0));
                 }
 
                 records = records
