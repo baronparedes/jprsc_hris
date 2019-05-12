@@ -119,7 +119,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var allEmployeesOfClient = await _db.Employees.AsNoTracking().Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
                 var allEmployeesOfClientIds = allEmployeesOfClient.Select(e => e.Id).ToList();
 
-                var allEmployeeDailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords.Where(dtr => allEmployeesOfClientIds.Contains(dtr.EmployeeId.Value) && !dtr.DeletedOn.HasValue && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
+                var allNotEndProcessedEmployeeDailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords.Include(dtr => dtr.PayrollProcessBatch).Where(dtr => allEmployeesOfClientIds.Contains(dtr.EmployeeId.Value) && !dtr.DeletedOn.HasValue && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && (!dtr.PayrollProcessBatchId.HasValue || !dtr.PayrollProcessBatch.EndProcessedOn.HasValue)).ToListAsync();
                 var allEmployeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => allEmployeesOfClientIds.Contains(ot.EmployeeId.Value) && !ot.DeletedOn.HasValue && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
 
                 var csvData = GetCSVData(command, out bool hasDuplicateEmployeeCodes);
@@ -310,7 +310,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         }
                     }
 
-                    var existingDailyTimeRecord = allEmployeeDailyTimeRecordsForPayrollPeriod.SingleOrDefault(dtr => dtr.EmployeeId == employee.Id);
+                    var existingDailyTimeRecord = allNotEndProcessedEmployeeDailyTimeRecordsForPayrollPeriod.SingleOrDefault(dtr => dtr.EmployeeId == employee.Id);
                     if (existingDailyTimeRecord != null)
                     {
                         existingDailyTimeRecord.COLADailyValue = (decimal?)daysOrMonthsWorked * employee.COLADaily;

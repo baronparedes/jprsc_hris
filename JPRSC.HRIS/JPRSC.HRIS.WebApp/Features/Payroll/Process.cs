@@ -97,7 +97,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var clientEmployeeIds = clientEmployees.Select(e => e.Id).ToList();
 
                 var dailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords
-                    .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth)
+                    .Include(dtr => dtr.PayrollProcessBatch)
+                    .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && (!dtr.PayrollProcessBatchId.HasValue || !dtr.PayrollProcessBatch.EndProcessedOn.HasValue))
                     .ToListAsync();
 
                 var overtimesForPayrollPeriod = await _db.Overtimes
@@ -317,6 +318,13 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 }
 
                 _db.PayrollProcessBatches.Add(payrollProcessBatch);
+
+                await _db.SaveChangesAsync();
+
+                foreach (var dtr in dailyTimeRecordsForPayrollPeriod)
+                {
+                    dtr.PayrollProcessBatchId = payrollProcessBatch.Id;
+                }
 
                 await _db.SaveChangesAsync();
 
