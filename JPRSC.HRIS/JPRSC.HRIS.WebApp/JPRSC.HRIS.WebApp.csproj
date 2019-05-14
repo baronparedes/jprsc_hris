@@ -371,6 +371,7 @@
     <Compile Include="Features\EarningDeductions\_MappingProfile.cs" />
     <Compile Include="Features\EmployeeRates\Add.cs" />
     <Compile Include="Features\EmployeeRates\Delete.cs" />
+    <Compile Include="Features\EmployeeRates\BulkChange.cs" />
     <Compile Include="Features\EmployeeRates\Edit.cs" />
     <Compile Include="Features\EmployeeRates\Index.cs" />
     <Compile Include="Features\EmployeeRates\Search.cs" />
@@ -6053,6 +6054,7 @@
     <Content Include="wwwroot\scripts\employeeRates\add.js" />
     <Content Include="wwwroot\scripts\employeeRates\edit.js" />
     <Content Include="wwwroot\scripts\employeeRates\index.js" />
+    <Content Include="wwwroot\scripts\employeeRates\bulkChange.js" />
     <Content Include="wwwroot\scripts\employees\add.js" />
     <Content Include="wwwroot\scripts\employees\rehireTransferModal.js" />
     <Content Include="wwwroot\scripts\employees\edit.js" />

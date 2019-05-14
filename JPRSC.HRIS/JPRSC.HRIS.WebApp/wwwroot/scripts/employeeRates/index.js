@@ -1,10 +1,11 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('EmployeeRateIndexCtrl', ['$http', '$timeout', '$scope', EmployeeRateIndexCtrl]);
+        .controller('EmployeeRateIndexCtrl', ['$http', '$timeout', '$uibModal', '$scope', EmployeeRateIndexCtrl]);
 
-    function EmployeeRateIndexCtrl($http, $timeout, $scope) {
+    function EmployeeRateIndexCtrl($http, $timeout, $uibModal, $scope) {
         var vm = this;
+        vm.bulkChangeClicked = bulkChangeClicked;
         vm.cancelEditEmployeeRateClicked = cancelEditEmployeeRateClicked;
         vm.clientsList = [];
         vm.currencySymbol = 'P';
@@ -21,6 +22,32 @@
         });
 
         $scope.$watch('vm.searchModel', onSearchModelChange, true);
+
+        function bulkChangeClicked() {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'bulkChangeModal.html',
+                controller: 'BulkChangeModalCtrl',
+                controllerAs: 'vm',
+                resolve: {
+                    params: function () {
+                        return {
+                            clients: vm.clientsList
+                        };
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (result) {
+                searchClicked();
+
+                alert('Successfully bulk changed!');
+            }, function () {
+                searchClicked();
+            });
+        };
 
         function cancelEditEmployeeRateClicked(employee) {
             employee.isEditing = false;

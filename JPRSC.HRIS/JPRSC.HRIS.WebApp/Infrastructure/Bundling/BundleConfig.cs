@@ -175,6 +175,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
         {
             bundles.AddScriptBundle("~/scriptbundles/employeeRates",
                 "~/wwwroot/scripts/employeeRates/add.js",
+                "~/wwwroot/scripts/employeeRates/bulkChange.js",
                 "~/wwwroot/scripts/employeeRates/edit.js",
                 "~/wwwroot/scripts/employeeRates/index.js");
         }

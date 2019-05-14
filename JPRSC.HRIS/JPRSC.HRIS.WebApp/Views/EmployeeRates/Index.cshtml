@@ -19,101 +19,176 @@
             Employee Rates
         </h1>
         @Html.RenderSuccessNotification()
-        <div class="row" ng-controller="EmployeeRateIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
-            <div class="col-sm-12">
-                <form role="form">
-                    <div class="form-body">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="control-label">Client</label>
-                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.text for client in vm.clientsList track by client.value"></select>
-                                </div>
+    <div class="row" ng-controller="EmployeeRateIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
+        <div class="col-sm-12">
+            <form role="form">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Client</label>
+                                <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.text for client in vm.clientsList track by client.value"></select>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="control-label">Search Employees</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
-                                            <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
-                                        </span>
-                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
-                                    </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Search Employees</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-search fa-fw" ng-show="!vm.searchInProgress"></i>
+                                        <i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i>
+                                    </span>
+                                    <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
-                <div class="note note-info" ng-show="!vm.employees.length">
-                    <p>No employees found.</p>
                 </div>
-                <div class="portlet light bordered" ng-show="vm.employees.length">
-                    <div class="portlet-title">
-                        <div class="caption font-red-sunglo">
-                            <i class="fa fa-dollar font-red-sunglo"></i>
-                            <span class="caption-subject font-red-sunglo bold uppercase">Employee Rates</span>
-                        </div>
+            </form>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" ng-click="vm.bulkChangeClicked()">Bulk Change</button>
                     </div>
-                    <div class="portlet-body">
-                        <div class="table-scrollable">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Employee Code</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Hourly Rate</th>
-                                        <th>Daily Rate</th>
-                                        <th>Monthly Rate</th>
-                                        <th>COLA Hourly</th>
-                                        <th>COLA Daily</th>
-                                        <th>COLA Monthly</th>
-                                        <th>&nbsp;</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="employee in vm.employees track by employee.id">
-                                        <td>{{employee.employeeCode}}</td>
-                                        <td>{{employee.firstName}}</td>
-                                        <td>{{employee.lastName}}</td>
-                                        <td>
-                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.hourlyRate | number:2}}</span>
-                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.hourlyRate" />
-                                        </td>
-                                        <td>
-                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.dailyRate | number:2}}</span>
-                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.dailyRate" />
-                                        </td>
-                                        <td>
-                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.monthlyRate | number:2}}</span>
-                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.monthlyRate" />
-                                        </td>
-                                        <td>
-                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaHourly | number:2}}</span>
-                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaHourly" />
-                                        </td>
-                                        <td>
-                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaDaily | number:2}}</span>
-                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaDaily" />
-                                        </td>
-                                        <td>
-                                            <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaMonthly | number:2}}</span>
-                                            <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaMonthly" />
-                                        </td>
-                                        <td>
-                                            <a ng-show="!employee.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.editEmployeeRateClicked(employee)">Edit</a>
-                                            <a ng-show="employee.isEditing" href="" class="btn btn-default btn-sm" ng-click="vm.cancelEditEmployeeRateClicked(employee)">Cancel</a>
-                                            <a ng-show="employee.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.saveEditEmployeeRateClicked(employee)">Save</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                </div>
+            </div>
+            <div class="note note-info" ng-show="!vm.employees.length">
+                <p>No employees found.</p>
+            </div>
+            <div class="portlet light bordered" ng-show="vm.employees.length">
+                <div class="portlet-title">
+                    <div class="caption font-red-sunglo">
+                        <i class="fa fa-dollar font-red-sunglo"></i>
+                        <span class="caption-subject font-red-sunglo bold uppercase">Employee Rates</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Employee Code</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Hourly Rate</th>
+                                    <th>Daily Rate</th>
+                                    <th>Monthly Rate</th>
+                                    <th>COLA Hourly</th>
+                                    <th>COLA Daily</th>
+                                    <th>COLA Monthly</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="employee in vm.employees track by employee.id">
+                                    <td>{{employee.employeeCode}}</td>
+                                    <td>{{employee.firstName}}</td>
+                                    <td>{{employee.lastName}}</td>
+                                    <td>
+                                        <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.hourlyRate | number:2}}</span>
+                                        <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.hourlyRate" />
+                                    </td>
+                                    <td>
+                                        <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.dailyRate | number:2}}</span>
+                                        <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.dailyRate" />
+                                    </td>
+                                    <td>
+                                        <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.monthlyRate | number:2}}</span>
+                                        <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.monthlyRate" />
+                                    </td>
+                                    <td>
+                                        <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaHourly | number:2}}</span>
+                                        <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaHourly" />
+                                    </td>
+                                    <td>
+                                        <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaDaily | number:2}}</span>
+                                        <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaDaily" />
+                                    </td>
+                                    <td>
+                                        <span ng-show="!employee.isEditing">{{vm.currencySymbol}}{{employee.colaMonthly | number:2}}</span>
+                                        <input ng-show="employee.isEditing" class="form-control input-sm" ng-model="employee.copy.colaMonthly" />
+                                    </td>
+                                    <td>
+                                        <a ng-show="!employee.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.editEmployeeRateClicked(employee)">Edit</a>
+                                        <a ng-show="employee.isEditing" href="" class="btn btn-default btn-sm" ng-click="vm.cancelEditEmployeeRateClicked(employee)">Cancel</a>
+                                        <a ng-show="employee.isEditing" href="" class="btn btn-primary btn-sm" ng-click="vm.saveEditEmployeeRateClicked(employee)">Save</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script type="text/ng-template" id="bulkChangeModal.html">
+            <form class="form-horizontal" role="form" method="post" id="bulkChangeForm">
+                <div class="modal-header">
+                    <h3 class="modal-title">Bulk Change</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-body">
+                        <input type="hidden" name="ClientId" value="{{vm.client.value}}" />
+                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.clientId }">
+                            <label class="col-md-4 col-lg-3 control-label">Client</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="hidden" name="ClientId" value="{{vm.client.id}}" />
+                                <select class="form-control" ng-model="vm.client" ng-options="client.text for client in vm.clients track by client.value"></select>
+                                <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.hourlyRate }">
+                            <label class="col-md-4 col-lg-3 control-label">Hourly Rate</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" class="form-control" name="HourlyRate" ng-model="vm.hourlyRate" />
+                                <span ng-show="vm.validationErrors.hourlyRate" class="help-block">{{vm.validationErrors.hourlyRate.join(' ')}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.dailyRate }">
+                            <label class="col-md-4 col-lg-3 control-label">Daily Rate</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" class="form-control" name="DailyRate" ng-model="vm.dailyRate" />
+                                <span ng-show="vm.validationErrors.dailyRate" class="help-block">{{vm.validationErrors.dailyRate.join(' ')}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.monthlyRate }">
+                            <label class="col-md-4 col-lg-3 control-label">Monthly Rate</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" class="form-control" name="MonthlyRate" ng-model="vm.monthlyRate" />
+                                <span ng-show="vm.validationErrors.monthlyRate" class="help-block">{{vm.validationErrors.monthlyRate.join(' ')}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.colaHourly }">
+                            <label class="col-md-4 col-lg-3 control-label">COLA Hourly</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" class="form-control" name="COLAHourly" ng-model="vm.colaHourly" />
+                                <span ng-show="vm.validationErrors.colaHourly" class="help-block">{{vm.validationErrors.colaHourly.join(' ')}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.colaDaily }">
+                            <label class="col-md-4 col-lg-3 control-label">COLA Daily</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" class="form-control" name="COLADaily" ng-model="vm.colaDaily" />
+                                <span ng-show="vm.validationErrors.colaDaily" class="help-block">{{vm.validationErrors.colaDaily.join(' ')}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.colaMonthly }">
+                            <label class="col-md-4 col-lg-3 control-label">COLA Monthly</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input type="text" class="form-control" name="COLAMonthly" ng-model="vm.colaMonthly" />
+                                <span ng-show="vm.validationErrors.colaMonthly" class="help-block">{{vm.validationErrors.colaMonthly.join(' ')}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.bulkChangeProgress"></i>
+                    <button type="button" class="btn green" ng-click="vm.bulkChangeSubmit()" ng-disabled="vm.bulkChangeProgress">Save</button>
+                    <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.bulkChangeProgress">Cancel</a>
+                </div>
+            </form>
+        </script>
+    </div>
     </div>
 </div>
 

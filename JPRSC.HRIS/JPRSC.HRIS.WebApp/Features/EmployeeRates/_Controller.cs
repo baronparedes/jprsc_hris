@@ -19,6 +19,19 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
         }
 
         [HttpPost]
+        public async Task<ActionResult> BulkChange(BulkChange.Command command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return JsonValidationError();
+            }
+
+            await _mediator.Send(command);
+
+            return Json("success");
+        }
+
+        [HttpPost]
         public async Task<ActionResult> Edit(Edit.Command command)
         {
             if (!ModelState.IsValid)
