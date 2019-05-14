@@ -40,14 +40,14 @@
                                     <td style="height: 100px;">&nbsp;</td>
                                     @if (Model.Item2.Overtimes.Where(ot => ot.NumberOfHoursValue.GetValueOrDefault() > 0).Any())
                                     {
-                                        <td>
+                                        <td class="particulars">
                                             @foreach (var overtime in Model.Item2.Overtimes.Where(ot => ot.NumberOfHoursValue.GetValueOrDefault() > 0))
                                             {
                                                 <div>@String.Format("{0} - P{1:n}", overtime.PayPercentageName.ToString(), overtime.NumberOfHoursValue.GetValueOrDefault())</div>
                                             }
 
                                         </td>
-                                        <td>
+                                        <td class="particulars">
                                             @foreach (var overtime in Model.Item2.Overtimes.Where(ot => ot.NumberOfHoursValue.GetValueOrDefault() > 0))
                                             {
                                                 <div>@String.Format("{0:n} hours", overtime.NumberOfHours.GetValueOrDefault())</div>
@@ -75,7 +75,7 @@
                                 </tr>
                                 <tr>
                                     <td style="height: 177px;">&nbsp;</td>
-                                    <td>
+                                    <td class="particulars">
                                         @{
                                             var earningItems = Model.Item2.EarningDeductionRecords.Where(e => e.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings && e.Amount.GetValueOrDefault() > 0);
                                         }
@@ -193,14 +193,16 @@
 
                                 @if (Model.Item2.PayrollRecord.LoanPaymentValue.GetValueOrDefault() > 0)
                                 {
-                                    foreach (var loanDeduction in Model.Item2.LoanDeductions)
-                                    {
-                                        <tr>
-                                            <td style="height: 60px;">&nbsp;</td>
-                                            <td>@String.Format("{0} - (P{1:n})", loanDeduction.Loan.LoanType.Description, loanDeduction.DeductionAmount.GetValueOrDefault())</td>
-                                            <td>&nbsp;</td>
-                                        </tr>
-                                    }
+                                    <tr>
+                                        <td style="height: 60px;">&nbsp;</td>
+                                        <td class="particulars">
+                                            @foreach (var loanDeduction in Model.Item2.LoanDeductions)
+                                            {
+                                                <div>@String.Format("{0} - (P{1:n})", loanDeduction.Loan.LoanType.Description, loanDeduction.DeductionAmount.GetValueOrDefault())</div>
+                                            }
+                                        </td>
+                                        <td>&nbsp;</td>
+                                    </tr>                                    
                                 }
                                 else
                                 {
@@ -218,7 +220,7 @@
                                 </tr>
                                 <tr>
                                     <td style="height: 60px;">&nbsp;</td>
-                                    <td>
+                                    <td class="particulars">
                                         @{
                                             var deductionItems = Model.Item2.EarningDeductionRecords.Where(e => e.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions && e.Amount.GetValueOrDefault() > 0);
                                         }
