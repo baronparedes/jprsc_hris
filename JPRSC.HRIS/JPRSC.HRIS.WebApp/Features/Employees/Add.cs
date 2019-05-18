@@ -275,34 +275,34 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
             private bool BeUniquePagIbig(string pagIbig)
             {
-                return !_db.Employees.Any(e => e.PagIbig == pagIbig);
+                return !_db.Employees.Any(e => !e.DeletedOn.HasValue && e.PagIbig == pagIbig);
             }
 
             private bool BeUniquePhilHealth(string philHealth)
             {
-                return !_db.Employees.Any(e => e.PhilHealth == philHealth);
+                return !_db.Employees.Any(e => !e.DeletedOn.HasValue && e.PhilHealth == philHealth);
             }
 
             private bool BeUniqueTIN(string tin)
             {
-                return !_db.Employees.Any(e => e.TIN == tin);
+                return !_db.Employees.Any(e => !e.DeletedOn.HasValue && e.TIN == tin);
             }
 
             private bool BeUniqueSSS(string sss)
             {
-                return !_db.Employees.Any(e => e.SSS == sss);
+                return !_db.Employees.Any(e => !e.DeletedOn.HasValue && e.SSS == sss);
             }
 
             private bool BeUniqueCompanyIdNumber(string companyIdNumber)
             {
-                return !_db.Employees.Any(e => e.CompanyIdNumber == companyIdNumber);
+                return !_db.Employees.Any(e => !e.DeletedOn.HasValue && e.CompanyIdNumber == companyIdNumber);
             }
 
             private bool BeUniqueATMAccountNumber(string atmAccountNumber)
             {
                 if (atmAccountNumber == "0") return true;
 
-                return !_db.Employees.Any(e => e.ATMAccountNumber == atmAccountNumber);
+                return !_db.Employees.Any(e => !e.DeletedOn.HasValue && e.ATMAccountNumber == atmAccountNumber);
             }
         }
 

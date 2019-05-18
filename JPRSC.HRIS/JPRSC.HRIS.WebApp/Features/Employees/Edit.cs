@@ -285,32 +285,32 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
             private bool BeUniquePagIbig(Command command, string pagIbig)
             {
-                return !_db.Employees.Any(e => e.Id != command.Id && e.PagIbig == pagIbig);
+                return !_db.Employees.Any(e => e.Id != command.Id && !e.DeletedOn.HasValue && e.PagIbig == pagIbig);
             }
 
             private bool BeUniquePhilHealth(Command command, string philHealth)
             {
-                return !_db.Employees.Any(e => e.Id != command.Id && e.PhilHealth == philHealth);
+                return !_db.Employees.Any(e => e.Id != command.Id && !e.DeletedOn.HasValue && e.PhilHealth == philHealth);
             }
 
             private bool BeUniqueTIN(Command command, string tin)
             {
-                return !_db.Employees.Any(e => e.Id != command.Id && e.TIN == tin);
+                return !_db.Employees.Any(e => e.Id != command.Id && !e.DeletedOn.HasValue && e.TIN == tin);
             }
 
             private bool BeUniqueSSS(Command command, string sss)
             {
-                return !_db.Employees.Any(e => e.Id != command.Id && e.SSS == sss);
+                return !_db.Employees.Any(e => e.Id != command.Id && !e.DeletedOn.HasValue && e.SSS == sss);
             }
 
             private bool BeUniqueCompanyIdNumber(Command command, string companyIdNumber)
             {
-                return !_db.Employees.Any(e => e.Id != command.Id && e.CompanyIdNumber == companyIdNumber);
+                return !_db.Employees.Any(e => e.Id != command.Id && !e.DeletedOn.HasValue && e.CompanyIdNumber == companyIdNumber);
             }
 
             private bool BeUniqueATMAccountNumber(Command command, string atmAccountNumber)
             {
-                return !_db.Employees.Any(e => e.Id != command.Id && e.ATMAccountNumber == atmAccountNumber);
+                return !_db.Employees.Any(e => e.Id != command.Id && !e.DeletedOn.HasValue && e.ATMAccountNumber == atmAccountNumber);
             }
         }
 
