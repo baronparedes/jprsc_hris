@@ -177,7 +177,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     }
                 }
 
-                var existingDailyTimeRecord = _db.DailyTimeRecords.Include(dtr => dtr.PayrollProcessBatch).SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && (!dtr.PayrollProcessBatchId.HasValue || !dtr.PayrollProcessBatch.EndProcessedOn.HasValue));
+                var existingDailyTimeRecord = _db.DailyTimeRecords.Include(dtr => dtr.PayrollProcessBatch).SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && !dtr.PayrollProcessBatchId.HasValue);
                 if (existingDailyTimeRecord != null)
                 {
                     existingDailyTimeRecord.COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily);
