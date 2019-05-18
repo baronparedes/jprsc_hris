@@ -5,19 +5,23 @@
         <table class="table table-bordered table-condensed" style="margin-bottom: 30px;">
             <tbody>
                 <tr>
-                    <td colspan="6" style="text-align: center;"><h5 style="margin: 0px;">Job Placement Resources Cooperative</h5></td>
+                    <td colspan="2" style="text-align: center;"><h5 style="margin: 0px;">Job Placement Resources Cooperative</h5></td>
                 </tr>
                 <tr>
-                    <td colspan="6">Payroll period from @Model.Item1.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.Item1.PayrollProcessBatchResult.PayrollPeriodToFormatted</td>
+                    <td colspan="2">Payroll period from @Model.Item1.PayrollProcessBatchResult.PayrollPeriodFromFormatted to @Model.Item1.PayrollProcessBatchResult.PayrollPeriodToFormatted</td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="padding: 0px;">
+                    <td colspan="2">
+                        <span style="margin-right: 5px;">Name: @String.Format("{0}, {1} {2} ({3})", Model.Item2.PayrollRecord.Employee.LastName, Model.Item2.PayrollRecord.Employee.FirstName, Model.Item2.PayrollRecord.Employee.MiddleName, Model.Item2.PayrollRecord.Employee.EmployeeCode)</span>
+                        <span style="margin-right: 5px;">@String.Format("Daily Rate: P{0:n}", Model.Item2.PayrollRecord.Employee.DailyRate.GetValueOrDefault())</span>
+                        <span style="margin-right: 5px;">@String.Format("Hourly Rate: P{0:n}", Model.Item2.PayrollRecord.Employee.HourlyRate.GetValueOrDefault())</span>
+                        <span style="margin-right: 5px;">Department: @String.Format("{0}", Model.Item2.PayrollRecord.Employee.Department?.Name)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%; padding: 0px;">
                         <table class="table table-bordered table-condensed no-outside-border" style="margin-bottom: 0px;">
                             <tbody>
-                                <tr>
-                                    <td colspan="2">Name: @String.Format("{0}, {1} {2} ({3})", Model.Item2.PayrollRecord.Employee.LastName, Model.Item2.PayrollRecord.Employee.FirstName, Model.Item2.PayrollRecord.Employee.MiddleName, Model.Item2.PayrollRecord.Employee.EmployeeCode)</td>
-                                    <td>@String.Format("Daily Rate: P{0:n}", Model.Item2.PayrollRecord.Employee.DailyRate.GetValueOrDefault())</td>
-                                </tr>
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td>Earnings</td>
@@ -101,13 +105,9 @@
                             </tbody>
                         </table>
                     </td>
-                    <td colspan="3" style="padding: 0px;">
+                    <td style="width: 50%; padding: 0px;">
                         <table class="table table-bordered table-condensed no-outside-border" style="margin-bottom: 0px;">
                             <tbody>
-                                <tr>
-                                    <td>@String.Format("Hourly Rate: P{0:n}", Model.Item2.PayrollRecord.Employee.HourlyRate.GetValueOrDefault())</td>
-                                    <td colspan="2">Department: @String.Format("{0}", Model.Item2.PayrollRecord.Employee.Department?.Name)</td>
-                                </tr>
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td>Deductions</td>

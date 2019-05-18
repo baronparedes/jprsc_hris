@@ -44,3 +44,18 @@
         $('#logoutForm').submit();
     };
 }());
+
+window.addEventListener('keypress', (function () {
+    var strToType = 'budot',
+        strTyped = '';
+    return function (event) {
+        var character = String.fromCharCode(event.which);
+        strTyped += character;
+        if (strToType.indexOf(strTyped) === -1) strTyped = '';
+        else if (strTyped === strToType) {
+            strTyped = '';
+
+            window.location = 'https://www.youtube.com/embed/w5Kzi1Yu9QY?autoplay=1';
+        }
+    };
+}()));
