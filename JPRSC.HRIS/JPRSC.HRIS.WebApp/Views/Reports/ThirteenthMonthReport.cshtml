@@ -26,7 +26,7 @@
             <div class="col-sm-12">
                 <h3>Job Placement Resources Services Cooperative</h3>
                 <h4>Thirteenth Month Report for @String.Format("{0}", String.IsNullOrWhiteSpace(Model.ClientName) ? "All Clients" : Model.ClientName)</h4>
-                <h5>For payroll period year @Model.PayrollPeriodYear</h5>
+                <h5>For payroll period year @Model.PayrollPeriodFromYear to @Model.PayrollPeriodToYear</h5>
                 <h5>@Model.ThirteenthMonthRecords.Count record/s total</h5>
             </div>
         </div>
@@ -43,15 +43,15 @@
             <div class="row hidden-print">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <a href="@Url.Action("GenerateThirteenthMonth", new { ClientId = Model.ClientId, PayrollPeriodYear = Model.PayrollPeriodYear, Destination = "Excel" })" class="btn btn-primary" style="margin-right: 20px;">Download Excel</a>
+                        <a href="@Url.Action("GenerateThirteenthMonth", new { ClientId = Model.ClientId, PayrollPeriodFromYear = Model.PayrollPeriodFromYear, PayrollPeriodToYear = Model.PayrollPeriodToYear, Destination = "Excel" })" class="btn btn-primary" style="margin-right: 20px;">Download Excel</a>
                         @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
                         {
                             <button class="btn btn-primary" disabled="disabled">Sort by Name</button>
-                            <a href="@Url.Action("GenerateThirteenthMonth", new { ClientId = Model.ClientId, PayrollPeriodYear = Model.PayrollPeriodYear, DisplayMode = "Branch" })" class="btn btn-primary">Group by Branch</a>
+                            <a href="@Url.Action("GenerateThirteenthMonth", new { ClientId = Model.ClientId, PayrollPeriodFromYear = Model.PayrollPeriodFromYear, PayrollPeriodToYear = Model.PayrollPeriodToYear, DisplayMode = "Branch" })" class="btn btn-primary">Group by Branch</a>
                         }
                         else if (Model.DisplayMode == "Branch")
                         {
-                            <a href="@Url.Action("GenerateThirteenthMonth", new { ClientId = Model.ClientId, PayrollPeriodYear = Model.PayrollPeriodYear })" class="btn btn-primary">Sort by Name</a>
+                            <a href="@Url.Action("GenerateThirteenthMonth", new { ClientId = Model.ClientId, PayrollPeriodFromYear = Model.PayrollPeriodFromYear, PayrollPeriodToYear = Model.PayrollPeriodToYear })" class="btn btn-primary">Sort by Name</a>
                             <button class="btn btn-primary" disabled="disabled">Group by Branch</button>
                         }
                     </div>

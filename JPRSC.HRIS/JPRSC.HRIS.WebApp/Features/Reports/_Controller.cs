@@ -2,6 +2,7 @@
 using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -95,6 +96,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         [HttpGet]
         public async Task<ActionResult> GenerateThirteenthMonth(GenerateThirteenthMonth.Query query)
         {
+            if (!ModelState.IsValid) return Content($"Error: {ModelState.GetAllErrors().First()}");
+
             var result = await _mediator.Send(query);
 
             if (query.Destination == "Excel")

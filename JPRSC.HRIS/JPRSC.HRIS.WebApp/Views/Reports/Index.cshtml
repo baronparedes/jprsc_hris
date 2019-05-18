@@ -173,10 +173,34 @@
                                     <span ng-show="vm.validationErrors.toPayrollPeriod" class="help-block">{{vm.validationErrors.toPayrollPeriod.join(' ')}}</span>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">
+                                <label class="col-md-4 col-lg-3 control-label">From Year</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="PayrollPeriodFromYear" ng-model="vm.payrollPeriodFromYear">
+                                        @for (var i = currentYear; i > minYear; i--)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                    <span ng-show="vm.validationErrors.payrollPeriodFromYear" class="help-block">{{vm.validationErrors.payrollPeriodFromYear.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">
+                                <label class="col-md-4 col-lg-3 control-label">To Year</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="PayrollPeriodToYear" ng-model="vm.payrollPeriodToYear">
+                                        @for (var i = currentYear; i > minYear; i--)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                    <span ng-show="vm.validationErrors.payrollPeriodToYear" class="help-block">{{vm.validationErrors.payrollPeriodToYear.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="vm.reportType != 'ThirteenthMonth'">
                                 <label class="col-md-4 col-lg-3 control-label">Payroll Year</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <select class="form-control" name="PayrollPeriodMonth" ng-model="vm.payrollPeriodYear">
+                                    <select class="form-control" name="PayrollPeriodYear" ng-model="vm.payrollPeriodYear">
                                         @for (var i = currentYear; i > minYear; i--)
                                         {
                                             <option value="@i">@i</option>
@@ -192,7 +216,7 @@
                         <a ng-if="vm.reportType == 'SSS'" ng-href="/Reports/GenerateSSS?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a ng-if="vm.reportType == 'PagIbig'" ng-href="/Reports/GeneratePagIbig?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a ng-if="vm.reportType == 'LoanLedger'" ng-href="/Reports/GenerateLoanLedger?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-if="vm.reportType == 'ThirteenthMonth'" ng-href="/Reports/GenerateThirteenthMonth?clientId={{vm.client.id}}&payrollPeriodYear={{vm.payrollPeriodYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'ThirteenthMonth'" ng-href="/Reports/GenerateThirteenthMonth?clientId={{vm.client.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
                     </div>
                 </form>

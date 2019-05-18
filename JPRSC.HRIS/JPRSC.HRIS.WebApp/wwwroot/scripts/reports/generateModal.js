@@ -13,6 +13,8 @@
         vm.toPayrollPeriodMonth = '10';
         vm.payrollPeriodMonth = '-1';
         vm.payrollPeriodYear = new Date().getFullYear().toString();
+        vm.payrollPeriodFromYear = new Date().getFullYear().toString();
+        vm.payrollPeriodToYear = new Date().getFullYear().toString();
         vm.reportType = params.reportType;
         vm.validationErrors = {};
 

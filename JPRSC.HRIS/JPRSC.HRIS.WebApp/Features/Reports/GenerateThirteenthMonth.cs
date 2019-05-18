@@ -22,7 +22,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public int? ClientId { get; set; }
             public string Destination { get; set; }
             public string DisplayMode { get; set; }
-            public int PayrollPeriodYear { get; set; }
+            public int PayrollPeriodFromYear { get; set; }
+            public int PayrollPeriodToYear { get; set; }
             public Month? FromPayrollPeriodMonth { get; set; }
             public int? FromPayrollPeriod { get; set; }
             public Month? ToPayrollPeriodMonth { get; set; }
@@ -48,11 +49,20 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 RuleFor(q => q.FromPayrollPeriodMonth)
                     .Must(BeBeforeToPayrollPeriodMonth)
                     .WithMessage("From payroll period month should be before To payroll period month.");
+
+                RuleFor(q => q.PayrollPeriodFromYear)
+                    .Must(BeOnOrBeforePayrollPeriodToYear)
+                    .WithMessage("From Year must be the same as or before To Year.");
             }
 
             private bool BeBeforeToPayrollPeriodMonth(Query query, Month? fromPayrollPeriodMonth)
             {
                 return (int)fromPayrollPeriodMonth.Value <= (int)query.ToPayrollPeriodMonth.Value;
+            }
+
+            private bool BeOnOrBeforePayrollPeriodToYear(Query query, int payrollPeriodFromYear)
+            {
+                return payrollPeriodFromYear <= query.PayrollPeriodToYear;
             }
         }
 
@@ -60,7 +70,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         {
             public int? ClientId { get; set; }
             public string ClientName { get; set; }
-            public int PayrollPeriodYear { get; set; }
+            public int PayrollPeriodFromYear { get; set; }
+            public int PayrollPeriodToYear { get; set; }
             public string DisplayMode { get; set; }
             public byte[] FileContent { get; set; }
             public string Filename { get; set; }
@@ -259,8 +270,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 var clientIds = clients.Select(c => c.Id).ToList();
 
-                var startDate = new DateTime(query.PayrollPeriodYear, 1, 1);
-                var endDate = new DateTime(query.PayrollPeriodYear, 12, 31);
+                var startDate = new DateTime(query.PayrollPeriodFromYear, 1, 1);
+                var endDate = new DateTime(query.PayrollPeriodToYear, 12, 31);
 
                 var fromPayrollPeriodMonthAsInt = (int)query.FromPayrollPeriodMonth.Value;
                 var toPayrollPeriodMonthAsInt = (int)query.ToPayrollPeriodMonth.Value;
@@ -341,7 +352,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                     reportFileNameBuilder.Append(" - ");
 
-                    reportFileNameBuilder.Append($"{query.PayrollPeriodYear}");
+                    reportFileNameBuilder.Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}");
 
                     reportFileNameBuilder.Append(".xlsx");
 
@@ -365,7 +376,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         ClientName = clientName,
                         DisplayMode = query.DisplayMode,
                         ThirteenthMonthRecords = thirteenthMonthRecords,
-                        PayrollPeriodYear = query.PayrollPeriodYear
+                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
+                        PayrollPeriodToYear = query.PayrollPeriodToYear,
                     };
                 }
             }
