@@ -43,21 +43,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 RuleFor(c => c.PayrollPeriodMonth)
                     .NotEmpty();
-
-                When(c => c.PayrollPeriodFrom.HasValue && c.PayrollPeriodTo.HasValue && c.PayrollPeriod.HasValue, () =>
-                {
-                    RuleFor(c => c.ClientId)
-                        .Must(NotHavePendingRecordsForEndProcess)
-                        .WithMessage("There are pending records for end process for this client.");
-                });
-            }
-
-            private bool NotHavePendingRecordsForEndProcess(Command commnad, int? clientId)
-            {
-                return !_db
-                    .PayrollProcessBatches
-                    .Any(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue && ppb.ClientId == clientId.Value &&
-                                ppb.PayrollPeriodFrom == commnad.PayrollPeriodFrom && ppb.PayrollPeriodTo == commnad.PayrollPeriodTo && ppb.PayrollPeriod == commnad.PayrollPeriod);
             }
         }
 
@@ -97,16 +82,15 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var clientEmployeeIds = clientEmployees.Select(e => e.Id).ToList();
 
                 var dailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords
-                    .Include(dtr => dtr.PayrollProcessBatch)
                     .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && !dtr.PayrollProcessBatchId.HasValue)
                     .ToListAsync();
 
                 var overtimesForPayrollPeriod = await _db.Overtimes
-                    .Where(ot => !ot.DeletedOn.HasValue && ot.EmployeeId.HasValue && clientEmployeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth)
+                    .Where(ot => !ot.DeletedOn.HasValue && ot.EmployeeId.HasValue && clientEmployeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth && !ot.PayrollProcessBatchId.HasValue)
                     .ToListAsync();
 
                 var earningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords
-                    .Where(edr => !edr.DeletedOn.HasValue && edr.EmployeeId.HasValue && clientEmployeeIds.Contains(edr.EmployeeId.Value) && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.PayrollPeriodMonth == command.PayrollPeriodMonth)
+                    .Where(edr => !edr.DeletedOn.HasValue && edr.EmployeeId.HasValue && clientEmployeeIds.Contains(edr.EmployeeId.Value) && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.PayrollPeriodMonth == command.PayrollPeriodMonth && !edr.PayrollProcessBatchId.HasValue)
                     .Include(edr => edr.EarningDeduction)
                     .ToListAsync();
 
@@ -131,14 +115,11 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var shouldDeductTax = client.TaxPayrollPeriods.Contains(command.PayrollPeriod.Value);
 
                 var existingPayrollProcessBatch = await _db.PayrollProcessBatches
-                    .FirstOrDefaultAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue && ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo && ppb.PayrollPeriodMonth == command.PayrollPeriodMonth);
+                    .Include(ppb => ppb.PayrollRecords)
+                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.LoanDeductions))
+                    .FirstOrDefaultAsync(ppb => !ppb.DeletedOn.HasValue && !ppb.EndProcessedOn.HasValue && ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == command.PayrollPeriodFrom && ppb.PayrollPeriodTo == command.PayrollPeriodTo && ppb.PayrollPeriodMonth == command.PayrollPeriodMonth);
 
-                if (existingPayrollProcessBatch != null)
-                {
-                    existingPayrollProcessBatch.DateOverwritten = now;
-                }
-
-                var payrollProcessBatch = new PayrollProcessBatch
+                var payrollProcessBatch = existingPayrollProcessBatch != null ? existingPayrollProcessBatch : new PayrollProcessBatch
                 {
                     AddedOn = now,
                     ClientId = command.ClientId,
@@ -186,6 +167,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 foreach (var employee in clientEmployees)
                 {
+                    var alreadyPayrollProcessed = payrollProcessBatch.PayrollRecords.Any(pr => pr.EmployeeId == employee.Id);
+                    if (alreadyPayrollProcessed) continue;
+
                     var employeeDtrsForPayrollPeriod = dailyTimeRecordsForPayrollPeriod.Where(dtr => dtr.EmployeeId == employee.Id).ToList();
                     var employeeOtsForPayrollPeriod = overtimesForPayrollPeriod.Where(ot => ot.EmployeeId == employee.Id).ToList();
                     var employeeEdrsForPayrollPeriod = earningDeductionRecordsForPayrollPeriod.Where(ed => ed.EmployeeId == employee.Id).ToList();
@@ -317,13 +301,25 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     }
                 }
 
-                _db.PayrollProcessBatches.Add(payrollProcessBatch);
-
-                await _db.SaveChangesAsync();
+                if (payrollProcessBatch.Id == 0)
+                {
+                    _db.PayrollProcessBatches.Add(payrollProcessBatch);
+                    await _db.SaveChangesAsync();
+                }
 
                 foreach (var dtr in dailyTimeRecordsForPayrollPeriod)
                 {
                     dtr.PayrollProcessBatchId = payrollProcessBatch.Id;
+                }
+
+                foreach (var ot in overtimesForPayrollPeriod)
+                {
+                    ot.PayrollProcessBatchId = payrollProcessBatch.Id;
+                }
+
+                foreach (var edr in earningDeductionRecordsForPayrollPeriod)
+                {
+                    edr.PayrollProcessBatchId = payrollProcessBatch.Id;
                 }
 
                 await _db.SaveChangesAsync();

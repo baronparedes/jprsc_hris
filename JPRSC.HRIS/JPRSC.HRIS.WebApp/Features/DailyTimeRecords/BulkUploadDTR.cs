@@ -119,8 +119,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var allEmployeesOfClient = await _db.Employees.AsNoTracking().Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
                 var allEmployeesOfClientIds = allEmployeesOfClient.Select(e => e.Id).ToList();
 
-                var allNotEndProcessedEmployeeDailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords.Include(dtr => dtr.PayrollProcessBatch).Where(dtr => allEmployeesOfClientIds.Contains(dtr.EmployeeId.Value) && !dtr.DeletedOn.HasValue && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && !dtr.PayrollProcessBatchId.HasValue).ToListAsync();
-                var allEmployeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => allEmployeesOfClientIds.Contains(ot.EmployeeId.Value) && !ot.DeletedOn.HasValue && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
+                var allNotProcessedEmployeeDailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords.Where(dtr => allEmployeesOfClientIds.Contains(dtr.EmployeeId.Value) && !dtr.DeletedOn.HasValue && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && !dtr.PayrollProcessBatchId.HasValue).ToListAsync();
+                var allNotProcessedEmployeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => allEmployeesOfClientIds.Contains(ot.EmployeeId.Value) && !ot.DeletedOn.HasValue && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth && !ot.PayrollProcessBatchId.HasValue).ToListAsync();
 
                 var csvData = GetCSVData(command, out bool hasDuplicateEmployeeCodes);
                 if (hasDuplicateEmployeeCodes)
@@ -247,7 +247,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                         var payPercentage = entry.Value;
 
-                        var existingOvertimes = allEmployeeOvertimesForPayrollPeriod.OrderByDescending(o => o.AddedOn).Where(ot => ot.EmployeeId == employee.Id && ot.PayPercentageId == payPercentage.Id);
+                        var existingOvertimes = allNotProcessedEmployeeOvertimesForPayrollPeriod.OrderByDescending(o => o.AddedOn).Where(ot => ot.EmployeeId == employee.Id && ot.PayPercentageId == payPercentage.Id);
                         if (existingOvertimes.Count() > 1)
                         {
                             var existingOvertimeToDelete = existingOvertimes.Skip(1);
@@ -310,7 +310,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         }
                     }
 
-                    var existingDailyTimeRecord = allNotEndProcessedEmployeeDailyTimeRecordsForPayrollPeriod.SingleOrDefault(dtr => dtr.EmployeeId == employee.Id);
+                    var existingDailyTimeRecord = allNotProcessedEmployeeDailyTimeRecordsForPayrollPeriod.SingleOrDefault(dtr => dtr.EmployeeId == employee.Id);
                     if (existingDailyTimeRecord != null)
                     {
                         existingDailyTimeRecord.COLADailyValue = (decimal?)daysOrMonthsWorked * employee.COLADaily;

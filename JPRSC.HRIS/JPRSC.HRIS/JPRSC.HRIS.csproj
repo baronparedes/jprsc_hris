@@ -434,6 +434,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201905120436393_AddDailyTimeRecordPayrollProcessBatch.Designer.cs">
       <DependentUpon>201905120436393_AddDailyTimeRecordPayrollProcessBatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201905191601292_AddPayrollProcessBatchIdToOvertimeAndEDRRecord.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201905191601292_AddPayrollProcessBatchIdToOvertimeAndEDRRecord.Designer.cs">
+      <DependentUpon>201905191601292_AddPayrollProcessBatchIdToOvertimeAndEDRRecord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -755,6 +759,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201905120436393_AddDailyTimeRecordPayrollProcessBatch.resx">
       <DependentUpon>201905120436393_AddDailyTimeRecordPayrollProcessBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201905191601292_AddPayrollProcessBatchIdToOvertimeAndEDRRecord.resx">
+      <DependentUpon>201905191601292_AddPayrollProcessBatchIdToOvertimeAndEDRRecord.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

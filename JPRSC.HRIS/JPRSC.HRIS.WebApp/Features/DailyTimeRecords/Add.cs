@@ -129,7 +129,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                 var existingOvertimes = await _db
                     .Overtimes
-                    .Where(o => !o.DeletedOn.HasValue && o.EmployeeId == command.EmployeeId && o.PayrollPeriodFrom == command.PayrollPeriodFrom && o.PayrollPeriodTo == command.PayrollPeriodTo && o.PayrollPeriodMonth == command.PayrollPeriodMonth)
+                    .Where(o => !o.DeletedOn.HasValue && o.EmployeeId == command.EmployeeId && o.PayrollPeriodFrom == command.PayrollPeriodFrom && o.PayrollPeriodTo == command.PayrollPeriodTo && o.PayrollPeriodMonth == command.PayrollPeriodMonth && !o.PayrollProcessBatchId.HasValue)
                     .ToListAsync();
 
                 var payPercentageIds = command.Overtimes.Where(ot => ot.PayPercentageId.HasValue).Select(ot => ot.PayPercentageId.Value);
@@ -177,7 +177,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     }
                 }
 
-                var existingDailyTimeRecord = _db.DailyTimeRecords.Include(dtr => dtr.PayrollProcessBatch).SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && !dtr.PayrollProcessBatchId.HasValue);
+                var existingDailyTimeRecord = _db.DailyTimeRecords.SingleOrDefault(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && !dtr.PayrollProcessBatchId.HasValue);
                 if (existingDailyTimeRecord != null)
                 {
                     existingDailyTimeRecord.COLADailyValue = GetValue(command.DaysWorked, employee.COLADaily);
@@ -227,7 +227,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                 var existingEarningDeductionRecords = await _db
                     .EarningDeductionRecords
-                    .Where(edr => !edr.DeletedOn.HasValue && edr.EmployeeId == command.EmployeeId && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.PayrollPeriodMonth == command.PayrollPeriodMonth)
+                    .Where(edr => !edr.DeletedOn.HasValue && edr.EmployeeId == command.EmployeeId && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.PayrollPeriodMonth == command.PayrollPeriodMonth && !edr.PayrollProcessBatchId.HasValue)
                     .ToListAsync();
 
                 foreach (var earningDeductionRecordUpload in command.EarningDeductionRecords)

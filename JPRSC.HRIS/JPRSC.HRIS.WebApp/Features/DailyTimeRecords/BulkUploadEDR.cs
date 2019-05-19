@@ -115,7 +115,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 var allEmployeesOfClient = await _db.Employees.AsNoTracking().Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId).ToListAsync();
                 var allEmployeesOfClientIds = allEmployeesOfClient.Select(e => e.Id).ToList();
 
-                var allEmployeeEarningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords.Where(edr => allEmployeesOfClientIds.Contains(edr.EmployeeId.Value) && !edr.DeletedOn.HasValue && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.PayrollPeriodMonth == command.PayrollPeriodMonth).ToListAsync();
+                var allNotProcessedEmployeeEarningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords.Where(edr => allEmployeesOfClientIds.Contains(edr.EmployeeId.Value) && !edr.DeletedOn.HasValue && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.PayrollPeriodMonth == command.PayrollPeriodMonth && !edr.PayrollProcessBatchId.HasValue).ToListAsync();
 
                 var csvData = GetCSVData(command);
                 var columnToEarningDeductionMap = await GetColumnToEarningDeductionMap(csvData.Item1);
@@ -201,14 +201,14 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                         if (!amount.HasValue) continue;
 
-                        var existingEarningDeductionRecords = allEmployeeEarningDeductionRecordsForPayrollPeriod.OrderByDescending(edr => edr.AddedOn).Where(edr => edr.EmployeeId == employee.Id && edr.EarningDeductionId == entry.Value.Id);
+                        var existingEarningDeductionRecords = allNotProcessedEmployeeEarningDeductionRecordsForPayrollPeriod.OrderByDescending(edr => edr.AddedOn).Where(edr => edr.EmployeeId == employee.Id && edr.EarningDeductionId == entry.Value.Id);
                         if (existingEarningDeductionRecords.Count() > 1)
                         {
                             var existingEarningDeductionRecordsToDelete = existingEarningDeductionRecords.Skip(1);
                             existingEarningDeductionRecordIdsToDelete.AddRange(existingEarningDeductionRecordsToDelete.Select(edr => edr.Id));
                         }
 
-                        var existingEarningDeductionRecord = allEmployeeEarningDeductionRecordsForPayrollPeriod.SingleOrDefault(edr => edr.EmployeeId == employee.Id && edr.Amount > 0 && edr.EarningDeductionId == entry.Value.Id);
+                        var existingEarningDeductionRecord = allNotProcessedEmployeeEarningDeductionRecordsForPayrollPeriod.SingleOrDefault(edr => edr.EmployeeId == employee.Id && edr.Amount > 0 && edr.EarningDeductionId == entry.Value.Id);
                         if (existingEarningDeductionRecord != null)
                         {
                             existingEarningDeductionRecord.Amount = amount;
