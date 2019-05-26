@@ -67,10 +67,7 @@
                                         @Html.StaticHorizontalFormGroup("IsActive")
                                     </uib-tab>
                                     <uib-tab index="2" heading="Pay Info">
-                                        @if (AuthorizeHelper.IsAuthorized(Permission.EmployeeEditATM))
-                                        {
-                                            @Html.StaticHorizontalFormGroup("ATMAccountNumber")
-                                        }
+                                        @Html.StaticHorizontalFormGroup("ATMAccountNumber")
                                         @Html.StaticHorizontalFormGroup("AccountType")
                                         @Html.StaticHorizontalFormGroup("TaxStatusCode", "Tax Status")
                                         @Html.StaticHorizontalFormGroup("PagIbigRecordCode", "Pag Ibig Record")
