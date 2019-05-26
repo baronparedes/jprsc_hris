@@ -81,11 +81,13 @@
                     payrollRecord.PayrollRecord.Employee.Department = new JPRSC.HRIS.Models.Department { Id = 0, Name = "No Branch" };
                 }
 
-                var groupedByBranch = Model.PayslipRecords.GroupBy(pr => new { pr.PayrollRecord.Employee.Department.Id, pr.PayrollRecord.Employee.Department.Name });
-                foreach (var group in groupedByBranch.OrderBy(g => g.Key.Name))
+                var groupedByBranch = Model.PayslipRecords.GroupBy(pr => new { pr.PayrollRecord.Employee.Department.Id, pr.PayrollRecord.Employee.Department.Name }).OrderBy(g => g.Key.Name).ToList();
+                for (var i = 0; i < groupedByBranch.Count; i++)
                 {
+                    var group = groupedByBranch[i];
                     <h3>@group.Key.Name</h3>
-                    @Html.Partial("PayslipReportTable", Tuple.Create(Model, group.AsEnumerable()))
+                    <div class="visible-print-block" style="height: 930px;">&nbsp;</div>
+                    @Html.Partial("PayslipReportTable", Tuple.Create(Model, group.AsEnumerable().ToList()))
                 }
             }
         }

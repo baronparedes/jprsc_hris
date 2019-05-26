@@ -1,6 +1,12 @@
-﻿@model Tuple<JPRSC.HRIS.WebApp.Features.Payroll.PayslipReport.QueryResult, IEnumerable<JPRSC.HRIS.WebApp.Features.Payroll.PayslipReport.QueryResult.PayslipRecord>>
+﻿@model Tuple<JPRSC.HRIS.WebApp.Features.Payroll.PayslipReport.QueryResult, List<JPRSC.HRIS.WebApp.Features.Payroll.PayslipReport.QueryResult.PayslipRecord>>
 
-@foreach (var payslipRecord in Model.Item2)
+@for (var i = 0; i < Model.Item2.Count; i++)
 {
+    var payslipRecord = Model.Item2[i];
     @Html.Partial("PayslipReportTableIndividual", Tuple.Create(Model.Item1, payslipRecord))
+
+    if (i == Model.Item2.Count - 1 && Model.Item2.Count % 2 == 1)
+    {
+        <div class="visible-print-block" style="height: 480px;">&nbsp;</div>
+    }
 }
