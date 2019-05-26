@@ -110,7 +110,18 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
         [AuthorizePermission(Permission.EmployeeEdit)]
         [HttpPost]
-        public async Task<ActionResult> RehireTransfer(RehireTransfer.Command command)
+        public async Task<ActionResult> Rehire(Rehire.Command command)
+        {
+            var commandResult = await _mediator.Send(command);
+
+            NotificationHelper.CreateSuccessNotification(this, $"Successfully rehired employee {commandResult.FirstName} {commandResult.LastName}.");
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [AuthorizePermission(Permission.EmployeeEdit)]
+        [HttpPost]
+        public async Task<ActionResult> Transfer(Transfer.Command command)
         {
             var commandResult = await _mediator.Send(command);
 

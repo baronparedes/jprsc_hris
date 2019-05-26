@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Employees
 {
-    public class RehireTransfer
+    public class Transfer
     {
         public class Command : IRequest<CommandResult>
         {
@@ -42,7 +42,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     AddedOn = DateTime.UtcNow,
                     ClientId = command.ClientId,
                     EmployeeId = command.EmployeeId,
-                    RehireTransferDateLocal = DateTime.Now
+                    RehireTransferDateLocal = DateTime.Now,
+                    Type = RehireTransferEventType.Transfer
                 };
                 _db.RehireTransferEvents.Add(rehireTransferEvent);
 

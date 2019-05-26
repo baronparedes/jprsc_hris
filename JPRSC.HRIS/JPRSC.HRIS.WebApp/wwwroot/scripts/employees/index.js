@@ -10,7 +10,8 @@
         vm.lastPageNumber = 1;
         vm.nextClicked = nextClicked;
         vm.previousClicked = previousClicked;
-        vm.rehireAndTransferClicked = rehireAndTransferClicked;
+        vm.rehireClicked = rehireClicked;
+        vm.transferClicked = transferClicked;
         vm.searchClicked = searchClicked;
         vm.searchModel = { pageNumber: 1 };
         vm.searchInProgress = false;
@@ -43,13 +44,40 @@
             searchClicked();
         };
 
-        function rehireAndTransferClicked(employee) {
+        function rehireClicked(employee) {
             var modalInstance = $uibModal.open({
                 animation: true,
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body',
-                templateUrl: 'rehireTransferModal.html',
-                controller: 'RehireTransferModalCtrl',
+                templateUrl: 'rehireModal.html',
+                controller: 'RehireModalCtrl',
+                controllerAs: 'vm',
+                resolve: {
+                    params: function () {
+                        return {
+                            clients: vm.clients,
+                            employee: employee
+                        }
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (result) {
+                searchClicked();
+
+                alert('Successfully rehired!');
+            }, function () {
+                searchClicked();
+            });
+        };
+
+        function transferClicked(employee) {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'transferModal.html',
+                controller: 'TransferModalCtrl',
                 controllerAs: 'vm',
                 resolve: {
                     params: function () {

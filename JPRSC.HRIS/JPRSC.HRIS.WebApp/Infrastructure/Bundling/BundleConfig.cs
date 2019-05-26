@@ -168,7 +168,8 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/employees/add.js",
                 "~/wwwroot/scripts/employees/edit.js",
                 "~/wwwroot/scripts/employees/index.js",
-                "~/wwwroot/scripts/employees/rehireTransferModal.js");
+                "~/wwwroot/scripts/employees/rehireModal.js",
+                "~/wwwroot/scripts/employees/transferModal.js");
         }
 
         private static void AddEmployeeRateBundles(BundleCollection bundles)

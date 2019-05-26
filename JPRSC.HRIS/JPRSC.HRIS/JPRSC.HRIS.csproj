@@ -438,6 +438,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201905191601292_AddPayrollProcessBatchIdToOvertimeAndEDRRecord.Designer.cs">
       <DependentUpon>201905191601292_AddPayrollProcessBatchIdToOvertimeAndEDRRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\201905260537352_AddRehireTransferEventType.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\201905260537352_AddRehireTransferEventType.Designer.cs">
+      <DependentUpon>201905260537352_AddRehireTransferEventType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -495,6 +499,7 @@
     <Compile Include="Models\ForProcessingBatch.cs" />
     <Compile Include="Models\Region.cs" />
     <Compile Include="Models\RehireTransferEvent.cs" />
+    <Compile Include="Models\RehireTransferEventType.cs" />
     <Compile Include="Models\Religion.cs" />
     <Compile Include="Models\ResignStatus.cs" />
     <Compile Include="Models\SalaryStatus.cs" />
@@ -762,6 +767,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201905191601292_AddPayrollProcessBatchIdToOvertimeAndEDRRecord.resx">
       <DependentUpon>201905191601292_AddPayrollProcessBatchIdToOvertimeAndEDRRecord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\201905260537352_AddRehireTransferEventType.resx">
+      <DependentUpon>201905260537352_AddRehireTransferEventType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

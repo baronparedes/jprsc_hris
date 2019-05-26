@@ -2,6 +2,7 @@
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -44,8 +45,11 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 public string EmployeeCode { get; set; }
                 public string FirstName { get; set; }
                 public int Id { get; set; }
+                [JsonIgnore] public bool IsActive { get; set; }
                 public string LastName { get; set; }
                 public string MiddleName { get; set; }
+                [JsonIgnore] public string ResignStatus { get; set; }
+                public bool RehireEnabled => !IsActive || (ResignStatus == Models.ResignStatus.Resigned || ResignStatus == Models.ResignStatus.AWOL);
             }
         }
 

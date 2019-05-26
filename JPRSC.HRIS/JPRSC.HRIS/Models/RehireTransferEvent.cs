@@ -11,5 +11,6 @@ namespace JPRSC.HRIS.Models
         public int? EmployeeId { get; set; }
         public Client Client { get; set; }
         public int? ClientId { get; set; }
+        public string Type { get; set; }
     }
 }
