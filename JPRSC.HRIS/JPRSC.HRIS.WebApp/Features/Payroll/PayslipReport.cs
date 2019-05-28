@@ -31,7 +31,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         {
             public int? PayrollProcessBatchId { get; set; }
             public string DisplayMode { get; set; }
-            public IEnumerable<PayslipRecord> PayslipRecords { get; set; } = new List<PayslipRecord>();
+            public List<PayslipRecord> PayslipRecords { get; set; } = new List<PayslipRecord>();
             public Models.PayrollProcessBatch PayrollProcessBatchResult { get; set; }
             public IEnumerable<Models.PayPercentage> PayRates { get; set; } = new List<Models.PayPercentage>();
             public IEnumerable<Models.EarningDeduction> EarningDeductions { get; set; } = new List<Models.EarningDeduction>();
