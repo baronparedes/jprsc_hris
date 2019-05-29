@@ -299,7 +299,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 await _db.SaveChangesAsync();
                 
-                await CreatePayslipFiles(command, payrollProcessBatch);
+                //await CreatePayslipFiles(command, payrollProcessBatch);
 
                 return new CommandResult();
             }
