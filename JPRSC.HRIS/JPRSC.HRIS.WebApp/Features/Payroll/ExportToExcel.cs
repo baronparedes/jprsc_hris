@@ -418,8 +418,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Employee Code", "EmployeeCode", p => p.PayrollRecord.Employee.EmployeeCode),
                     new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Employee", "Employee", p => String.Format("{0}, {1}", p.PayrollRecord.Employee.LastName, p.PayrollRecord.Employee.FirstName)),
                     new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Regulary Pay", "RegularPay", p => String.Format("{0:n}", p.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + p.PayrollRecord.HoursWorkedValue.GetValueOrDefault())),
-                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Days Worked", "DaysWorked", p => String.Format("{0:n}", p.DailyTimeRecord.DaysWorked?.ToString() ?? "0")),
-                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Hours Worked", "HoursWorked", p => String.Format("{0:n}", p.DailyTimeRecord.HoursWorked?.ToString() ?? "0")),
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Days Worked", "DaysWorked", p => String.Format("{0:n}", p.DailyTimeRecord?.DaysWorked?.ToString() ?? "0")),
+                    new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Hours Worked", "HoursWorked", p => String.Format("{0:n}", p.DailyTimeRecord?.HoursWorked?.ToString() ?? "0")),
                     new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Overtime", "Overtime", p => String.Format("{0:n}", p.PayrollRecord.OvertimeValue.GetValueOrDefault())),
                     new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Overtime Worked", "OvertimeWorked", p => String.Format("{0:n}", p.Overtimes.Sum(ot => ot.NumberOfHours.GetValueOrDefault())))
                 };
@@ -437,8 +437,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 }
 
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("UT/Tardy", "UT/Tardy", p => String.Format("{0:n}", p.PayrollRecord.HoursUndertimeValue.GetValueOrDefault() + p.PayrollRecord.HoursLateValue.GetValueOrDefault())));
-                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Undertime Minutes", "UndertimeMinutes", p => String.Format("{0:n}", p.DailyTimeRecord.HoursUndertime.GetValueOrDefault() * 60)));
-                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Tardiness Minutes", "TardinessMinutes", p => String.Format("{0:n}", p.DailyTimeRecord.HoursLate.GetValueOrDefault() * 60)));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Undertime Minutes", "UndertimeMinutes", p => String.Format("{0:n}", p.DailyTimeRecord?.HoursUndertime.GetValueOrDefault() * 60)));
+                columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Tardiness Minutes", "TardinessMinutes", p => String.Format("{0:n}", p.DailyTimeRecord?.HoursLate.GetValueOrDefault() * 60)));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("COLA", "COLA", p => String.Format("{0:n}", p.PayrollRecord.COLADailyValue.GetValueOrDefault() + p.PayrollRecord.COLAHourlyValue.GetValueOrDefault() + p.PayrollRecord.COLAMonthlyValue.GetValueOrDefault())));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Earnings", "Earnings", p => String.Format("{0:n}", p.PayrollRecord.EarningsValue.GetValueOrDefault())));
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Total Earnings", "TotalEarnings", p => String.Format("{0:n}", p.PayrollRecord.TotalEarningsValue)));

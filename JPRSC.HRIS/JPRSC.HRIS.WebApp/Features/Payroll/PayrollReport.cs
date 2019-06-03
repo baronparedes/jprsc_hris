@@ -83,6 +83,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     .Where(dtr => !dtr.DeletedOn.HasValue && employeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && dtr.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
                     .ToListAsync();
 
+                var test = await _db
+                    .DailyTimeRecords
+                    .AsNoTracking()
+                    .Where(dtr => dtr.PayrollProcessBatchId.HasValue && dtr.PayrollProcessBatchId == payrollProcessBatch.Id)
+                    .ToListAsync();
+
                 var earningDeductionRecords = await _db
                     .EarningDeductionRecords
                     .AsNoTracking()
@@ -119,32 +125,40 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 foreach (var payrollRecord in payrollRecords)
                 {
-                    var payrollReportItem = new QueryResult.PayrollReportItem();
-                    payrollReportItem.PayrollRecord = payrollRecord;
-                    payrollReportItem.DailyTimeRecord = dailyTimeRecords.SingleOrDefault(dtr => dtr.EmployeeId == payrollRecord.EmployeeId);
-                    payrollReportItem.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
-                    payrollReportItem.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
-
-                    if (payrollRecord.AddedOn < marchFour2019)
+                    try
                     {
-                        payrollReportItem.Loans = loans
-                            .Where(l => l.EmployeeId == payrollRecord.EmployeeId)
-                            .Select(l => new Models.LoanDeduction
-                            {
-                                DeductionAmount = l.DeductionAmount,
-                                Loan = l,
-                                LoanId = l.Id,
-                                PayrollRecord = payrollRecord,
-                                PayrollRecordId = payrollRecord.Id
-                            })
-                            .ToList();
-                    }
-                    else
-                    {
-                        payrollReportItem.Loans = loanDeductions.Where(ld => ld.PayrollRecordId == payrollRecord.Id).ToList();
-                    }
+                        var payrollReportItem = new QueryResult.PayrollReportItem();
+                        payrollReportItem.PayrollRecord = payrollRecord;
+                        payrollReportItem.DailyTimeRecord = dailyTimeRecords.SingleOrDefault(dtr => dtr.EmployeeId == payrollRecord.EmployeeId);
+                        payrollReportItem.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
+                        payrollReportItem.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
 
-                    payrollReportItems.Add(payrollReportItem);
+                        if (payrollRecord.AddedOn < marchFour2019)
+                        {
+                            payrollReportItem.Loans = loans
+                                .Where(l => l.EmployeeId == payrollRecord.EmployeeId)
+                                .Select(l => new Models.LoanDeduction
+                                {
+                                    DeductionAmount = l.DeductionAmount,
+                                    Loan = l,
+                                    LoanId = l.Id,
+                                    PayrollRecord = payrollRecord,
+                                    PayrollRecordId = payrollRecord.Id
+                                })
+                                .ToList();
+                        }
+                        else
+                        {
+                            payrollReportItem.Loans = loanDeductions.Where(ld => ld.PayrollRecordId == payrollRecord.Id).ToList();
+                        }
+
+                        payrollReportItems.Add(payrollReportItem);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw;
+                    }
                 }
 
                 var payRates = await _db.PayPercentages.AsNoTracking().ToListAsync();
