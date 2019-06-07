@@ -222,9 +222,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                                 Amount = amount,
                                 EarningDeductionId = entry.Value.Id,
                                 EmployeeId = employee.Id,
-                                PayrollPeriodFrom = command.PayrollPeriodFrom,
+                                PayrollPeriodFrom = command.PayrollPeriodFrom?.Date,
                                 PayrollPeriodMonth = command.PayrollPeriodMonth,
-                                PayrollPeriodTo = command.PayrollPeriodTo
+                                PayrollPeriodTo = command.PayrollPeriodTo?.Date
                             };
                             earningDeductionRecordsToAdd.Add(earningDeductionRecord);
                         }

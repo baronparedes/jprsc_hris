@@ -351,9 +351,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             HoursWorked = hoursWorked,
                             HoursWorkedValue = (decimal?)hoursWorked * employee.HourlyRate,
                             MonthlyRate = employee.MonthlyRate,
-                            PayrollPeriodFrom = command.PayrollPeriodFrom,
+                            PayrollPeriodFrom = command.PayrollPeriodFrom?.Date,
                             PayrollPeriodMonth = command.PayrollPeriodMonth,
-                            PayrollPeriodTo = command.PayrollPeriodTo
+                            PayrollPeriodTo = command.PayrollPeriodTo?.Date
                         };
                         _db.DailyTimeRecords.Add(dailyTimeRecord);
                     }

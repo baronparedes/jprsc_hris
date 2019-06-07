@@ -128,9 +128,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     DeductedSSS = shouldDeductSSS,
                     DeductedTax = shouldDeductTax,
                     PayrollPeriod = command.PayrollPeriod,
-                    PayrollPeriodFrom = command.PayrollPeriodFrom,
+                    PayrollPeriodFrom = command.PayrollPeriodFrom?.Date,
                     PayrollPeriodMonth = command.PayrollPeriodMonth,
-                    PayrollPeriodTo = command.PayrollPeriodTo
+                    PayrollPeriodTo = command.PayrollPeriodTo?.Date
                 };
 
                 var previousPayrollProcessBatchesInMonth = new List<PayrollProcessBatch>();

@@ -162,9 +162,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             NumberOfHoursValue = overtimeUpload.NumberOfHoursValue,
                             PayPercentageName = overtimeUpload.PayPercentageName,
                             PayPercentagePercentage = overtimeUpload.PayPercentagePercentage,
-                            PayrollPeriodFrom = command.PayrollPeriodFrom,
+                            PayrollPeriodFrom = command.PayrollPeriodFrom?.Date,
                             PayrollPeriodMonth = command.PayrollPeriodMonth,
-                            PayrollPeriodTo = command.PayrollPeriodTo,
+                            PayrollPeriodTo = command.PayrollPeriodTo?.Date,
                             Reference = overtimeUpload.Reference,
                             To = command.PayrollPeriodTo
                         };
@@ -218,9 +218,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         HoursWorked = command.HoursWorked,
                         HoursWorkedValue = GetValue(command.HoursWorked, employee.HourlyRate),
                         MonthlyRate = employee.MonthlyRate,
-                        PayrollPeriodFrom = command.PayrollPeriodFrom,
+                        PayrollPeriodFrom = command.PayrollPeriodFrom?.Date,
                         PayrollPeriodMonth = command.PayrollPeriodMonth,
-                        PayrollPeriodTo = command.PayrollPeriodTo
+                        PayrollPeriodTo = command.PayrollPeriodTo?.Date
                     };
                     _db.DailyTimeRecords.Add(dailyTimeRecord);
                 }
@@ -248,9 +248,9 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             Amount = earningDeductionRecordUpload.Amount,
                             EarningDeductionId = earningDeductionRecordUpload.EarningDeductionId,
                             EmployeeId = command.EmployeeId,
-                            PayrollPeriodFrom = command.PayrollPeriodFrom,
+                            PayrollPeriodFrom = command.PayrollPeriodFrom?.Date,
                             PayrollPeriodMonth = command.PayrollPeriodMonth,
-                            PayrollPeriodTo = command.PayrollPeriodTo,
+                            PayrollPeriodTo = command.PayrollPeriodTo?.Date,
                         };
                         _db.EarningDeductionRecords.Add(earningDeductionRecord);
                     }
