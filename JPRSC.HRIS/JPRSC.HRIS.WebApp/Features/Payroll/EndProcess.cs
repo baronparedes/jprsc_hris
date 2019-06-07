@@ -249,7 +249,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var payrollProcessBatch = await _db
                     .PayrollProcessBatches
                     .Include(ppb => ppb.Client)
-                    .SingleOrDefaultAsync(ppb => ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && ppb.PayrollPeriodFrom == payrollPeriodFromDate && ppb.PayrollPeriodTo == payrollPeriodToDate && ppb.PayrollPeriod == command.PayrollPeriod && !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue);
+                    .SingleOrDefaultAsync(ppb => ppb.ClientId == command.ClientId && ppb.PayrollPeriod == command.PayrollPeriod && DbFunctions.TruncateTime(ppb.PayrollPeriodFrom) == payrollPeriodFromDate && DbFunctions.TruncateTime(ppb.PayrollPeriodTo) == payrollPeriodToDate && ppb.PayrollPeriod == command.PayrollPeriod && !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && !ppb.EndProcessedOn.HasValue);
 
                 if (payrollProcessBatch == null) throw new Exception("Unable to find payroll process batch.");
 
