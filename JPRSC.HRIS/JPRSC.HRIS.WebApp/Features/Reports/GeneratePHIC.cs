@@ -219,6 +219,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 }
 
                 return phicRecords
+                    .Where(p => p.TotalPHICEmployee > 0 || p.TotalPHICEmployer > 0)
                     .OrderBy(p => p.Employee.LastName)
                     .ThenBy(p => p.Employee.FirstName)
                     .ToList();

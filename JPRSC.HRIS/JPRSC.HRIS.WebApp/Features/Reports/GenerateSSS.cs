@@ -218,6 +218,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 }
 
                 return sssRecords
+                    .Where(sr => sr.TotalSSSEmployee > 0 || sr.TotalSSSEmployer > 0)
                     .OrderBy(sr => sr.Employee.LastName)
                     .ThenBy(sr => sr.Employee.FirstName)
                     .ToList();

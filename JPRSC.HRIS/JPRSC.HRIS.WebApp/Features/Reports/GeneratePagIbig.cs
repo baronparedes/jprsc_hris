@@ -219,6 +219,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 }
 
                 return pagIbigRecords
+                    .Where(pr => pr.TotalPagIbigEmployee > 0 || pr.TotalPagIbigEmployer > 0)
                     .OrderBy(pr => pr.Employee.LastName)
                     .ThenBy(pr => pr.Employee.FirstName)
                     .ToList();
