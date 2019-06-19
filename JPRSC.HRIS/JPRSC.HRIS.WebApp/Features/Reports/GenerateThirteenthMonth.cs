@@ -57,7 +57,12 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
             private bool BeBeforeToPayrollPeriodMonth(Query query, Month? fromPayrollPeriodMonth)
             {
-                return (int)fromPayrollPeriodMonth.Value <= (int)query.ToPayrollPeriodMonth.Value;
+                if (query.PayrollPeriodFromYear == query.PayrollPeriodToYear)
+                {
+                    return (int)fromPayrollPeriodMonth.Value <= (int)query.ToPayrollPeriodMonth.Value;
+                }
+
+                return true;
             }
 
             private bool BeOnOrBeforePayrollPeriodToYear(Query query, int payrollPeriodFromYear)
@@ -72,18 +77,28 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public string ClientName { get; set; }
             public int PayrollPeriodFromYear { get; set; }
             public int PayrollPeriodToYear { get; set; }
+            public Month? FromPayrollPeriodMonth { get; set; }
+            public int? FromPayrollPeriod { get; set; }
+            public Month? ToPayrollPeriodMonth { get; set; }
+            public int? ToPayrollPeriod { get; set; }
             public string DisplayMode { get; set; }
             public byte[] FileContent { get; set; }
             public string Filename { get; set; }
             public IList<ThirteenthMonthRecord> ThirteenthMonthRecords { get; set; } = new List<ThirteenthMonthRecord>();
+            public Query Query { get; set; }
 
             public IList<string> GetTotals(IList<ThirteenthMonthRecord> thirteenthMonthRecords)
             {
                 var totals = new List<string> { String.Empty, "TOTAL" };
 
-                for (var i = 1; i < 13; i++)
+                for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                 {
-                    totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Where(r => r.MonthRecords.ContainsKey(i)).Select(r => r.MonthRecords[i]).Sum(mr => mr.Total)));
+                    for (var j = 1; j < 13; j++)
+                    {
+                        var key = ValueTuple.Create(i, j);
+
+                        totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Where(r => r.MonthRecords.ContainsKey(key)).Select(r => r.MonthRecords[key]).Sum(mr => mr.Total)));
+                    }
                 }
 
                 totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Sum(r => r.Half)));
@@ -92,10 +107,25 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 return totals;
             }
 
+            public IList<string> GetMonthHeaders()
+            {
+                var monthHeaders = new List<string>();
+
+                var months = new List<string> { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
+
+                for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
+                {
+                    monthHeaders.AddRange(months);
+                }
+
+                return monthHeaders;
+            }
+
             public class ThirteenthMonthRecord
             {
                 public Employee Employee { get; set; }
-                public IDictionary<int, MonthRecord> MonthRecords { get; set; } = new Dictionary<int, MonthRecord>();
+                public IDictionary<ValueTuple<int, int>, MonthRecord> MonthRecords { get; set; } = new Dictionary<ValueTuple<int, int>, MonthRecord>();
+                public Query Query { get; set; }
 
                 public decimal Half => Whole / 2.0m;
                 public decimal Whole => MonthRecords.Select(mr => mr.Value).Sum(v => v.Total) / 12.0m;
@@ -105,48 +135,72 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 {
                     get
                     {
-                        var lineOne = new List<string> { $"{Employee.LastName}, {Employee.FirstName}{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}", $"{Employee.EmployeeCode}", String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty };
+                        var lineOne = new List<string> { $"{Employee.LastName}, {Employee.FirstName}{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}", $"{Employee.EmployeeCode}" };
+
+                        for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
+                        {
+                            lineOne.AddRange(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty });
+                        }
+                        lineOne.Add(String.Empty);
+                        lineOne.Add(String.Empty);
 
                         var lineTwo = new List<string> { String.Empty, "BASIC" };
-                        for (var i = 1; i < 13; i++)
+
+                        for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
-                            if (MonthRecords.ContainsKey(i))
+                            for (var j = 1; j < 13; j++)
                             {
-                                lineTwo.Add(String.Format("{0:n}", MonthRecords[i].Basic));
-                            }
-                            else
-                            {
-                                lineTwo.Add(String.Empty);
+                                var key = ValueTuple.Create(i, j);
+
+                                if (MonthRecords.ContainsKey(key))
+                                {
+                                    lineTwo.Add(String.Format("{0:n}", MonthRecords[key].Basic));
+                                }
+                                else
+                                {
+                                    lineTwo.Add(String.Empty);
+                                }
                             }
                         }
+
                         lineTwo.Add(String.Empty);
                         lineTwo.Add(String.Empty);
 
                         var lineThree = new List<string> { String.Empty, "UT/TARDINESS" };
-                        for (var i = 1; i < 13; i++)
+                        for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
-                            if (MonthRecords.ContainsKey(i))
+                            for (var j = 1; j < 13; j++)
                             {
-                                lineThree.Add(String.Format("{0:n}", MonthRecords[i].UTTardy));
-                            }
-                            else
-                            {
-                                lineThree.Add(String.Empty);
+                                var key = ValueTuple.Create(i, j);
+
+                                if (MonthRecords.ContainsKey(key))
+                                {
+                                    lineThree.Add(String.Format("{0:n}", MonthRecords[key].UTTardy));
+                                }
+                                else
+                                {
+                                    lineThree.Add(String.Empty);
+                                }
                             }
                         }
                         lineThree.Add(String.Empty);
                         lineThree.Add(String.Empty);
 
                         var lineFour = new List<string> { String.Empty, "TOTAL" };
-                        for (var i = 1; i < 13; i++)
+                        for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
-                            if (MonthRecords.ContainsKey(i))
+                            for (var j = 1; j < 13; j++)
                             {
-                                lineFour.Add(String.Format("{0:n}", MonthRecords[i].Total));
-                            }
-                            else
-                            {
-                                lineFour.Add(String.Empty);
+                                var key = ValueTuple.Create(i, j);
+
+                                if (MonthRecords.ContainsKey(key))
+                                {
+                                    lineFour.Add(String.Format("{0:n}", MonthRecords[key].Total));
+                                }
+                                else
+                                {
+                                    lineFour.Add(String.Empty);
+                                }
                             }
                         }
                         lineFour.Add(String.Format("{0:n}", Half));
@@ -159,6 +213,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
             public class MonthRecord
             {
+                public int Month { get; set; }
+                public int Year { get; set; }
                 public decimal Basic { get; set; }
                 public decimal UTTardy { get; set; }
                 public decimal Total => Basic - UTTardy;
@@ -200,6 +256,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         clientIds.Contains(ppb.ClientId.Value) &&
                         DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
                         DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate &&
+                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value).Value.Year == query.PayrollPeriodFromYear &&
                         ppb.PayrollPeriodMonth == query.FromPayrollPeriodMonth.Value &&
                         ppb.PayrollPeriod >= query.FromPayrollPeriod)
                     .ToListAsync();
@@ -212,6 +269,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         clientIds.Contains(ppb.ClientId.Value) &&
                         DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
                         DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate &&
+                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value).Value.Year == query.PayrollPeriodToYear &&
                         ppb.PayrollPeriodMonth == query.ToPayrollPeriodMonth.Value &&
                         ppb.PayrollPeriod <= query.ToPayrollPeriod)
                     .ToListAsync();
@@ -223,9 +281,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     .Where(ppb => !ppb.DeletedOn.HasValue &&
                         clientIds.Contains(ppb.ClientId.Value) &&
                         DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
-                        DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate &&
-                        ppb.PayrollPeriodMonth > query.FromPayrollPeriodMonth &&
-                        ppb.PayrollPeriodMonth < query.ToPayrollPeriodMonth)
+                        DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate)
                     .ToListAsync();
 
                 var payrollProcessBatches = payrollProcessBatchesInBeginningMonth
@@ -236,10 +292,24 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     .OrderBy(ppb => ppb.Id)
                     .ToList();
 
-                var thirteenthMonthRecords = GetThirteenthMonthRecords(payrollProcessBatches);
+                var thirteenthMonthRecords = GetThirteenthMonthRecords(query, payrollProcessBatches);
 
                 if (query.Destination == "Excel")
                 {
+                    var queryResult = new QueryResult
+                    {
+                        ClientId = query.ClientId,
+                        DisplayMode = query.DisplayMode,
+                        ThirteenthMonthRecords = thirteenthMonthRecords,
+                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
+                        PayrollPeriodToYear = query.PayrollPeriodToYear,
+                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
+                        FromPayrollPeriod = query.FromPayrollPeriod,
+                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
+                        ToPayrollPeriod = query.ToPayrollPeriod,
+                        Query = query
+                    };
+
                     var excelLines = new List<IList<string>>();
 
                     foreach (var thirteenthMonthRecord in thirteenthMonthRecords)
@@ -250,8 +320,17 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         }
                     }
 
-                    excelLines.Insert(0, new List<string> { "Employee Name", "Employee Code", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEPT", "OCT", "NOV", "DEC", "HALF", "13th Month Pay" });
-                    
+                    var header = new List<string> { "Employee Name", "Employee Code" };
+                    var monthHeaders = queryResult.GetMonthHeaders();
+                    foreach (var monthHeader in monthHeaders)
+                    {
+                        header.Add(monthHeader);
+                    }
+                    header.Add("HALF");
+                    header.Add("13th Month Pay");
+
+                    excelLines.Insert(0, header);
+
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
                     var reportFileNameBuilder = new StringBuilder(64);
@@ -272,11 +351,10 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                     reportFileNameBuilder.Append(".xlsx");
 
-                    return new QueryResult
-                    {
-                        FileContent = reportFileContent,
-                        Filename = reportFileNameBuilder.ToString()
-                    };
+                    queryResult.FileContent = reportFileContent;
+                    queryResult.Filename = reportFileNameBuilder.ToString();
+
+                    return queryResult;
                 }
                 else
                 {
@@ -294,47 +372,61 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         ThirteenthMonthRecords = thirteenthMonthRecords,
                         PayrollPeriodFromYear = query.PayrollPeriodFromYear,
                         PayrollPeriodToYear = query.PayrollPeriodToYear,
+                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
+                        FromPayrollPeriod = query.FromPayrollPeriod,
+                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
+                        ToPayrollPeriod = query.ToPayrollPeriod,
+                        Query = query
                     };
                 }
             }
 
-            private IList<QueryResult.ThirteenthMonthRecord> GetThirteenthMonthRecords(IList<PayrollProcessBatch> payrollProcessBatches)
+            private IList<QueryResult.ThirteenthMonthRecord> GetThirteenthMonthRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)
             {
                 var thirteenthMonthRecordsDictionary = new Dictionary<int, QueryResult.ThirteenthMonthRecord>();
 
-                for (var i = 1; i < 13; i++)
+                for (var i = query.PayrollPeriodFromYear; i <= query.PayrollPeriodToYear; i++)
                 {
-                    var payrollRecordsInMonth = payrollProcessBatches
-                        .Where(ppb => ppb.PayrollPeriodFrom.Value.Month == i)
-                        .SelectMany(ppb => ppb.PayrollRecords)
-                        .OrderBy(pr => pr.Employee.LastName)
-                        .ThenBy(pr => pr.Employee.FirstName)
-                        .ToList();
+                    var startingJ = 1;
+                    var endingJ = 13;
 
-                    foreach (var payrollRecord in payrollRecordsInMonth)
+                    for (var j = startingJ; j < endingJ; j++)
                     {
-                        if (!thirteenthMonthRecordsDictionary.ContainsKey(payrollRecord.EmployeeId.Value))
-                        {
-                            thirteenthMonthRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.ThirteenthMonthRecord { Employee = payrollRecord.Employee });
-                        }
+                        var payrollRecordsInMonth = payrollProcessBatches
+                            .Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i && ppb.PayrollPeriodFrom.Value.Month == j)
+                            .SelectMany(ppb => ppb.PayrollRecords)
+                            .OrderBy(pr => pr.Employee.LastName)
+                            .ThenBy(pr => pr.Employee.FirstName)
+                            .ToList();
 
-                        if (!thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.ContainsKey(i))
+                        foreach (var payrollRecord in payrollRecordsInMonth)
                         {
-                            thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.Add(i, new QueryResult.MonthRecord
+                            if (!thirteenthMonthRecordsDictionary.ContainsKey(payrollRecord.EmployeeId.Value))
                             {
-                                Basic = payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault(),
-                                UTTardy = payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault()
-                            });
-                        }
-                        else
-                        {
-                            thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords[i].Basic += payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault();
-                            thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords[i].UTTardy += payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault();
+                                thirteenthMonthRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.ThirteenthMonthRecord { Employee = payrollRecord.Employee, Query = query });
+                            }
+
+                            var key = ValueTuple.Create(i, j);
+                            if (!thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.ContainsKey(key))
+                            {
+                                thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.Add(key, new QueryResult.MonthRecord
+                                {
+                                    Basic = payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault(),
+                                    UTTardy = payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault(),
+                                    Month = j,
+                                    Year = i
+                                });
+                            }
+                            else
+                            {
+                                thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords[key].Basic += payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault();
+                                thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords[key].UTTardy += payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault();
+                            }
                         }
                     }
                 }
 
-                return thirteenthMonthRecordsDictionary.Select(d => d.Value).ToList();
+                return thirteenthMonthRecordsDictionary.Select(t => t.Value).OrderBy(t => t.Employee.LastName).ThenBy(t => t.Employee.FirstName).ToList();
             }
         }
     }
