@@ -63,6 +63,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             {
                 var clients = await _db.Clients
                     .Where(c => !c.DeletedOn.HasValue)
+                    .OrderBy(c => c.Name)
                     .ProjectToListAsync<QueryResult.Client>();
 
                 var loanTypes = await _db.LoanTypes

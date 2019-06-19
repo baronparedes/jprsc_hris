@@ -93,6 +93,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 var clients = await _db.Clients
                     .Include(c => c.PayrollProcessBatches)
                     .Where(c => !c.DeletedOn.HasValue)
+                    .OrderBy(c => c.Code)
                     .ProjectToListAsync<QueryResult.Client>();
 
                 foreach (var client in clients)

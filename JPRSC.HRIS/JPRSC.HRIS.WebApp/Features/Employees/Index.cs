@@ -55,6 +55,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             {
                 var clients = await _db.Clients
                     .Where(c => !c.DeletedOn.HasValue)
+                    .OrderBy(c => c.Code)
                     .ProjectToListAsync<QueryResult.Client>();
 
                 return new QueryResult

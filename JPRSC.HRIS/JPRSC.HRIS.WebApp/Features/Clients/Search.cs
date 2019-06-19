@@ -69,7 +69,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 }
 
                 var clients = await dbQuery
-                    .OrderBy(c => c.Id)
+                    .OrderBy(c => c.Code)
                     .PageBy(pageNumber, pageSize)
                     .ProjectToListAsync<QueryResult.Client>();
 

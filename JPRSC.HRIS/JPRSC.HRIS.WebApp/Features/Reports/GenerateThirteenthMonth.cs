@@ -108,129 +108,45 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         var lineOne = new List<string> { $"{Employee.LastName}, {Employee.FirstName}{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}", $"{Employee.EmployeeCode}", String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty };
 
                         var lineTwo = new List<string> { String.Empty, "BASIC" };
-                        if (ThirteenthMonthMode == "December")
+                        for (var i = 1; i < 13; i++)
                         {
-                            for (var i = 1; i < 13; i++)
+                            if (MonthRecords.ContainsKey(i))
                             {
-                                if (MonthRecords.ContainsKey(i))
-                                {
-                                    lineTwo.Add(String.Format("{0:n}", MonthRecords[i].Basic));
-                                }
-                                else
-                                {
-                                    lineTwo.Add(String.Empty);
-                                }
+                                lineTwo.Add(String.Format("{0:n}", MonthRecords[i].Basic));
                             }
-                        }
-                        else if (ThirteenthMonthMode == "October")
-                        {
-                            for (var i = 11; i < 13; i++)
+                            else
                             {
-                                if (MonthRecords.ContainsKey(i))
-                                {
-                                    lineTwo.Add(String.Format("{0:n}", MonthRecords[i].Basic));
-                                }
-                                else
-                                {
-                                    lineTwo.Add(String.Empty);
-                                }
-                            }
-                            for (var i = 1; i < 11; i++)
-                            {
-                                if (MonthRecords.ContainsKey(i))
-                                {
-                                    lineTwo.Add(String.Format("{0:n}", MonthRecords[i].Basic));
-                                }
-                                else
-                                {
-                                    lineTwo.Add(String.Empty);
-                                }
+                                lineTwo.Add(String.Empty);
                             }
                         }
                         lineTwo.Add(String.Empty);
                         lineTwo.Add(String.Empty);
 
                         var lineThree = new List<string> { String.Empty, "UT/TARDINESS" };
-                        if (ThirteenthMonthMode == "December")
+                        for (var i = 1; i < 13; i++)
                         {
-                            for (var i = 1; i < 13; i++)
+                            if (MonthRecords.ContainsKey(i))
                             {
-                                if (MonthRecords.ContainsKey(i))
-                                {
-                                    lineThree.Add(String.Format("{0:n}", MonthRecords[i].UTTardy));
-                                }
-                                else
-                                {
-                                    lineThree.Add(String.Empty);
-                                }
+                                lineThree.Add(String.Format("{0:n}", MonthRecords[i].UTTardy));
                             }
-                        }
-                        else if (ThirteenthMonthMode == "October")
-                        {
-                            for (var i = 11; i < 13; i++)
+                            else
                             {
-                                if (MonthRecords.ContainsKey(i))
-                                {
-                                    lineThree.Add(String.Format("{0:n}", MonthRecords[i].UTTardy));
-                                }
-                                else
-                                {
-                                    lineThree.Add(String.Empty);
-                                }
-                            }
-                            for (var i = 1; i < 11; i++)
-                            {
-                                if (MonthRecords.ContainsKey(i))
-                                {
-                                    lineThree.Add(String.Format("{0:n}", MonthRecords[i].UTTardy));
-                                }
-                                else
-                                {
-                                    lineThree.Add(String.Empty);
-                                }
+                                lineThree.Add(String.Empty);
                             }
                         }
                         lineThree.Add(String.Empty);
                         lineThree.Add(String.Empty);
 
                         var lineFour = new List<string> { String.Empty, "TOTAL" };
-                        if (ThirteenthMonthMode == "December")
+                        for (var i = 1; i < 13; i++)
                         {
-                            for (var i = 1; i < 13; i++)
+                            if (MonthRecords.ContainsKey(i))
                             {
-                                if (MonthRecords.ContainsKey(i))
-                                {
-                                    lineFour.Add(String.Format("{0:n}", MonthRecords[i].Total));
-                                }
-                                else
-                                {
-                                    lineFour.Add(String.Empty);
-                                }
+                                lineFour.Add(String.Format("{0:n}", MonthRecords[i].Total));
                             }
-                        }
-                        else if (ThirteenthMonthMode == "October")
-                        {
-                            for (var i = 11; i < 13; i++)
+                            else
                             {
-                                if (MonthRecords.ContainsKey(i))
-                                {
-                                    lineFour.Add(String.Format("{0:n}", MonthRecords[i].Total));
-                                }
-                                else
-                                {
-                                    lineFour.Add(String.Empty);
-                                }
-                            }
-                            for (var i = 1; i < 11; i++)
-                            {
-                                if (MonthRecords.ContainsKey(i))
-                                {
-                                    lineFour.Add(String.Format("{0:n}", MonthRecords[i].Total));
-                                }
-                                else
-                                {
-                                    lineFour.Add(String.Empty);
-                                }
+                                lineFour.Add(String.Empty);
                             }
                         }
                         lineFour.Add(String.Format("{0:n}", Half));

@@ -39,7 +39,7 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
 
             private async Task<IList<SelectListItem>> GetClientsList()
             {
-                var clients = await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync();
+                var clients = await _db.Clients.Where(c => !c.DeletedOn.HasValue).OrderBy(c => c.Code).ToListAsync();
 
                 return clients
                     .Select(c => new SelectListItem

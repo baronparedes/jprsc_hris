@@ -146,7 +146,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
             private async Task<IList<SelectListItem>> GetClientsList()
             {
-                var clients = await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync();
+                var clients = await _db.Clients.Where(c => !c.DeletedOn.HasValue).OrderBy(c => c.Name).ToListAsync();
 
                 return clients
                     .Select(c => new SelectListItem
