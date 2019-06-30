@@ -147,6 +147,18 @@
                                 </div>
                             </div>
                             <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">
+                                <label class="col-md-4 col-lg-3 control-label">From Year</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <select class="form-control" name="PayrollPeriodFromYear" ng-model="vm.payrollPeriodFromYear">
+                                        @for (var i = currentYear; i > minYear; i--)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                    <span ng-show="vm.validationErrors.payrollPeriodFromYear" class="help-block">{{vm.validationErrors.payrollPeriodFromYear.join(' ')}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">
                                 <label class="col-md-4 col-lg-3 control-label">To Payroll Period Month</label>
                                 <div class="col-md-8 col-lg-9">
                                     <select class="form-control" name="ToPayrollPeriodMonth" ng-model="vm.toPayrollPeriodMonth">
@@ -171,18 +183,6 @@
                                 <div class="col-md-8 col-lg-9">
                                     <input type="text" class="form-control" name="ToPayrollPeriod" ng-model="vm.toPayrollPeriod" />
                                     <span ng-show="vm.validationErrors.toPayrollPeriod" class="help-block">{{vm.validationErrors.toPayrollPeriod.join(' ')}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">
-                                <label class="col-md-4 col-lg-3 control-label">From Year</label>
-                                <div class="col-md-8 col-lg-9">
-                                    <select class="form-control" name="PayrollPeriodFromYear" ng-model="vm.payrollPeriodFromYear">
-                                        @for (var i = currentYear; i > minYear; i--)
-                                        {
-                                            <option value="@i">@i</option>
-                                        }
-                                    </select>
-                                    <span ng-show="vm.validationErrors.payrollPeriodFromYear" class="help-block">{{vm.validationErrors.payrollPeriodFromYear.join(' ')}}</span>
                                 </div>
                             </div>
                             <div class="form-group" ng-show="vm.reportType == 'ThirteenthMonth'">

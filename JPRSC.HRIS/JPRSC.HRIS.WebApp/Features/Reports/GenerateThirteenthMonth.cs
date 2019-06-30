@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
-using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Features.Payroll;
 using JPRSC.HRIS.WebApp.Infrastructure.Excel;
 using MediatR;
 using System;
@@ -112,11 +110,31 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 var monthHeaders = new List<string>();
 
                 var months = new List<string> { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
+                var offsetMonths = new List<string>();
 
                 for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                 {
                     monthHeaders.AddRange(months);
+                    //if (i == Query.PayrollPeriodFromYear)
+                    //{
+                    //    for (var j = 0; j < months.Count; j++)
+                    //    {
+                    //        if (j < (int)Query.FromPayrollPeriodMonth / 10)
+                    //        {
+                    //            offsetMonths.Add(months[j]);
+                    //            continue;
+                    //        }
+
+                    //        monthHeaders.Add(months[j]);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    monthHeaders.AddRange(months);
+                    //}
                 }
+
+                monthHeaders.AddRange(offsetMonths);
 
                 return monthHeaders;
             }
@@ -242,57 +260,84 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 var clientIds = clients.Select(c => c.Id).ToList();
 
-                var startDate = new DateTime(query.PayrollPeriodFromYear, 1, 1);
-                var endDate = new DateTime(query.PayrollPeriodToYear, 12, 31);
+                var allPayrollProcessBatches = new List<PayrollProcessBatch>();
 
-                var fromPayrollPeriodMonthAsInt = (int)query.FromPayrollPeriodMonth.Value;
-                var toPayrollPeriodMonthAsInt = (int)query.ToPayrollPeriodMonth.Value;
+                for (var i = query.PayrollPeriodFromYear; i <= query.PayrollPeriodToYear; i++)
+                {
+                    DateTime startDate;
+                    DateTime endDate;
 
-                var payrollProcessBatchesInBeginningMonth = await _db.PayrollProcessBatches
-                    .Include(ppb => ppb.PayrollRecords)
-                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                    .Where(ppb => !ppb.DeletedOn.HasValue &&
-                        clientIds.Contains(ppb.ClientId.Value) &&
-                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
-                        DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate &&
-                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value).Value.Year == query.PayrollPeriodFromYear &&
-                        ppb.PayrollPeriodMonth == query.FromPayrollPeriodMonth.Value &&
-                        ppb.PayrollPeriod >= query.FromPayrollPeriod)
-                    .ToListAsync();
+                    if (i == query.PayrollPeriodFromYear)
+                    {
+                        startDate = new DateTime(i, (int)query.FromPayrollPeriodMonth / 10, 1);
+                    }
+                    else
+                    {
+                        startDate = new DateTime(i, 1, 1);
+                    }
 
-                var payrollProcessBatchesInEndingMonth = await _db.PayrollProcessBatches
-                    .Include(ppb => ppb.PayrollRecords)
-                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                    .Where(ppb => !ppb.DeletedOn.HasValue &&
-                        clientIds.Contains(ppb.ClientId.Value) &&
-                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
-                        DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate &&
-                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value).Value.Year == query.PayrollPeriodToYear &&
-                        ppb.PayrollPeriodMonth == query.ToPayrollPeriodMonth.Value &&
-                        ppb.PayrollPeriod <= query.ToPayrollPeriod)
-                    .ToListAsync();
+                    if (i == query.PayrollPeriodToYear)
+                    {
+                        endDate = new DateTime(i, (int)query.ToPayrollPeriodMonth / 10, 1).AddMonths(1).AddDays(-1);
+                    }
+                    else
+                    {
+                        endDate = new DateTime(i, 12, 31);
+                    }
 
-                var payrollProcessBatchesInBetween = await _db.PayrollProcessBatches
-                    .Include(ppb => ppb.PayrollRecords)
-                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                    .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                    .Where(ppb => !ppb.DeletedOn.HasValue &&
-                        clientIds.Contains(ppb.ClientId.Value) &&
-                        DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
-                        DbFunctions.TruncateTime(ppb.PayrollPeriodTo.Value) <= endDate)
-                    .ToListAsync();
+                    var fromPayrollPeriodMonthAsInt = (int)query.FromPayrollPeriodMonth.Value;
+                    var toPayrollPeriodMonthAsInt = (int)query.ToPayrollPeriodMonth.Value;
 
-                var payrollProcessBatches = payrollProcessBatchesInBeginningMonth
-                    .Concat(payrollProcessBatchesInBetween)
-                    .Concat(payrollProcessBatchesInEndingMonth)
+                    var payrollProcessBatchesInBeginningMonth = await _db.PayrollProcessBatches
+                        .Include(ppb => ppb.PayrollRecords)
+                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                        .Where(ppb => !ppb.DeletedOn.HasValue &&
+                            clientIds.Contains(ppb.ClientId.Value) &&
+                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
+                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value).Value.Year == i &&
+                            ppb.PayrollPeriodMonth == query.FromPayrollPeriodMonth.Value &&
+                            ppb.PayrollPeriod >= query.FromPayrollPeriod)
+                        .ToListAsync();
+
+                    var payrollProcessBatchesInEndingMonth = await _db.PayrollProcessBatches
+                        .Include(ppb => ppb.PayrollRecords)
+                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                        .Where(ppb => !ppb.DeletedOn.HasValue &&
+                            clientIds.Contains(ppb.ClientId.Value) &&
+                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
+                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value).Value.Year == i &&
+                            ppb.PayrollPeriodMonth == query.ToPayrollPeriodMonth.Value &&
+                            ppb.PayrollPeriod <= query.ToPayrollPeriod)
+                        .ToListAsync();
+
+                    var payrollProcessBatchesInBetween = await _db.PayrollProcessBatches
+                        .Include(ppb => ppb.PayrollRecords)
+                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                        .Where(ppb => !ppb.DeletedOn.HasValue &&
+                            clientIds.Contains(ppb.ClientId.Value) &&
+                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate)
+                        .ToListAsync();
+
+                    var payrollProcessBatches = payrollProcessBatchesInBeginningMonth
+                        .Concat(payrollProcessBatchesInBetween)
+                        .Concat(payrollProcessBatchesInEndingMonth);
+
+                    allPayrollProcessBatches.AddRange(payrollProcessBatches);
+                }
+
+                allPayrollProcessBatches = allPayrollProcessBatches
                     .GroupBy(ppb => ppb.Id)
                     .Select(g => g.First())
                     .OrderBy(ppb => ppb.Id)
                     .ToList();
 
-                var thirteenthMonthRecords = GetThirteenthMonthRecords(query, payrollProcessBatches);
+                var thirteenthMonthRecords = GetThirteenthMonthRecords(query, allPayrollProcessBatches);
 
                 if (query.Destination == "Excel")
                 {
@@ -390,10 +435,21 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     var startingJ = 1;
                     var endingJ = 13;
 
+                    if (i == query.PayrollPeriodFromYear)
+                    {
+                        startingJ = (int)query.FromPayrollPeriodMonth / 10;
+                    }
+
+                    if (i == query.PayrollPeriodToYear)
+                    {
+                        endingJ = (int)query.ToPayrollPeriodMonth / 10;
+                    }
+
                     for (var j = startingJ; j < endingJ; j++)
                     {
                         var payrollRecordsInMonth = payrollProcessBatches
-                            .Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i && ppb.PayrollPeriodFrom.Value.Month == j)
+                            //.Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i && ppb.PayrollPeriodFrom.Value.Month == j)
+                            .Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i && (int)ppb.PayrollPeriodMonth / 10 == j)
                             .SelectMany(ppb => ppb.PayrollRecords)
                             .OrderBy(pr => pr.Employee.LastName)
                             .ThenBy(pr => pr.Employee.FirstName)
