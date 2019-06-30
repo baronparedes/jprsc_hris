@@ -192,6 +192,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     .GroupBy(ppb => ppb.PayrollPeriodMonth)
                     .ToList();
 
+                var sssRanges = await _db.SSSRecords
+                    .ToListAsync();
+
                 foreach (var batch in payrollProcessBatchesPerMonth)
                 {
                     var payrollRecordsInBatchPerEmployee = batch
@@ -205,13 +208,17 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
+                        
+                        
+
+
                         var sssRecord = new QueryResult.SSSRecord();
                         sssRecord.CompanySSS = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.SSS;
                         sssRecord.SSSDeductionBasis = employeePayrollRecords.Sum(pr => pr.SSSDeductionBasis.GetValueOrDefault());
                         sssRecord.Employee = sampleEmployee;
                         sssRecord.NetPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
                         sssRecord.TotalSSSEmployee = employeePayrollRecords.Sum(pr => pr.SSSValueEmployee.GetValueOrDefault());
-                        sssRecord.TotalSSSEmployer = employeePayrollRecords.Sum(pr => pr.SSSValueEmployer.GetValueOrDefault());
+                        sssRecord.TotalSSSEmployer = employeePayrollRecords.Sum(pr => pr.SSSValueEmployer.GetValueOrDefault() + GetECC(sssRanges, pr.SSSDeductionBasis.GetValueOrDefault()));
 
                         sssRecords.Add(sssRecord);
                     }
@@ -222,6 +229,24 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     .OrderBy(sr => sr.Employee.LastName)
                     .ThenBy(sr => sr.Employee.FirstName)
                     .ToList();
+            }
+
+            private decimal GetECC(IList<SSSRecord> sssRanges, decimal deductionBasis)
+            {
+                SSSRecord matchingRange = null;
+
+                try
+                {
+                    matchingRange = sssRanges
+                        .OrderBy(s => s.Range1)
+                        .First(s => s.Range1 > deductionBasis);
+                }
+                catch
+                {
+                    throw new Exception($"Matching SSS range not found for amount {deductionBasis}");
+                }
+
+                return matchingRange.ECC.GetValueOrDefault();
             }
         }
     }
