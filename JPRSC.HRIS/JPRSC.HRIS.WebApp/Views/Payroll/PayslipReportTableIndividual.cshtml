@@ -30,7 +30,7 @@
                                 <tr>
                                     <td style="text-align: right;">Basic pay:</td>
                                     <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + Model.Item2.PayrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
-                                    <td style="text-align: left;">@String.Format("{0:n} days/(months) and {1:n} hours", Model.Item2.DailyTimeRecord.DaysWorked.GetValueOrDefault(), Model.Item2.DailyTimeRecord.HoursWorked.GetValueOrDefault())</td>
+                                    <td style="text-align: left;">@String.Format("{0:n} days/(months) and {1:n} hours", Model.Item2.DailyTimeRecord?.DaysWorked.GetValueOrDefault(), Model.Item2.DailyTimeRecord?.HoursWorked.GetValueOrDefault())</td>
 
                                 </tr>
                                 <tr>
