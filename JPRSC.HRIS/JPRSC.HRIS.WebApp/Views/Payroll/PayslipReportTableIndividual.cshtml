@@ -23,25 +23,22 @@
                         <table class="table table-bordered table-condensed no-outside-border" style="margin-bottom: 0px;">
                             <tbody>
                                 <tr>
-                                    <td>&nbsp;</td>
+                                    <td style="min-width: 100px;">&nbsp;</td>
                                     <td>Earnings</td>
-                                    <td>&nbsp;</td>
+                                    <td style="min-width: 170px;">&nbsp;</td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align: right;">Basic pay:</td>
+                                    <td style="text-align: right; min-width: 100px;">Basic pay:</td>
                                     <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.DaysWorkedValue.GetValueOrDefault() + Model.Item2.PayrollRecord.HoursWorkedValue.GetValueOrDefault())</td>
-                                    <td style="text-align: left;">@String.Format("{0:n} days/(months) and {1:n} hours", Model.Item2.DailyTimeRecord?.DaysWorked.GetValueOrDefault(), Model.Item2.DailyTimeRecord?.HoursWorked.GetValueOrDefault())</td>
-
+                                    <td style="text-align: left; min-width: 170px;">@String.Format("{0:n} days/(months) and {1:n} hours", Model.Item2.DailyTimeRecord?.DaysWorked.GetValueOrDefault(), Model.Item2.DailyTimeRecord?.HoursWorked.GetValueOrDefault())</td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align: right;">Overtime:</td>
+                                    <td style="text-align: right; min-width: 100px;">Overtime:</td>
                                     <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.OvertimeValue.GetValueOrDefault())</td>
-                                    <td>&nbsp;</td>
-
+                                    <td style="min-width: 170px;">&nbsp;</td>
                                 </tr>
-
                                 <tr>
-                                    <td style="height: 100px;">&nbsp;</td>
+                                    <td style="height: 100px; min-width: 100px;">&nbsp;</td>
                                     @if (Model.Item2.Overtimes.Where(ot => ot.NumberOfHoursValue.GetValueOrDefault() > 0).Any())
                                     {
                                         <td class="particulars">
@@ -51,7 +48,7 @@
                                             }
 
                                         </td>
-                                        <td class="particulars">
+                                        <td class="particulars" style="min-width: 170px;">
                                             @foreach (var overtime in Model.Item2.Overtimes.Where(ot => ot.NumberOfHoursValue.GetValueOrDefault() > 0))
                                             {
                                                 <div>@String.Format("{0:n} hours", overtime.NumberOfHours.GetValueOrDefault())</div>
@@ -61,24 +58,21 @@
                                     else
                                     {
                                         <td><div style="font-style: italic;">-- No Overtimes --</div></td>
-                                        <td>&nbsp;</td>
+                                        <td style="min-width: 170px;">&nbsp;</td>
                                     }
                                 </tr>
-
                                 <tr>
-                                    <td style="text-align: right;">COLA:</td>
+                                    <td style="text-align: right; min-width: 100px;">COLA:</td>
                                     <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.COLADailyValue.GetValueOrDefault() + Model.Item2.PayrollRecord.COLAHourlyValue.GetValueOrDefault() + Model.Item2.PayrollRecord.COLAMonthlyValue.GetValueOrDefault())</td>
                                     <td>&nbsp;</td>
-
                                 </tr>
                                 <tr>
-                                    <td style="text-align: right;">Other earnings:</td>
+                                    <td style="text-align: right; min-width: 100px;">Other earnings:</td>
                                     <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.EarningsValue.GetValueOrDefault())</td>
-                                    <td>&nbsp;</td>
-
+                                    <td style="min-width: 170px;">&nbsp;</td>
                                 </tr>
                                 <tr>
-                                    <td style="height: 177px;">&nbsp;</td>
+                                    <td style="height: 177px; min-width: 100px;">&nbsp;</td>
                                     <td class="particulars">
                                         @{
                                             var earningItems = Model.Item2.EarningDeductionRecords.Where(e => e.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings && e.Amount.GetValueOrDefault() > 0);
@@ -95,12 +89,12 @@
                                             <div style="font-style: italic;">-- No Earnings --</div>
                                         }
                                     </td>
-                                    <td>&nbsp;</td>
+                                    <td style="min-width: 170px;">&nbsp;</td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align: right;">Total Earnings:</td>
+                                    <td style="text-align: right; min-width: 100px;">Total Earnings:</td>
                                     <td>@String.Format("P{0:n}", Model.Item2.PayrollRecord.TotalEarningsValue)</td>
-                                    <td>&nbsp;</td>
+                                    <td style="min-width: 170px;">&nbsp;</td>
                                 </tr>
                             </tbody>
                         </table>
