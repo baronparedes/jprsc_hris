@@ -110,31 +110,24 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 var monthHeaders = new List<string>();
 
                 var months = new List<string> { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
-                var offsetMonths = new List<string>();
 
                 for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                 {
-                    monthHeaders.AddRange(months);
-                    //if (i == Query.PayrollPeriodFromYear)
-                    //{
-                    //    for (var j = 0; j < months.Count; j++)
-                    //    {
-                    //        if (j < (int)Query.FromPayrollPeriodMonth / 10)
-                    //        {
-                    //            offsetMonths.Add(months[j]);
-                    //            continue;
-                    //        }
+                    //monthHeaders.AddRange(months);
+                    if (i == Query.PayrollPeriodFromYear)
+                    {
+                        for (var j = 0; j < months.Count; j++)
+                        {
+                            if (j + 1 < (int)Query.FromPayrollPeriodMonth / 10) continue;
 
-                    //        monthHeaders.Add(months[j]);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    monthHeaders.AddRange(months);
-                    //}
+                            monthHeaders.Add(months[j]);
+                        }
+                    }
+                    else
+                    {
+                        monthHeaders.AddRange(months);
+                    }
                 }
-
-                monthHeaders.AddRange(offsetMonths);
 
                 return monthHeaders;
             }
@@ -153,11 +146,24 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 {
                     get
                     {
-                        var lineOne = new List<string> { $"{Employee.LastName}, {Employee.FirstName}{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}", $"{Employee.EmployeeCode}" };
+                        var monthsPlaceholder = new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty };
 
+                        var lineOne = new List<string> { $"{Employee.LastName}, {Employee.FirstName}{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}", $"{Employee.EmployeeCode}" };
                         for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
-                            lineOne.AddRange(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty });
+                            if (i == Query.PayrollPeriodFromYear)
+                            {
+                                for (var j = 0; j < monthsPlaceholder.Count; j++)
+                                {
+                                    if (j + 1 < (int)Query.FromPayrollPeriodMonth / 10) continue;
+
+                                    lineOne.Add(monthsPlaceholder[j]);
+                                }
+                            }
+                            else
+                            {
+                                lineOne.AddRange(monthsPlaceholder);
+                            }
                         }
                         lineOne.Add(String.Empty);
                         lineOne.Add(String.Empty);
@@ -166,7 +172,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                         for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
-                            for (var j = 1; j < 13; j++)
+                            var startingJ = 1;
+
+                            if (i == Query.PayrollPeriodFromYear)
+                            {
+                                startingJ = (int)Query.FromPayrollPeriodMonth / 10;
+                            }
+
+                            for (var j = startingJ; j < 13; j++)
                             {
                                 var key = ValueTuple.Create(i, j);
 
@@ -187,7 +200,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         var lineThree = new List<string> { String.Empty, "UT/TARDINESS" };
                         for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
-                            for (var j = 1; j < 13; j++)
+                            var startingJ = 1;
+
+                            if (i == Query.PayrollPeriodFromYear)
+                            {
+                                startingJ = (int)Query.FromPayrollPeriodMonth / 10;
+                            }
+
+                            for (var j = startingJ; j < 13; j++)
                             {
                                 var key = ValueTuple.Create(i, j);
 
@@ -207,7 +227,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         var lineFour = new List<string> { String.Empty, "TOTAL" };
                         for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
-                            for (var j = 1; j < 13; j++)
+                            var startingJ = 1;
+
+                            if (i == Query.PayrollPeriodFromYear)
+                            {
+                                startingJ = (int)Query.FromPayrollPeriodMonth / 10;
+                            }
+
+                            for (var j = startingJ; j < 13; j++)
                             {
                                 var key = ValueTuple.Create(i, j);
 
