@@ -303,6 +303,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         startDate = new DateTime(i, 1, 1);
                     }
 
+                    startDate = startDate.AddMonths(-1);
+
                     if (i == query.PayrollPeriodToYear)
                     {
                         endDate = new DateTime(i, (int)query.ToPayrollPeriodMonth / 10, 1).AddMonths(1).AddDays(-1);
@@ -323,8 +325,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                             clientIds.Contains(ppb.ClientId.Value) &&
                             DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
                             DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
-                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value).Value.Year == i &&
-                            ppb.PayrollPeriodMonth == query.FromPayrollPeriodMonth.Value &&
+                            (int)ppb.PayrollPeriodMonth == fromPayrollPeriodMonthAsInt &&
                             ppb.PayrollPeriod >= query.FromPayrollPeriod)
                         .ToListAsync();
 
@@ -336,8 +337,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                             clientIds.Contains(ppb.ClientId.Value) &&
                             DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
                             DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
-                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value).Value.Year == i &&
-                            ppb.PayrollPeriodMonth == query.ToPayrollPeriodMonth.Value &&
+                            (int)ppb.PayrollPeriodMonth == toPayrollPeriodMonthAsInt &&
                             ppb.PayrollPeriod <= query.ToPayrollPeriod)
                         .ToListAsync();
 
@@ -348,7 +348,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         .Where(ppb => !ppb.DeletedOn.HasValue &&
                             clientIds.Contains(ppb.ClientId.Value) &&
                             DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
-                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate)
+                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
+                            (int)ppb.PayrollPeriodMonth > fromPayrollPeriodMonthAsInt &&
+                            (int)ppb.PayrollPeriodMonth < toPayrollPeriodMonthAsInt)
                         .ToListAsync();
 
                     var payrollProcessBatches = payrollProcessBatchesInBeginningMonth
@@ -457,6 +459,44 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             {
                 var thirteenthMonthRecordsDictionary = new Dictionary<int, QueryResult.ThirteenthMonthRecord>();
 
+                if (query.FromPayrollPeriodMonth == Month.January)
+                {
+                    var j = 1;
+
+                    var payrollRecordsInMonth = payrollProcessBatches
+                            //.Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i && ppb.PayrollPeriodFrom.Value.Month == j)
+                            .Where(ppb => ppb.PayrollPeriodFrom.Value.Year == query.PayrollPeriodFromYear - 1 && (int)ppb.PayrollPeriodMonth / 10 == j)
+                            .SelectMany(ppb => ppb.PayrollRecords)
+                            .OrderBy(pr => pr.Employee.LastName)
+                            .ThenBy(pr => pr.Employee.FirstName)
+                            .ToList();
+
+                    foreach (var payrollRecord in payrollRecordsInMonth)
+                    {
+                        if (!thirteenthMonthRecordsDictionary.ContainsKey(payrollRecord.EmployeeId.Value))
+                        {
+                            thirteenthMonthRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.ThirteenthMonthRecord { Employee = payrollRecord.Employee, Query = query });
+                        }
+
+                        var key = ValueTuple.Create(query.PayrollPeriodFromYear, j);
+                        if (!thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.ContainsKey(key))
+                        {
+                            thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.Add(key, new QueryResult.MonthRecord
+                            {
+                                Basic = payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault(),
+                                UTTardy = payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault(),
+                                Month = j,
+                                Year = query.PayrollPeriodFromYear
+                            });
+                        }
+                        else
+                        {
+                            thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords[key].Basic += payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault();
+                            thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords[key].UTTardy += payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault();
+                        }
+                    }
+                }
+
                 for (var i = query.PayrollPeriodFromYear; i <= query.PayrollPeriodToYear; i++)
                 {
                     var startingJ = 1;
@@ -472,7 +512,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         endingJ = (int)query.ToPayrollPeriodMonth / 10;
                     }
 
-                    for (var j = startingJ; j < endingJ; j++)
+                    for (var j = startingJ; j <= endingJ; j++)
                     {
                         var payrollRecordsInMonth = payrollProcessBatches
                             //.Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i && ppb.PayrollPeriodFrom.Value.Month == j)
