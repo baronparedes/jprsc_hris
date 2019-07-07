@@ -16,6 +16,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 {
     public class GenerateSingleLoanType
     {
+        private const int HDMFCALL_ID = 7;
+        private const int HDMFL_ID = 10;
+
         public class Query : IRequest<QueryResult>
         {
             public int? ClientId { get; set; }
@@ -40,6 +43,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public Month? PayrollPeriodMonthMonth { get; set; }
             public int PayrollPeriodYear { get; set; }
             public IList<LoanRecord> LoanRecords { get; set; } = new List<LoanRecord>();
+            public string SSSOrPagibigHeader { get; set; }
 
             public class LoanType
             {
@@ -52,6 +56,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             {
                 public Loan Loan { get; set; }
                 public decimal? DeductionAmount { get; set; }
+                public string SSSOrPagIbigNumber { get; set; }
 
                 public IList<string> DisplayLine
                 {
@@ -59,7 +64,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         var line = new List<string>();
 
-                        line.Add(Loan.Employee.SSS);
+                        line.Add(SSSOrPagIbigNumber);
                         line.Add(Loan.Employee.LastName);
                         line.Add(Loan.Employee.FirstName);
                         line.Add(String.IsNullOrWhiteSpace(Loan.Employee.MiddleName) ? null : Loan.Employee.MiddleName.Trim().First().ToString());
@@ -123,8 +128,10 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 if (query.Destination == "Excel")
                 {
+                    var sssOrPagibig = query.LoanTypeId == HDMFCALL_ID || query.LoanTypeId == HDMFL_ID ? "Employee PagIbig No." : "Employee SSS No.";
+
                     var excelLines = loanRecords.Select(pr => pr.DisplayLine).ToList();
-                    excelLines.Insert(0, new List<string> { "Employee SSS No.", "Last Name", "First Name", "Middle Initial", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Monthly Amortization", "AMPSDG", "Status", "Effective Date" });
+                    excelLines.Insert(0, new List<string> { sssOrPagibig, "Last Name", "First Name", "Middle Initial", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Monthly Amortization", "AMPSDG", "Status", "Effective Date" });
                     excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", loanRecords.Sum(sr => sr.DeductionAmount.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
@@ -185,7 +192,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         LoanRecords = loanRecords,
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
                         PayrollPeriodMonthMonth = payrollPeriodMonth,
-                        PayrollPeriodYear = query.PayrollPeriodYear
+                        PayrollPeriodYear = query.PayrollPeriodYear,
+                        SSSOrPagibigHeader = query.LoanTypeId == HDMFCALL_ID || query.LoanTypeId == HDMFL_ID ? "Employee PagIbig No." : "Employee SSS No."
                     };
                 }
             }
@@ -239,6 +247,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     .Select(l => new QueryResult.LoanRecord
                     {
                         Loan = l.Loan,
+                        SSSOrPagIbigNumber = l.Loan.LoanTypeId == HDMFCALL_ID || l.Loan.LoanTypeId == HDMFL_ID ? l.Loan.Employee.PagIbig : l.Loan.Employee.SSS,
                         DeductionAmount = l.DeductionAmount
                     })
                     .ToList();
