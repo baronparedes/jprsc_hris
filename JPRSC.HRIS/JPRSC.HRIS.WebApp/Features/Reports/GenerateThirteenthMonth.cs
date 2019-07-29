@@ -91,7 +91,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                 {
-                    for (var j = 1; j < 13; j++)
+                    var startingJ = 1;
+
+                    if (i == Query.PayrollPeriodFromYear)
+                    {
+                        startingJ = (int)Query.FromPayrollPeriodMonth / 10;
+                    }
+
+                    for (var j = startingJ; j < 13; j++)
                     {
                         var key = ValueTuple.Create(i, j);
 
@@ -325,47 +332,66 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     var fromPayrollPeriodMonthAsInt = (int)query.FromPayrollPeriodMonth.Value;
                     var toPayrollPeriodMonthAsInt = (int)query.ToPayrollPeriodMonth.Value;
 
-                    var payrollProcessBatchesInBeginningMonth = await _db.PayrollProcessBatches
-                        .Include(ppb => ppb.PayrollRecords)
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue &&
-                            clientIds.Contains(ppb.ClientId.Value) &&
-                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
-                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
-                            (int)ppb.PayrollPeriodMonth == fromPayrollPeriodMonthAsInt &&
-                            ppb.PayrollPeriod >= query.FromPayrollPeriod)
-                        .ToListAsync();
+                    if (query.PayrollPeriodFromYear == query.PayrollPeriodToYear && query.FromPayrollPeriod == query.ToPayrollPeriod && query.FromPayrollPeriodMonth == query.ToPayrollPeriodMonth)
+                    {
+                        var onlyPayrollProcessbatch = await _db.PayrollProcessBatches
+                            .Include(ppb => ppb.PayrollRecords)
+                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                            .Where(ppb => !ppb.DeletedOn.HasValue &&
+                                clientIds.Contains(ppb.ClientId.Value) &&
+                                DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                                DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
+                                (int)ppb.PayrollPeriodMonth == fromPayrollPeriodMonthAsInt &&
+                                ppb.PayrollPeriod == query.FromPayrollPeriod)
+                            .ToListAsync();
 
-                    var payrollProcessBatchesInEndingMonth = await _db.PayrollProcessBatches
-                        .Include(ppb => ppb.PayrollRecords)
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue &&
-                            clientIds.Contains(ppb.ClientId.Value) &&
-                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
-                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
-                            (int)ppb.PayrollPeriodMonth == toPayrollPeriodMonthAsInt &&
-                            ppb.PayrollPeriod <= query.ToPayrollPeriod)
-                        .ToListAsync();
+                        allPayrollProcessBatches.AddRange(onlyPayrollProcessbatch);
+                    }
+                    else
+                    {
+                        var payrollProcessBatchesInBeginningMonth = await _db.PayrollProcessBatches
+                            .Include(ppb => ppb.PayrollRecords)
+                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                            .Where(ppb => !ppb.DeletedOn.HasValue &&
+                                clientIds.Contains(ppb.ClientId.Value) &&
+                                DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                                DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
+                                (int)ppb.PayrollPeriodMonth == fromPayrollPeriodMonthAsInt &&
+                                ppb.PayrollPeriod >= query.FromPayrollPeriod)
+                            .ToListAsync();
 
-                    var payrollProcessBatchesInBetween = await _db.PayrollProcessBatches
-                        .Include(ppb => ppb.PayrollRecords)
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue &&
-                            clientIds.Contains(ppb.ClientId.Value) &&
-                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
-                            DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
-                            (int)ppb.PayrollPeriodMonth > fromPayrollPeriodMonthAsInt &&
-                            (int)ppb.PayrollPeriodMonth < toPayrollPeriodMonthAsInt)
-                        .ToListAsync();
+                        var payrollProcessBatchesInEndingMonth = await _db.PayrollProcessBatches
+                            .Include(ppb => ppb.PayrollRecords)
+                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                            .Where(ppb => !ppb.DeletedOn.HasValue &&
+                                clientIds.Contains(ppb.ClientId.Value) &&
+                                DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                                DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
+                                (int)ppb.PayrollPeriodMonth == toPayrollPeriodMonthAsInt &&
+                                ppb.PayrollPeriod <= query.ToPayrollPeriod)
+                            .ToListAsync();
 
-                    var payrollProcessBatches = payrollProcessBatchesInBeginningMonth
-                        .Concat(payrollProcessBatchesInBetween)
-                        .Concat(payrollProcessBatchesInEndingMonth);
+                        var payrollProcessBatchesInBetween = await _db.PayrollProcessBatches
+                            .Include(ppb => ppb.PayrollRecords)
+                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                            .Where(ppb => !ppb.DeletedOn.HasValue &&
+                                clientIds.Contains(ppb.ClientId.Value) &&
+                                DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
+                                DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= endDate &&
+                                (int)ppb.PayrollPeriodMonth > fromPayrollPeriodMonthAsInt &&
+                                (int)ppb.PayrollPeriodMonth < toPayrollPeriodMonthAsInt)
+                            .ToListAsync();
 
-                    allPayrollProcessBatches.AddRange(payrollProcessBatches);
+                        var payrollProcessBatches = payrollProcessBatchesInBeginningMonth
+                            .Concat(payrollProcessBatchesInBetween)
+                            .Concat(payrollProcessBatchesInEndingMonth);
+
+                        allPayrollProcessBatches.AddRange(payrollProcessBatches);
+                    }
                 }
 
                 allPayrollProcessBatches = allPayrollProcessBatches
