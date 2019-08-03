@@ -309,13 +309,18 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     DateTime startDate;
                     DateTime endDate;
 
+                    int fromPayrollPeriodMonthAsInt;
+                    int toPayrollPeriodMonthAsInt;
+
                     if (i == query.PayrollPeriodFromYear)
                     {
                         startDate = new DateTime(i, (int)query.FromPayrollPeriodMonth / 10, 1);
+                        fromPayrollPeriodMonthAsInt = (int)query.FromPayrollPeriodMonth.Value;
                     }
                     else
                     {
                         startDate = new DateTime(i, 1, 1);
+                        fromPayrollPeriodMonthAsInt = (int)Month.January;
                     }
 
                     startDate = startDate.AddMonths(-1);
@@ -323,16 +328,16 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     if (i == query.PayrollPeriodToYear)
                     {
                         endDate = new DateTime(i, (int)query.ToPayrollPeriodMonth / 10, 1).AddMonths(1).AddDays(-1);
+                        toPayrollPeriodMonthAsInt = (int)query.ToPayrollPeriodMonth.Value;
                     }
                     else
                     {
                         endDate = new DateTime(i, 12, 31);
+                        toPayrollPeriodMonthAsInt = (int)Month.December;
                     }
 
-                    var fromPayrollPeriodMonthAsInt = (int)query.FromPayrollPeriodMonth.Value;
-                    var toPayrollPeriodMonthAsInt = (int)query.ToPayrollPeriodMonth.Value;
-
-                    if (query.PayrollPeriodFromYear == query.PayrollPeriodToYear && query.FromPayrollPeriod == query.ToPayrollPeriod && query.FromPayrollPeriodMonth == query.ToPayrollPeriodMonth)
+                    var forOnlyOnePayrollPeriod = query.PayrollPeriodFromYear == query.PayrollPeriodToYear && query.FromPayrollPeriod == query.ToPayrollPeriod && query.FromPayrollPeriodMonth == query.ToPayrollPeriodMonth;
+                    if (forOnlyOnePayrollPeriod)
                     {
                         var onlyPayrollProcessbatch = await _db.PayrollProcessBatches
                             .Include(ppb => ppb.PayrollRecords)
