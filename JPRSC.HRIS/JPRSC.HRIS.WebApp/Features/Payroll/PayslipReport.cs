@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Infrastructure.Logging;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -120,7 +122,23 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                     var payslipRecord = new QueryResult.PayslipRecord();
                     payslipRecord.PayrollProcessBatchResult = payrollProcessBatchResult;
                     payslipRecord.PayrollRecord = payrollRecord;
-                    payslipRecord.DailyTimeRecord = dailyTimeRecords.SingleOrDefault(dtr => dtr.EmployeeId == payrollRecord.EmployeeId);
+
+                    var matchingDailyTimeRecords = dailyTimeRecords.Where(dtr => dtr.EmployeeId == payrollRecord.EmployeeId).OrderByDescending(dtr => dtr.AddedOn).ToList();
+                    if (matchingDailyTimeRecords.Count > 1)
+                    {
+                        var logEntry = new LogEntry
+                        {
+                            Action = "PayslipReport",
+                            Controller = "Payroll",
+                            LoggedOn = DateTime.UtcNow,
+                            Level = LogLevel.Warn,
+                            Message = $"Multiple daily time records for employee {payrollRecord.EmployeeId}, payroll record {payrollRecord.Id}, payroll process batch {query.PayrollProcessBatchId}"
+                        };
+
+                        Logger.Log(logEntry);
+                    }
+
+                    payslipRecord.DailyTimeRecord = matchingDailyTimeRecords.FirstOrDefault();
                     payslipRecord.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
                     payslipRecord.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
                     payslipRecord.Loans = loans.Where(l => l.EmployeeId == payrollRecord.EmployeeId).ToList();

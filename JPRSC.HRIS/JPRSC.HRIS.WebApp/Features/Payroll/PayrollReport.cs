@@ -127,60 +127,48 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 foreach (var payrollRecord in payrollRecords)
                 {
-                    try
+                    var payrollReportItem = new QueryResult.PayrollReportItem();
+                    payrollReportItem.PayrollRecord = payrollRecord;
+
+                    var matchingDailyTimeRecords = dailyTimeRecords.Where(dtr => dtr.EmployeeId == payrollRecord.EmployeeId).OrderByDescending(dtr => dtr.AddedOn).ToList();
+                    if (matchingDailyTimeRecords.Count > 1)
                     {
-                        var payrollReportItem = new QueryResult.PayrollReportItem();
-                        payrollReportItem.PayrollRecord = payrollRecord;
-
-                        var matchingDailyTimeRecords = dailyTimeRecords.Where(dtr => dtr.EmployeeId == payrollRecord.EmployeeId).OrderByDescending(dtr => dtr.AddedOn).ToList();
-
-                        if (matchingDailyTimeRecords.Count > 1)
+                        var logEntry = new LogEntry
                         {
-                            var logEntry = new LogEntry
+                            Action = "PayrollReport",
+                            Controller = "Payroll",
+                            LoggedOn = DateTime.UtcNow,
+                            Level = LogLevel.Warn,
+                            Message = $"Multiple daily time records for employee {payrollRecord.EmployeeId}, payroll record {payrollRecord.Id}, payroll process batch {query.PayrollProcessBatchId}"
+                        };
+
+                        Logger.Log(logEntry);
+                    }                        
+
+                    payrollReportItem.DailyTimeRecord = matchingDailyTimeRecords.FirstOrDefault();
+                    payrollReportItem.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
+                    payrollReportItem.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
+
+                    if (payrollRecord.AddedOn < marchFour2019)
+                    {
+                        payrollReportItem.Loans = loans
+                            .Where(l => l.EmployeeId == payrollRecord.EmployeeId)
+                            .Select(l => new Models.LoanDeduction
                             {
-                                Action = "PayrollReport",
-                                Controller = "Payroll",
-                                LoggedOn = DateTime.UtcNow,
-                                Level = LogLevel.Warn,
-                                Message = $"Multiple daily time records for employee {payrollRecord.EmployeeId}, payroll record {payrollRecord.Id}, payroll process batch {query.PayrollProcessBatchId}"
-                            };
-
-                            Logger.Log(logEntry);
-                        }
-                        else
-                        {
-                            payrollReportItem.DailyTimeRecord = matchingDailyTimeRecords.FirstOrDefault();
-                        }
-
-                        payrollReportItem.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
-                        payrollReportItem.Overtimes = overtimes.Where(ot => ot.EmployeeId == payrollRecord.EmployeeId).ToList();
-
-                        if (payrollRecord.AddedOn < marchFour2019)
-                        {
-                            payrollReportItem.Loans = loans
-                                .Where(l => l.EmployeeId == payrollRecord.EmployeeId)
-                                .Select(l => new Models.LoanDeduction
-                                {
-                                    DeductionAmount = l.DeductionAmount,
-                                    Loan = l,
-                                    LoanId = l.Id,
-                                    PayrollRecord = payrollRecord,
-                                    PayrollRecordId = payrollRecord.Id
-                                })
-                                .ToList();
-                        }
-                        else
-                        {
-                            payrollReportItem.Loans = loanDeductions.Where(ld => ld.PayrollRecordId == payrollRecord.Id).ToList();
-                        }
-
-                        payrollReportItems.Add(payrollReportItem);
+                                DeductionAmount = l.DeductionAmount,
+                                Loan = l,
+                                LoanId = l.Id,
+                                PayrollRecord = payrollRecord,
+                                PayrollRecordId = payrollRecord.Id
+                            })
+                            .ToList();
                     }
-                    catch (Exception ex)
+                    else
                     {
-
-                        throw;
+                        payrollReportItem.Loans = loanDeductions.Where(ld => ld.PayrollRecordId == payrollRecord.Id).ToList();
                     }
+
+                    payrollReportItems.Add(payrollReportItem);
                 }
 
                 var payRates = await _db.PayPercentages.AsNoTracking().ToListAsync();
