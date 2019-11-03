@@ -33,6 +33,7 @@ namespace JPRSC.HRIS.WebApp.Features.AuditTrails
         public class QueryResult
         {
             public IEnumerable<AuditTrail> AuditTrails { get; set; } = new List<AuditTrail>();
+            public int TotalResultsCount { get; set; }
 
             public class AuditTrail
             {
@@ -59,6 +60,11 @@ namespace JPRSC.HRIS.WebApp.Features.AuditTrails
                 var pageNumber = query.PageNumber.HasValue && query.PageNumber > 0 ? query.PageNumber.Value : 1;
                 var pageSize = query.PageSize.HasValue && query.PageSize > 0 ? Math.Min(query.PageSize.Value, 1000) : AppSettings.Int("DefaultGridPageSize");
 
+                var totalResultsCount = _db
+                    .AuditTrailEntries
+                    .AsNoTracking()
+                    .Count();
+
                 var dbQuery = _db
                     .AuditTrailEntries;
 
@@ -69,7 +75,8 @@ namespace JPRSC.HRIS.WebApp.Features.AuditTrails
 
                 return new QueryResult
                 {
-                    AuditTrails = auditTrails
+                    AuditTrails = auditTrails,
+                    TotalResultsCount = totalResultsCount
                 };
             }
         }
