@@ -7,10 +7,11 @@
         var vm = this;
         vm.clientChanged = clientChanged;
         vm.payrollPeriodMonthChanged = payrollPeriodMonthChanged;
+        vm.payrollPeriodYearChanged = payrollPeriodYearChanged;
         vm.payrollProcessBatches = [];
         vm.processClicked = processClicked;
         vm.searchClicked = searchClicked;
-        vm.searchModel = { payrollPeriodMonth: '-1' };
+        vm.searchModel = { payrollPeriodMonth: '-1', payrollPeriodYear: '-1' };
         vm.searchInProgress = false;
         vm.sendPayslipClicked = sendPayslipClicked;
 
@@ -27,6 +28,10 @@
         };
 
         function payrollPeriodMonthChanged() {
+            searchClicked();
+        };
+
+        function payrollPeriodYearChanged() {
             searchClicked();
         };
 

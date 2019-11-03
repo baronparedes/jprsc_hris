@@ -18,6 +18,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         {
             public int? ClientId { get; set; }
             public Month? PayrollPeriodMonth { get; set; }
+            public int? PayrollPeriodYear { get; set; }
         }
 
         public class QueryValidator : AbstractValidator<Query>
@@ -84,6 +85,12 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 {
                     dbQuery = dbQuery
                         .Where(ppb => ppb.PayrollPeriodMonth == query.PayrollPeriodMonth);
+                }
+
+                if (query.PayrollPeriodYear.HasValue && query.PayrollPeriodYear.Value > 0)
+                {
+                    dbQuery = dbQuery
+                        .Where(ppb => ppb.PayrollPeriodFrom.HasValue && ppb.PayrollPeriodFrom.Value.Year == query.PayrollPeriodYear.Value);
                 }
 
                 var payrollProcessBatches = await dbQuery

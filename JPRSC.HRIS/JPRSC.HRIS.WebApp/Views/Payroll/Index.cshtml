@@ -24,14 +24,14 @@
                 <form role="form">
                     <div class="form-body">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label">Client</label>
                                     <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id" ng-change="vm.clientChanged()">
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label">Month</label>
                                     <select class="form-control" ng-model="vm.searchModel.payrollPeriodMonth" ng-change="vm.payrollPeriodMonthChanged()">
@@ -48,6 +48,18 @@
                                         <option value="@((int)Month.October)">@Month.October.ToString()</option>
                                         <option value="@((int)Month.November)">@Month.November.ToString()</option>
                                         <option value="@((int)Month.December)">@Month.December.ToString()</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label">Year</label>
+                                    <select class="form-control" ng-model="vm.searchModel.payrollPeriodYear" ng-change="vm.payrollPeriodYearChanged()">
+                                        <option value="-1">All Years</option>
+                                        @for (var i = DateTime.Now.Year; i >= 2018; i--)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
                                     </select>
                                 </div>
                             </div>
