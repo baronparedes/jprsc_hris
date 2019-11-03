@@ -14,8 +14,9 @@
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.payrollPeriodChanged = payrollPeriodChanged;
         vm.payrollPeriodMonthChanged = payrollPeriodMonthChanged;
+        vm.payrollPeriodYearChanged = payrollPeriodYearChanged;
         vm.searchClicked = searchClicked;
-        vm.searchModel = { payrollPeriodMonth: '10' };
+        vm.searchModel = { payrollPeriodMonth: '10', payrollPeriodYear: new Date().getFullYear().toString() };
         vm.searchInProgress = false;
 
         $timeout(function () {
@@ -123,6 +124,10 @@
         };
 
         function payrollPeriodMonthChanged() {
+            searchClicked();
+        };
+
+        function payrollPeriodYearChanged() {
             searchClicked();
         };
 

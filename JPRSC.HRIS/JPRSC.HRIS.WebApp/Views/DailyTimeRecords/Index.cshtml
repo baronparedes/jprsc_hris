@@ -21,25 +21,25 @@
         @Html.RenderSuccessNotification()
         <div class="row" ng-controller="DailyTimeRecordIndexCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
-                <div class="note note-info" ng-show="!vm.searchModel.client.value || !vm.searchModel.client.value.length">
+                <div class="note note-info" ng-show="!vm.searchModel.client || !vm.searchModel.client.code">
                     <p>Please select a client.</p>
                 </div>
                 <form role="form">
                     <div class="form-body">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="control-label">Client</label>
                                     <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.code for client in vm.clients track by client.id" ng-change="vm.clientChanged()"></select>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="control-label">Payroll Period</label>
                                     <select class="form-control" ng-model="vm.dailyTimeRecordPayrollPeriodBasis" ng-disabled="vm.payrollPeriodSelectionDisabled" ng-options="payrollPeriod.text for payrollPeriod in vm.payrollPeriods track by payrollPeriod.value" ng-change="vm.payrollPeriodChanged()"></select>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="control-label">Payroll Period Month</label>
                                     <select class="form-control" ng-model="vm.searchModel.payrollPeriodMonth" ng-change="vm.payrollPeriodMonthChanged()">
@@ -55,6 +55,17 @@
                                         <option value="@((int)Month.October)">@Month.October.ToString()</option>
                                         <option value="@((int)Month.November)">@Month.November.ToString()</option>
                                         <option value="@((int)Month.December)">@Month.December.ToString()</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Payroll Period Year</label>
+                                    <select class="form-control" ng-model="vm.searchModel.payrollPeriodYear" ng-change="vm.payrollPeriodYearChanged()">
+                                        @for (var i = DateTime.Now.Year; i >= 2018; i--)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
                                     </select>
                                 </div>
                             </div>

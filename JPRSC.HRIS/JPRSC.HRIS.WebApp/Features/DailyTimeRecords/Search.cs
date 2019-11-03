@@ -24,6 +24,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             public int? ClientId { get; set; }
             public int? DailyTimeRecordPayrollPeriodBasisId { get; set; }
             public Month? PayrollPeriodMonth { get; set; }
+            public int? PayrollPeriodYear { get; set; }
 
             public string SearchLikeTerm
             {
@@ -113,6 +114,12 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 {
                     dbQuery = dbQuery
                         .Where(dtr => dtr.PayrollPeriodMonth == query.PayrollPeriodMonth);
+                }
+
+                if (query.PayrollPeriodYear.HasValue)
+                {
+                    dbQuery = dbQuery
+                        .Where(dtr => dtr.PayrollPeriodFrom.HasValue && dtr.PayrollPeriodFrom.Value.Year == query.PayrollPeriodYear.Value);
                 }
 
                 if (query.DailyTimeRecordPayrollPeriodBasisId.HasValue)

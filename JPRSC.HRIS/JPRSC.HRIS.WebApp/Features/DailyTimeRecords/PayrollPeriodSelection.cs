@@ -72,6 +72,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 }
 
                 return payrollPeriods
+                    .OrderBy(pp => pp.Item2)
                     .Select(pp => new SelectListItem
                     {
                         Value = pp.Item1.ToString(),
