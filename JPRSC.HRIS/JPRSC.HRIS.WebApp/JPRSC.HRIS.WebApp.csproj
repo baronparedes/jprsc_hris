@@ -467,6 +467,7 @@
     <Compile Include="Features\Religions\Search.cs" />
     <Compile Include="Features\Religions\_Controller.cs" />
     <Compile Include="Features\Religions\_MappingProfile.cs" />
+    <Compile Include="Features\Reports\GenerateEarningsDeductions.cs" />
     <Compile Include="Features\Reports\GenerateThirteenthMonth.cs" />
     <Compile Include="Features\Reports\GeneratePagIbig.cs" />
     <Compile Include="Features\Reports\GenerateSingleLoanType.cs" />
@@ -7116,6 +7117,7 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\Local IIS.pubxml" />
     <Content Include="Views\Reports\ThirteenthMonthReport.cshtml" />
+    <Content Include="Views\Reports\EarningsDeductionsReport.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace JPRSC.HRIS.WebApp.Features.Reports
 {
-    public class GenerateThirteenthMonth
+    public class GenerateEarningsDeductions
     {
         public class Query : IRequest<QueryResult>
         {
@@ -82,10 +82,10 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public string DisplayMode { get; set; }
             public byte[] FileContent { get; set; }
             public string Filename { get; set; }
-            public IList<ThirteenthMonthRecord> ThirteenthMonthRecords { get; set; } = new List<ThirteenthMonthRecord>();
+            public IList<EarningsDeductionsRecord> EarningsDeductionsRecords { get; set; } = new List<EarningsDeductionsRecord>();
             public Query Query { get; set; }
 
-            public IList<string> GetTotals(IList<ThirteenthMonthRecord> thirteenthMonthRecords)
+            public IList<string> GetTotals(IList<EarningsDeductionsRecord> thirteenthMonthRecords)
             {
                 var totals = new List<string> { String.Empty, "TOTAL" };
 
@@ -106,8 +106,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     }
                 }
 
-                totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Sum(r => r.Half)));
-                totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Sum(r => r.Whole)));
+                //totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Sum(r => r.Half)));
+                //totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Sum(r => r.Whole)));
 
                 return totals;
             }
@@ -139,7 +139,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 return monthHeaders;
             }
 
-            public class ThirteenthMonthRecord
+            public class EarningsDeductionsRecord
             {
                 public Employee Employee { get; set; }
                 public IDictionary<ValueTuple<int, int>, MonthRecord> MonthRecords { get; set; } = new Dictionary<ValueTuple<int, int>, MonthRecord>();
@@ -172,23 +172,15 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                                 nameLine.AddRange(monthsPlaceholder);
                             }
                         }
-                        nameLine.Add(String.Empty);
-                        nameLine.Add(String.Empty);
 
                         var basicLine = new List<string> { String.Empty, "BASIC" };
                         PopulateLine(basicLine, m => m.Basic);
-                        basicLine.Add(String.Empty);
-                        basicLine.Add(String.Empty);
 
                         var utTardyLine = new List<string> { String.Empty, "UT/TARDINESS" };
                         PopulateLine(utTardyLine, m => m.UTTardy);
-                        utTardyLine.Add(String.Empty);
-                        utTardyLine.Add(String.Empty);
 
                         var totalLine = new List<string> { String.Empty, "TOTAL" };
                         PopulateLine(totalLine, m => m.Total);
-                        totalLine.Add(String.Format("{0:n}", Half));
-                        totalLine.Add(String.Format("{0:n}", Whole));
 
                         var retVal = new List<IList<string>>();
                         retVal.Add(nameLine);
@@ -370,7 +362,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         ClientId = query.ClientId,
                         DisplayMode = query.DisplayMode,
-                        ThirteenthMonthRecords = thirteenthMonthRecords,
+                        EarningsDeductionsRecords = thirteenthMonthRecords,
                         PayrollPeriodFromYear = query.PayrollPeriodFromYear,
                         PayrollPeriodToYear = query.PayrollPeriodToYear,
                         FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
@@ -439,7 +431,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         ClientId = query.ClientId,
                         ClientName = clientName,
                         DisplayMode = query.DisplayMode,
-                        ThirteenthMonthRecords = thirteenthMonthRecords,
+                        EarningsDeductionsRecords = thirteenthMonthRecords,
                         PayrollPeriodFromYear = query.PayrollPeriodFromYear,
                         PayrollPeriodToYear = query.PayrollPeriodToYear,
                         FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
@@ -451,9 +443,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 }
             }
 
-            private IList<QueryResult.ThirteenthMonthRecord> GetThirteenthMonthRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)
+            private IList<QueryResult.EarningsDeductionsRecord> GetThirteenthMonthRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)
             {
-                var thirteenthMonthRecordsDictionary = new Dictionary<int, QueryResult.ThirteenthMonthRecord>();
+                var thirteenthMonthRecordsDictionary = new Dictionary<int, QueryResult.EarningsDeductionsRecord>();
 
                 for (var i = query.PayrollPeriodFromYear; i <= query.PayrollPeriodToYear; i++)
                 {
@@ -512,13 +504,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 return thirteenthMonthRecordsDictionary.Select(t => t.Value).OrderBy(t => t.Employee.LastName).ThenBy(t => t.Employee.FirstName).ToList();
             }
 
-            private static void AddPayrollRecordsToThirteenthMonthRecordsDictionary(Query query, Dictionary<int, QueryResult.ThirteenthMonthRecord> thirteenthMonthRecordsDictionary, int year, int month, IGrouping<int, PayrollProcessBatch> group, List<PayrollRecord> payrollRecordsInMonth)
+            private static void AddPayrollRecordsToThirteenthMonthRecordsDictionary(Query query, Dictionary<int, QueryResult.EarningsDeductionsRecord> thirteenthMonthRecordsDictionary, int year, int month, IGrouping<int, PayrollProcessBatch> group, List<PayrollRecord> payrollRecordsInMonth)
             {
                 foreach (var payrollRecord in payrollRecordsInMonth)
                 {
                     if (!thirteenthMonthRecordsDictionary.ContainsKey(payrollRecord.EmployeeId.Value))
                     {
-                        thirteenthMonthRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.ThirteenthMonthRecord { Employee = payrollRecord.Employee, Query = query });
+                        thirteenthMonthRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.EarningsDeductionsRecord { Employee = payrollRecord.Employee, Query = query });
                     }
 
                     var key = ValueTuple.Create(year, month);
