@@ -85,7 +85,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public IList<EarningsDeductionsRecord> EarningsDeductionsRecords { get; set; } = new List<EarningsDeductionsRecord>();
             public Query Query { get; set; }
 
-            public IList<string> GetTotals(IList<EarningsDeductionsRecord> thirteenthMonthRecords)
+            public IList<string> GetTotals(IList<EarningsDeductionsRecord> earningsDeductionsRecords)
             {
                 var totals = new List<string> { String.Empty, "TOTAL" };
 
@@ -102,12 +102,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         var key = ValueTuple.Create(i, j);
 
-                        totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Where(r => r.MonthRecords.ContainsKey(key)).Select(r => r.MonthRecords[key]).Sum(mr => mr.Total)));
+                        totals.Add(String.Format("{0:n}", earningsDeductionsRecords.Where(r => r.MonthRecords.ContainsKey(key)).Select(r => r.MonthRecords[key]).Sum(mr => mr.Total)));
                     }
                 }
-
-                //totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Sum(r => r.Half)));
-                //totals.Add(String.Format("{0:n}", thirteenthMonthRecords.Sum(r => r.Whole)));
 
                 return totals;
             }
@@ -120,7 +117,6 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                 {
-                    //monthHeaders.AddRange(months);
                     if (i == Query.PayrollPeriodFromYear)
                     {
                         for (var j = 0; j < months.Count; j++)
@@ -144,52 +140,121 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 public Employee Employee { get; set; }
                 public IDictionary<ValueTuple<int, int>, MonthRecord> MonthRecords { get; set; } = new Dictionary<ValueTuple<int, int>, MonthRecord>();
                 public Query Query { get; set; }
+                public IList<IList<string>> DisplayLineCollection { get; private set; } = new List<IList<string>>();
 
-                public decimal Half => Whole / 2.0m;
-                public decimal Whole => MonthRecords.Select(mr => mr.Value).Sum(v => v.Total) / 12.0m;
-                public string ThirteenthMonthMode { get; set; }
-
-                public IList<IList<string>> DisplayLineCollection
+                public void PopulateDisplayLineCollection(IList<Tuple<int, string>> distinctEarningsTypes, IList<Tuple<int, string>> distinctDeductionTypes)
                 {
-                    get
-                    {
-                        var monthsPlaceholder = new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty };
+                    var monthsPlaceholder = new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty };
 
-                        var nameLine = new List<string> { $"{Employee.LastName}, {Employee.FirstName}{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}", $"{Employee.EmployeeCode}" };
+                    var nameLine = new List<string> { $"{Employee.LastName}, {Employee.FirstName}{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}", $"{Employee.EmployeeCode}" };
+                    for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
+                    {
+                        if (i == Query.PayrollPeriodFromYear)
+                        {
+                            for (var j = 0; j < monthsPlaceholder.Count; j++)
+                            {
+                                if (j + 1 < (int)Query.FromPayrollPeriodMonth / 10) continue;
+
+                                nameLine.Add(monthsPlaceholder[j]);
+                            }
+                        }
+                        else
+                        {
+                            nameLine.AddRange(monthsPlaceholder);
+                        }
+                    }
+
+                    var retVal = new List<IList<string>>();
+                    retVal.Add(nameLine);
+
+                    foreach (var earningType in distinctEarningsTypes)
+                    {
+                        var earningLine = new List<string> { String.Empty, earningType.Item2 };
+                        var hasEarningType = false;
+
                         for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
+                            var startingJ = 1;
+
                             if (i == Query.PayrollPeriodFromYear)
                             {
-                                for (var j = 0; j < monthsPlaceholder.Count; j++)
-                                {
-                                    if (j + 1 < (int)Query.FromPayrollPeriodMonth / 10) continue;
-
-                                    nameLine.Add(monthsPlaceholder[j]);
-                                }
+                                startingJ = (int)Query.FromPayrollPeriodMonth / 10;
                             }
-                            else
+
+                            for (var j = startingJ; j < 13; j++)
                             {
-                                nameLine.AddRange(monthsPlaceholder);
+                                var key = ValueTuple.Create(i, j);
+
+                                if (MonthRecords.ContainsKey(key))
+                                {
+                                    var monthRecord = MonthRecords[key];
+                                    hasEarningType = monthRecord.EarningsValues.TryGetValue(earningType.Item1, out Tuple<string, decimal> earningValue);
+                                    if (hasEarningType)
+                                    {
+                                        earningLine.Add(String.Format("{0:n}", earningValue.Item2));
+                                    }
+                                    else
+                                    {
+                                        earningLine.Add(String.Empty);
+                                    }
+                                }
+                                else
+                                {
+                                    earningLine.Add(String.Empty);
+                                }
                             }
                         }
 
-                        var basicLine = new List<string> { String.Empty, "BASIC" };
-                        PopulateLine(basicLine, m => m.Basic);
-
-                        var utTardyLine = new List<string> { String.Empty, "UT/TARDINESS" };
-                        PopulateLine(utTardyLine, m => m.UTTardy);
-
-                        var totalLine = new List<string> { String.Empty, "TOTAL" };
-                        PopulateLine(totalLine, m => m.Total);
-
-                        var retVal = new List<IList<string>>();
-                        retVal.Add(nameLine);
-                        retVal.Add(basicLine);
-                        retVal.Add(utTardyLine);
-                        retVal.Add(totalLine);
-
-                        return retVal;
+                        if (hasEarningType) retVal.Add(earningLine);
                     }
+
+                    foreach (var deductionType in distinctDeductionTypes)
+                    {
+                        var deductionLine = new List<string> { String.Empty, deductionType.Item2 };
+                        var hasDeductionType = false;
+
+                        for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
+                        {
+                            var startingJ = 1;
+
+                            if (i == Query.PayrollPeriodFromYear)
+                            {
+                                startingJ = (int)Query.FromPayrollPeriodMonth / 10;
+                            }
+
+                            for (var j = startingJ; j < 13; j++)
+                            {
+                                var key = ValueTuple.Create(i, j);
+
+                                if (MonthRecords.ContainsKey(key))
+                                {
+                                    var monthRecord = MonthRecords[key];
+                                    hasDeductionType = monthRecord.DeductionsValues.TryGetValue(deductionType.Item1, out Tuple<string, decimal> earningValue);
+                                    if (hasDeductionType)
+                                    {
+                                        deductionLine.Add(String.Format("{0:n}", earningValue.Item2));
+                                    }
+                                    else
+                                    {
+                                        deductionLine.Add(String.Empty);
+                                    }
+                                }
+                                else
+                                {
+                                    deductionLine.Add(String.Empty);
+                                }
+                            }
+                        }
+
+                        if (hasDeductionType) retVal.Add(deductionLine);
+                    }
+
+                    var totalLine = new List<string> { String.Empty, "TOTAL" };
+                    PopulateLine(totalLine, m => m.Total);
+
+                    retVal.Add(totalLine);
+
+                    DisplayLineCollection = retVal;
                 }
 
                 private void PopulateLine(IList<string> line, Func<MonthRecord, decimal> valueGetter)
@@ -222,11 +287,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
             public class MonthRecord
             {
-                public decimal Basic { get; set; }
-                public decimal UTTardy { get; set; }
-                public IDictionary<int, decimal> BasicPerPayrollPeriod { get; set; } = new Dictionary<int, decimal>();
-                public IDictionary<int, decimal> UTTardyPerPayrollPeriod { get; set; } = new Dictionary<int, decimal>();
-                public decimal Total => Basic - UTTardy;
+                public IDictionary<int, Tuple<string, decimal>> EarningsValues { get; set; } = new Dictionary<int, Tuple<string, decimal>>();
+                public IDictionary<int, Tuple<string, decimal>> DeductionsValues { get; set; } = new Dictionary<int, Tuple<string, decimal>>();
+                public decimal Total => EarningsValues.Sum(e => e.Value.Item2) - DeductionsValues.Sum(d => d.Value.Item2);
             }
         }
 
@@ -246,8 +309,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var clients = query.ClientId == -1 ?
-                    await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync() :
-                    await _db.Clients.Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
+                    await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue).ToListAsync() :
+                    await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
 
                 var clientIds = clients.Select(c => c.Id).ToList();
 
@@ -289,9 +352,11 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     if (forOnlyOnePayrollPeriod)
                     {
                         var onlyPayrollProcessbatch = await _db.PayrollProcessBatches
-                            .Include(ppb => ppb.PayrollRecords)
-                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                            .AsNoTracking()
+                            .Include(ppb => ppb.EarningDeductionRecords)
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.EarningDeduction))
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.Employee))
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.Employee.Department))
                             .Where(ppb => !ppb.DeletedOn.HasValue &&
                                 clientIds.Contains(ppb.ClientId.Value) &&
                                 DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
@@ -305,9 +370,11 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     else
                     {
                         var payrollProcessBatchesInBeginningMonth = await _db.PayrollProcessBatches
-                            .Include(ppb => ppb.PayrollRecords)
-                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                            .AsNoTracking()
+                            .Include(ppb => ppb.EarningDeductionRecords)
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.EarningDeduction))
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.Employee))
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.Employee.Department))
                             .Where(ppb => !ppb.DeletedOn.HasValue &&
                                 clientIds.Contains(ppb.ClientId.Value) &&
                                 DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
@@ -317,9 +384,11 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                             .ToListAsync();
 
                         var payrollProcessBatchesInEndingMonth = await _db.PayrollProcessBatches
-                            .Include(ppb => ppb.PayrollRecords)
-                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                            .AsNoTracking()
+                            .Include(ppb => ppb.EarningDeductionRecords)
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.EarningDeduction))
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.Employee))
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.Employee.Department))
                             .Where(ppb => !ppb.DeletedOn.HasValue &&
                                 clientIds.Contains(ppb.ClientId.Value) &&
                                 DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
@@ -329,9 +398,11 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                             .ToListAsync();
 
                         var payrollProcessBatchesInBetween = await _db.PayrollProcessBatches
-                            .Include(ppb => ppb.PayrollRecords)
-                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                            .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                            .AsNoTracking()
+                            .Include(ppb => ppb.EarningDeductionRecords)
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.EarningDeduction))
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.Employee))
+                            .Include(ppb => ppb.EarningDeductionRecords.Select(edr => edr.Employee.Department))
                             .Where(ppb => !ppb.DeletedOn.HasValue &&
                                 clientIds.Contains(ppb.ClientId.Value) &&
                                 DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= startDate &&
@@ -354,7 +425,38 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     .OrderBy(ppb => ppb.Id)
                     .ToList();
 
-                var thirteenthMonthRecords = GetThirteenthMonthRecords(query, allPayrollProcessBatches);
+                var earningsDeductionsRecords = GetEarningsDeductionsRecords(query, allPayrollProcessBatches);
+
+                var allEarningTypes = earningsDeductionsRecords
+                    .SelectMany(edr => edr.MonthRecords)
+                    .Select(dict => dict.Value)
+                    .SelectMany(mr => mr.EarningsValues);
+
+                var distinctEarningTypes = new List<Tuple<int, string>>();
+                foreach (var earningType in allEarningTypes)
+                {
+                    if (distinctEarningTypes.Any(et => et.Item1 == earningType.Key)) continue;
+
+                    distinctEarningTypes.Add(Tuple.Create(earningType.Key, earningType.Value.Item1));
+                }
+
+                var allDeductionTypes = earningsDeductionsRecords
+                    .SelectMany(edr => edr.MonthRecords)
+                    .Select(dict => dict.Value)
+                    .SelectMany(mr => mr.DeductionsValues);
+
+                var distinctDeductionTypes = new List<Tuple<int, string>>();
+                foreach (var deductionType in allDeductionTypes)
+                {
+                    if (distinctDeductionTypes.Any(dt => dt.Item1 == deductionType.Key)) continue;
+
+                    distinctDeductionTypes.Add(Tuple.Create(deductionType.Key, deductionType.Value.Item1));
+                }
+
+                foreach (var earningsDeductionsRecord in earningsDeductionsRecords)
+                {
+                    earningsDeductionsRecord.PopulateDisplayLineCollection(distinctEarningTypes, distinctDeductionTypes);
+                }
 
                 if (query.Destination == "Excel")
                 {
@@ -362,7 +464,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         ClientId = query.ClientId,
                         DisplayMode = query.DisplayMode,
-                        EarningsDeductionsRecords = thirteenthMonthRecords,
+                        EarningsDeductionsRecords = earningsDeductionsRecords,
                         PayrollPeriodFromYear = query.PayrollPeriodFromYear,
                         PayrollPeriodToYear = query.PayrollPeriodToYear,
                         FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
@@ -374,9 +476,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                     var excelLines = new List<IList<string>>();
 
-                    foreach (var thirteenthMonthRecord in thirteenthMonthRecords)
+                    foreach (var earningsDeductionsRecord in earningsDeductionsRecords)
                     {
-                        foreach (var displayLine in thirteenthMonthRecord.DisplayLineCollection)
+                        foreach (var displayLine in earningsDeductionsRecord.DisplayLineCollection)
                         {
                             excelLines.Add(displayLine);
                         }
@@ -388,15 +490,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     {
                         header.Add(monthHeader);
                     }
-                    header.Add("HALF");
-                    header.Add("13th Month Pay");
 
                     excelLines.Insert(0, header);
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
                     var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"Thirteenth Month Report - ");
+                    reportFileNameBuilder.Append($"Earnings and Deductions Report - ");
 
                     if (query.ClientId == -1)
                     {
@@ -423,7 +523,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     var clientName = String.Empty;
                     if (query.ClientId.HasValue && query.ClientId.Value > 0)
                     {
-                        clientName = (await _db.Clients.SingleAsync(c => c.Id == query.ClientId)).Name;
+                        clientName = (await _db.Clients.AsNoTracking().SingleAsync(c => c.Id == query.ClientId)).Name;
                     }
 
                     return new QueryResult
@@ -431,7 +531,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         ClientId = query.ClientId,
                         ClientName = clientName,
                         DisplayMode = query.DisplayMode,
-                        EarningsDeductionsRecords = thirteenthMonthRecords,
+                        EarningsDeductionsRecords = earningsDeductionsRecords,
                         PayrollPeriodFromYear = query.PayrollPeriodFromYear,
                         PayrollPeriodToYear = query.PayrollPeriodToYear,
                         FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
@@ -443,9 +543,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 }
             }
 
-            private IList<QueryResult.EarningsDeductionsRecord> GetThirteenthMonthRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)
+            private IList<QueryResult.EarningsDeductionsRecord> GetEarningsDeductionsRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)
             {
-                var thirteenthMonthRecordsDictionary = new Dictionary<int, QueryResult.EarningsDeductionsRecord>();
+                var earningsDeductionsRecordsDictionary = new Dictionary<int, QueryResult.EarningsDeductionsRecord>();
 
                 for (var i = query.PayrollPeriodFromYear; i <= query.PayrollPeriodToYear; i++)
                 {
@@ -469,9 +569,9 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                         foreach (var group in batchesGroupedByPayrollPeriod)
                         {
-                            var payrollRecordsInMonth = group
+                            var earningDeductionRecordsInMonth = group
                                 .Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i && (int)ppb.PayrollPeriodMonth / 10 == j)
-                                .SelectMany(ppb => ppb.PayrollRecords)
+                                .SelectMany(ppb => ppb.EarningDeductionRecords)
                                 .ToList();
 
                             var isJanuaryFirstPayrollPeriod = j == 1 && group.Key == 1;
@@ -479,77 +579,76 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                             {
                                 var payrollRecordsInJanuaryFirstPeriod = group
                                     .Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i - 1 && (int)ppb.PayrollPeriodMonth / 10 == j)
-                                    .SelectMany(ppb => ppb.PayrollRecords)
+                                    .SelectMany(ppb => ppb.EarningDeductionRecords)
                                     .ToList();
 
                                 if (payrollRecordsInJanuaryFirstPeriod.Any())
                                 {
                                     foreach (var record in payrollRecordsInJanuaryFirstPeriod)
                                     {
-                                        payrollRecordsInMonth.Add(record);
+                                        earningDeductionRecordsInMonth.Add(record);
                                     }
                                 }
                             }
 
-                            payrollRecordsInMonth = payrollRecordsInMonth
-                                .OrderBy(pr => pr.Employee.LastName)
-                                .ThenBy(pr => pr.Employee.FirstName)
+                            earningDeductionRecordsInMonth = earningDeductionRecordsInMonth
+                                .OrderBy(edr => edr.Employee.LastName)
+                                .ThenBy(edr => edr.Employee.FirstName)
                                 .ToList();
 
-                            AddPayrollRecordsToThirteenthMonthRecordsDictionary(query, thirteenthMonthRecordsDictionary, i, j, group, payrollRecordsInMonth);
+                            AddEarningDeductionsToEarningsDeductionsRecordsDictionary(query, earningsDeductionsRecordsDictionary, i, j, group, earningDeductionRecordsInMonth);
                         }
                     }
                 }
 
-                return thirteenthMonthRecordsDictionary.Select(t => t.Value).OrderBy(t => t.Employee.LastName).ThenBy(t => t.Employee.FirstName).ToList();
+                return earningsDeductionsRecordsDictionary.Select(t => t.Value).OrderBy(t => t.Employee.LastName).ThenBy(t => t.Employee.FirstName).ToList();
             }
 
-            private static void AddPayrollRecordsToThirteenthMonthRecordsDictionary(Query query, Dictionary<int, QueryResult.EarningsDeductionsRecord> thirteenthMonthRecordsDictionary, int year, int month, IGrouping<int, PayrollProcessBatch> group, List<PayrollRecord> payrollRecordsInMonth)
+            private static void AddEarningDeductionsToEarningsDeductionsRecordsDictionary(Query query, Dictionary<int, QueryResult.EarningsDeductionsRecord> earningsDeductionsRecordsDictionary, int year, int month, IGrouping<int, PayrollProcessBatch> group, List<EarningDeductionRecord> earningDeductionsRecordsInMonth)
             {
-                foreach (var payrollRecord in payrollRecordsInMonth)
+                foreach (var earningDeductionRecord in earningDeductionsRecordsInMonth)
                 {
-                    if (!thirteenthMonthRecordsDictionary.ContainsKey(payrollRecord.EmployeeId.Value))
+                    if (!earningsDeductionsRecordsDictionary.ContainsKey(earningDeductionRecord.EmployeeId.Value))
                     {
-                        thirteenthMonthRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.EarningsDeductionsRecord { Employee = payrollRecord.Employee, Query = query });
+                        earningsDeductionsRecordsDictionary.Add(earningDeductionRecord.EmployeeId.Value, new QueryResult.EarningsDeductionsRecord { Employee = earningDeductionRecord.Employee, Query = query });
                     }
 
                     var key = ValueTuple.Create(year, month);
-                    if (!thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.ContainsKey(key))
+                    if (!earningsDeductionsRecordsDictionary[earningDeductionRecord.EmployeeId.Value].MonthRecords.ContainsKey(key))
                     {
-                        var newMonthRecord = new QueryResult.MonthRecord
+                        var newMonthRecord = new QueryResult.MonthRecord();
+
+                        var earningOrDeductionDictionary = new Dictionary<int, Tuple<string, decimal>>
                         {
-                            Basic = payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault(),
-                            UTTardy = payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault()
+                            { earningDeductionRecord.EarningDeductionId.GetValueOrDefault(), Tuple.Create(earningDeductionRecord.EarningDeduction.Code, earningDeductionRecord.Amount.GetValueOrDefault()) }
                         };
 
-                        newMonthRecord.BasicPerPayrollPeriod.Add(group.Key, payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault());
-                        newMonthRecord.UTTardyPerPayrollPeriod.Add(group.Key, payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault());
+                        if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Earnings)
+                        {
+                            newMonthRecord.EarningsValues = earningOrDeductionDictionary;
+                        }
+                        else if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Deductions)
+                        {
+                            newMonthRecord.DeductionsValues = earningOrDeductionDictionary;
+                        }
 
-                        thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.Add(key, newMonthRecord);
+                        earningsDeductionsRecordsDictionary[earningDeductionRecord.EmployeeId.Value].MonthRecords.Add(key, newMonthRecord);
                     }
                     else
                     {
-                        var monthRecord = thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords[key];
+                        var monthRecord = earningsDeductionsRecordsDictionary[earningDeductionRecord.EmployeeId.Value].MonthRecords[key];
 
-                        monthRecord.Basic += payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault();
-                        monthRecord.UTTardy += payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault();
+                        if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Earnings)
+                        {
+                            var newTuple = Tuple.Create(monthRecord.EarningsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()].Item1, monthRecord.EarningsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()].Item2 + earningDeductionRecord.Amount.GetValueOrDefault());
 
-                        if (monthRecord.BasicPerPayrollPeriod.ContainsKey(group.Key))
-                        {
-                            monthRecord.BasicPerPayrollPeriod[group.Key] += payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault();
+                            monthRecord.EarningsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()] = newTuple;
                         }
-                        else
+                        else if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Deductions)
                         {
-                            monthRecord.BasicPerPayrollPeriod.Add(group.Key, payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault());
-                        }
+                            var newTuple = Tuple.Create(monthRecord.DeductionsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()].Item1, monthRecord.DeductionsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()].Item2 + earningDeductionRecord.Amount.GetValueOrDefault());
 
-                        if (monthRecord.UTTardyPerPayrollPeriod.ContainsKey(group.Key))
-                        {
-                            monthRecord.UTTardyPerPayrollPeriod[group.Key] += payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault();
-                        }
-                        else
-                        {
-                            monthRecord.UTTardyPerPayrollPeriod.Add(group.Key, payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault());
+                            monthRecord.DeductionsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()] = newTuple;
                         }
                     }
                 }

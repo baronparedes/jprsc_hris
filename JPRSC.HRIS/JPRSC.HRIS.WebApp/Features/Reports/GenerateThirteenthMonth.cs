@@ -251,8 +251,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var clients = query.ClientId == -1 ?
-                    await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync() :
-                    await _db.Clients.Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
+                    await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue).ToListAsync() :
+                    await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
 
                 var clientIds = clients.Select(c => c.Id).ToList();
 
@@ -294,6 +294,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     if (forOnlyOnePayrollPeriod)
                     {
                         var onlyPayrollProcessbatch = await _db.PayrollProcessBatches
+                            .AsNoTracking()
                             .Include(ppb => ppb.PayrollRecords)
                             .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                             .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
@@ -310,6 +311,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     else
                     {
                         var payrollProcessBatchesInBeginningMonth = await _db.PayrollProcessBatches
+                            .AsNoTracking()
                             .Include(ppb => ppb.PayrollRecords)
                             .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                             .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
@@ -322,6 +324,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                             .ToListAsync();
 
                         var payrollProcessBatchesInEndingMonth = await _db.PayrollProcessBatches
+                            .AsNoTracking()
                             .Include(ppb => ppb.PayrollRecords)
                             .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                             .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
@@ -334,6 +337,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                             .ToListAsync();
 
                         var payrollProcessBatchesInBetween = await _db.PayrollProcessBatches
+                            .AsNoTracking()
                             .Include(ppb => ppb.PayrollRecords)
                             .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                             .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
@@ -428,7 +432,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     var clientName = String.Empty;
                     if (query.ClientId.HasValue && query.ClientId.Value > 0)
                     {
-                        clientName = (await _db.Clients.SingleAsync(c => c.Id == query.ClientId)).Name;
+                        clientName = (await _db.Clients.AsNoTracking().SingleAsync(c => c.Id == query.ClientId)).Name;
                     }
 
                     return new QueryResult
