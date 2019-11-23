@@ -105,6 +105,14 @@
                                     <span ng-show="vm.validationErrors.clientId" class="help-block">{{vm.validationErrors.clientId.join(' ')}}</span>
                                 </div>
                             </div>
+                            <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }" ng-show="(vm.reportType == 'Thirteenth Month' || vm.reportType == 'Earnings and Deductions') && vm.showEmployeeSelection">
+                                <label class="col-md-4 col-lg-3 control-label">Employee</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
+                                    <select class="form-control" ng-model="vm.employee" ng-options="employee.name for employee in vm.employees track by employee.id" ng-disabled="vm.loadEmployeesInProgress"></select>
+                                    <span ng-show="vm.validationErrors.employeeId" class="help-block">{{vm.validationErrors.employeeId.join(' ')}}</span>
+                                </div>
+                            </div>
                             <div class="form-group" ng-hide="vm.reportType == 'Thirteenth Month' || vm.reportType == 'Earnings and Deductions'">
                                 <label class="col-md-4 col-lg-3 control-label">Payroll Period Month</label>
                                 <div class="col-md-8 col-lg-9">
@@ -218,12 +226,12 @@
                     </div>
                     <div class="modal-footer">
                         <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.generateInProgress"></i>
-                        <a ng-if="vm.reportType == 'PHIC'" ng-href="/Reports/GeneratePHIC?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-if="vm.reportType == 'SSS'" ng-href="/Reports/GenerateSSS?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-if="vm.reportType == 'PagIbig'" ng-href="/Reports/GeneratePagIbig?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-if="vm.reportType == 'Loan Ledger'" ng-href="/Reports/GenerateLoanLedger?clientId={{vm.client.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-if="vm.reportType == 'Thirteenth Month'" ng-href="/Reports/GenerateThirteenthMonth?clientId={{vm.client.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-if="vm.reportType == 'Earnings and Deductions'" ng-href="/Reports/GenerateEarningsDeductions?clientId={{vm.client.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'PHIC'" ng-href="/Reports/GeneratePHIC?clientId={{vm.client.id}}&employeeId={{vm.employee.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'SSS'" ng-href="/Reports/GenerateSSS?clientId={{vm.client.id}}&employeeId={{vm.employee.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'PagIbig'" ng-href="/Reports/GeneratePagIbig?clientId={{vm.client.id}}&employeeId={{vm.employee.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'Loan Ledger'" ng-href="/Reports/GenerateLoanLedger?clientId={{vm.client.id}}&employeeId={{vm.employee.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'Thirteenth Month'" ng-href="/Reports/GenerateThirteenthMonth?clientId={{vm.client.id}}&employeeId={{vm.employee.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-if="vm.reportType == 'Earnings and Deductions'" ng-href="/Reports/GenerateEarningsDeductions?clientId={{vm.client.id}}&employeeId={{vm.employee.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
                     </div>
                 </form>

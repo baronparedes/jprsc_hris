@@ -20,6 +20,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public int? ClientId { get; set; }
             public string Destination { get; set; }
             public string DisplayMode { get; set; }
+            public int? EmployeeId { get; set; }
             public int PayrollPeriodFromYear { get; set; }
             public int PayrollPeriodToYear { get; set; }
             public Month? FromPayrollPeriodMonth { get; set; }
@@ -483,6 +484,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                                 .SelectMany(ppb => ppb.PayrollRecords)
                                 .ToList();
 
+                            if (query.EmployeeId.HasValue && query.EmployeeId.Value > 0)
+                            {
+                                payrollRecordsInMonth = payrollRecordsInMonth
+                                    .Where(pr => pr.EmployeeId == query.EmployeeId.Value)
+                                    .ToList();
+                            }
+
                             var isJanuaryFirstPayrollPeriod = j == 1 && group.Key == 1;
                             if (isJanuaryFirstPayrollPeriod)
                             {
@@ -490,6 +498,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                                     .Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i - 1 && (int)ppb.PayrollPeriodMonth / 10 == j)
                                     .SelectMany(ppb => ppb.PayrollRecords)
                                     .ToList();
+
+                                if (query.EmployeeId.HasValue && query.EmployeeId.Value > 0)
+                                {
+                                    payrollRecordsInJanuaryFirstPeriod = payrollRecordsInJanuaryFirstPeriod
+                                        .Where(pr => pr.EmployeeId == query.EmployeeId.Value)
+                                        .ToList();
+                                }
 
                                 if (payrollRecordsInJanuaryFirstPeriod.Any())
                                 {

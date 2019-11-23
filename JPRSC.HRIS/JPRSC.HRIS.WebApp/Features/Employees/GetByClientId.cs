@@ -60,8 +60,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                 var employees = await dbQuery
                     .Include(e => e.Company)
                     .OrderBy(e => e.LastName)
-                    .ThenBy(e => e.FirstName)
-                    
+                    .ThenBy(e => e.FirstName)                    
                     .ProjectToListAsync<QueryResult.Employee>();
 
                 return new QueryResult

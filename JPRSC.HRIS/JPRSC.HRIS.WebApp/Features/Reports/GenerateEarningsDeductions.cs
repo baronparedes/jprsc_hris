@@ -20,6 +20,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public int? ClientId { get; set; }
             public string Destination { get; set; }
             public string DisplayMode { get; set; }
+            public int? EmployeeId { get; set; }
             public int PayrollPeriodFromYear { get; set; }
             public int PayrollPeriodToYear { get; set; }
             public Month? FromPayrollPeriodMonth { get; set; }
@@ -574,17 +575,31 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                                 .SelectMany(ppb => ppb.EarningDeductionRecords)
                                 .ToList();
 
+                            if (query.EmployeeId.HasValue && query.EmployeeId.Value > 0)
+                            {
+                                earningDeductionRecordsInMonth = earningDeductionRecordsInMonth
+                                    .Where(edr => edr.EmployeeId == query.EmployeeId.Value)
+                                    .ToList();
+                            }
+
                             var isJanuaryFirstPayrollPeriod = j == 1 && group.Key == 1;
                             if (isJanuaryFirstPayrollPeriod)
                             {
-                                var payrollRecordsInJanuaryFirstPeriod = group
+                                var earningDeductionRecordsInJanuaryFirstPeriod = group
                                     .Where(ppb => ppb.PayrollPeriodFrom.Value.Year == i - 1 && (int)ppb.PayrollPeriodMonth / 10 == j)
                                     .SelectMany(ppb => ppb.EarningDeductionRecords)
                                     .ToList();
 
-                                if (payrollRecordsInJanuaryFirstPeriod.Any())
+                                if (query.EmployeeId.HasValue && query.EmployeeId.Value > 0)
                                 {
-                                    foreach (var record in payrollRecordsInJanuaryFirstPeriod)
+                                    earningDeductionRecordsInJanuaryFirstPeriod = earningDeductionRecordsInJanuaryFirstPeriod
+                                        .Where(pr => pr.EmployeeId == query.EmployeeId.Value)
+                                        .ToList();
+                                }
+
+                                if (earningDeductionRecordsInJanuaryFirstPeriod.Any())
+                                {
+                                    foreach (var record in earningDeductionRecordsInJanuaryFirstPeriod)
                                     {
                                         earningDeductionRecordsInMonth.Add(record);
                                     }
