@@ -120,7 +120,6 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                 {
-                    //monthHeaders.AddRange(months);
                     if (i == Query.PayrollPeriodFromYear)
                     {
                         for (var j = 0; j < months.Count; j++)
@@ -232,8 +231,6 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             {
                 public decimal Basic { get; set; }
                 public decimal UTTardy { get; set; }
-                public IDictionary<int, decimal> BasicPerPayrollPeriod { get; set; } = new Dictionary<int, decimal>();
-                public IDictionary<int, decimal> UTTardyPerPayrollPeriod { get; set; } = new Dictionary<int, decimal>();
                 public decimal Total => Basic - UTTardy;
             }
         }
@@ -529,10 +526,6 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                             Basic = payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault(),
                             UTTardy = payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault()
                         };
-
-                        newMonthRecord.BasicPerPayrollPeriod.Add(group.Key, payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault());
-                        newMonthRecord.UTTardyPerPayrollPeriod.Add(group.Key, payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault());
-
                         thirteenthMonthRecordsDictionary[payrollRecord.EmployeeId.Value].MonthRecords.Add(key, newMonthRecord);
                     }
                     else
@@ -541,24 +534,6 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                         monthRecord.Basic += payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault();
                         monthRecord.UTTardy += payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault();
-
-                        if (monthRecord.BasicPerPayrollPeriod.ContainsKey(group.Key))
-                        {
-                            monthRecord.BasicPerPayrollPeriod[group.Key] += payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault();
-                        }
-                        else
-                        {
-                            monthRecord.BasicPerPayrollPeriod.Add(group.Key, payrollRecord.DaysWorkedValue.GetValueOrDefault() + payrollRecord.HoursWorkedValue.GetValueOrDefault());
-                        }
-
-                        if (monthRecord.UTTardyPerPayrollPeriod.ContainsKey(group.Key))
-                        {
-                            monthRecord.UTTardyPerPayrollPeriod[group.Key] += payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault();
-                        }
-                        else
-                        {
-                            monthRecord.UTTardyPerPayrollPeriod.Add(group.Key, payrollRecord.HoursLateValue.GetValueOrDefault() + payrollRecord.HoursUndertimeValue.GetValueOrDefault());
-                        }
                     }
                 }
             }
