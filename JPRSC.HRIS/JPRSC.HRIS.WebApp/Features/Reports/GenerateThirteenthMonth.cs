@@ -350,9 +350,28 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                                 (int)ppb.PayrollPeriodMonth < toPayrollPeriodMonthAsInt)
                             .ToListAsync();
 
+                        var payrollProcessBatchesBetweenYears = new List<PayrollProcessBatch>();
+                        if (startDate.Year == endDate.Year - 1)
+                        {
+                            var betweenYearStartDate = new DateTime(startDate.Year, 12, 1);
+                            var betweenYearEndDate = new DateTime(endDate.Year, 1, 1);
+
+                            payrollProcessBatchesBetweenYears = await _db.PayrollProcessBatches
+                                .AsNoTracking()
+                                .Include(ppb => ppb.PayrollRecords)
+                                .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
+                                .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
+                                .Where(ppb => !ppb.DeletedOn.HasValue &&
+                                    clientIds.Contains(ppb.ClientId.Value) &&
+                                    DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) >= betweenYearStartDate &&
+                                    DbFunctions.TruncateTime(ppb.PayrollPeriodFrom.Value) <= betweenYearEndDate)
+                                .ToListAsync();
+                        }
+
                         var payrollProcessBatches = payrollProcessBatchesInBeginningMonth
                             .Concat(payrollProcessBatchesInBetween)
-                            .Concat(payrollProcessBatchesInEndingMonth);
+                            .Concat(payrollProcessBatchesInEndingMonth)
+                            .Concat(payrollProcessBatchesBetweenYears);
 
                         allPayrollProcessBatches.AddRange(payrollProcessBatches);
                     }
