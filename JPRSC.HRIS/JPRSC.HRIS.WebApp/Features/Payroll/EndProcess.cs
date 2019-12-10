@@ -54,8 +54,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 public PayrollProcessBatch PayrollProcessBatchForEndProcess { get; set; }
 
                 public int? NextPayrollPeriod => CurrentPayrollPeriod == NumberOfPayrollPeriodsAMonth ? 1 : CurrentPayrollPeriod += 1;
-                public DateTime? NextPayrollPeriodFrom => !PayrollPeriodFrom.HasValue ? (DateTime?)null : PayrollPeriodFrom.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value);
-                public DateTime? NextPayrollPeriodTo => !PayrollPeriodTo.HasValue ? (DateTime?)null : PayrollPeriodTo.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value);
+                public DateTime? NextPayrollPeriodFrom => PayrollPeriodFrom.HasValue && NumberOfWorkingDaysForThisPayrollPeriod.HasValue ? PayrollPeriodFrom.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value) : (DateTime?)null;
+                public DateTime? NextPayrollPeriodTo => PayrollPeriodTo.HasValue && NumberOfWorkingDaysForThisPayrollPeriod.HasValue ? PayrollPeriodTo.Value.AddDays(NumberOfWorkingDaysForThisPayrollPeriod.Value) : (DateTime?)null;
                 public Month? NextPayrollPeriodMonth => !PayrollPeriodMonth.HasValue ? (Month?)null : (int)PayrollPeriodMonth == 120 ? (Month)10 : (Month)((int)PayrollPeriodMonth.Value + 10);
             }
 
