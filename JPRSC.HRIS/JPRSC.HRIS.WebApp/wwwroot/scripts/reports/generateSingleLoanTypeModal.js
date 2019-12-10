@@ -8,11 +8,15 @@
         vm.cancel = cancel;
         vm.clients = params.clients;
         vm.payrollPeriodMonth = '-1';
+        vm.payrollPeriodYear = new Date().getFullYear().toString();
         vm.loanType = params.loanType;
         vm.validationErrors = {};
 
         $timeout(function () {
-            vm.clients.splice(0, 0, { id: -1, code: 'All Clients', name: 'All Clients' });
+            if (vm.clients.length && vm.clients[0].id !== -1) {
+                vm.clients.splice(0, 0, { id: -1, code: 'All Clients', name: 'All Clients' });
+            }
+
             vm.client = vm.clients[0];
         });
 

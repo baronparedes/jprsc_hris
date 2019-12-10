@@ -272,11 +272,23 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-lg-3 control-label">Payroll Year</label>
+                                <div class="col-md-8 col-lg-9">
+                                    {{vm.payrollPeriodYear}}
+                                    <select class="form-control" name="PayrollPeriodYear" ng-model="vm.payrollPeriodYear">
+                                        @for (var i = currentYear; i > minYear; i--)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <i class="fa fa-refresh fa-pulse fa-fw margin-right-10" ng-show="vm.generateInProgress"></i>
-                        <a ng-href="/Reports/GenerateSingleLoanType?clientId={{vm.client.id}}&loanTypeId={{vm.loanType.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        <a ng-href="/Reports/GenerateSingleLoanType?clientId={{vm.client.id}}&loanTypeId={{vm.loanType.id}}&payrollPeriodMonth={{vm.payrollPeriodMonth}}&payrollPeriodYear={{vm.payrollPeriodYear}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
                     </div>
                 </form>
