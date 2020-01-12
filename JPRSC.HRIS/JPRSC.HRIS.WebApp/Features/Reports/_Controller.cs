@@ -19,6 +19,23 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         }
 
         [HttpGet]
+        public async Task<ActionResult> GenerateAlphalist(GenerateAlphalist.Query query)
+        {
+            if (!ModelState.IsValid) return Content($"Error: {ModelState.GetAllErrors().First()}");
+
+            var result = await _mediator.Send(query);
+
+            if (query.Destination == "Excel" || query.Destination == "CSV")
+            {
+                return File(result.FileContent, System.Net.Mime.MediaTypeNames.Application.Octet, result.Filename);
+            }
+            else
+            {
+                return View("AlphalistReport", result);
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GenerateEarningsDeductions(GenerateEarningsDeductions.Query query)
         {
             if (!ModelState.IsValid) return Content($"Error: {ModelState.GetAllErrors().First()}");

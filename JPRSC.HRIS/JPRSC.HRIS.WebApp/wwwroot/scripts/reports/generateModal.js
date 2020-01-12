@@ -5,6 +5,7 @@
 
     function GenerateReportModalCtrl($http, $scope, $timeout, $uibModalInstance, lookups, params, $window) {
         var vm = this;
+        vm.alphalistType = '7.1';
         vm.cancel = cancel;
         vm.clientChanged = clientChanged;
         vm.clients = params.clients;
@@ -12,14 +13,20 @@
         vm.fromPayrollPeriod = '1';
         vm.fromPayrollPeriodMonth = '10';
         vm.loadEmployeesInProgress = false;
-        vm.toPayrollPeriod = '1';
-        vm.toPayrollPeriodMonth = '10';
         vm.payrollPeriodMonth = '-1';
         vm.payrollPeriodYear = new Date().getFullYear().toString();
         vm.payrollPeriodFromYear = new Date().getFullYear().toString();
         vm.payrollPeriodToYear = new Date().getFullYear().toString();
         vm.reportType = params.reportType;
         vm.showEmployeeSelection = false;
+        vm.toPayrollPeriod = '1';
+        vm.toPayrollPeriodMonth = '10';
+        vm.thirteenthMonthFromPayrollPeriod = '1';
+        vm.thirteenthMonthFromPayrollPeriodMonth = '10';
+        vm.thirteenthMonthPayrollPeriodFromYear = new Date().getFullYear().toString();
+        vm.thirteenthMonthPayrollPeriodToYear = new Date().getFullYear().toString();
+        vm.thirteenthMonthToPayrollPeriod = '1';
+        vm.thirteenthMonthToPayrollPeriodMonth = '10';
         vm.validationErrors = {};
 
         $timeout(function () {
