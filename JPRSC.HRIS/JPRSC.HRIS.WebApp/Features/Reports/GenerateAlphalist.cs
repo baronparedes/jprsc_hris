@@ -116,6 +116,71 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 return totals;
             }
 
+            public IList<string> GetPreHeaders()
+            {
+                return new List<string>
+                {
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+
+                    // Gross Compensation Income Previous Employer Non-Taxable
+                    "Gross Compensation Income Previous Employer Non-Taxable",
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+
+                    // Gross Compensation Income Previous Employer Taxable
+                    "Taxable",
+                    String.Empty,
+                    String.Empty,
+
+                    // Gross Compensation Income Present Employer Non-Taxable
+                    "Gross Compensation Income Present Employer Non-Taxable",
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+
+                    // Gross Compensation Income Present Employer Taxable
+                    "Taxable",
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    "Exemption",
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+                    String.Empty,
+
+                    // Gross Compensation Income Present Employer Tax Withheld
+                    "Tax Withheld",
+                    String.Empty,
+
+                    // Gross Compensation Income Present Employer Year End Adjustments
+                    "Year-End Adjustment (11a or 11b)",
+                    String.Empty,
+                    String.Empty
+                };
+            }
+
             public IList<string> GetHeaders()
             {
                 return new List<string>
@@ -124,16 +189,60 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     "Employee Code",
                     "Employee TIN",
                     "Employee Region",
+
+                    // Gross Compensation Income Previous Employer Non-Taxable
+                    "Gross compensation income previous",
+                    "Basic/SMW",
+                    "Holiday Pay",
+                    "Overtime Pay",
+                    "Night Shift Differential",
+                    "Hazard Pay",
+                    "13th month pay and other benefits",
+                    "De minimis benefits",
+                    "SSS, GSIS, PHIC and PAG-IBIG Contris and other union dues",
+                    "Salaries and other forms of compensations",
+                    "Total non-taxable/exempt compensation income",
+
+                    // Gross Compensation Income Previous Employer Taxable
+                    "13th month pay and other benefits",
+                    "Salaries and other forms of compensation",
+                    "Total taxable (previous employer)",
+
+                    // Gross Compensation Income Present Employer Non-Taxable
                     "Employment",
                     "Gross compensation present",
                     "Basic SMW per day",
                     "Basic SMW per month",
                     "Basic SMW per year",
                     "Factor used (no of days/year)",
+                    "Holiday Pay",
                     "Overtime Pay",
+                    "Night Shift Differential",
+                    "Hazard Pay",
                     "13th month pay and other benefits",
+                    "De minimis benefits",
                     "SSS, GSIS, PHIC and PAG-IBIG Contris and other union dues",
-                    "Salaries and other forms of compensations"
+                    "Salaries and other forms of compensations",
+
+                    // Gross Compensation Income Present Employer Taxable
+                    "13th month pay and other benefits",
+                    "Salaries and other forms of compensations",
+                    "Total compensation present",
+                    "Total compensation income (previous and present employers)",
+                    "Exemption code",
+                    "Amount",
+                    "Premium paid on health and or hospital insurance",
+                    "Net taxable compensation income",
+                    "Tax due (Jan - Dec)",
+
+                    // Gross Compensation Income Present Employer Tax Withheld
+                    "Previous Employer",
+                    "Present Employer",
+
+                    // Gross Compensation Income Present Employer Year End Adjustments
+                    "Amt withheld and paid for in December",
+                    "Over withheld tax employee",
+                    "Amount of tax withheld as adjusted"
                 };
             }
 
@@ -216,16 +325,60 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         displayLine.Add(Employee.EmployeeCode);
                         displayLine.Add(Employee.TIN);
                         displayLine.Add(Employee.Region.HasValue ? EnumHelper.GetDisplayName(Employee.Region.Value) : String.Empty);
+
+                        // Gross Compensation Income Previous Employer Non-Taxable
+                        displayLine.Add(PREV_NT__GrossCompensationIncomePrevious);
+                        displayLine.Add(PREV_NT_BasicSMW);
+                        displayLine.Add(PREV_NT_HolidayPay);
+                        displayLine.Add(PREV_NT_OvertimePay);
+                        displayLine.Add(PREV_NT_NightShiftDifferential);
+                        displayLine.Add(PREV_NT_HazardPay);
+                        displayLine.Add(PREV_NT_ThirteenthMonthPayAndOtherBenefits);
+                        displayLine.Add(PREV_NT_DeMinimisBenefits);
+                        displayLine.Add(PREV_NT_Contributions);
+                        displayLine.Add(PREV_NT_SalariesAndOtherFormsOfCompensations);
+                        displayLine.Add(PREV_NT_TotalIncome);
+
+                        // Gross Compensation Income Previous Employer Taxable
+                        displayLine.Add(PREV_T_ThirteenthMonthPayAndOtherBenefits);
+                        displayLine.Add(PREV_T_SalariesAndOtherFormsOfCompensations);
+                        displayLine.Add(PREV_T_TotalIncome);
+
+                        // Gross Compensation Income Present Employer Non-Taxable
                         displayLine.Add(employmentDuration);
                         displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings));
                         displayLine.Add(Employee.DailyRate.HasValue ? String.Format("{0:n}", Employee.DailyRate) : String.Empty);
                         displayLine.Add(Employee.MonthlyRate.HasValue ? String.Format("{0:n}", Employee.MonthlyRate) : String.Empty);
                         displayLine.Add(yearlyRate.HasValue ? String.Format("{0:n}", yearlyRate) : String.Empty);
                         displayLine.Add(NumberOfWeekdaysInToYear.ToString());
+                        displayLine.Add(PRES_NT_HolidayPay);
                         displayLine.Add(String.Format("{0:n}", PRES_NT_TotalOvertimeValue));
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalThirteenthMonth + PRES_NT_TotalEarnings));
+                        displayLine.Add(PRES_NT_NightShiftDifferential);
+                        displayLine.Add(PRES_NT_HazardPay);
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalThirteenthMonth));
+                        displayLine.Add(PRES_NT_DeMinimisBenefits);
                         displayLine.Add(String.Format("{0:n}", PRES_NT_TotalContributions));
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings + PRES_NT_TotalOvertimeValue + PRES_NT_TotalThirteenthMonth + PRES_NT_TotalContributions));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings - PRES_NT_TotalOvertimeValue - PRES_NT_TotalThirteenthMonth - PRES_NT_TotalContributions));
+
+                        // Gross Compensation Income Present Employer Taxable
+                        displayLine.Add(PRES_T_ThirteenthMonthPayAndOtherBenefits);
+                        displayLine.Add(PRES_T_SalariesAndOtherFormsOfCompensations);
+                        displayLine.Add(PRES_T_TotalCompensationPresent);
+                        displayLine.Add(PRES_T_TotalCompensationIncome);
+                        displayLine.Add(PRES_T_ExemptionCode);
+                        displayLine.Add(PRES_T_Amount);
+                        displayLine.Add(PRES_T_PremiumPaidHospital);
+                        displayLine.Add(PRES_T_NetTaxableCompensationIncome);
+                        displayLine.Add(PRES_T_TaxDue);
+
+                        // Gross Compensation Income Present Employer Tax Withheld
+                        displayLine.Add(PRES_TW_PreviousEmployer);
+                        displayLine.Add(PRES_TW_PresentEmployer);
+
+                        // Gross Compensation Income Present Employer Year End Adjustments
+                        displayLine.Add(PRES_YEA_AmountWithheldPaidDecember);
+                        displayLine.Add(PRES_YEA_OverWithheldTax);
+                        displayLine.Add(PRES_YEA_AmountWithheldRequested);
 
                         return displayLine;
                     }
@@ -453,9 +606,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         excelLines.Add(alphalistRecord.DisplayLine);
                     }
 
-                    var header = queryResult.GetHeaders();
-
-                    excelLines.Insert(0, header);
+                    excelLines.Insert(0, queryResult.GetHeaders());
+                    excelLines.Insert(0, queryResult.GetPreHeaders());
 
                     var totals = queryResult.GetTotals(queryResult.AlphalistRecords);
                     excelLines.Add(totals);
