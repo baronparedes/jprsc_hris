@@ -17,10 +17,18 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 {
     public class GenerateAlphalist
     {
+        public const string BIRFormNumber = "1604CF";
+        public const string CompanyTIN = "225628759";
+        public const string U_0039 = "0039";
+        public const string U_N = "N";
+        public const string U_039 = "039";
+        public const string U_0000 = "0000";
+
         public class Query : IRequest<QueryResult>
         {
             public string AlphalistType { get; set; }
             public int? ClientId { get; set; }
+            public DateTime DateGenerated { get; set; }
             public string Destination { get; set; }
             public string DisplayMode { get; set; }
             public int PayrollPeriodFromYear { get; set; }
@@ -115,6 +123,43 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalEarnings + a.PRES_NT_TotalOvertimeValue + a.PRES_NT_TotalThirteenthMonth + a.PRES_NT_TotalContributions)));
 
                 return totals;
+            }
+
+            public IList<string> GetCSVHeader()
+            {
+                var displayLine = new List<string>();
+
+                displayLine.Add(BIRFormNumber);
+                displayLine.Add(CompanyTIN);
+                displayLine.Add(U_0039);
+                displayLine.Add(String.Format("MM/dd/yyyy", Query.DateGenerated));
+                displayLine.Add(U_N);
+                displayLine.Add("0");
+                displayLine.Add(U_039);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+                displayLine.Add(String.Empty);
+
+                return displayLine;
             }
 
             public IList<string> GetPreHeaders()
@@ -249,6 +294,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
             public class AlphalistRecord
             {
+                public AlphalistRecord(DateTime dateGenerated)
+                {
+                    DateGenerated = dateGenerated;
+                }
+
+                public DateTime DateGenerated { get; set; }
+                public int Order { get; set; }
+
                 public Employee Employee { get; set; }
                 public Query Query { get; set; }
 
@@ -309,6 +362,50 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 public string PRES_YEA_AmountWithheldPaidDecember { get; set; } = "NA";
                 public string PRES_YEA_OverWithheldTax { get; set; } = "NA";
                 public string PRES_YEA_AmountWithheldRequested { get; set; } = "NA";
+
+                public IList<string> CSVDisplayLine
+                {
+                    get
+                    {
+                        var dateHired = Employee.DateHired.HasValue ? $"{Employee.DateHired.Value:MMM d, yyyy}" : String.Empty;
+                        var dateResigned = Employee.DateResigned.HasValue ? $"{Employee.DateResigned.Value:MMM d, yyyy}" : String.Empty;
+
+                        var displayLine = new List<string>();
+
+                        displayLine.Add("D" + Query.AlphalistType);
+                        displayLine.Add(BIRFormNumber);
+                        displayLine.Add(CompanyTIN);
+                        displayLine.Add(U_0039);
+                        displayLine.Add(String.Format("MM/dd/yyyy", Query.DateGenerated));
+                        displayLine.Add(Order.ToString());
+                        displayLine.Add(Employee.TIN);
+                        displayLine.Add(U_0000);
+                        displayLine.Add($"\"{Employee.LastName}\"");
+                        displayLine.Add($"\"{Employee.FirstName}\"");
+                        displayLine.Add($"\"{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}\"");
+                        displayLine.Add(dateHired);
+                        displayLine.Add(dateResigned);
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalThirteenthMonth));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalContributions));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings - PRES_NT_TotalOvertimeValue - PRES_NT_TotalThirteenthMonth - PRES_NT_TotalContributions));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings - PRES_NT_TotalOvertimeValue - PRES_NT_TotalThirteenthMonth - PRES_NT_TotalContributions));
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("N/A");
+                        displayLine.Add("Y");
+
+                        return displayLine;
+                    }
+                }
 
                 public IList<string> DisplayLine
                 {
@@ -404,6 +501,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                query.DateGenerated = DateTime.Now;
+
                 var clients = query.ClientId == -1 ?
                     await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue).ToListAsync() :
                     await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
@@ -569,8 +668,11 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     .ThirteenthMonthRecords
                     .ToDictionary(t => t.Employee.Id, t => t);
 
-                foreach (var alphalistRecord in alphalistRecords)
+                for (var i = 0; i < alphalistRecords.Count; i++)
                 {
+                    var alphalistRecord = alphalistRecords[i];
+
+                    alphalistRecord.Order = i + 1;
                     alphalistRecord.NumberOfWeekdaysInToYear = weekdays;
 
                     if (thirteenthMonthRecordsDictionary.ContainsKey(alphalistRecord.Employee.Id))
@@ -667,8 +769,10 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                     foreach (var alphalistRecord in alphalistRecords)
                     {
-                        csvLines.Add(alphalistRecord.DisplayLine);
+                        csvLines.Add(alphalistRecord.CSVDisplayLine);
                     }
+
+                    csvLines.Insert(0, queryResult.GetCSVHeader());
 
                     var reportFileContent = _csvBuilder.BuildCSVFile(csvLines);
 
@@ -794,7 +898,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 {
                     if (!alphalistRecordsDictionary.ContainsKey(payrollRecord.EmployeeId.Value))
                     {
-                        alphalistRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.AlphalistRecord { Employee = payrollRecord.Employee, Query = query });
+                        alphalistRecordsDictionary.Add(payrollRecord.EmployeeId.Value, new QueryResult.AlphalistRecord(query.DateGenerated) { Employee = payrollRecord.Employee, Query = query });
                     }
 
                     var alphalistRecord = alphalistRecordsDictionary[payrollRecord.EmployeeId.Value];
