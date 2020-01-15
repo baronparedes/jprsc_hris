@@ -376,13 +376,13 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         displayLine.Add(BIRFormNumber);
                         displayLine.Add(CompanyTIN);
                         displayLine.Add(U_0039);
-                        displayLine.Add(String.Format("MM/dd/yyyy", Query.DateGenerated));
+                        displayLine.Add(String.Format("{0:MM/dd/yyyy}", Query.DateGenerated));
                         displayLine.Add(Order.ToString());
                         displayLine.Add(Employee.TIN);
                         displayLine.Add(U_0000);
                         displayLine.Add($"\"{Employee.LastName}\"");
                         displayLine.Add($"\"{Employee.FirstName}\"");
-                        displayLine.Add($"\"{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}\"");
+                        displayLine.Add($"\"{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? String.Empty : $", {Employee.MiddleName}")}\"");
                         displayLine.Add(dateHired);
                         displayLine.Add(dateResigned);
                         displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings));
