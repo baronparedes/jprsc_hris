@@ -502,6 +502,7 @@
     <Compile Include="Features\TaxStatuses\_MappingProfile.cs" />
     <Compile Include="Infrastructure\Angular\AngularHtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\AuditTrail\AuditTrailAttribute.cs" />
+    <Compile Include="Infrastructure\CSV\CSVBuilder.cs" />
     <Compile Include="Infrastructure\Excel\ColumnInfo.cs" />
     <Compile Include="Infrastructure\Excel\ExcelObject.cs" />
     <Compile Include="Infrastructure\Excel\IEnumerableExtensions.cs" />

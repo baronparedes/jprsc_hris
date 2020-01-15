@@ -18,6 +18,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Threading;
 using System.Text;
+using JPRSC.HRIS.WebApp.Infrastructure.CSV;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
 {
@@ -47,6 +48,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             container.Register<IAuthenticationManager>(GetAuthenticationManager, Lifestyle.Scoped);
             container.Register<IMVCLogger, MVCLogger>(Lifestyle.Singleton);
             container.Register<IExcelBuilder, OpenXMLExcelBuilder>(Lifestyle.Scoped);
+            container.Register<ICSVBuilder, CSVBuilder>(Lifestyle.Scoped);
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
 

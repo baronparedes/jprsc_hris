@@ -2,6 +2,7 @@
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Infrastructure.NET;
 using JPRSC.HRIS.Models;
+using JPRSC.HRIS.WebApp.Infrastructure.CSV;
 using JPRSC.HRIS.WebApp.Infrastructure.Excel;
 using MediatR;
 using System;
@@ -389,12 +390,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly ICSVBuilder _csvBuilder;
             private readonly IExcelBuilder _excelBuilder;
             private readonly IMediator _mediator;
 
-            public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMediator mediator)
+            public QueryHandler(ApplicationDbContext db, ICSVBuilder csvBuilder, IExcelBuilder excelBuilder, IMediator mediator)
             {
                 _db = db;
+                _csvBuilder = csvBuilder;
                 _excelBuilder = excelBuilder;
                 _mediator = mediator;
             }
@@ -631,6 +634,61 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     reportFileNameBuilder.Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}");
 
                     reportFileNameBuilder.Append(".xlsx");
+
+                    queryResult.FileContent = reportFileContent;
+                    queryResult.Filename = reportFileNameBuilder.ToString();
+
+                    return queryResult;
+                }
+                else if (query.Destination == "CSV")
+                {
+                    var queryResult = new QueryResult
+                    {
+                        AlphalistType = query.AlphalistType,
+                        ClientId = query.ClientId,
+                        DisplayMode = query.DisplayMode,
+                        AlphalistRecords = alphalistRecords,
+                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
+                        PayrollPeriodToYear = query.PayrollPeriodToYear,
+                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
+                        FromPayrollPeriod = query.FromPayrollPeriod,
+                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
+                        ToPayrollPeriod = query.ToPayrollPeriod,
+                        ThirteenthMonthFromPayrollPeriod = query.ThirteenthMonthFromPayrollPeriod,
+                        ThirteenthMonthFromPayrollPeriodMonth = query.ThirteenthMonthFromPayrollPeriodMonth,
+                        ThirteenthMonthPayrollPeriodFromYear = query.ThirteenthMonthPayrollPeriodFromYear,
+                        ThirteenthMonthPayrollPeriodToYear = query.ThirteenthMonthPayrollPeriodToYear,
+                        ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
+                        ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
+                        Query = query
+                    };
+
+                    var csvLines = new List<IList<string>>();
+
+                    foreach (var alphalistRecord in alphalistRecords)
+                    {
+                        csvLines.Add(alphalistRecord.DisplayLine);
+                    }
+
+                    var reportFileContent = _csvBuilder.BuildCSVFile(csvLines);
+
+                    var reportFileNameBuilder = new StringBuilder(64);
+                    reportFileNameBuilder.Append($"Alphalist Report - ");
+
+                    if (query.ClientId == -1)
+                    {
+                        reportFileNameBuilder.Append("All Clients");
+                    }
+                    else
+                    {
+                        reportFileNameBuilder.Append(clients.Single().Name);
+                    }
+
+                    reportFileNameBuilder.Append(" - ");
+
+                    reportFileNameBuilder.Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}");
+
+                    reportFileNameBuilder.Append(".csv");
 
                     queryResult.FileContent = reportFileContent;
                     queryResult.Filename = reportFileNameBuilder.ToString();
