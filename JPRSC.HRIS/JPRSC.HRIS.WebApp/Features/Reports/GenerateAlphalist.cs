@@ -103,15 +103,15 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             public IList<string> GetTotals(IList<AlphalistRecord> alphalistRecords)
             {
                 var totals = new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, "TOTAL" };
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.TotalEarnings)));
+                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalEarnings)));
                 totals.Add(String.Empty); // Daily Rate
                 totals.Add(String.Empty); // Monthly Rate
                 totals.Add(String.Empty); // Yearly Rate
                 totals.Add(String.Empty); // Number of weekdays in year
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.TotalOvertimeValue)));
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.TotalThirteenthMonth + a.TotalEarnings)));
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.TotalContributions)));
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.TotalEarnings + a.TotalOvertimeValue + a.TotalThirteenthMonth + a.TotalContributions)));
+                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalOvertimeValue)));
+                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalThirteenthMonth + a.PRES_NT_TotalEarnings)));
+                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalContributions)));
+                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalEarnings + a.PRES_NT_TotalOvertimeValue + a.PRES_NT_TotalThirteenthMonth + a.PRES_NT_TotalContributions)));
 
                 return totals;
             }
@@ -141,20 +141,64 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             {
                 public Employee Employee { get; set; }
                 public Query Query { get; set; }
+
+                // Gross Compensation Income Previous Employer Non-Taxable
+                public string PREV_NT__GrossCompensationIncomePrevious { get; set; } = "NA";
+                public string PREV_NT_BasicSMW { get; set; } = "NA";
+                public string PREV_NT_HolidayPay { get; set; } = "NA";
+                public string PREV_NT_OvertimePay { get; set; } = "NA";
+                public string PREV_NT_NightShiftDifferential { get; set; } = "NA";
+                public string PREV_NT_HazardPay { get; set; } = "NA";
+                public string PREV_NT_ThirteenthMonthPayAndOtherBenefits { get; set; } = "NA";
+                public string PREV_NT_DeMinimisBenefits { get; set; } = "NA";
+                public string PREV_NT_Contributions { get; set; } = "NA";
+                public string PREV_NT_SalariesAndOtherFormsOfCompensations { get; set; } = "NA";
+                public string PREV_NT_TotalIncome { get; set; } = "NA";
+
+                // Gross Compensation Income Previous Employer Taxable
+                public string PREV_T_ThirteenthMonthPayAndOtherBenefits { get; set; } = "NA";
+                public string PREV_T_SalariesAndOtherFormsOfCompensations { get; set; } = "NA";
+                public string PREV_T_TotalIncome { get; set; } = "NA";
+
+                // Gross Compensation Income Present Employer Non-Taxable
                 public decimal TotalHoursWorkedValue { get; set; }
                 public decimal TotalDaysWorkedValue { get; set; }
-                public decimal TotalOvertimeValue { get; set; }
+                public decimal PRES_NT_TotalOvertimeValue { get; set; }
                 public decimal TotalCOLAHourlyValue { get; set; }
                 public decimal TotalCOLADailyValue { get; set; }
                 public decimal TotalCOLAMonthlyValue { get; set; }
                 public decimal TotalEarningsValue { get; set; }
-                public decimal TotalEarnings => TotalDaysWorkedValue + TotalHoursWorkedValue + TotalOvertimeValue + TotalCOLAHourlyValue + TotalCOLADailyValue + TotalCOLAMonthlyValue + TotalEarningsValue;
-                public decimal TotalThirteenthMonth { get; set; }
+                public decimal PRES_NT_TotalEarnings => TotalDaysWorkedValue + TotalHoursWorkedValue + PRES_NT_TotalOvertimeValue + TotalCOLAHourlyValue + TotalCOLADailyValue + TotalCOLAMonthlyValue + TotalEarningsValue;
+                public decimal PRES_NT_TotalThirteenthMonth { get; set; }
                 public int NumberOfWeekdaysInToYear { get; set; }
                 public decimal TotalSSSValue { get; set; }
                 public decimal TotalPHICValue { get; set; }
                 public decimal TotalPagIbigValue { get; set; }
-                public decimal TotalContributions => TotalSSSValue + TotalPHICValue + TotalPagIbigValue;
+                public decimal PRES_NT_TotalContributions => TotalSSSValue + TotalPHICValue + TotalPagIbigValue;
+                public string PRES_NT_HolidayPay { get; set; } = "NA";
+                public string PRES_NT_NightShiftDifferential { get; set; } = "NA";
+                public string PRES_NT_HazardPay { get; set; } = "NA";
+                public string PRES_NT_DeMinimisBenefits { get; set; } = "NA";
+
+                // Gross Compensation Income Present Employer Taxable
+                public string PRES_T_ThirteenthMonthPayAndOtherBenefits { get; set; } = "NA";
+                public string PRES_T_SalariesAndOtherFormsOfCompensations { get; set; } = "NA";
+                public string PRES_T_TotalCompensationPresent { get; set; } = "NA";
+                public string PRES_T_TotalCompensationIncome { get; set; } = "NA";
+                public string PRES_T_ExemptionCode { get; set; } = "NA";
+                public string PRES_T_Amount { get; set; } = "NA";
+                public string PRES_T_PremiumPaidHospital { get; set; } = "NA";
+                public string PRES_T_NetTaxableCompensationIncome { get; set; } = "NA";
+                public string PRES_T_TaxDue { get; set; } = "NA";
+
+                // Gross Compensation Income Present Employer Tax Withheld
+                public string PRES_TW_PreviousEmployer { get; set; } = "NA";
+                public string PRES_TW_PresentEmployer { get; set; } = "NA";
+
+                // Gross Compensation Income Present Employer Year End Adjustments
+                public string PRES_YEA_AmountWithheldPaidDecember { get; set; } = "NA";
+                public string PRES_YEA_OverWithheldTax { get; set; } = "NA";
+                public string PRES_YEA_AmountWithheldRequested { get; set; } = "NA";
 
                 public IList<string> DisplayLine
                 {
@@ -173,15 +217,15 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         displayLine.Add(Employee.TIN);
                         displayLine.Add(Employee.Region.HasValue ? EnumHelper.GetDisplayName(Employee.Region.Value) : String.Empty);
                         displayLine.Add(employmentDuration);
-                        displayLine.Add(String.Format("{0:n}", TotalEarnings));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings));
                         displayLine.Add(Employee.DailyRate.HasValue ? String.Format("{0:n}", Employee.DailyRate) : String.Empty);
                         displayLine.Add(Employee.MonthlyRate.HasValue ? String.Format("{0:n}", Employee.MonthlyRate) : String.Empty);
                         displayLine.Add(yearlyRate.HasValue ? String.Format("{0:n}", yearlyRate) : String.Empty);
                         displayLine.Add(NumberOfWeekdaysInToYear.ToString());
-                        displayLine.Add(String.Format("{0:n}", TotalOvertimeValue));
-                        displayLine.Add(String.Format("{0:n}", TotalThirteenthMonth + TotalEarnings));
-                        displayLine.Add(String.Format("{0:n}", TotalContributions));
-                        displayLine.Add(String.Format("{0:n}", TotalEarnings + TotalOvertimeValue + TotalThirteenthMonth + TotalContributions));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalOvertimeValue));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalThirteenthMonth + PRES_NT_TotalEarnings));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalContributions));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings + PRES_NT_TotalOvertimeValue + PRES_NT_TotalThirteenthMonth + PRES_NT_TotalContributions));
 
                         return displayLine;
                     }
@@ -375,7 +419,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                     if (thirteenthMonthRecordsDictionary.ContainsKey(alphalistRecord.Employee.Id))
                     {
-                        alphalistRecord.TotalThirteenthMonth = thirteenthMonthRecordsDictionary[alphalistRecord.Employee.Id].Whole;
+                        alphalistRecord.PRES_NT_TotalThirteenthMonth = thirteenthMonthRecordsDictionary[alphalistRecord.Employee.Id].Whole;
                     }
                 }
 
@@ -549,7 +593,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     alphalistRecord.TotalCOLAHourlyValue += payrollRecord.COLAHourlyValue.GetValueOrDefault();
                     alphalistRecord.TotalCOLADailyValue += payrollRecord.COLADailyValue.GetValueOrDefault();
                     alphalistRecord.TotalCOLAMonthlyValue += payrollRecord.COLAMonthlyValue.GetValueOrDefault();
-                    alphalistRecord.TotalOvertimeValue += payrollRecord.OvertimeValue.GetValueOrDefault();
+                    alphalistRecord.PRES_NT_TotalOvertimeValue += payrollRecord.OvertimeValue.GetValueOrDefault();
                     alphalistRecord.TotalSSSValue += payrollRecord.SSSValueEmployee.GetValueOrDefault();
                     alphalistRecord.TotalPHICValue += payrollRecord.PHICValueEmployee.GetValueOrDefault();
                     alphalistRecord.TotalPagIbigValue += payrollRecord.PagIbigValueEmployee.GetValueOrDefault();
