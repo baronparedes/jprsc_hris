@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Infrastructure.NET;
 using JPRSC.HRIS.Models;
@@ -517,6 +518,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 _csvBuilder = csvBuilder;
                 _excelBuilder = excelBuilder;
                 _mediator = mediator;
+
+                _db.Database.CommandTimeout = AppSettings.Int("CommandTimeout_GenerateAlphalist");
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -648,6 +651,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         allPayrollProcessBatches.AddRange(payrollProcessBatches);
                     }
                 }
+
+                _db.Database.CommandTimeout = 30;
 
                 allPayrollProcessBatches = allPayrollProcessBatches
                     .GroupBy(ppb => ppb.Id)
