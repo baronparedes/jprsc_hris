@@ -231,13 +231,21 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             {
                 return new List<string>
                 {
-                    "Employee Name",
+                    "Employee Last Name",
+                    "First Name",
+                    "Middle Name",
                     "Employee Code",
                     "Employee TIN",
                     "Employee Region",
+                    "Permanent Addrress",
+                    "Birth Date",
+                    "Contact Number",
+                    "Zip Code",
 
                     // Gross Compensation Income Previous Employer Non-Taxable
                     "Gross compensation income previous",
+                    "Regular Pay",
+                    "Total Earnings",
                     "Basic/SMW",
                     "Holiday Pay",
                     "Overtime Pay",
@@ -255,7 +263,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     "Total taxable (previous employer)",
 
                     // Gross Compensation Income Present Employer Non-Taxable
-                    "Employment",
+                    "Date Hired",
+                    "Date Resigned",
                     "Gross compensation present",
                     "Basic SMW per day",
                     "Basic SMW per month",
@@ -331,7 +340,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 public decimal TotalCOLADailyValue { get; set; }
                 public decimal TotalCOLAMonthlyValue { get; set; }
                 public decimal TotalEarningsValue { get; set; }
-                public decimal PRES_NT_TotalEarnings => TotalDaysWorkedValue + TotalHoursWorkedValue + PRES_NT_TotalOvertimeValue + TotalCOLAHourlyValue + TotalCOLADailyValue + TotalCOLAMonthlyValue + TotalEarningsValue;
+                public decimal PRES_NT_TotalEarnings => TotalDaysWorkedValue + TotalHoursWorkedValue + TotalCOLAHourlyValue + TotalCOLADailyValue + TotalCOLAMonthlyValue + TotalEarningsValue + PRES_NT_TotalOvertimeValue;
+                public decimal PRES_NT_RegularPay => TotalDaysWorkedValue + TotalHoursWorkedValue + TotalCOLAHourlyValue + TotalCOLADailyValue + TotalCOLAMonthlyValue;
                 public decimal PRES_NT_TotalThirteenthMonth { get; set; }
                 public int NumberOfWeekdaysInToYear { get; set; }
                 public decimal TotalSSSValue { get; set; }
@@ -367,8 +377,8 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 {
                     get
                     {
-                        var dateHired = Employee.DateHired.HasValue ? $"{Employee.DateHired.Value:MMM d, yyyy}" : String.Empty;
-                        var dateResigned = Employee.DateResigned.HasValue ? $"{Employee.DateResigned.Value:MMM d, yyyy}" : String.Empty;
+                        var dateHired = Employee.DateHired.HasValue ? $"{Employee.DateHired.Value:MM/dd/yyyy}" : String.Empty;
+                        var dateResigned = Employee.DateResigned.HasValue ? $"{Employee.DateResigned.Value:MM/dd/yyyy}" : String.Empty;
 
                         var displayLine = new List<string>();
 
@@ -411,18 +421,25 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                 {
                     get
                     {
-                        var dateHired = Employee.DateHired.HasValue ? $"{Employee.DateHired.Value:MMM d, yyyy}" : String.Empty;
-                        var dateResigned = Employee.DateResigned.HasValue ? $"{Employee.DateResigned.Value:MMM d, yyyy}" : String.Empty;
+                        var dateHired = Employee.DateHired.HasValue ? $"{Employee.DateHired.Value:MM/dd/yyyy}" : String.Empty;
+                        var dateResigned = Employee.DateResigned.HasValue ? $"{Employee.DateResigned.Value:MM/dd/yyyy}" : "present";
                         var employmentDuration = Employee.DateHired.HasValue && Employee.DateResigned.HasValue ? $"{dateHired} - {dateResigned}" :
                             Employee.DateHired.HasValue && !Employee.DateResigned.HasValue ? $"{dateHired} - present" :
                             String.Empty;
                         var yearlyRate = Employee.MonthlyRate.HasValue ? Employee.MonthlyRate.Value * 12 : (decimal?)null;
 
                         var displayLine = new List<string>();
-                        displayLine.Add($"{Employee.LastName}, {Employee.FirstName}{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $", {Employee.MiddleName}")}");
+                        displayLine.Add(Employee.LastName);
+                        displayLine.Add(Employee.FirstName);
+                        displayLine.Add(String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $"{Employee.MiddleName}"));
                         displayLine.Add(Employee.EmployeeCode);
-                        displayLine.Add(Employee.TIN);
+                        displayLine.Add(Employee.TIN);                       
                         displayLine.Add(Employee.Region.HasValue ? EnumHelper.GetDisplayName(Employee.Region.Value) : String.Empty);
+
+                        displayLine.Add(Employee.PermanentAddress);
+                        displayLine.Add(Employee.DateOfBirth.HasValue ? $"{Employee.DateOfBirth.Value:MM/dd/yyyy}" : String.Empty);
+                        displayLine.Add(Employee.CelNo);
+                        displayLine.Add(Employee.ZipCode);
 
                         // Gross Compensation Income Previous Employer Non-Taxable
                         displayLine.Add(PREV_NT__GrossCompensationIncomePrevious);
@@ -443,8 +460,11 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         displayLine.Add(PREV_T_TotalIncome);
 
                         // Gross Compensation Income Present Employer Non-Taxable
-                        displayLine.Add(employmentDuration);
+                        displayLine.Add(dateHired);
+                        displayLine.Add(dateResigned);
                         displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings));
+                        displayLine.Add(String.Format("{0:n}", PRES_NT_RegularPay));
+                        displayLine.Add(String.Format("{0:n}", TotalEarningsValue));
                         displayLine.Add(Employee.DailyRate.HasValue ? String.Format("{0:n}", Employee.DailyRate) : String.Empty);
                         displayLine.Add(Employee.MonthlyRate.HasValue ? String.Format("{0:n}", Employee.MonthlyRate) : String.Empty);
                         displayLine.Add(yearlyRate.HasValue ? String.Format("{0:n}", yearlyRate) : String.Empty);
