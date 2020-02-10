@@ -337,7 +337,7 @@
             <script type="text/ng-template" id="generateSingleLoanTypeReportModal.html">
                 <form class="form-horizontal" role="form" method="post" id="generateForm">
                     <div class="modal-header">
-                        <h3 class="modal-title">Generate {{vm.reportType}} Report</h3>
+                        <h3 class="modal-title">Generate {{vm.loanType.code}} Report</h3>
                     </div>
                     <div class="modal-body">
                         <div class="form-body">
@@ -372,7 +372,6 @@
                             <div class="form-group">
                                 <label class="col-md-4 col-lg-3 control-label">Payroll Year</label>
                                 <div class="col-md-8 col-lg-9">
-                                    {{vm.payrollPeriodYear}}
                                     <select class="form-control" name="PayrollPeriodYear" ng-model="vm.payrollPeriodYear">
                                         @for (var i = currentYear; i > minYear; i--)
                                         {

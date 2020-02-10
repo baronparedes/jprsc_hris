@@ -7,9 +7,10 @@
         var vm = this;
         vm.cancel = cancel;
         vm.clients = params.clients;
+        vm.loanType = params.loanType;
         vm.payrollPeriodMonth = '-1';
         vm.payrollPeriodYear = new Date().getFullYear().toString();
-        vm.loanType = params.loanType;
+        vm.reportType = params.reportType;
         vm.validationErrors = {};
 
         $timeout(function () {
