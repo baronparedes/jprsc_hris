@@ -98,19 +98,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 var clientIds = clients.Select(c => c.Id).ToList();
 
-                var payrollProcessBatches = query.PayrollPeriodMonth == -1 ?
-                    await _db.PayrollProcessBatches
-                        .Include(ppb => ppb.PayrollRecords)
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodFrom.Value.Year == query.PayrollPeriodYear)
-                        .ToListAsync() :
-                    await _db.PayrollProcessBatches
-                        .Include(ppb => ppb.PayrollRecords)
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == query.PayrollPeriodMonth && ppb.PayrollPeriodFrom.Value.Year == query.PayrollPeriodYear)
-                        .ToListAsync();
+                var payrollProcessBatches = await _db.PayrollProcessBatchesByMonthAndYear(clientIds, query.PayrollPeriodMonth, query.PayrollPeriodYear);
 
                 var sssRecords = await GetSSSRecords(payrollProcessBatches);
 

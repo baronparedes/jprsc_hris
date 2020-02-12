@@ -108,31 +108,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
 
                 var clientIds = clients.Select(c => c.Id).ToList();
 
-                var payrollProcessBatches = query.PayrollPeriodMonth == -1 ?
-                    await _db.PayrollProcessBatches
-                        .Include(ppb => ppb.PayrollRecords)
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodFrom.HasValue && ppb.PayrollPeriodFrom.Value.Year == query.PayrollPeriodYear)
-                        .ToListAsync() :
-                    await _db.PayrollProcessBatches
-                        .Include(ppb => ppb.PayrollRecords)
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodFrom.HasValue && ppb.PayrollPeriodFrom.Value.Year == query.PayrollPeriodYear && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == query.PayrollPeriodMonth)
-                        .ToListAsync();
-
-                if (query.PayrollPeriodMonth == -1 || query.PayrollPeriodMonth == 10)
-                {
-                    var decemberPayrollPeriodOnePayrollProcessBatchesFromLastYear = await _db.PayrollProcessBatches
-                        .Include(ppb => ppb.PayrollRecords)
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
-                        .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                        .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodFrom.HasValue && ppb.PayrollPeriodFrom.Value.Year == query.PayrollPeriodYear - 1 && ppb.PayrollPeriodFrom.Value.Month == 12 && ppb.PayrollPeriod == 1 && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == query.PayrollPeriodMonth)
-                        .ToListAsync();
-
-                    payrollProcessBatches.AddRange(decemberPayrollPeriodOnePayrollProcessBatchesFromLastYear);
-                }
+                var payrollProcessBatches = await _db.PayrollProcessBatchesByMonthAndYear(clientIds, query.PayrollPeriodMonth, query.PayrollPeriodYear);
 
                 var loanType = await _db.LoanTypes.Where(l => l.Id == query.LoanTypeId).ProjectToSingleAsync<QueryResult.LoanType>();
 

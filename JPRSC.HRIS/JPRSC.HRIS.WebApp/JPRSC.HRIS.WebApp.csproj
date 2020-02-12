@@ -477,6 +477,7 @@
     <Compile Include="Features\Reports\GeneratePHIC.cs" />
     <Compile Include="Features\Reports\Index.cs" />
     <Compile Include="Features\Reports\_Controller.cs" />
+    <Compile Include="Features\Reports\_Extensions.cs" />
     <Compile Include="Features\Reports\_MappingProfile.cs" />
     <Compile Include="Features\SSSRecords\Add.cs" />
     <Compile Include="Features\SSSRecords\Delete.cs" />
