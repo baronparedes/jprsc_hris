@@ -33,7 +33,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     .Include(ppb => ppb.PayrollRecords)
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
-                    .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodFrom.HasValue && ppb.PayrollPeriodFrom.Value.Year == payrollPeriodYear - 1 && ppb.PayrollPeriodFrom.Value.Month == 12 && ppb.PayrollPeriod == 1 && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == payrollPeriodMonth)
+                    .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodFrom.HasValue && ppb.PayrollPeriodFrom.Value.Year == payrollPeriodYear - 1 && ppb.PayrollPeriodFrom.Value.Month == 12 && ppb.PayrollPeriodMonth.HasValue && (int)ppb.PayrollPeriodMonth == payrollPeriodMonth)
                     .ToListAsync();
 
                 payrollProcessBatches.AddRange(decemberPayrollPeriodOnePayrollProcessBatchesFromLastYear);
