@@ -160,6 +160,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                             From = command.PayrollPeriodFrom,
                             NumberOfHours = overtimeUpload.NumberOfHours,
                             NumberOfHoursValue = overtimeUpload.NumberOfHoursValue,
+                            PayPercentageId = overtimeUpload.PayPercentageId,
                             PayPercentageName = overtimeUpload.PayPercentageName,
                             PayPercentagePercentage = overtimeUpload.PayPercentagePercentage,
                             PayrollPeriodFrom = command.PayrollPeriodFrom?.Date,
