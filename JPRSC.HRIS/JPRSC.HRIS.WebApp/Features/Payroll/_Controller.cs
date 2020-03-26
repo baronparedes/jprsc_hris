@@ -244,9 +244,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                 return JsonValidationError();
             }
 
-            await _mediator.Send(command);
+            var result = await _mediator.Send(command);
 
-            return Json("success");
+            return JsonCamelCase(result);
         }
 
         [AuthorizePermission(Permission.PayrollDefault)]

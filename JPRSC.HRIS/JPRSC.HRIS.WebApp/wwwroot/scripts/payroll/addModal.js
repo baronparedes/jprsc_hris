@@ -36,10 +36,19 @@
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
 
             $http.post(action, data, config).then(function (response) {
-                $uibModalInstance.close();
+                console.log(response);
+                if (!response.data.errorMessage) {
+                    $uibModalInstance.close();
+                }
+                else {
+                    var errorMessage = 'Unable to process. ' + response.data.errorMessage;
+                    alert(errorMessage);
+                }
 
                 vm.processInProgress = false;
             }, function (response) {
+                console.log(response);
+
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
                 }
