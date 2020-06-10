@@ -4,6 +4,7 @@ using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
+using JPRSC.HRIS.WebApp.Infrastructure.Logging;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -310,7 +311,18 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                         }
                     }
 
-                    var existingDailyTimeRecord = allNotProcessedEmployeeDailyTimeRecordsForPayrollPeriod.SingleOrDefault(dtr => dtr.EmployeeId == employee.Id);
+                    DailyTimeRecord existingDailyTimeRecord = null;
+                    var existingDailyTimeRecords = allNotProcessedEmployeeDailyTimeRecordsForPayrollPeriod.Where(dtr => dtr.EmployeeId == employee.Id).ToList();
+                    if (existingDailyTimeRecords.Count > 1)
+                    {
+                        var log = LogHelper.CreateLogEntryFromCurrentContext("Warn", $"More than 1 unprocessed DTR found for employee {employee.Id}. Client: {command.ClientId} From: {command.PayrollPeriodFrom} To: {command.PayrollPeriodTo} Month: {command.PayrollPeriodMonth}");
+                        existingDailyTimeRecord = existingDailyTimeRecords.Single(dtr => dtr.DaysWorked.HasValue || dtr.HoursWorked.HasValue);
+                    }
+                    else if (existingDailyTimeRecords.Count == 1)
+                    {
+                        existingDailyTimeRecord = existingDailyTimeRecords.Single();
+                    }
+
                     if (existingDailyTimeRecord != null)
                     {
                         existingDailyTimeRecord.COLADailyValue = (decimal?)daysOrMonthsWorked * employee.COLADaily;
