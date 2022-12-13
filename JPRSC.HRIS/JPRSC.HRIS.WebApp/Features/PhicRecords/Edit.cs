@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Data.Entity;
@@ -26,20 +28,30 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
             public double? Percentage { get; set; }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<PhicRecord, Command>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 if (query.PhicRecordId == default(int)) query.PhicRecordId = _db.PhicRecords.Select(pr => pr.Id).First();
 
-                var command = await _db.PhicRecords.Where(r => r.Id == query.PhicRecordId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+                var command = await _db.PhicRecords.AsNoTracking().Where(r => r.Id == query.PhicRecordId && !r.DeletedOn.HasValue).ProjectTo<Command>(_mapper).SingleAsync();
 
                 return command;
             }

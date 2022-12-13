@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
@@ -111,18 +112,28 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             public bool? SubmittedSSSLoanVerification { get; set; }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Employee, Command>().ForAllOtherMembers(opts => opts.Ignore());
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<Command> Handle(Query query, CancellationToken token)
             {
-                var command = await _db.Employees.Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+                var command = await _db.Employees.Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue).ProjectTo<Command>(_mapper).SingleAsync();
                 var employee = await _db.Employees.SingleAsync(e => e.Id == query.EmployeeId);
 
                 command.ReligionsList = await GetReligionsList(query, employee);

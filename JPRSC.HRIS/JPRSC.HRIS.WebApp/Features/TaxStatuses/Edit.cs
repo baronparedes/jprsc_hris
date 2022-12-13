@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
@@ -37,18 +38,29 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<TaxStatus, Command>();
+                CreateMap<TaxRange, Command.TaxRange>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<Command> Handle(Query query, CancellationToken token)
             {
-                return await _db.TaxStatuses.Where(r => r.Id == query.TaxStatusId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+                return await _db.TaxStatuses.AsNoTracking().Where(r => r.Id == query.TaxStatusId && !r.DeletedOn.HasValue).ProjectTo<Command>(_mapper).SingleAsync();
             }
         }
 
@@ -90,8 +102,8 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
             private async Task ProcessTaxRanges(Command command, DateTime addedOrModifiedOn)
             {
                 var existingTaxRanges = await _db.TaxRanges.Where(tr => tr.TaxStatusId == command.Id).ToListAsync();
-                var existingTaxRangeIds = existingTaxRanges.Select(tr => tr.Id).ToHashSet();
-                var inputTaxRangeIds = command.TaxRanges.Select(tr => tr.Id).ToHashSet();
+                var existingTaxRangeIds = new HashSet<int>(existingTaxRanges.Select(tr => tr.Id));
+                var inputTaxRangeIds = new HashSet<int>(command.TaxRanges.Select(tr => tr.Id));
 
                 var newTaxRangeIds = inputTaxRangeIds.Except(existingTaxRangeIds);
                 var newTaxRanges = command.TaxRanges.Where(tr => newTaxRangeIds.Contains(tr.Id));

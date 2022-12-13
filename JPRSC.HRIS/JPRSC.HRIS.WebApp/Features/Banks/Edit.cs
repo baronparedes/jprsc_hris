@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Data.Entity;
@@ -33,18 +35,28 @@ namespace JPRSC.HRIS.WebApp.Features.Banks
             public string Position { get; set; }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Bank, Command>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<Command> Handle(Query query, CancellationToken token)
             {
-                return await _db.Banks.Where(r => r.Id == query.BankId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+                return await _db.Banks.AsNoTracking().Where(r => r.Id == query.BankId && !r.DeletedOn.HasValue).ProjectTo<Command>(_mapper).SingleAsync();
             }
         }
 

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -60,19 +62,31 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<PayrollProcessBatch, QueryResult.PayrollProcessBatch>();
+                CreateMap<Client, QueryResult.Client>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken cancellationToken)
             {
                 var dbQuery = _db
                     .PayrollProcessBatches
+                    .AsNoTracking()
                     .Where(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue);
 
                 if (query.ClientId.HasValue && query.ClientId.Value > 0)
@@ -95,7 +109,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var payrollProcessBatches = await dbQuery
                     .OrderByDescending(ppb => ppb.AddedOn)
-                    .ProjectToListAsync<QueryResult.PayrollProcessBatch>();
+                    .ProjectTo<QueryResult.PayrollProcessBatch>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

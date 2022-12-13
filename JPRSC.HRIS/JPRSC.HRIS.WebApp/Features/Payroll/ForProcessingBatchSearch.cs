@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -43,19 +45,30 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<ForProcessingBatch, QueryResult.ForProcessingBatch>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var dbQuery = _db
                     .ForProcessingBatches
+                    .AsNoTracking()
                     .Where(fpb => !fpb.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
@@ -66,7 +79,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
                 var forProcessingBatches = await dbQuery
                     .OrderByDescending(fpb => fpb.ProcessedOn)
-                    .ProjectToListAsync<QueryResult.ForProcessingBatch>();
+                    .ProjectTo<QueryResult.ForProcessingBatch>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

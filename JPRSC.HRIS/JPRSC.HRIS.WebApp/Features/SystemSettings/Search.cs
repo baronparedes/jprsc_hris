@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
@@ -41,13 +42,23 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Models.SystemSettings, QueryResult.SystemSettings>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -56,7 +67,8 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
                 var pageSize = query.PageSize.HasValue && query.PageSize > 0 ? Math.Min(query.PageSize.Value, 1000) : AppSettings.Int("DefaultGridPageSize");
 
                 var dbQuery = _db
-                    .SystemSettings;
+                    .SystemSettings
+                    .AsNoTracking();
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
@@ -66,7 +78,8 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
                 var systemSettingsResult = await dbQuery
                     .OrderBy(pr => pr.Id)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.SystemSettings>();
+                    .ProjectTo<QueryResult.SystemSettings>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

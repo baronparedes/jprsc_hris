@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
@@ -43,13 +44,23 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Client, QueryResult.Client>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -59,6 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
 
                 var dbQuery = _db
                     .Clients
+                    .AsNoTracking()
                     .Where(c => !c.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
@@ -71,7 +83,8 @@ namespace JPRSC.HRIS.WebApp.Features.Clients
                 var clients = await dbQuery
                     .OrderBy(c => c.Code)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.Client>();
+                    .ProjectTo<QueryResult.Client>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

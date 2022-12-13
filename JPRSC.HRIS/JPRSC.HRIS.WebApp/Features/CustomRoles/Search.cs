@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
@@ -39,17 +40,26 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
             {
                 public int Id { get; set; }
                 public string Name { get; set; }
-                //public IEnumerable<Permission> Permissions { get; set; }
+            }
+        }
+
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<CustomRole, QueryResult.CustomRole>();
             }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -59,6 +69,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
 
                 var dbQuery = _db
                     .CustomRoles
+                    .AsNoTracking()
                     .Where(cr => !cr.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
@@ -70,7 +81,8 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
                 var customRoles = await dbQuery
                     .OrderBy(cr => cr.Id)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.CustomRole>();
+                    .ProjectTo<QueryResult.CustomRole>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

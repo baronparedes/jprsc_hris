@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using MediatR;
 using Microsoft.AspNet.Identity;
@@ -32,13 +34,23 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             public string RepeatNewPassword { get; set; }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<User, Command>().ForAllOtherMembers(opts => opts.Ignore());
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<Command> Handle(Query query, CancellationToken token)
@@ -47,8 +59,10 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
                 var command = await _db
                     .Users
+                    .AsNoTracking()
                     .Where(u => u.Id == currentUserId && !u.DeletedOn.HasValue)
-                    .ProjectToSingleAsync<Command>();
+                    .ProjectTo<Command>(_mapper)
+                    .SingleAsync();
 
                 command.CompaniesList = await GetCompaniesList(query, currentUserId);
 
@@ -57,8 +71,8 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
             private async Task<IList<SelectListItem>> GetCompaniesList(Query query, string userId)
             {
-                var user = await _db.Users.Include(u => u.CustomRoles).SingleAsync(u => u.Id == userId && !u.DeletedOn.HasValue);
-                var Companies = await _db.Companies.Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
+                var user = await _db.Users.AsNoTracking().Include(u => u.CustomRoles).SingleAsync(u => u.Id == userId && !u.DeletedOn.HasValue);
+                var Companies = await _db.Companies.AsNoTracking().Where(cr => !cr.DeletedOn.HasValue).ToListAsync();
 
                 return Companies
                     .Select(cp => new SelectListItem

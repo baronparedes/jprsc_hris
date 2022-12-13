@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -42,13 +44,23 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Department, QueryResult.Department>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -58,6 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
 
                 var dbQuery = _db
                     .Departments
+                    .AsNoTracking()
                     .Where(d => !d.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
@@ -69,7 +82,8 @@ namespace JPRSC.HRIS.WebApp.Features.Departments
                 var departments = await dbQuery
                     .OrderBy(d => d.Id)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.Department>();
+                    .ProjectTo<QueryResult.Department>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

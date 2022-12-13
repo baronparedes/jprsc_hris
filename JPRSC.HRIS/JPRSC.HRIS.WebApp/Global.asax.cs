@@ -1,5 +1,4 @@
 ﻿using JPRSC.HRIS.WebApp.Infrastructure.Bundling;
-using JPRSC.HRIS.WebApp.Infrastructure.Mapping;
 using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
 using JPRSC.HRIS.WebApp.Infrastructure.Validation;
 using System.Web;
@@ -14,7 +13,6 @@ namespace JPRSC.HRIS.WebApp
         protected void Application_Start()
         {
             ValidationConfig.Configure();
-            MappingConfig.Configure();
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

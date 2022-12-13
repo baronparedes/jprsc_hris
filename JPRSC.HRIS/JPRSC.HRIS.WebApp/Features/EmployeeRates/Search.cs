@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using Newtonsoft.Json;
 using System;
@@ -52,13 +54,23 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Employee, QueryResult.Employee>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -68,6 +80,7 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
 
                 var dbQuery = _db
                     .Employees
+                    .AsNoTracking()
                     .Where(e => !e.DeletedOn.HasValue);
 
                 if (query.ClientId.HasValue)
@@ -86,7 +99,8 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
                 var employees = await dbQuery
                     .OrderBy(e => e.Id)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.Employee>();
+                    .ProjectTo<QueryResult.Employee>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -42,13 +44,23 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<PhicRecord, QueryResult.PhicRecord>().ForAllOtherMembers(opts => opts.Ignore());
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -58,6 +70,7 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
 
                 var dbQuery = _db
                     .PhicRecords
+                    .AsNoTracking()
                     .Where(pr => !pr.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
@@ -68,7 +81,8 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
                 var phicRecords = await dbQuery
                     .OrderBy(pr => pr.Id)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.PhicRecord>();
+                    .ProjectTo<QueryResult.PhicRecord>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

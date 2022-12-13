@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
@@ -46,21 +47,33 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Client, QueryResult.Client>().ForAllOtherMembers(opts => opts.Ignore());
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var clients = await _db.Clients
+                    .AsNoTracking()
                     .Where(c => !c.DeletedOn.HasValue)
                     .OrderBy(c => c.Code)
-                    .ProjectToListAsync<QueryResult.Client>();
+                    .ProjectTo<QueryResult.Client>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {
@@ -72,7 +85,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
             private async Task<IList<SelectListItem>> GetLoanTypesList()
             {
-                var loanTypes = await _db.LoanTypes.Where(c => !c.DeletedOn.HasValue).ToListAsync();
+                var loanTypes = await _db.LoanTypes.AsNoTracking().Where(c => !c.DeletedOn.HasValue).ToListAsync();
 
                 return loanTypes
                     .Select(c => new SelectListItem
@@ -87,6 +100,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             {
                 var transactionNumbers = await _db
                     .Loans
+                    .AsNoTracking()
                     .Where(l => !l.DeletedOn.HasValue && l.TransactionNumber != null)
                     .Select(l => l.TransactionNumber)
                     .ToListAsync();

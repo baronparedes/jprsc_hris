@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Domain;
 using JPRSC.HRIS.Infrastructure.Data;
@@ -29,27 +30,40 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
             public IList<SelectListItem> PermissionsList { get; set; } = EnumHelper.GetSelectList(typeof(Permission));
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<CustomRole, Command>().ForAllOtherMembers(opts => opts.Ignore());
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
             private IList<int> _permissionValuesNotShownInMenu = new List<int> { (int)Permission.OvertimeDefault, (int)Permission.EarningDeductionRecordDefault };
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 var command = await _db
                     .CustomRoles
+                    .AsNoTracking()
                     .Where(cr => cr.Id == query.CustomRoleId && !cr.DeletedOn.HasValue)
-                    .ProjectToSingleAsync<Edit.Command>();
+                    .ProjectTo<Command>(_mapper)
+                    .SingleAsync();
 
                 command.PermissionsList = EnumHelper.GetSelectList(typeof(Permission)).Where(sli => !PermissionHelper.PermissionValuesNotShownInMenu.Contains(Convert.ToInt32(sli.Value))).ToList();
 
                 var customRole = await _db
                     .CustomRoles
+                    .AsNoTracking()
                     .SingleAsync(cr => cr.Id == query.CustomRoleId && !cr.DeletedOn.HasValue);
 
                 foreach (var permission in customRole.Permissions)

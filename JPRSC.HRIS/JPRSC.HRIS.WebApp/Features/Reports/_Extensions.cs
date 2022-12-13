@@ -15,12 +15,14 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         {
             var payrollProcessBatches = payrollPeriodMonth == -1 ?
                 await _db.PayrollProcessBatches
+                    .AsNoTracking()
                     .Include(ppb => ppb.PayrollRecords)
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
                     .Where(ppb => !ppb.DeletedOn.HasValue && clientIds.Contains(ppb.ClientId.Value) && ppb.PayrollPeriodFrom.HasValue && ppb.PayrollPeriodFrom.Value.Year == payrollPeriodYear)
                     .ToListAsync() :
                 await _db.PayrollProcessBatches
+                    .AsNoTracking()
                     .Include(ppb => ppb.PayrollRecords)
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))
@@ -30,6 +32,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             if (payrollPeriodMonth == -1 || payrollPeriodMonth == 10)
             {
                 var decemberPayrollPeriodOnePayrollProcessBatchesFromLastYear = await _db.PayrollProcessBatches
+                    .AsNoTracking()
                     .Include(ppb => ppb.PayrollRecords)
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee))
                     .Include(ppb => ppb.PayrollRecords.Select(pr => pr.Employee.Department))

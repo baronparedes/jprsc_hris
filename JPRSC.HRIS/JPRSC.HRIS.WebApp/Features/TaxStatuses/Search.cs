@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using Newtonsoft.Json;
 using System;
@@ -56,13 +58,24 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<TaxStatus, QueryResult.TaxStatus>();
+                CreateMap<TaxRange, QueryResult.TaxRange>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -72,6 +85,7 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
 
                 var dbQuery = _db
                     .TaxStatuses
+                    .AsNoTracking()
                     .Include(tr => tr.TaxRanges)
                     .Where(ts => !ts.DeletedOn.HasValue);
 
@@ -85,7 +99,8 @@ namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
                 var taxStatuses = await dbQuery
                     .OrderBy(ts => ts.Id)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.TaxStatus>();
+                    .ProjectTo<QueryResult.TaxStatus>(_mapper)
+                    .ToListAsync();
 
                 foreach (var taxStatus in taxStatuses)
                 {

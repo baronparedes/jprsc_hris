@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
@@ -31,20 +32,30 @@ namespace JPRSC.HRIS.WebApp.Features.SystemSettings
             public bool? EnableSendingEmails { get; set; }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Models.SystemSettings, Command>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<Command> Handle(Query query, CancellationToken token)
             {
                 if (query.SystemSettingsId == default(int)) query.SystemSettingsId = _db.SystemSettings.Select(pr => pr.Id).FirstOrDefault();
 
-                var command = await _db.SystemSettings.Where(r => r.Id == query.SystemSettingsId).ProjectToSingleOrDefaultAsync<Command>();
+                var command = await _db.SystemSettings.AsNoTracking().Where(r => r.Id == query.SystemSettingsId).ProjectTo<Command>(_mapper).SingleOrDefaultAsync();
 
                 if (command == null)
                 {

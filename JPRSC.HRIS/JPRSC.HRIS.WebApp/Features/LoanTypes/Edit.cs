@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
@@ -28,15 +29,25 @@ namespace JPRSC.HRIS.WebApp.Features.LoanTypes
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<Command> Handle(Query query, CancellationToken token)
             {
-                return await _db.LoanTypes.Where(r => r.Id == query.LoanTypeId && !r.DeletedOn.HasValue).ProjectToSingleAsync<Command>();
+                return await _db.LoanTypes.AsNoTracking().Where(r => r.Id == query.LoanTypeId && !r.DeletedOn.HasValue).ProjectTo<Command>(_mapper).SingleAsync();
+            }
+        }
+
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<LoanType, Command>();
             }
         }
 

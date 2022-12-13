@@ -1,10 +1,7 @@
-﻿using AutoMapper;
-using FluentValidation;
-using JPRSC.HRIS.Infrastructure.Data;
+﻿using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,13 +21,6 @@ namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
             public int Id { get; set; }
             public string LastName { get; set; }
             public decimal? MonthlyRate { get; set; }
-        }
-
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-            }
         }
 
         public class CommandHandler : IRequestHandler<Command>

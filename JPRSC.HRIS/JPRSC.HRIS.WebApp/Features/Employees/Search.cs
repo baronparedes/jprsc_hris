@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using Newtonsoft.Json;
 using System;
@@ -53,13 +55,23 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Employee, QueryResult.Employee>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -69,6 +81,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
                 var dbQuery = _db
                     .Employees
+                    .AsNoTracking()
                     .Where(e => !e.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
@@ -99,7 +112,8 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     .OrderBy(e => e.LastName)
                     .ThenBy(e => e.FirstName)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.Employee>();
+                    .ProjectTo<QueryResult.Employee>(_mapper)
+                    .ToListAsync();
 
                 var remainder = totalResultsCount % pageSize;
                 var divisor = totalResultsCount / pageSize;

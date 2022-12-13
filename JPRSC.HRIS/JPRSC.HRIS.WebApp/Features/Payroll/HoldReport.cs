@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using Humanizer;
 using JPRSC.HRIS.Infrastructure.Data;
@@ -163,34 +164,51 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<PayrollProcessBatch, QueryResult.PayrollProcessBatch>();
+                CreateMap<PayrollRecord, QueryResult.PayrollRecord>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<Employee, QueryResult.Employee>();
+                CreateMap<Client, QueryResult.Client>();
+                CreateMap<Department, QueryResult.Department>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken cancellationToken)
             {
                 var payrollProcessBatch = await _db.PayrollProcessBatches
+                    .AsNoTracking()
                     .Include(ppb => ppb.Client)
                     .SingleAsync(ppb => ppb.Id == query.PayrollProcessBatchId);
 
                 var payrollRecords = await _db.PayrollRecords
+                    .AsNoTracking()
                     .Include(pr => pr.Employee)
                     .Include(pr => pr.Employee.Department)
                     .Where(pr => pr.PayrollProcessBatchId == query.PayrollProcessBatchId && pr.Employee.SalaryStatus == SalaryStatus.OnHold)
                     .OrderBy(pr => pr.Employee.LastName)
                     .ThenBy(pr => pr.Employee.FirstName)
-                    .ProjectToListAsync<QueryResult.PayrollRecord>();
+                    .ProjectTo<QueryResult.PayrollRecord>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,
                     DisplayMode = query.DisplayMode,
-                    PayrollProcessBatchResult = Mapper.Map<QueryResult.PayrollProcessBatch>(payrollProcessBatch),
+                    PayrollProcessBatchResult = _mapper.Map<QueryResult.PayrollProcessBatch>(payrollProcessBatch),
                     PayrollRecords = payrollRecords
                 };
             }

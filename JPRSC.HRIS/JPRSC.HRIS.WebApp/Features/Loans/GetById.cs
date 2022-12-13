@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
@@ -82,20 +83,24 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var loan = await _db
                     .Loans
+                    .AsNoTracking()
                     .Include(l => l.Employee)
                     .Include(l => l.LoanType)
                     .Where(l => l.Id == query.Id)
-                    .ProjectToSingleAsync<QueryResult.Loan>();
+                    .ProjectTo<QueryResult.Loan>(_mapper)
+                    .SingleAsync();
 
                 return new QueryResult
                 {

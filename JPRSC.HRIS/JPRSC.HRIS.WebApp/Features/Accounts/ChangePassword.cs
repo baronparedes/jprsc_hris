@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Infrastructure.Identity;
+using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
 using System;
@@ -28,18 +30,28 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
             public string RepeatNewPassword { get; set; }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<User, Command>().ForAllOtherMembers(opts => opts.Ignore());
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<Command> Handle(Query query, CancellationToken token)
             {
-                return await _db.Users.Where(u => u.Id == query.UserId).ProjectToSingleAsync<Command>();
+                return await _db.Users.AsNoTracking().Where(u => u.Id == query.UserId).ProjectTo<Command>(_mapper).SingleAsync();
             }
         }
 

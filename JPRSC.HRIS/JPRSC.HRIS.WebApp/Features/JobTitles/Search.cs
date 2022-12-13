@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -41,13 +43,23 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<JobTitle, QueryResult.JobTitle>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -57,6 +69,7 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
 
                 var dbQuery = _db
                     .JobTitles
+                    .AsNoTracking()
                     .Where(jt => !jt.DeletedOn.HasValue);
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
@@ -68,7 +81,8 @@ namespace JPRSC.HRIS.WebApp.Features.JobTitles
                 var jobTitles = await dbQuery
                     .OrderBy(jt => jt.Id)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.JobTitle>();
+                    .ProjectTo<QueryResult.JobTitle>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

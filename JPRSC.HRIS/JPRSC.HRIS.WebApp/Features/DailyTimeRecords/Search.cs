@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
@@ -82,13 +83,24 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Employee, QueryResult.Employee>();
+                CreateMap<DailyTimeRecord, QueryResult.DailyTimeRecord>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -100,6 +112,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
 
                 var dbQuery = _db
                     .DailyTimeRecords
+                    .AsNoTracking()
                     .Include(dtr => dtr.Employee)
                     .Where(dtr => !dtr.DeletedOn.HasValue && !dtr.Employee.DeletedOn.HasValue && dtr.Employee.ClientId == query.ClientId);
 
@@ -126,7 +139,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                 {
                     var dailyTimeRecordPayrollPeriodBasis = await _db
                         .DailyTimeRecords
-                        .FindAsync(query.DailyTimeRecordPayrollPeriodBasisId.Value);
+                        .AsNoTracking()
+                        .SingleOrDefaultAsync(dtr => dtr.Id == query.DailyTimeRecordPayrollPeriodBasisId.Value);
 
                     dbQuery = dbQuery
                         .Where(dtr => DbFunctions.TruncateTime(dtr.PayrollPeriodFrom) == DbFunctions.TruncateTime(dailyTimeRecordPayrollPeriodBasis.PayrollPeriodFrom) &&
@@ -137,7 +151,8 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
                     .OrderBy(e => e.Employee.LastName)
                     .ThenBy(e => e.Employee.FirstName)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.DailyTimeRecord>();
+                    .ProjectTo<QueryResult.DailyTimeRecord>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

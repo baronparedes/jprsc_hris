@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,18 +42,22 @@ namespace JPRSC.HRIS.WebApp.Features.Companies
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 return await _db
                     .Companies
+                    .AsNoTracking()
                     .Where(cp => cp.Id == query.CompanyId && !cp.DeletedOn.HasValue)
-                    .ProjectToSingleAsync<QueryResult>();
+                    .ProjectTo<QueryResult>(_mapper)
+                    .SingleAsync();
             }
         }
     }

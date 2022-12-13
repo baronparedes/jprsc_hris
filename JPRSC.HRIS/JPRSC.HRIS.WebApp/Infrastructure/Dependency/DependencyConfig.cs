@@ -19,6 +19,8 @@ using System.Web.Mvc;
 using System.Threading;
 using System.Text;
 using JPRSC.HRIS.WebApp.Infrastructure.CSV;
+using JPRSC.HRIS.WebApp.Infrastructure.MediatR;
+using JPRSC.HRIS.WebApp.Infrastructure.Mapping;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
 {
@@ -39,10 +41,13 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
         {
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new WebRequestLifestyle();
+            container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
 
             container.Register<ApplicationDbContext, ApplicationDbContext>(Lifestyle.Scoped);
             RegisterValidators(container);
             RegisterMediatR(container);
+            container.Register<MapperProvider>(Lifestyle.Singleton);
+            container.RegisterSingleton(() => GetMapper(container));
             container.Register<SignInManager>(GetSignInManager, Lifestyle.Scoped);
             container.Register<UserManager>(GetUserManager, Lifestyle.Scoped);
             container.Register<IAuthenticationManager>(GetAuthenticationManager, Lifestyle.Scoped);
@@ -111,86 +116,11 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
             var assemblyOfValidationClasses = Assembly.GetExecutingAssembly();
             container.Register(typeof(IValidator<>), new[] { Assembly.GetExecutingAssembly() });
         }
-    }
 
-    // https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples/GenericPipelineBehavior.cs
-    public class GenericPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    {
-        private readonly TextWriter _writer;
-
-        public GenericPipelineBehavior(TextWriter writer)
+        private AutoMapper.IMapper GetMapper(Container container)
         {
-            _writer = writer;
+            var mp = container.GetInstance<MapperProvider>();
+            return mp.GetMapper();
         }
-
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            _writer.WriteLine("-- Handling Request");
-            var response = await next();
-            _writer.WriteLine("-- Finished Request");
-            return response;
-        }
-    }
-
-    // https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples/GenericRequestPostProcessor.cs
-    public class GenericRequestPostProcessor<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse>
-    {
-        private readonly TextWriter _writer;
-
-        public GenericRequestPostProcessor(TextWriter writer)
-        {
-            _writer = writer;
-        }
-
-        public Task Process(TRequest request, TResponse response)
-        {
-            _writer.WriteLine("- All Done");
-            return Task.FromResult(0);
-        }
-    }
-
-    // https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples/GenericRequestPreProcessor.cs
-    public class GenericRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
-    {
-        private readonly TextWriter _writer;
-
-        public GenericRequestPreProcessor(TextWriter writer)
-        {
-            _writer = writer;
-        }
-
-        public Task Process(TRequest request, CancellationToken cancellationToken)
-        {
-            _writer.WriteLine("- Starting Up");
-            return Task.FromResult(0);
-        }
-    }
-
-    // https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples/Runner.cs
-    public class WrappingWriter : TextWriter
-    {
-        private readonly TextWriter _innerWriter;
-        private readonly StringBuilder _stringWriter = new StringBuilder();
-
-        public WrappingWriter(TextWriter innerWriter)
-        {
-            _innerWriter = innerWriter;
-        }
-
-        public override void Write(char value)
-        {
-            _stringWriter.Append(value);
-            _innerWriter.Write(value);
-        }
-
-        public override Task WriteLineAsync(string value)
-        {
-            _stringWriter.AppendLine(value);
-            return _innerWriter.WriteLineAsync(value);
-        }
-
-        public override Encoding Encoding => _innerWriter.Encoding;
-
-        public string Contents => _stringWriter.ToString();
     }
 }

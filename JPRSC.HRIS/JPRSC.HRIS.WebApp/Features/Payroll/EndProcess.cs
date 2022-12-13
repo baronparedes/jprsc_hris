@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
@@ -79,22 +80,37 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<PayrollProcessBatch, QueryResult.PayrollProcessBatch>();
+                CreateMap<Client, QueryResult.Client>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<PayrollProcessBatch, EndProcessQueryResult.PayrollProcessBatch>();
+                CreateMap<Client, EndProcessQueryResult.Client>().ForAllOtherMembers(opts => opts.Ignore());
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var clients = await _db.Clients
+                    .AsNoTracking()
                     .Include(c => c.PayrollProcessBatches)
                     .Where(c => !c.DeletedOn.HasValue)
                     .OrderBy(c => c.Code)
-                    .ProjectToListAsync<QueryResult.Client>();
+                    .ProjectTo<QueryResult.Client>(_mapper)
+                    .ToListAsync();
 
                 foreach (var client in clients)
                 {
@@ -165,19 +181,23 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         public class EmdProcessQueryHandler : IRequestHandler<EndProcessQuery, EndProcessQueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public EmdProcessQueryHandler(ApplicationDbContext db)
+            public EmdProcessQueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<EndProcessQueryResult> Handle(EndProcessQuery query, CancellationToken cancellationToken)
             {
                 var payrollProcessBatches = await _db
                     .PayrollProcessBatches
+                    .AsNoTracking()
                     .Include(ppb => ppb.Client)
                     .Where(ppb => !ppb.DeletedOn.HasValue && !ppb.DateOverwritten.HasValue && ppb.EndProcessedOn.HasValue)
-                    .ProjectToListAsync<EndProcessQueryResult.PayrollProcessBatch>();
+                    .ProjectTo<EndProcessQueryResult.PayrollProcessBatch>(_mapper)
+                    .ToListAsync();
 
                 return new EndProcessQueryResult
                 {

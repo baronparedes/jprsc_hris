@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Features.Payroll;
@@ -89,28 +90,30 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
             private readonly ApplicationDbContext _db;
             private readonly IExcelBuilder _excelBuilder;
             private readonly IMediator _mediator;
+            private readonly IMapper _mapper;
             private Models.SystemSettings _systemSettings;
 
-            public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMediator mediator)
+            public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMediator mediator, IMapper mapper)
             {
                 _db = db;
                 _excelBuilder = excelBuilder;
                 _mediator = mediator;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
-                _systemSettings = await _db.SystemSettings.SingleAsync();
+                _systemSettings = await _db.SystemSettings.AsNoTracking().SingleAsync();
 
                 var clients = query.ClientId == -1 ?
-                    await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync() :
-                    await _db.Clients.Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
+                    await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue).ToListAsync() :
+                    await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
 
                 var clientIds = clients.Select(c => c.Id).ToList();
 
                 var payrollProcessBatches = await _db.PayrollProcessBatchesByMonthAndYear(clientIds, query.PayrollPeriodMonth, query.PayrollPeriodYear);
 
-                var loanType = await _db.LoanTypes.Where(l => l.Id == query.LoanTypeId).ProjectToSingleAsync<QueryResult.LoanType>();
+                var loanType = await _db.LoanTypes.AsNoTracking().Where(l => l.Id == query.LoanTypeId).ProjectTo<QueryResult.LoanType>(_mapper).SingleAsync();
 
                 var loanRecords = await GetLoanRecords(query, payrollProcessBatches);
 
@@ -204,6 +207,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                     if (payrollProcessBatch.AddedOn < marchFour2019)
                     {
                         var loans = await _db.Loans
+                            .AsNoTracking()
                             .Include(l => l.Employee)
                             .Include(l => l.LoanType)
                             .Where(l => l.LoanTypeId == query.LoanTypeId && !l.DeletedOn.HasValue && clientEmployeeIds.Contains(l.EmployeeId.Value) && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
@@ -218,6 +222,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
                         var payrollRecordIds = payrollProcessBatch.PayrollRecords.Select(pr => pr.Id).ToList();
 
                         var loanDeductions = await _db.LoanDeductions
+                            .AsNoTracking()
                             .Include(ld => ld.Loan)
                             .Include(ld => ld.Loan.Employee)
                             .Include(ld => ld.Loan.LoanType)

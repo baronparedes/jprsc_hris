@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -44,13 +46,23 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<PayPercentage, QueryResult.PayPercentage>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -60,6 +72,7 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
 
                 var dbQuery = _db
                     .PayPercentages
+                    .AsNoTracking()
                     .AsQueryable();
 
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
@@ -71,7 +84,8 @@ namespace JPRSC.HRIS.WebApp.Features.PayPercentages
                 var payPercentages = await dbQuery
                     .OrderBy(pp => pp.Id)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.PayPercentage>();
+                    .ProjectTo<QueryResult.PayPercentage>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

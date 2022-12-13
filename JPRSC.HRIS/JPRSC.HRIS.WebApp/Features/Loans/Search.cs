@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -83,13 +85,25 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Employee, QueryResult.Employee>();
+                CreateMap<Loan, QueryResult.Loan>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<LoanType, QueryResult.LoanType>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -99,6 +113,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
 
                 var dbQuery = _db
                     .Loans
+                    .AsNoTracking()
                     .Include(l => l.Employee)
                     .Include(l => l.LoanType)
                     .Where(l => l.EmployeeId.HasValue && !l.DeletedOn.HasValue);
@@ -125,7 +140,8 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
                     .OrderBy(l => l.Employee.LastName)
                     .ThenBy(l => l.Employee.FirstName)
                     .PageBy(pageNumber, pageSize)
-                    .ProjectToListAsync<QueryResult.Loan>();
+                    .ProjectTo<QueryResult.Loan>(_mapper)
+                    .ToListAsync();
 
                 return new QueryResult
                 {

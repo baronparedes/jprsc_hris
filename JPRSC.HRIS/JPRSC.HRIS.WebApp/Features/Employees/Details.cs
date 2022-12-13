@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
@@ -111,23 +112,37 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Employee, QueryResult>();
+                CreateMap<RehireTransferEvent, QueryResult.RehireTransferEvent>();
+                CreateMap<Client, QueryResult.Client>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var queryResult = await _db
                     .Employees
+                    .AsNoTracking()
                     .Include(e => e.RehireTransferEvents)
                     .Include(e => e.RehireTransferEvents.Select(rte => rte.Client))
                     .Where(r => r.Id == query.EmployeeId && !r.DeletedOn.HasValue)
-                    .ProjectToSingleAsync<QueryResult>();
+                    .ProjectTo<QueryResult>(_mapper)
+                    .SingleAsync();
 
                 if (queryResult.RehireTransferEvents.Any())
                 {
