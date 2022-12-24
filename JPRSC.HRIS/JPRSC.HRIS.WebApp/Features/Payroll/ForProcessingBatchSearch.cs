@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
@@ -17,6 +18,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         public class Query : IRequest<QueryResult>
         {
             public string SearchTerm { get; set; }
+            public int? PageNumber { get; set; }
+            public int? PageSize { get; set; }
 
             public string SearchLikeTerm
             {
@@ -32,6 +35,8 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         public class QueryResult
         {
             public IList<ForProcessingBatch> ForProcessingBatches { get; set; } = new List<ForProcessingBatch>();
+            public int LastPageNumber { get; set; }
+            public int TotalResultsCount { get; set; }
 
             public class ForProcessingBatch
             {
@@ -66,6 +71,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                var pageNumber = query.PageNumber.HasValue && query.PageNumber > 0 ? query.PageNumber.Value : 1;
+                var pageSize = query.PageSize.HasValue && query.PageSize > 0 ? Math.Min(query.PageSize.Value, 1000) : AppSettings.Int("DefaultGridPageSize");
+
                 var dbQuery = _db
                     .ForProcessingBatches
                     .AsNoTracking()
@@ -77,14 +85,24 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
                         .Where(r => DbFunctions.Like(r.Name, query.SearchLikeTerm));
                 }
 
+                var totalResultsCount = await dbQuery
+                    .CountAsync();
+
                 var forProcessingBatches = await dbQuery
                     .OrderByDescending(fpb => fpb.ProcessedOn)
+                    .PageBy(pageNumber, pageSize)
                     .ProjectTo<QueryResult.ForProcessingBatch>(_mapper)
                     .ToListAsync();
 
+                var remainder = totalResultsCount % pageSize;
+                var divisor = totalResultsCount / pageSize;
+                var lastPageNumber = remainder > 0 ? divisor + 1 : divisor;
+
                 return new QueryResult
                 {
-                    ForProcessingBatches = forProcessingBatches
+                    ForProcessingBatches = forProcessingBatches,
+                    LastPageNumber = lastPageNumber,
+                    TotalResultsCount = totalResultsCount
                 };
             }
         }

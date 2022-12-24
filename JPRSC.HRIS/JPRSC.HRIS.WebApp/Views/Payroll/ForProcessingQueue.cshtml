@@ -51,17 +51,19 @@
                                 <div class="form-group">
                                     <label class="control-label">Search by Name</label>
                                     <div class="input-group" style="width: 100%">
-                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                        <input type="text" class="form-control" ng-model="vm.searchModel.searchTerm" ng-model-options="{ debounce: 500 }" ng-disabled="vm.searchInProgress" placeholder="" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
-                <div class="note note-info" ng-show="!vm.forProcessingBatches.length">
+                <div class="note note-info" ng-show="!vm.searchInProgress && !vm.forProcessingBatches.length">
                     <p>No items found.</p>
                 </div>
-                <p ng-show="vm.searchInProgress">Loading...</p>
+                <p ng-show="vm.searchInProgress">
+                    <i class="fa fa-refresh fa-pulse fa-fw margin-right-10"></i>Loading...
+                </p>
                 <div class="portlet light bordered" ng-show="vm.forProcessingBatches.length">
                     <div class="portlet-body">
                         <div class="table-scrollable fit-to-portlet">
@@ -88,6 +90,19 @@
                                 </tbody>
                             </table>
                         </div>
+                        <ul class="pager">
+                            <li class="previous">
+                                <a href="" ng-disabled="vm.searchModel.pageNumber == 1" ng-click="vm.previousClicked()" class="btn blue">
+                                    <i class="fa fa-angle-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="next">
+                                <a href="" ng-disabled="vm.searchModel.pageNumber == vm.lastPageNumber" ng-click="vm.nextClicked()" class="btn blue">
+                                    Next
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
