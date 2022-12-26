@@ -6,14 +6,18 @@
     function PayrollIndexCtrl($http, $scope, $timeout, $uibModal, globalSettings) {
         var vm = this;
         vm.clientChanged = clientChanged;
+        vm.lastPageNumber = 1;
+        vm.nextClicked = nextClicked;
         vm.payrollPeriodMonthChanged = payrollPeriodMonthChanged;
         vm.payrollPeriodYearChanged = payrollPeriodYearChanged;
         vm.payrollProcessBatches = [];
+        vm.previousClicked = previousClicked;
         vm.processClicked = processClicked;
         vm.searchClicked = searchClicked;
-        vm.searchModel = { payrollPeriodMonth: '-1', payrollPeriodYear: '-1' };
+        vm.searchModel = { pageNumber: 1, payrollPeriodMonth: '-1', payrollPeriodYear: '-1' };
         vm.searchInProgress = false;
         vm.sendPayslipClicked = sendPayslipClicked;
+        vm.totalResultsCount = 0;
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
@@ -27,11 +31,25 @@
             searchClicked();
         };
 
+        function nextClicked() {
+            if (vm.searchModel.pageNumber == vm.lastPageNumber) return;
+
+            vm.searchModel.pageNumber += 1;
+            searchClicked();
+        };
+
         function payrollPeriodMonthChanged() {
             searchClicked();
         };
 
         function payrollPeriodYearChanged() {
+            searchClicked();
+        };
+
+        function previousClicked() {
+            if (vm.searchModel.pageNumber == 1) return;
+
+            vm.searchModel.pageNumber -= 1;
             searchClicked();
         };
 
@@ -72,6 +90,9 @@
 
             $http.get('/Payroll/Search', { params: vm.searchModel }).then(function (response) {
                 vm.payrollProcessBatches = response.data.payrollProcessBatches;
+                vm.totalResultsCount = response.data.totalResultsCount;
+                vm.lastPageNumber = response.data.lastPageNumber;
+
                 vm.searchInProgress = false;
             });
         };

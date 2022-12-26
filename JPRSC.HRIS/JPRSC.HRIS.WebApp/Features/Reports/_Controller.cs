@@ -1,5 +1,6 @@
-﻿using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
+﻿using JPRSC.HRIS.Features.Reports;
+using JPRSC.HRIS.Infrastructure.Mvc;
+using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
 using System.Linq;

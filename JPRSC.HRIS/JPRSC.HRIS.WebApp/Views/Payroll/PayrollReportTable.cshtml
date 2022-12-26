@@ -1,4 +1,4 @@
-﻿@model Tuple<JPRSC.HRIS.WebApp.Features.Payroll.PayrollReport.QueryResult, IEnumerable<JPRSC.HRIS.WebApp.Features.Payroll.PayrollReport.QueryResult.PayrollReportItem>>
+﻿@model Tuple<JPRSC.HRIS.Features.Payroll.PayrollReport.QueryResult, IEnumerable<JPRSC.HRIS.Features.Payroll.PayrollReport.QueryResult.PayrollReportItem>>
 @{ 
     var shouldShowLoanColumns = Model.Item2.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()) > 0;
 }

@@ -37,6 +37,9 @@
     <Reference Include="AutoMapper, Version=8.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.8.1.1\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.18.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.18.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
@@ -76,14 +79,17 @@
     <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.2.2\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=22.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <HintPath>..\packages\Select.HtmlToPdf.22.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
     </Reference>
     <Reference Include="SendGrid, Version=9.28.1.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
       <HintPath>..\packages\SendGrid.9.28.1\lib\net452\SendGrid.dll</HintPath>
@@ -95,8 +101,8 @@
       <HintPath>..\packages\starkbank-ecdsa.1.3.3\lib\net452\StarkbankEcdsa.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -132,23 +138,23 @@
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.1.0.20105.408\lib\net40\System.Web.Helpers.dll</HintPath>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.3.0.20105.1\lib\net40\System.Web.Mvc.dll</HintPath>
+    <Reference Include="System.Web.Mvc, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.1.0.20105.408\lib\net40\System.Web.Razor.dll</HintPath>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.1.0.20105.408\lib\net40\System.Web.WebPages.dll</HintPath>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.1.0.20105.408\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.1.0.20105.408\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -166,6 +172,166 @@
     <Compile Include="Features\Accounts\EditOwn.cs" />
     <Compile Include="Features\Accounts\Index.cs" />
     <Compile Include="Features\Accounts\Search.cs" />
+    <Compile Include="Features\Account\ConfirmEmail.cs" />
+    <Compile Include="Features\Account\ForgotPassword.cs" />
+    <Compile Include="Features\Account\Login.cs" />
+    <Compile Include="Features\Account\LogOff.cs" />
+    <Compile Include="Features\Account\Register.cs" />
+    <Compile Include="Features\Account\ResetPassword.cs" />
+    <Compile Include="Features\Account\SendCode.cs" />
+    <Compile Include="Features\Account\VerifyCode.cs" />
+    <Compile Include="Features\ApprovalLevels\Add.cs" />
+    <Compile Include="Features\ApprovalLevels\Delete.cs" />
+    <Compile Include="Features\ApprovalLevels\Edit.cs" />
+    <Compile Include="Features\ApprovalLevels\Index.cs" />
+    <Compile Include="Features\ApprovalLevels\Search.cs" />
+    <Compile Include="Features\AuditTrails\Index.cs" />
+    <Compile Include="Features\AuditTrails\Search.cs" />
+    <Compile Include="Features\Banks\Add.cs" />
+    <Compile Include="Features\Banks\Delete.cs" />
+    <Compile Include="Features\Banks\Edit.cs" />
+    <Compile Include="Features\Banks\Index.cs" />
+    <Compile Include="Features\Banks\Search.cs" />
+    <Compile Include="Features\Clients\Add.cs" />
+    <Compile Include="Features\Clients\Delete.cs" />
+    <Compile Include="Features\Clients\Details.cs" />
+    <Compile Include="Features\Clients\Edit.cs" />
+    <Compile Include="Features\Clients\Index.cs" />
+    <Compile Include="Features\Clients\Search.cs" />
+    <Compile Include="Features\Companies\Add.cs" />
+    <Compile Include="Features\Companies\Delete.cs" />
+    <Compile Include="Features\Companies\Details.cs" />
+    <Compile Include="Features\Companies\Edit.cs" />
+    <Compile Include="Features\Companies\Index.cs" />
+    <Compile Include="Features\Companies\Search.cs" />
+    <Compile Include="Features\CustomRoles\Add.cs" />
+    <Compile Include="Features\CustomRoles\Delete.cs" />
+    <Compile Include="Features\CustomRoles\Edit.cs" />
+    <Compile Include="Features\CustomRoles\Index.cs" />
+    <Compile Include="Features\CustomRoles\Search.cs" />
+    <Compile Include="Features\DailyTimeRecords\Add.cs" />
+    <Compile Include="Features\DailyTimeRecords\BulkUploadDTR.cs" />
+    <Compile Include="Features\DailyTimeRecords\BulkUploadEDR.cs" />
+    <Compile Include="Features\DailyTimeRecords\Delete.cs" />
+    <Compile Include="Features\DailyTimeRecords\Edit.cs" />
+    <Compile Include="Features\DailyTimeRecords\Index.cs" />
+    <Compile Include="Features\DailyTimeRecords\PayrollPeriodSelection.cs" />
+    <Compile Include="Features\DailyTimeRecords\Search.cs" />
+    <Compile Include="Features\Departments\Add.cs" />
+    <Compile Include="Features\Departments\Delete.cs" />
+    <Compile Include="Features\Departments\Edit.cs" />
+    <Compile Include="Features\Departments\Index.cs" />
+    <Compile Include="Features\Departments\Search.cs" />
+    <Compile Include="Features\EarningDeductions\Add.cs" />
+    <Compile Include="Features\EarningDeductions\Delete.cs" />
+    <Compile Include="Features\EarningDeductions\Edit.cs" />
+    <Compile Include="Features\EarningDeductions\Index.cs" />
+    <Compile Include="Features\EarningDeductions\Search.cs" />
+    <Compile Include="Features\EmployeeRates\Add.cs" />
+    <Compile Include="Features\EmployeeRates\BulkChange.cs" />
+    <Compile Include="Features\EmployeeRates\Delete.cs" />
+    <Compile Include="Features\EmployeeRates\Edit.cs" />
+    <Compile Include="Features\EmployeeRates\Index.cs" />
+    <Compile Include="Features\EmployeeRates\Search.cs" />
+    <Compile Include="Features\Employees\Add.cs" />
+    <Compile Include="Features\Employees\Delete.cs" />
+    <Compile Include="Features\Employees\Details.cs" />
+    <Compile Include="Features\Employees\Edit.cs" />
+    <Compile Include="Features\Employees\GetByClientId.cs" />
+    <Compile Include="Features\Employees\Index.cs" />
+    <Compile Include="Features\Employees\Rehire.cs" />
+    <Compile Include="Features\Employees\Search.cs" />
+    <Compile Include="Features\Employees\Transfer.cs" />
+    <Compile Include="Features\JobTitles\Add.cs" />
+    <Compile Include="Features\JobTitles\Delete.cs" />
+    <Compile Include="Features\JobTitles\Edit.cs" />
+    <Compile Include="Features\JobTitles\Index.cs" />
+    <Compile Include="Features\JobTitles\Search.cs" />
+    <Compile Include="Features\Loans\Add.cs" />
+    <Compile Include="Features\Loans\CheckExisting.cs" />
+    <Compile Include="Features\Loans\Edit.cs" />
+    <Compile Include="Features\Loans\GetById.cs" />
+    <Compile Include="Features\Loans\Index.cs" />
+    <Compile Include="Features\Loans\MakeActive.cs" />
+    <Compile Include="Features\Loans\Search.cs" />
+    <Compile Include="Features\Loans\ZeroOut.cs" />
+    <Compile Include="Features\LoanTypes\Add.cs" />
+    <Compile Include="Features\LoanTypes\Delete.cs" />
+    <Compile Include="Features\LoanTypes\Edit.cs" />
+    <Compile Include="Features\LoanTypes\Index.cs" />
+    <Compile Include="Features\LoanTypes\Search.cs" />
+    <Compile Include="Features\Manage\AddPhoneNumber.cs" />
+    <Compile Include="Features\Manage\ChangePassword.cs" />
+    <Compile Include="Features\Manage\SetPassword.cs" />
+    <Compile Include="Features\PagIbigRecords\Add.cs" />
+    <Compile Include="Features\PagIbigRecords\Delete.cs" />
+    <Compile Include="Features\PagIbigRecords\Edit.cs" />
+    <Compile Include="Features\PagIbigRecords\Index.cs" />
+    <Compile Include="Features\PagIbigRecords\Search.cs" />
+    <Compile Include="Features\PayPercentages\Add.cs" />
+    <Compile Include="Features\PayPercentages\Delete.cs" />
+    <Compile Include="Features\PayPercentages\Edit.cs" />
+    <Compile Include="Features\PayPercentages\Index.cs" />
+    <Compile Include="Features\PayPercentages\Search.cs" />
+    <Compile Include="Features\Payroll\AddForProcessingBatch.cs" />
+    <Compile Include="Features\Payroll\BankReport.cs" />
+    <Compile Include="Features\Payroll\CashHoldReport.cs" />
+    <Compile Include="Features\Payroll\CashReport.cs" />
+    <Compile Include="Features\Payroll\CheckReport.cs" />
+    <Compile Include="Features\Payroll\Delete.cs" />
+    <Compile Include="Features\Payroll\DeleteForProcessingBatch.cs" />
+    <Compile Include="Features\Payroll\EndProcess.cs" />
+    <Compile Include="Features\Payroll\ExportQueueToDTRExcel.cs" />
+    <Compile Include="Features\Payroll\ExportQueueToEDRExcel.cs" />
+    <Compile Include="Features\Payroll\ExportToExcel.cs" />
+    <Compile Include="Features\Payroll\ForProcessing.cs" />
+    <Compile Include="Features\Payroll\ForProcessingBatchSearch.cs" />
+    <Compile Include="Features\Payroll\ForProcessingQueue.cs" />
+    <Compile Include="Features\Payroll\HoldReport.cs" />
+    <Compile Include="Features\Payroll\Index.cs" />
+    <Compile Include="Features\Payroll\NetPayHelper.cs" />
+    <Compile Include="Features\Payroll\PayrollReport.cs" />
+    <Compile Include="Features\Payroll\PayrollSummaryReport.cs" />
+    <Compile Include="Features\Payroll\PayslipReport.cs" />
+    <Compile Include="Features\Payroll\Process.cs" />
+    <Compile Include="Features\Payroll\Search.cs" />
+    <Compile Include="Features\Payroll\SendPayslip.cs" />
+    <Compile Include="Features\PhicRecords\Add.cs" />
+    <Compile Include="Features\PhicRecords\Delete.cs" />
+    <Compile Include="Features\PhicRecords\Edit.cs" />
+    <Compile Include="Features\PhicRecords\Index.cs" />
+    <Compile Include="Features\PhicRecords\Search.cs" />
+    <Compile Include="Features\Religions\Add.cs" />
+    <Compile Include="Features\Religions\Delete.cs" />
+    <Compile Include="Features\Religions\Edit.cs" />
+    <Compile Include="Features\Religions\Index.cs" />
+    <Compile Include="Features\Religions\Search.cs" />
+    <Compile Include="Features\Reports\GenerateAlphalist.cs" />
+    <Compile Include="Features\Reports\GenerateEarningsDeductions.cs" />
+    <Compile Include="Features\Reports\GenerateLoanLedger.cs" />
+    <Compile Include="Features\Reports\GeneratePagIbig.cs" />
+    <Compile Include="Features\Reports\GeneratePHIC.cs" />
+    <Compile Include="Features\Reports\GenerateSingleLoanType.cs" />
+    <Compile Include="Features\Reports\GenerateSSS.cs" />
+    <Compile Include="Features\Reports\GenerateThirteenthMonth.cs" />
+    <Compile Include="Features\Reports\Index.cs" />
+    <Compile Include="Features\Reports\_Extensions.cs" />
+    <Compile Include="Features\SSSRecords\Add.cs" />
+    <Compile Include="Features\SSSRecords\Delete.cs" />
+    <Compile Include="Features\SSSRecords\Edit.cs" />
+    <Compile Include="Features\SSSRecords\Index.cs" />
+    <Compile Include="Features\SSSRecords\Search.cs" />
+    <Compile Include="Features\SystemSettings\Add.cs" />
+    <Compile Include="Features\SystemSettings\Delete.cs" />
+    <Compile Include="Features\SystemSettings\Edit.cs" />
+    <Compile Include="Features\SystemSettings\EditSMTP.cs" />
+    <Compile Include="Features\SystemSettings\Index.cs" />
+    <Compile Include="Features\SystemSettings\Search.cs" />
+    <Compile Include="Features\TaxStatuses\Add.cs" />
+    <Compile Include="Features\TaxStatuses\Delete.cs" />
+    <Compile Include="Features\TaxStatuses\Edit.cs" />
+    <Compile Include="Features\TaxStatuses\Index.cs" />
+    <Compile Include="Features\TaxStatuses\Search.cs" />
     <Compile Include="Infrastructure\.NET\DateTimeExtensions.cs" />
     <Compile Include="Infrastructure\.NET\EnumHelper.cs" />
     <Compile Include="Infrastructure\.NET\IEnumerableExtensions.cs" />
@@ -541,14 +707,18 @@
     <Compile Include="Infrastructure\Identity\SignInManager.cs" />
     <Compile Include="Infrastructure\Identity\UserManager.cs" />
     <Compile Include="Infrastructure\Logging\Logger.cs" />
+    <Compile Include="Infrastructure\Logging\LogHelper.cs" />
     <Compile Include="Infrastructure\Logging\LogLevel.cs" />
     <Compile Include="Infrastructure\Mapping\IQueryableExtensions.cs" />
     <Compile Include="Infrastructure\MediatR\GenericPipelineBehavior.cs" />
     <Compile Include="Infrastructure\MediatR\GenericRequestPostProcessor.cs" />
     <Compile Include="Infrastructure\MediatR\GenericRequestPreProcessor.cs" />
     <Compile Include="Infrastructure\MediatR\WrappingWriter.cs" />
+    <Compile Include="Infrastructure\Mvc\AppController.cs" />
+    <Compile Include="Infrastructure\Mvc\JsonCamelCaseResult.cs" />
     <Compile Include="Infrastructure\Security\AuthorizeHelper.cs" />
     <Compile Include="Infrastructure\Sms\NoopSmsService.cs" />
+    <Compile Include="Infrastructure\Validation\FluentValidationExtensions.cs" />
     <Compile Include="Models\AccountType.cs" />
     <Compile Include="Models\ApprovalLevel.cs" />
     <Compile Include="Models\AuditTrailEntry.cs" />

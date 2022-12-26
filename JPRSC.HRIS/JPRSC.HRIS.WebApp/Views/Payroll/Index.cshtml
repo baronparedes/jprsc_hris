@@ -1,4 +1,4 @@
-﻿@model JPRSC.HRIS.WebApp.Features.Payroll.Index.QueryResult
+﻿@model JPRSC.HRIS.Features.Payroll.Index.QueryResult
 
 @{
     ViewBag.Title = "Payroll";
@@ -76,9 +76,12 @@
                         </div>
                     </div>
                 }
-                <div class="note note-info" ng-show="!vm.payrollProcessBatches.length">
+                <div class="note note-info" ng-show="!vm.searchInProgress && !vm.payrollProcessBatches.length">
                     <p>No payroll records found.</p>
                 </div>
+                <p ng-show="vm.searchInProgress">
+                    <i class="fa fa-refresh fa-pulse fa-fw margin-right-10"></i>Loading...
+                </p>
                 <div class="portlet light bordered" ng-show="vm.payrollProcessBatches.length">
                     <div class="portlet-title">
                         <div class="caption font-red-sunglo">
@@ -143,8 +146,8 @@
                                                         <a href="{{'/Payroll/PayrollSummaryReport?payrollProcessBatchId=' + payrollProcessBatch.id}}" target="_blank">Payroll Summary</a>
                                                     </li>
                                                     @*<li ng-if="payrollProcessBatch.isEndProcessed">
-                                                        <a href="" ng-click="vm.sendPayslipClicked(payrollProcessBatch)">Send payslip</a>
-                                                    </li>*@
+                                                <a href="" ng-click="vm.sendPayslipClicked(payrollProcessBatch)">Send payslip</a>
+                                            </li>*@
                                                 </ul>
                                             </div>
 
@@ -164,6 +167,19 @@
                                 </tbody>
                             </table>
                         </div>
+                        <ul class="pager">
+                            <li class="previous">
+                                <a href="" ng-disabled="vm.searchModel.pageNumber == 1" ng-click="vm.previousClicked()" class="btn blue">
+                                    <i class="fa fa-angle-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="next">
+                                <a href="" ng-disabled="vm.searchModel.pageNumber == vm.lastPageNumber" ng-click="vm.nextClicked()" class="btn blue">
+                                    Next
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

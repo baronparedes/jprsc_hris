@@ -1,5 +1,5 @@
-﻿using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
+﻿using JPRSC.HRIS.Infrastructure.Mvc;
+using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using System.Web.Mvc;
 

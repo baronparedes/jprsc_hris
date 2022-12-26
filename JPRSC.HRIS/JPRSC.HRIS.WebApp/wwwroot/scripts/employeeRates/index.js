@@ -11,10 +11,14 @@
         vm.currencySymbol = 'P';
         vm.editEmployeeRateClicked = editEmployeeRateClicked;
         vm.employeeRates = [];
+        vm.lastPageNumber = 1;
+        vm.nextClicked = nextClicked;
+        vm.previousClicked = previousClicked;
         vm.saveEditEmployeeRateClicked = saveEditEmployeeRateClicked;
         vm.searchClicked = searchClicked;
-        vm.searchModel = {};
+        vm.searchModel = { pageNumber: 1 };
         vm.searchInProgress = false;
+        vm.totalResultsCount = 0;
 
         $timeout(function () {
             vm.clientsList = vm.serverModel.clientsList;
@@ -59,7 +63,21 @@
             employee.copy = angular.copy(employee);
         };
 
+        function nextClicked() {
+            if (vm.searchModel.pageNumber == vm.lastPageNumber) return;
+
+            vm.searchModel.pageNumber += 1;
+            searchClicked();
+        };
+
         function onSearchModelChange(newValue, oldValue) {
+            searchClicked();
+        };
+
+        function previousClicked() {
+            if (vm.searchModel.pageNumber == 1) return;
+
+            vm.searchModel.pageNumber -= 1;
             searchClicked();
         };
 
@@ -93,6 +111,9 @@
 
             $http.get('/EmployeeRates/Search', { params: vm.searchModel }).then(function (response) {
                 vm.employees = response.data.employees;
+                vm.totalResultsCount = response.data.totalResultsCount;
+                vm.lastPageNumber = response.data.lastPageNumber;
+                
                 vm.searchInProgress = false;
             });
         };

@@ -1,10 +1,11 @@
-﻿using MediatR;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
+﻿using JPRSC.HRIS.Features.Account;
 using JPRSC.HRIS.Infrastructure.Identity;
+using JPRSC.HRIS.Infrastructure.Mvc;
 using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Features.Account;
-using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
+using MediatR;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 

@@ -11,13 +11,17 @@
         vm.detailsClicked = detailsClicked;
         vm.editClicked = editClicked;
         vm.getInterestAmount = getInterestAmount;
+        vm.lastPageNumber = 1;
         vm.loans = [];
         vm.loanTypes = [];
         vm.makeActiveSubmit = makeActiveSubmit;
+        vm.nextClicked = nextClicked;
         vm.nextTransactionNumber = '';
+        vm.previousClicked = previousClicked;
         vm.searchClicked = searchClicked;
-        vm.searchModel = {};
+        vm.searchModel = { pageNumber: 1 };
         vm.searchInProgress = false;
+        vm.totalResultsCount = 0;
         vm.zeroOutSubmit = zeroOutSubmit;
 
         $scope.$watch('vm.searchModel', onSearchModelChange, true);
@@ -133,7 +137,21 @@
             });
         };
 
+        function nextClicked() {
+            if (vm.searchModel.pageNumber == vm.lastPageNumber) return;
+
+            vm.searchModel.pageNumber += 1;
+            searchClicked();
+        };
+
         function onSearchModelChange(newValue, oldValue) {
+            searchClicked();
+        };
+
+        function previousClicked() {
+            if (vm.searchModel.pageNumber == 1) return;
+
+            vm.searchModel.pageNumber -= 1;
             searchClicked();
         };
 
@@ -156,6 +174,9 @@
 
             $http.get('/Loans/Search', { params: vm.searchModel }).then(function (response) {
                 vm.loans = response.data.loans;
+                vm.totalResultsCount = response.data.totalResultsCount;
+                vm.lastPageNumber = response.data.lastPageNumber;
+                
                 vm.searchInProgress = false;
             });
         };

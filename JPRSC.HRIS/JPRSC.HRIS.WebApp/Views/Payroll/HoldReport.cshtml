@@ -1,4 +1,4 @@
-﻿@model JPRSC.HRIS.WebApp.Features.Payroll.HoldReport.QueryResult
+﻿@model JPRSC.HRIS.Features.Payroll.HoldReport.QueryResult
 @{
     Layout = null;
 }
@@ -92,7 +92,7 @@
                     {
                         foreach (var payrollRecord in Model.PayrollRecords.Where(p => p.Employee.Department == null))
                         {
-                            payrollRecord.Employee.Department = new JPRSC.HRIS.WebApp.Features.Payroll.HoldReport.QueryResult.Department { Id = 0, Name = "No Branch" };
+                            payrollRecord.Employee.Department = new JPRSC.HRIS.Features.Payroll.HoldReport.QueryResult.Department { Id = 0, Name = "No Branch" };
                         }
 
                         var groupedByBranch = Model.PayrollRecords.GroupBy(pr => new { pr.Employee.Department.Id, pr.Employee.Department.Name });

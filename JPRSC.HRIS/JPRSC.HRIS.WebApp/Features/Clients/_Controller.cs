@@ -1,6 +1,7 @@
-﻿using JPRSC.HRIS.Models;
+﻿using JPRSC.HRIS.Features.Clients;
+using JPRSC.HRIS.Infrastructure.Mvc;
+using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Html;
-using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
 using MediatR;
 using System.Threading.Tasks;
