@@ -1,6 +1,6 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Infrastructure.Excel;
+using JPRSC.HRIS.Infrastructure.Excel;
 using MediatR;
 using System;
 using System.Collections.Generic;

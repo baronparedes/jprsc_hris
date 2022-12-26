@@ -1,26 +1,23 @@
 ﻿using FluentValidation;
+using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Infrastructure.Identity;
+using JPRSC.HRIS.Infrastructure.CSV;
+using JPRSC.HRIS.Infrastructure.Excel;
+using JPRSC.HRIS.WebApp.Infrastructure.Mapping;
+using JPRSC.HRIS.Infrastructure.MediatR;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using JPRSC.HRIS.Infrastructure.Data;
-using JPRSC.HRIS.Infrastructure.Identity;
-using JPRSC.HRIS.WebApp.Infrastructure.Excel;
-using JPRSC.HRIS.WebApp.Infrastructure.Logging;
 using SimpleInjector;
 using SimpleInjector.Integration.Web;
 using SimpleInjector.Integration.Web.Mvc;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Threading;
-using System.Text;
-using JPRSC.HRIS.WebApp.Infrastructure.CSV;
-using JPRSC.HRIS.WebApp.Infrastructure.MediatR;
-using JPRSC.HRIS.WebApp.Infrastructure.Mapping;
+using JPRSC.HRIS.WebApp.Infrastructure.Logging;
 
 namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
 {
@@ -83,8 +80,9 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
         // More info: https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples.SimpleInjector/Program.cs
         private static void RegisterMediatR(Container container)
         {
-            var assemblyOfMediatRClasses = Assembly.GetExecutingAssembly();
-            var assemblies = new[] { assemblyOfMediatRClasses };
+            var webAssembly = Assembly.GetExecutingAssembly();
+            var coreAssembly = typeof(ApplicationDbContext).Assembly;
+            var assemblies = new[] { webAssembly, coreAssembly };
             container.RegisterSingleton<IMediator, Mediator>();
             container.Register(typeof(IRequestHandler<,>), assemblies);
 

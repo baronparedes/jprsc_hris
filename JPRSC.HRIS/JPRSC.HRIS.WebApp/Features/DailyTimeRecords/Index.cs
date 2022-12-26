@@ -66,7 +66,7 @@ namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
         {
             public Mapping()
             {
-                CreateMap<Client, QueryResult.Client>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<Client, QueryResult.Client>();
                 CreateMap<EarningDeduction, QueryResult.EarningDeduction>();
                 CreateMap<PayPercentage, QueryResult.PayPercentage>();
             }

@@ -85,9 +85,9 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
             public Mapping()
             {
                 CreateMap<PayrollProcessBatch, QueryResult.PayrollProcessBatch>();
-                CreateMap<Client, QueryResult.Client>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<Client, QueryResult.Client>();
                 CreateMap<PayrollProcessBatch, EndProcessQueryResult.PayrollProcessBatch>();
-                CreateMap<Client, EndProcessQueryResult.Client>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<Client, EndProcessQueryResult.Client>();
             }
         }
 

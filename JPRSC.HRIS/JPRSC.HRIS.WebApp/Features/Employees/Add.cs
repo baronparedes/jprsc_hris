@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Infrastructure.Security;
 using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
@@ -391,7 +392,7 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
                     ZipCode = command.ZipCode
                 };
 
-                if (AuthorizeHelper.IsAuthorized(Permission.EmployeeEditATM))
+                if (AuthorizeHelper.IsAuthorized(_db, Permission.EmployeeEditATM))
                 {
                     employee.ATMAccountNumber = command.ATMAccountNumber;
                 }

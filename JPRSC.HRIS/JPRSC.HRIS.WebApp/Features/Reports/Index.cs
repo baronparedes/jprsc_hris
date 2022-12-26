@@ -56,7 +56,7 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         {
             public Mapping()
             {
-                CreateMap<Client, QueryResult.Client>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<Client, QueryResult.Client>();
                 CreateMap<LoanType, QueryResult.LoanType>();
             }
         }

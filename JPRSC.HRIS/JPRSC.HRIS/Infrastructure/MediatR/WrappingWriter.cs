@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JPRSC.HRIS.WebApp.Infrastructure.MediatR
+namespace JPRSC.HRIS.Infrastructure.MediatR
 {
     // https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples/Runner.cs
     public class WrappingWriter : TextWriter

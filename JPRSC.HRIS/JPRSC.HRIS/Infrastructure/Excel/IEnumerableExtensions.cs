@@ -1,7 +1,8 @@
-﻿using JPRSC.HRIS.WebApp.Infrastructure.Excel;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace System.Collections.Generic
+namespace JPRSC.HRIS.Infrastructure.Excel
 {
     public static class IEnumerableExtensions
     {

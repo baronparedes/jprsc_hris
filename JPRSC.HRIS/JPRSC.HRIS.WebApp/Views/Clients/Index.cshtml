@@ -16,7 +16,7 @@
         <h1 class="page-title">
             Clients
         </h1>
-        @Html.RenderSuccessNotification()
+        @Html.Raw(Html.RenderSuccessNotification())
         @if (AuthorizeHelper.IsAuthorized(Permission.ClientAdd))
         {
             <div class="row">

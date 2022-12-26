@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace JPRSC.HRIS.WebApp.Infrastructure.Excel
+namespace JPRSC.HRIS.Infrastructure.Excel
 {
     public class ColumnInfo<TRow>
     {

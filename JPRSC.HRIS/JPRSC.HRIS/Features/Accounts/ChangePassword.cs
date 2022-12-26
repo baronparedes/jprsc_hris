@@ -4,7 +4,7 @@ using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Infrastructure.Identity;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Infrastructure.Security;
+using JPRSC.HRIS.Infrastructure.Security;
 using MediatR;
 using System;
 using System.Data.Entity;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JPRSC.HRIS.WebApp.Features.Accounts
+namespace JPRSC.HRIS.Features.Accounts
 {
     public class ChangePassword
     {
@@ -34,7 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         {
             public Mapping()
             {
-                CreateMap<User, Command>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<User, Command>();
             }
         }
 
@@ -94,7 +94,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
             public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
-                var useOldPassword = !AuthorizeHelper.IsSuperAdmin();
+                var useOldPassword = !AuthorizeHelper.IsSuperAdmin(_db);
                 if (useOldPassword)
                 {
                     var changePasswordResult = await _userManager.ChangePasswordAsync(command.Id, command.OldPassword, command.NewPassword);

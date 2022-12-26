@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace JPRSC.HRIS.WebApp.Infrastructure.CSV
+namespace JPRSC.HRIS.Infrastructure.CSV
 {
     public interface ICSVBuilder
     {

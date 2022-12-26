@@ -17,7 +17,7 @@
         <h1 class="page-title">
             Employees
         </h1>
-        @Html.RenderSuccessNotification()
+        @Html.Raw(Html.RenderSuccessNotification())
         @if (AuthorizeHelper.IsAuthorized(Permission.EmployeeAdd))
         {
             <div class="row">

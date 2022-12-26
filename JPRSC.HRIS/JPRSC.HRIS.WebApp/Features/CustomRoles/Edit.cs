@@ -34,7 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.CustomRoles
         {
             public Mapping()
             {
-                CreateMap<CustomRole, Command>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<CustomRole, Command>();
             }
         }
 

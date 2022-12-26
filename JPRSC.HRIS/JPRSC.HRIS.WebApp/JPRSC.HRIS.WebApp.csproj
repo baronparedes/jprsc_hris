@@ -568,13 +568,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\Accounts\Add.cs" />
-    <Compile Include="Features\Accounts\Delete.cs" />
-    <Compile Include="Features\Accounts\Edit.cs" />
-    <Compile Include="Features\Accounts\ChangePassword.cs" />
-    <Compile Include="Features\Accounts\EditOwn.cs" />
-    <Compile Include="Features\Accounts\Index.cs" />
-    <Compile Include="Features\Accounts\Search.cs" />
     <Compile Include="Features\Accounts\_Controller.cs" />
     <Compile Include="Features\Account\SendCode.cs" />
     <Compile Include="Features\Account\VerifyCode.cs" />
@@ -754,26 +747,15 @@
     <Compile Include="Features\TaxStatuses\_Controller.cs" />
     <Compile Include="Infrastructure\Angular\AngularHtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\AuditTrail\AuditTrailAttribute.cs" />
-    <Compile Include="Infrastructure\CSV\CSVBuilder.cs" />
-    <Compile Include="Infrastructure\Dependency\IQueryableExtensions.cs" />
-    <Compile Include="Infrastructure\Excel\ColumnInfo.cs" />
-    <Compile Include="Infrastructure\Excel\ExcelObject.cs" />
-    <Compile Include="Infrastructure\Excel\IEnumerableExtensions.cs" />
-    <Compile Include="Infrastructure\Excel\OpenXMLExcelBuilder.cs" />
+    <Compile Include="Infrastructure\DependencyConfig\DependencyConfig.cs" />
     <Compile Include="Infrastructure\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Logging\LogHelper.cs" />
-    <Compile Include="Infrastructure\Mapping\MapperProvider.cs" />
     <Compile Include="Infrastructure\Html\NotificationHelper.cs" />
-    <Compile Include="Infrastructure\MediatR\GenericPipelineBehavior.cs" />
-    <Compile Include="Infrastructure\MediatR\GenericRequestPostProcessor.cs" />
-    <Compile Include="Infrastructure\MediatR\GenericRequestPreProcessor.cs" />
-    <Compile Include="Infrastructure\MediatR\WrappingWriter.cs" />
+    <Compile Include="Infrastructure\Mapping\MapperProvider.cs" />
     <Compile Include="Infrastructure\Mvc\EnumHtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\Mvc\MemoryFile.cs" />
-    <Compile Include="Infrastructure\Security\AuthorizeHelper.cs" />
     <Compile Include="Infrastructure\Security\AuthorizePermissionAttribute.cs" />
     <Compile Include="Infrastructure\Bundling\BundleConfig.cs" />
-    <Compile Include="Infrastructure\Dependency\DependencyConfig.cs" />
     <Compile Include="Infrastructure\Mvc\FilterConfig.cs" />
     <Compile Include="Infrastructure\Mvc\RouteConfig.cs" />
     <Compile Include="Infrastructure\Security\Startup.Auth.cs" />

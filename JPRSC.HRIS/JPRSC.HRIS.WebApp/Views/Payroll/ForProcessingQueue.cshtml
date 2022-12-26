@@ -35,7 +35,7 @@
         <h1 class="page-title">
             For Processing Queue
         </h1>
-        @Html.RenderSuccessNotification()
+        @Html.Raw(Html.RenderSuccessNotification())
         <div class="row" ng-controller="ForProcessingQueueCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
                 <form role="form">

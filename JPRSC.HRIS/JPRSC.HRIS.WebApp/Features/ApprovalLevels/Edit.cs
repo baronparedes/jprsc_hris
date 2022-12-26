@@ -34,7 +34,7 @@ namespace JPRSC.HRIS.WebApp.Features.ApprovalLevels
         {
             public Mapping()
             {
-                CreateMap<ApprovalLevel, Command>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<ApprovalLevel, Command>();
             }
         }
 

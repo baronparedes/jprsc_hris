@@ -48,7 +48,7 @@ namespace JPRSC.HRIS.WebApp.Features.PhicRecords
         {
             public Mapping()
             {
-                CreateMap<PhicRecord, QueryResult.PhicRecord>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<PhicRecord, QueryResult.PhicRecord>();
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using JPRSC.HRIS.Models;
+﻿using JPRSC.HRIS.Features.Accounts;
+using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Html;
 using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;

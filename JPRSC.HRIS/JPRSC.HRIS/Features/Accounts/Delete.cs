@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JPRSC.HRIS.WebApp.Features.Accounts
+namespace JPRSC.HRIS.Features.Accounts
 {
     public class Delete
     {

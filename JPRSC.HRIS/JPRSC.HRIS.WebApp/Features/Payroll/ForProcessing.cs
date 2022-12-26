@@ -48,7 +48,7 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
         {
             public Mapping()
             {
-                CreateMap<Client, QueryResult.Client>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<Client, QueryResult.Client>();
             }
         }
 

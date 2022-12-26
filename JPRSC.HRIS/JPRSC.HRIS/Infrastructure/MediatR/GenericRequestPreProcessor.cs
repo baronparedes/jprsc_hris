@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JPRSC.HRIS.WebApp.Infrastructure.MediatR
+namespace JPRSC.HRIS.Infrastructure.MediatR
 {
     // https://github.com/jbogard/MediatR/blob/master/samples/MediatR.Examples/GenericRequestPreProcessor.cs
     public class GenericRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>

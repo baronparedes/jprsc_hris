@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JPRSC.HRIS.WebApp.Infrastructure.Excel
+namespace JPRSC.HRIS.Infrastructure.Excel
 {
     public class ExcelObject
     {

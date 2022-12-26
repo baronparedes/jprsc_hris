@@ -90,7 +90,7 @@ namespace JPRSC.HRIS.WebApp.Features.Loans
             public Mapping()
             {
                 CreateMap<Employee, QueryResult.Employee>();
-                CreateMap<Loan, QueryResult.Loan>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<Loan, QueryResult.Loan>();
                 CreateMap<LoanType, QueryResult.LoanType>();
             }
         }

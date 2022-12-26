@@ -1,21 +1,19 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
+//using JPRSC.HRIS.Infrastructure.Dependency;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-namespace JPRSC.HRIS.WebApp.Infrastructure.Security
+namespace JPRSC.HRIS.Infrastructure.Security
 {
     public static class AuthorizeHelper
     {
         private static int _superAdminCustomRoleId = 1;
 
-        public static bool IsAuthorized(Permission permission)
+        public static bool IsAuthorized(ApplicationDbContext db, Permission permission)
         {
-            var db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
-
             var currentUserId = HttpContext.Current.User.Identity.GetUserId();
 
             var currentUser = db.Users
@@ -29,10 +27,8 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Security
             return authorizedViaPermission;
         }
 
-        public static bool IsSuperAdmin()
+        public static bool IsSuperAdmin(ApplicationDbContext db)
         {
-            var db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
-
             var currentUserId = HttpContext.Current.User.Identity.GetUserId();
 
             var currentUser = db.Users

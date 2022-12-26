@@ -3,7 +3,6 @@ using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Infrastructure.Identity;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.Accounts
+namespace JPRSC.HRIS.Features.Accounts
 {
     public class Add
     {
@@ -97,10 +96,12 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            private readonly ApplicationDbContext _db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
+            private readonly ApplicationDbContext _db;
 
-            public CommandValidator()
+            public CommandValidator(ApplicationDbContext db)
             {
+                _db = db;
+
                 RuleFor(c => c.UserName)
                     .NotEmpty();
 

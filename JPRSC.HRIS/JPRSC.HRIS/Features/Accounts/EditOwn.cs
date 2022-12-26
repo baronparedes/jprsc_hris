@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Infrastructure.Dependency;
 using MediatR;
 using Microsoft.AspNet.Identity;
 using System;
@@ -15,7 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.Accounts
+namespace JPRSC.HRIS.Features.Accounts
 {
     public class EditOwn
     {
@@ -38,7 +37,7 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
         {
             public Mapping()
             {
-                CreateMap<User, Command>().ForAllOtherMembers(opts => opts.Ignore());
+                CreateMap<User, Command>();
             }
         }
 
@@ -87,10 +86,12 @@ namespace JPRSC.HRIS.WebApp.Features.Accounts
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            private readonly ApplicationDbContext _db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
+            private readonly ApplicationDbContext _db;
 
-            public CommandValidator()
+            public CommandValidator(ApplicationDbContext db)
             {
+                _db = db;
+
                 RuleFor(c => c.UserName)
                     .NotEmpty();
 
