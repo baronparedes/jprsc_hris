@@ -26,8 +26,6 @@ namespace JPRSC.HRIS.WebApp.Features.Payroll
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            private readonly ApplicationDbContext _db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
-
             public CommandValidator()
             {
                 RuleFor(c => c.ClientId)

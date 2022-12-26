@@ -234,10 +234,12 @@ namespace JPRSC.HRIS.WebApp.Features.Employees
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            private readonly ApplicationDbContext _db = DependencyConfig.Instance.Container.GetInstance<ApplicationDbContext>();
+            private readonly ApplicationDbContext _db;
 
-            public CommandValidator()
+            public CommandValidator(ApplicationDbContext db)
             {
+                _db = db;
+
                 RuleFor(c => c.FirstName)
                     .NotEmpty();
 

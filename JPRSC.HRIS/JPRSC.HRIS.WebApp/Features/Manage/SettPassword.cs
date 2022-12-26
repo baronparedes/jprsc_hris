@@ -28,12 +28,10 @@ namespace JPRSC.HRIS.WebApp.Features.Manage
         public class Validator : AbstractValidator<Command>
         {
             private readonly PasswordValidator _passwordValidator;
-            private readonly UserManager _userManager;
 
             public Validator()
             {
                 _passwordValidator = UserManager.CreatePasswordValidator();
-                _userManager = DependencyConfig.Instance.Container.GetInstance<UserManager>();
 
                 RuleFor(c => c.NewPassword)
                     .NotEmpty();
