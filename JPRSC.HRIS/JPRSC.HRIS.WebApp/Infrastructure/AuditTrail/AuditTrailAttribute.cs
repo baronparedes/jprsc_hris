@@ -62,13 +62,11 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.AuditTrail
 
             foreach (PropertyInfo prop in props)
             {
+                if (prop.Name != "Id") continue;
+                
                 var propValue = prop.GetValue(command, null);
-
-                if (prop.Name == "Id")
-                {
-                    idParameter = Convert.ToInt32(propValue);
-                    break;
-                }
+                idParameter = Convert.ToInt32(propValue);
+                break;
             }
 
             return idParameter;

@@ -523,6 +523,9 @@
     <Compile Include="Models\RehireTransferEvent.cs" />
     <Compile Include="Models\RehireTransferEventType.cs" />
     <Compile Include="Models\Religion.cs" />
+    <Compile Include="Models\BackgroundProcess.cs" />
+    <Compile Include="Models\BackgroundProcessStatus.cs" />
+    <Compile Include="Models\BackgroundProcessType.cs" />
     <Compile Include="Models\ResignStatus.cs" />
     <Compile Include="Models\SalaryStatus.cs" />
     <Compile Include="Models\SSSRecord.cs" />
