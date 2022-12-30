@@ -85,19 +85,25 @@ namespace JPRSC.HRIS.Features.Reports
             }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<LoanType, QueryResult.LoanType>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
             private readonly IExcelBuilder _excelBuilder;
-            private readonly IMediator _mediator;
             private readonly IMapper _mapper;
             private Models.SystemSettings _systemSettings;
 
-            public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMediator mediator, IMapper mapper)
+            public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMapper mapper)
             {
                 _db = db;
                 _excelBuilder = excelBuilder;
-                _mediator = mediator;
                 _mapper = mapper;
             }
 

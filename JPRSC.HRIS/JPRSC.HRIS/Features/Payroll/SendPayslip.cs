@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
 using MediatR;
 
@@ -58,7 +59,7 @@ namespace JPRSC.HRIS.Features.Payroll
 
             private async Task SendEmails(Models.SystemSettings systemSettings, Models.PayrollProcessBatch payrollProcessBatch)
             {
-                var saveDirectoryBase = HttpContext.Current.Server.MapPath("~/wwwroot/payslips/");
+                var saveDirectoryBase = HttpContext.Current.Server.MapPath(AppSettings.String("PayslipsPath"));
                 var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{payrollProcessBatch.Id}/");
 
                 foreach (var payrollRecord in payrollProcessBatch.PayrollRecords)

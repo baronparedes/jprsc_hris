@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Data.Entity;
@@ -37,6 +38,14 @@ namespace JPRSC.HRIS.Features.Companies
             public string SSS { get; set; }
             public string VAT { get; set; }
             public string ZipCode { get; set; }
+        }
+
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Company, QueryResult>();
+            }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>

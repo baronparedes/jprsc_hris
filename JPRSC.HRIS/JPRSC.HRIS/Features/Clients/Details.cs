@@ -75,6 +75,14 @@ namespace JPRSC.HRIS.Features.Clients
             public bool? TaxExempt { get; set; }
         }
 
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Client, QueryResult>();
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;

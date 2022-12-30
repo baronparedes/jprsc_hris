@@ -20,6 +20,16 @@ namespace JPRSC.HRIS.WebApp.Features.Reports
         }
 
         [HttpGet]
+        public async Task<ActionResult> Generate2316(Generate2316.Query query)
+        {
+            if (!ModelState.IsValid) return Content($"Error: {ModelState.GetAllErrors().First()}");
+
+            var result = await _mediator.Send(query);
+
+            return View("2316Report", result);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GenerateAlphalist(GenerateAlphalist.Query query)
         {
             if (!ModelState.IsValid) return Content($"Error: {ModelState.GetAllErrors().First()}");

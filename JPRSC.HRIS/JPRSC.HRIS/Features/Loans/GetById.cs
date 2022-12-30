@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -77,6 +78,14 @@ namespace JPRSC.HRIS.Features.Loans
                 public string Code { get; set; }
                 public string Description { get; set; }
                 public int Id { get; set; }
+            }
+        }
+
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<Loan, QueryResult>();
             }
         }
 

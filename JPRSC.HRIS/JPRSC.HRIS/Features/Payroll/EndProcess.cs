@@ -15,6 +15,7 @@ using JPRSC.HRIS.Infrastructure.Mvc;
 using MediatR;
 using Newtonsoft.Json;
 using SelectPdf;
+using JPRSC.HRIS.Infrastructure.Configuration;
 
 namespace JPRSC.HRIS.Features.Payroll
 {
@@ -336,7 +337,7 @@ namespace JPRSC.HRIS.Features.Payroll
 
                 var tupledCollection = Tuple.Create(payslipReportQueryResult, payslipReportQueryResult.PayslipRecords);
 
-                var saveDirectoryBase = HttpContext.Current.Server.MapPath("~/wwwroot/payslips/");
+                var saveDirectoryBase = HttpContext.Current.Server.MapPath(AppSettings.String("PayslipsPath"));
                 var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{payrollProcessBatch.Client.Code} - {payrollProcessBatch.PayrollPeriodFromFormatted} to {payrollProcessBatch.PayrollPeriodToFormatted}/");
 
                 if (!Directory.Exists(saveDirectoryForBatch))

@@ -108,6 +108,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
       <Private>True</Private>
@@ -315,6 +316,7 @@
     <Compile Include="Features\Reports\GenerateSSS.cs" />
     <Compile Include="Features\Reports\GenerateThirteenthMonth.cs" />
     <Compile Include="Features\Reports\Index.cs" />
+    <Compile Include="Features\Reports\Generate2316.cs" />
     <Compile Include="Features\Reports\_Extensions.cs" />
     <Compile Include="Features\SSSRecords\Add.cs" />
     <Compile Include="Features\SSSRecords\Delete.cs" />

@@ -638,6 +638,7 @@
     <Compile Include="Features\Manage\VerifyPhoneNumberViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="wwwroot\images\2316-template.jpg" />
     <Content Include="wwwroot\lib\jquery\AUTHORS.txt" />
     <Content Include="wwwroot\lib\jquery\dist\jquery.js" />
     <Content Include="wwwroot\lib\jquery\dist\jquery.min.js" />
@@ -7198,6 +7199,7 @@
     <Content Include="Views\Reports\ThirteenthMonthReport.cshtml" />
     <Content Include="Views\Reports\EarningsDeductionsReport.cshtml" />
     <Content Include="Views\Reports\AlphalistReport.cshtml" />
+    <Content Include="Views\Reports\2316Report.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
