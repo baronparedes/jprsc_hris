@@ -1,20 +1,18 @@
-﻿using FluentValidation;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
 using JPRSC.HRIS.Infrastructure.Configuration;
 using JPRSC.HRIS.Infrastructure.Data;
-using JPRSC.HRIS.Infrastructure.NET;
+using JPRSC.HRIS.Infrastructure.Mvc;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.Infrastructure.CSV;
-using JPRSC.HRIS.Infrastructure.Excel;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Drawing;
 using static JPRSC.HRIS.Features.Reports.GenerateAlphalist.QueryResult;
 
 namespace JPRSC.HRIS.Features.Reports
@@ -126,36 +124,64 @@ namespace JPRSC.HRIS.Features.Reports
                     Query = query
                 };
 
-                var template2316 = (Bitmap)Image.FromFile(HttpContext.Current.Server.MapPath(AppSettings.String("2316TemplatePath")));
+                var template2316FilePath = HttpContext.Current.Server.MapPath(AppSettings.String("2316TemplatePath"));
+                var fileDirectory = HttpContext.Current.Server.MapPath(AppSettings.String("2316FilesPath"));
+                if (!Directory.Exists(fileDirectory))
+                {
+                    Directory.CreateDirectory(fileDirectory);
+                }
 
+                var filePath = fileDirectory + "test.pdf";
 
+                Bitmap filledOutImage;
+                using (var template2316 = (Bitmap)System.Drawing.Image.FromFile(template2316FilePath))
+                {
+                    using (var graphics = Graphics.FromImage(template2316))
+                    {
+                        using (var courierNew = new System.Drawing.Font("Courier New", 18, FontStyle.Bold))
+                        {
+                            graphics.DrawSpacedString("2022", courierNew, Brushes.Black, new PointF(360f, 270f), 48f);
+                            graphics.DrawString("Hello World".ToUpperInvariant(), courierNew, Brushes.Black, new PointF(135f, 420f));
+                        }
+                    }
 
+                    filledOutImage = new Bitmap(template2316);
+                }
 
+                Document document = new Document();
+                using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    PdfWriter.GetInstance(document, stream);
+                    document.Open();
+                    using (var ms = new MemoryStream())
+                    {
+                        filledOutImage.Save(ms, ImageFormat.Jpeg);
+                        ms.Position = 0;
+                        var image = iTextSharp.text.Image.GetInstance(ms);
 
+                        image.SetAbsolutePosition(0, 0);
+                        image.ScaleAbsolute(iTextSharp.text.PageSize.A4.Width, iTextSharp.text.PageSize.A4.Height);
 
-                //string firstText = "Hello";
-                //string secondText = "World";
+                        document.Add(image);
+                    }
+                    document.Close();
+                }
 
-                //PointF firstLocation = new PointF(10f, 10f);
-                //PointF secondLocation = new PointF(10f, 50f);
+                filledOutImage.Dispose();
 
-                ////string imageFilePath = @"path\picture.bmp"
-                ////Bitmap bitmap = (Bitmap)Image.FromFile(imageFilePath);//load the image file
-
-                //using (Graphics graphics = Graphics.FromImage(template2316))
-                //{
-                //    using (Font arialFont = new Font("Arial", 10))
-                //    {
-                //        graphics.DrawString(firstText, arialFont, Brushes.Blue, firstLocation);
-                //        graphics.DrawString(secondText, arialFont, Brushes.Red, secondLocation);
-                //    }
-                //}
-
-                //template2316.Save(HttpContext.Current.Server.MapPath(AppSettings.String("2316FilesPath")));//save the image file 
-
-                generate2316Result.FilesPath = HttpContext.Current.Server.MapPath(AppSettings.String("2316FilesPath"));
-
+                generate2316Result.FilesPath = filePath;
                 return generate2316Result;
+            }
+        }
+    }
+
+    internal static class GraphicsExtensions
+    {
+        internal static void DrawSpacedString(this Graphics g, string s, System.Drawing.Font font, Brush brush, PointF point, float spaces)
+        {
+            for (var i = 0; i < s.Length; i++)
+            {
+                g.DrawString(s[i].ToString(), font, brush, new PointF(point.X + i * spaces, point.Y));
             }
         }
     }
