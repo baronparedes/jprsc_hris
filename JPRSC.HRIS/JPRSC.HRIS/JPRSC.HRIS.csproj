@@ -351,6 +351,7 @@
     <Compile Include="Infrastructure\Data\ApplicationDbContext.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CompanyProfileConfiguration.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CustomRoleConfiguration.cs" />
+    <Compile Include="Infrastructure\Data\EntityConfiguration\EmployeeConfiguration.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201712190413596_Initial.cs" />
     <Compile Include="Infrastructure\Data\Migrations\201712190413596_Initial.Designer.cs">
       <DependentUpon>201712190413596_Initial.cs</DependentUpon>

@@ -87,5 +87,7 @@ namespace JPRSC.HRIS.Models
         public string CompanyIdNumber { get; set; }
         public string PermanentAddress { get; set; }
         public string PlaceOfBirth { get; set; }
+
+        public string FullName => String.Format("{0}, {1}{2}", LastName, FirstName, String.IsNullOrWhiteSpace(MiddleName) ? null : $", {MiddleName}");
     }
 }

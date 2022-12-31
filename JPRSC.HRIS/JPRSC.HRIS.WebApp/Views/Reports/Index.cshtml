@@ -232,7 +232,7 @@
                                     <span ng-show="vm.validationErrors.payrollPeriodToYear" class="help-block">{{vm.validationErrors.payrollPeriodToYear.join(' ')}}</span>
                                 </div>
                             </div>
-                            <div class="form-group" ng-show="vm.reportType != 'Thirteenth Month' && vm.reportType != 'Alphalist' || vm.reportType == '2316'">
+                            <div class="form-group" ng-show="vm.reportType != 'Thirteenth Month' && vm.reportType != 'Alphalist' && vm.reportType != '2316'">
                                 <label class="col-md-4 col-lg-3 control-label">Payroll Year</label>
                                 <div class="col-md-8 col-lg-9">
                                     <select class="form-control" name="PayrollPeriodYear" ng-model="vm.payrollPeriodYear">
