@@ -248,6 +248,8 @@ namespace JPRSC.HRIS.Features.Payroll
 
         public class CommandResult
         {
+            public int RecordCount { get; set; }
+            public string FilesPath { get; set; }
         }
 
         public class CommandHandler : IRequestHandler<Command, CommandResult>
@@ -320,22 +322,6 @@ namespace JPRSC.HRIS.Features.Payroll
                 }
 
                 await _db.SaveChangesAsync();
-                
-                //await CreatePayslipFiles(command, payrollProcessBatch);
-
-                return new CommandResult();
-            }
-
-            private async Task CreatePayslipFiles(Command command, PayrollProcessBatch payrollProcessBatch)
-            {
-                var payslipReportQuery = new PayslipReport.Query
-                {
-                    PayrollProcessBatchId = payrollProcessBatch.Id
-                };
-
-                var payslipReportQueryResult = await _mediator.Send(payslipReportQuery);
-
-                var tupledCollection = Tuple.Create(payslipReportQueryResult, payslipReportQueryResult.PayslipRecords);
 
                 var saveDirectoryBase = HttpContext.Current.Server.MapPath(AppSettings.String("PayslipsPath"));
                 var saveDirectoryForBatch = Path.Combine(saveDirectoryBase, $"{payrollProcessBatch.Client.Code} - {payrollProcessBatch.PayrollPeriodFromFormatted} to {payrollProcessBatch.PayrollPeriodToFormatted}/");
@@ -345,20 +331,61 @@ namespace JPRSC.HRIS.Features.Payroll
                     Directory.CreateDirectory(saveDirectoryForBatch);
                 }
 
+                var payslipReportQuery = new PayslipReport.Query
+                {
+                    PayrollProcessBatchId = payrollProcessBatch.Id
+                };
+
+                var payslipReportQueryResult = await _mediator.Send(payslipReportQuery);
+
+                await CreatePayslipFiles(command, payrollProcessBatch, payslipReportQueryResult, saveDirectoryForBatch);
+
+                return new CommandResult
+                {
+                    RecordCount = payslipReportQueryResult.PayslipRecords.Count,
+                    FilesPath = saveDirectoryForBatch
+                };
+            }
+
+            private async Task CreatePayslipFiles(Command command, PayrollProcessBatch payrollProcessBatch, PayslipReport.QueryResult payslipReportQueryResult, string saveDirectoryForBatch)
+            {
+                var tupledCollection = Tuple.Create(payslipReportQueryResult, payslipReportQueryResult.PayslipRecords);
+
+                var fileContents = new List<Tuple<string, string>>();
                 foreach (var payslipRecord in tupledCollection.Item2)
                 {
                     var tupledIndividual = Tuple.Create(payslipReportQueryResult, payslipRecord);
 
+                    var fileName = $"{payslipRecord.PayrollRecord.Employee.EmployeeCode} - {payslipRecord.PayrollRecord.Employee.LastName}, {payslipRecord.PayrollRecord.Employee.FirstName} {(String.IsNullOrWhiteSpace(payslipRecord.PayrollRecord.Employee.MiddleName) ? "" : payslipRecord.PayrollRecord.Employee.MiddleName.First().ToString())}.pdf";
                     var partialRendered = command.AppController.RenderPartialToString("PayslipReportTableIndividual", tupledIndividual);
 
-                    var converter = new HtmlToPdf();
-                    converter.Options.PdfPageOrientation = PdfPageOrientation.Landscape;
-                    var doc = converter.ConvertHtmlString(partialRendered);
+                    fileContents.Add(new Tuple<string, string>(fileName, partialRendered));
+                }
 
-                    var saveFileName = Path.Combine(saveDirectoryForBatch, $"{payslipRecord.PayrollRecord.Employee.EmployeeCode} - {payslipRecord.PayrollRecord.Employee.LastName}, {payslipRecord.PayrollRecord.Employee.FirstName} {(String.IsNullOrWhiteSpace(payslipRecord.PayrollRecord.Employee.MiddleName) ? "" : payslipRecord.PayrollRecord.Employee.MiddleName.First().ToString())}.pdf");
+                var converter = new HtmlToPdf();
+                converter.Options.PdfPageOrientation = PdfPageOrientation.Landscape;
+                converter.Options.AutoFitHeight = HtmlToPdfPageFitMode.NoAdjustment;
+                converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.AutoFit;
+                converter.Options.PdfPageSize = PdfPageSize.A4;
+                converter.Options.JavaScriptEnabled = false;
+                converter.Options.JpegCompressionEnabled = false;
+                converter.Options.PdfCompressionLevel = PdfCompressionLevel.NoCompression;
+                converter.Options.EmbedFonts = false;
+                converter.Options.MinPageLoadTime = 0;
+                converter.Options.PluginsEnabled = false;
 
-                    doc.Save(saveFileName);
-                    doc.Close();
+                for (var i = 0; i < fileContents.Count; i++)
+                {
+                    var fileContent = fileContents[i];
+                    Task.Run(() =>
+                    {
+                        var doc = converter.ConvertHtmlString(fileContent.Item2);
+
+                        var saveFileName = Path.Combine(saveDirectoryForBatch, fileContent.Item1);
+
+                        doc.Save(saveFileName);
+                        doc.Close();
+                    });
                 }
             }
         }

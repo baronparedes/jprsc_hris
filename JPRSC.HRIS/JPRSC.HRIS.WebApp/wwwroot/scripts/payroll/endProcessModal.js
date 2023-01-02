@@ -26,7 +26,8 @@
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
 
             $http.post(action, data, config).then(function (response) {
-                alert('Successfully End processed!');
+                console.log('response', response);
+                alert(`Successfully End processed! Payslip creation will continue in the background.\n\n${response.data.recordCount} payslips will be saved to: '${response.data.filesPath}'`);
                 $uibModalInstance.close();
 
                 vm.endProcessInProgress = false;
