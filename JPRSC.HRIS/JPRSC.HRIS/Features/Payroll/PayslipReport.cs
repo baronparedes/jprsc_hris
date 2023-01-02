@@ -62,13 +62,13 @@ namespace JPRSC.HRIS.Features.Payroll
 
             public async Task<QueryResult> Handle(Query query, CancellationToken cancellationToken)
             {
-                var payrollProcessBatch = await _db.PayrollProcessBatches
+                var payrollProcessBatch = await _db.PayrollProcessBatches.AsNoTracking()
                     .Include(ppb => ppb.Client)
                     .SingleAsync(ppb => ppb.Id == query.PayrollProcessBatchId);
 
                 var payrollProcessBatchResult = payrollProcessBatch;
 
-                var payrollRecords = await _db.PayrollRecords
+                var payrollRecords = await _db.PayrollRecords.AsNoTracking()
                     .Include(pr => pr.Employee)
                     .Include(pr => pr.Employee.Department)
                     .Include(pr => pr.LoanDeductions)
@@ -80,30 +80,22 @@ namespace JPRSC.HRIS.Features.Payroll
 
                 var employeeIds = payrollRecords.Select(pr => pr.EmployeeId.Value).ToList();
 
-                var dailyTimeRecords = await _db
-                    .DailyTimeRecords
-                    .AsNoTracking()
+                var dailyTimeRecords = await _db.DailyTimeRecords.AsNoTracking()
                     .Where(dtr => !dtr.DeletedOn.HasValue && employeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && dtr.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
                     .ToListAsync();
 
-                var earningDeductionRecords = await _db
-                    .EarningDeductionRecords
-                    .Include(edr => edr.EarningDeduction)
-                    .AsNoTracking()
+                var earningDeductionRecords = await _db.EarningDeductionRecords.AsNoTracking()
+                    .Include(edr => edr.EarningDeduction)                    
                     .Where(edr => !edr.DeletedOn.HasValue && employeeIds.Contains(edr.EmployeeId.Value) && edr.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && edr.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
                     .ToListAsync();
 
-                var overtimes = await _db
-                    .Overtimes
+                var overtimes = await _db.Overtimes.AsNoTracking()
                     .Include(ot => ot.PayPercentage)
-                    .AsNoTracking()
                     .Where(ot => !ot.DeletedOn.HasValue && employeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && ot.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
                     .ToListAsync();
 
-                var loans = await _db
-                    .Loans
-                    .Include(l => l.LoanType)
-                    .AsNoTracking()
+                var loans = await _db.Loans.AsNoTracking()
+                    .Include(l => l.LoanType)                    
                     .Where(l => !l.DeletedOn.HasValue && employeeIds.Contains(l.EmployeeId.Value) && !l.ZeroedOutOn.HasValue && DbFunctions.TruncateTime(l.StartDeductionDate) <= DbFunctions.TruncateTime(payrollProcessBatch.PayrollPeriodTo))
                     .ToListAsync();
 
