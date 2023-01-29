@@ -267,6 +267,8 @@ namespace JPRSC.HRIS.Features.Reports
                     "Date Hired",
                     "Date Resigned",
                     "Gross compensation present",
+                     "Regular Pay",
+                    "Total Earnings",
                     "Basic SMW per day",
                     "Basic SMW per month",
                     "Basic SMW per year",
@@ -433,6 +435,7 @@ namespace JPRSC.HRIS.Features.Reports
                             String.Empty;
                         var yearlyRate = Employee.MonthlyRate.HasValue ? Employee.MonthlyRate.Value * 12 : (decimal?)null;
 
+                        //10 Rows header, 10 rows data.
                         var displayLine = new List<string>();
                         displayLine.Add(Employee.LastName);
                         displayLine.Add(Employee.FirstName);
@@ -446,8 +449,11 @@ namespace JPRSC.HRIS.Features.Reports
                         displayLine.Add(Employee.CelNo);
                         displayLine.Add(Employee.ZipCode);
 
-                        // Gross Compensation Income Previous Employer Non-Taxable
+                        //13 rows header, 11 rows data. TODO: Mismatch! Temporarily added two lines
+                        // Gross Compensation Income Previous Employer Non-Taxable                    
                         displayLine.Add(PREV_NT__GrossCompensationIncomePrevious);
+                        displayLine.Add("NA"); //Regular Pay. TODO: missing data
+                        displayLine.Add("NA"); //Total Earnings TODO: missing data
                         displayLine.Add(PREV_NT_BasicSMW);
                         displayLine.Add(PREV_NT_HolidayPay);
                         displayLine.Add(PREV_NT_OvertimePay);
@@ -459,11 +465,13 @@ namespace JPRSC.HRIS.Features.Reports
                         displayLine.Add(PREV_NT_SalariesAndOtherFormsOfCompensations);
                         displayLine.Add(PREV_NT_TotalIncome);
 
+                        //3 rows header, 3 rows data
                         // Gross Compensation Income Previous Employer Taxable
                         displayLine.Add(PREV_T_ThirteenthMonthPayAndOtherBenefits);
                         displayLine.Add(PREV_T_SalariesAndOtherFormsOfCompensations);
                         displayLine.Add(PREV_T_TotalIncome);
 
+                        //15 rows header, 17 rows data. TODO: Mismatch! Temporarily removed two lines.
                         // Gross Compensation Income Present Employer Non-Taxable
                         displayLine.Add(dateHired);
                         displayLine.Add(dateResigned);
@@ -483,6 +491,8 @@ namespace JPRSC.HRIS.Features.Reports
                         displayLine.Add(String.Format("{0:n}", PRES_NT_TotalContributions));
                         displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings - PRES_NT_TotalOvertimeValue - PRES_NT_TotalThirteenthMonth - PRES_NT_TotalContributions));
 
+
+                        //9 rows header, 9 rows data
                         // Gross Compensation Income Present Employer Taxable
                         displayLine.Add(PRES_T_ThirteenthMonthPayAndOtherBenefits);
                         displayLine.Add(PRES_T_SalariesAndOtherFormsOfCompensations);
@@ -494,10 +504,12 @@ namespace JPRSC.HRIS.Features.Reports
                         displayLine.Add(PRES_T_NetTaxableCompensationIncome);
                         displayLine.Add(PRES_T_TaxDue);
 
+                        //2 rows header, 2 rows data
                         // Gross Compensation Income Present Employer Tax Withheld
                         displayLine.Add(PRES_TW_PreviousEmployer);
                         displayLine.Add(PRES_TW_PresentEmployer);
 
+                        //3 rows header, 2 rows data
                         // Gross Compensation Income Present Employer Year End Adjustments
                         displayLine.Add(PRES_YEA_AmountWithheldPaidDecember);
                         displayLine.Add(PRES_YEA_OverWithheldTax);
