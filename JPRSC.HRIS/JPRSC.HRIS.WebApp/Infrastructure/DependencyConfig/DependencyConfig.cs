@@ -111,8 +111,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Dependency
 
         private static void RegisterValidators(Container container)
         {
-            var assemblyOfValidationClasses = Assembly.GetExecutingAssembly();
-            container.Register(typeof(IValidator<>), new[] { Assembly.GetExecutingAssembly() });
+            container.Register(typeof(IValidator<>), new[] { Assembly.GetExecutingAssembly(), typeof(ApplicationDbContext).Assembly });
         }
 
         private AutoMapper.IMapper GetMapper(Container container)

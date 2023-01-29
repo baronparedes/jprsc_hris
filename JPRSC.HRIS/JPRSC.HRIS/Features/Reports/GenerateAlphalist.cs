@@ -304,6 +304,10 @@ namespace JPRSC.HRIS.Features.Reports
 
             public class AlphalistRecord
             {
+                public AlphalistRecord()
+                {                        
+                }
+
                 public AlphalistRecord(DateTime dateGenerated)
                 {
                     DateGenerated = dateGenerated;

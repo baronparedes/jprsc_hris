@@ -137,7 +137,7 @@ namespace JPRSC.HRIS.Features.Reports
                 return generate2316Result;
             }
 
-            private static void Generate2316File(QueryResult queryResult, AlphalistRecord record, string template2316FilePath, string saveFolder)
+            internal static void Generate2316File(QueryResult queryResult, AlphalistRecord record, string template2316FilePath, string saveFolder)
             {
                 var fullName = record.Employee.FullName;
                 var filePath = Path.Combine(saveFolder, fullName + ".pdf");

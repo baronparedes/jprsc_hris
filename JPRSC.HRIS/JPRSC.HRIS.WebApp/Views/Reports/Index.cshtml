@@ -3,6 +3,7 @@
     ViewBag.Title = "Reports";
     var currentYear = DateTime.Now.Year;
     var minYear = currentYear - 10;
+    var show2316Generation = false;
 }
 
 <div class="page-content-wrapper">
@@ -75,12 +76,15 @@
                                             <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('Alphalist')">Generate</a>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>2316</td>
-                                        <td>
-                                            <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('2316')">Generate</a>
-                                        </td>
-                                    </tr>
+                                    @if (show2316Generation)
+                                    {
+                                        <tr>
+                                            <td>2316</td>
+                                            <td>
+                                                <a href="" class="btn btn-primary btn-sm" ng-click="vm.generateClicked('2316')">Generate</a>
+                                            </td>
+                                        </tr>
+                                    }
                                     <tr>
                                         <td>Earnings and Deductions</td>
                                         <td>
@@ -335,7 +339,10 @@
                         <a ng-if="vm.reportType == 'Thirteenth Month'" ng-href="/Reports/GenerateThirteenthMonth?clientId={{vm.client.id}}&employeeId={{vm.employee.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a ng-if="vm.reportType == 'Earnings and Deductions'" ng-href="/Reports/GenerateEarningsDeductions?clientId={{vm.client.id}}&employeeId={{vm.employee.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
                         <a ng-if="vm.reportType == 'Alphalist'" ng-href="/Reports/GenerateAlphalist?alphalistType={{vm.alphalistType}}&clientId={{vm.client.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&thirteenthMonthPayrollPeriodFromYear={{vm.thirteenthMonthPayrollPeriodFromYear}}&thirteenthMonthPayrollPeriodToYear={{vm.thirteenthMonthPayrollPeriodToYear}}&thirteenthMonthFromPayrollPeriod={{vm.thirteenthMonthFromPayrollPeriod}}&thirteenthMonthFromPayrollPeriodMonth={{vm.thirteenthMonthFromPayrollPeriodMonth}}&thirteenthMonthToPayrollPeriod={{vm.thirteenthMonthToPayrollPeriod}}&thirteenthMonthToPayrollPeriodMonth={{vm.thirteenthMonthToPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
-                        <a ng-if="vm.reportType == '2316'" ng-href="/Reports/Generate2316?alphalistType={{vm.alphalistType}}&clientId={{vm.client.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&thirteenthMonthPayrollPeriodFromYear={{vm.thirteenthMonthPayrollPeriodFromYear}}&thirteenthMonthPayrollPeriodToYear={{vm.thirteenthMonthPayrollPeriodToYear}}&thirteenthMonthFromPayrollPeriod={{vm.thirteenthMonthFromPayrollPeriod}}&thirteenthMonthFromPayrollPeriodMonth={{vm.thirteenthMonthFromPayrollPeriodMonth}}&thirteenthMonthToPayrollPeriod={{vm.thirteenthMonthToPayrollPeriod}}&thirteenthMonthToPayrollPeriodMonth={{vm.thirteenthMonthToPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        @if (show2316Generation)
+                        {
+                            <a ng-if="vm.reportType == '2316'" ng-href="/Reports/Generate2316?alphalistType={{vm.alphalistType}}&clientId={{vm.client.id}}&payrollPeriodFromYear={{vm.payrollPeriodFromYear}}&payrollPeriodToYear={{vm.payrollPeriodToYear}}&fromPayrollPeriod={{vm.fromPayrollPeriod}}&fromPayrollPeriodMonth={{vm.fromPayrollPeriodMonth}}&toPayrollPeriod={{vm.toPayrollPeriod}}&toPayrollPeriodMonth={{vm.toPayrollPeriodMonth}}&thirteenthMonthPayrollPeriodFromYear={{vm.thirteenthMonthPayrollPeriodFromYear}}&thirteenthMonthPayrollPeriodToYear={{vm.thirteenthMonthPayrollPeriodToYear}}&thirteenthMonthFromPayrollPeriod={{vm.thirteenthMonthFromPayrollPeriod}}&thirteenthMonthFromPayrollPeriodMonth={{vm.thirteenthMonthFromPayrollPeriodMonth}}&thirteenthMonthToPayrollPeriod={{vm.thirteenthMonthToPayrollPeriod}}&thirteenthMonthToPayrollPeriodMonth={{vm.thirteenthMonthToPayrollPeriodMonth}}&destination=page" target="_blank" class="btn btn-primary" style="margin-right: 20px;">Generate</a>
+                        }
                         <a href="" class="btn btn-default" ng-click="vm.cancel()" ng-disabled="vm.generateInProgress">Cancel</a>
                     </div>
                 </form>
