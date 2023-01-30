@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="control-label">Payroll Period</label>
+                                    <label class="control-label"><span class="margin-right-10">Payroll Period</span><span ng-show="vm.payrollPeriodSelectionLoading"><i class="fa fa-refresh fa-pulse fa-fw margin-right-10"></i></span></label>
                                     <select class="form-control" ng-model="vm.dailyTimeRecordPayrollPeriodBasis" ng-disabled="vm.payrollPeriodSelectionDisabled" ng-options="payrollPeriod.text for payrollPeriod in vm.payrollPeriods track by payrollPeriod.value" ng-change="vm.payrollPeriodChanged()"></select>
                                 </div>
                             </div>
@@ -132,6 +132,19 @@
                                 </tbody>
                             </table>
                         </div>
+                        <ul class="pager">
+                            <li class="previous">
+                                <a href="" ng-disabled="vm.searchModel.pageNumber == 1" ng-click="vm.previousClicked()" class="btn blue">
+                                    <i class="fa fa-angle-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="next">
+                                <a href="" ng-disabled="vm.searchModel.pageNumber == vm.lastPageNumber" ng-click="vm.nextClicked()" class="btn blue">
+                                    Next
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

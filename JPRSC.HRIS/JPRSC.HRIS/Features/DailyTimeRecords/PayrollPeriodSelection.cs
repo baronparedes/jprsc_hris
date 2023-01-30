@@ -34,23 +34,42 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
         public class QueryResult
         {
             public IList<SelectListItem> PayrollPeriods { get; set; } = new List<SelectListItem>();
+
+            public class PayrollPeriodSelection
+            {
+                public int Id { get; set; }
+                public DateTime? PayrollPeriodFrom { get; set; }
+                public DateTime? PayrollPeriodTo { get; set; }
+            }
+        }
+
+        public class Mapping : Profile
+        {
+            public Mapping()
+            {
+                CreateMap<DailyTimeRecord, QueryResult.PayrollPeriodSelection>();
+            }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
                 var dailyTimeRecords = await _db
                     .DailyTimeRecords
+                    .AsNoTracking()
                     .Include(dtr => dtr.Employee)
                     .Where(dtr => !dtr.DeletedOn.HasValue && dtr.Employee.ClientId == query.ClientId)
+                    .ProjectTo<QueryResult.PayrollPeriodSelection>(_mapper)
                     .ToListAsync();
 
                 return new QueryResult
@@ -59,7 +78,7 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                 };
             }
 
-            private IList<SelectListItem> GetPayrollPeriods(IList<DailyTimeRecord> dailyTimeRecords)
+            private IList<SelectListItem> GetPayrollPeriods(IList<QueryResult.PayrollPeriodSelection> dailyTimeRecords)
             {
                 var payrollPeriods = new List<Tuple<int, DateTime?, DateTime?>>();
 

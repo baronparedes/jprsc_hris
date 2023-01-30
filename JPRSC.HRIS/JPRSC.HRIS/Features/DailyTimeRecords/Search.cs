@@ -41,6 +41,8 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
         public class QueryResult
         {
             public IEnumerable<DailyTimeRecord> DailyTimeRecords { get; set; } = new List<DailyTimeRecord>();
+            public int LastPageNumber { get; set; }
+            public int TotalResultsCount { get; set; }
 
             public class Employee
             {
@@ -147,6 +149,9 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                                       DbFunctions.TruncateTime(dtr.PayrollPeriodTo) == DbFunctions.TruncateTime(dailyTimeRecordPayrollPeriodBasis.PayrollPeriodTo));
                 }
 
+                var totalResultsCount = await dbQuery
+                    .CountAsync();
+
                 var dailyTimeRecords = await dbQuery
                     .OrderBy(e => e.Employee.LastName)
                     .ThenBy(e => e.Employee.FirstName)
@@ -154,9 +159,15 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                     .ProjectTo<QueryResult.DailyTimeRecord>(_mapper)
                     .ToListAsync();
 
+                var remainder = totalResultsCount % pageSize;
+                var divisor = totalResultsCount / pageSize;
+                var lastPageNumber = remainder > 0 ? divisor + 1 : divisor;
+
                 return new QueryResult
                 {
-                    DailyTimeRecords = dailyTimeRecords
+                    DailyTimeRecords = dailyTimeRecords,
+                    LastPageNumber = lastPageNumber,
+                    TotalResultsCount = totalResultsCount
                 };
             }
         }

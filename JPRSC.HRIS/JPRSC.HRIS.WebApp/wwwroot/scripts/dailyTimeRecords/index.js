@@ -12,12 +12,17 @@
         vm.currencySymbol = 'P';
         vm.dailyTimeRecords = [];
         vm.datepickerOptions = globalSettings.datepickerOptions;
+        vm.lastPageNumber = 1;
+        vm.nextClicked = nextClicked;
         vm.payrollPeriodChanged = payrollPeriodChanged;
         vm.payrollPeriodMonthChanged = payrollPeriodMonthChanged;
+        vm.payrollPeriodSelectionLoading = false;
         vm.payrollPeriodYearChanged = payrollPeriodYearChanged;
+        vm.previousClicked = previousClicked;
         vm.searchClicked = searchClicked;
-        vm.searchModel = { payrollPeriodMonth: '10', payrollPeriodYear: new Date().getFullYear().toString() };
+        vm.searchModel = { pageNumber: 1, payrollPeriodMonth: '10', payrollPeriodYear: new Date().getFullYear().toString() };
         vm.searchInProgress = false;
+        vm.totalResultsCount = 0;
 
         $timeout(function () {
             vm.clients = vm.serverModel.clients;
@@ -113,6 +118,13 @@
             populatePayrollPeriodsSelection();
         };
 
+        function nextClicked() {
+            if (vm.searchModel.pageNumber == vm.lastPageNumber) return;
+
+            vm.searchModel.pageNumber += 1;
+            searchClicked();
+        };
+
         function onSearchModelChange(newValue, oldValue) {
             if (!vm.searchModel.client || vm.searchModel.client.id <= 0) return;
 
@@ -131,6 +143,13 @@
             searchClicked();
         };
 
+        function previousClicked() {
+            if (vm.searchModel.pageNumber == 1) return;
+
+            vm.searchModel.pageNumber -= 1;
+            searchClicked();
+        };
+
         function populatePayrollPeriodsSelection() {
             if (!vm.searchModel.client || !vm.searchModel.client.id) {
                 vm.payrollPeriods = [{ value: '', text: '-- Select a client --' }];
@@ -140,6 +159,7 @@
             }
 
             vm.payrollPeriodSelectionDisabled = true;
+            vm.payrollPeriodSelectionLoading = true;
 
             $http.get('/DailyTimeRecords/PayrollPeriodSelection', { params: { clientId: vm.searchModel.client.id } }).then(function (response) {
                 vm.payrollPeriods = response.data.payrollPeriods;
@@ -152,6 +172,7 @@
                     vm.payrollPeriodSelectionDisabled = false;
                 }
 
+                vm.payrollPeriodSelectionLoading = false;
                 vm.dailyTimeRecordPayrollPeriodBasis = vm.payrollPeriods[0];
             });
         };
@@ -180,6 +201,8 @@
 
             $http.get('/DailyTimeRecords/Search', { params: vm.searchModel }).then(function (response) {
                 vm.dailyTimeRecords = response.data.dailyTimeRecords;
+                vm.totalResultsCount = response.data.totalResultsCount;
+                vm.lastPageNumber = response.data.lastPageNumber;
                 vm.searchInProgress = false;
             });
         };
