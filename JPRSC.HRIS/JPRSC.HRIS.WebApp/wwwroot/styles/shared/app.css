@@ -14,6 +14,10 @@ div.page-logo > a:hover, div.page-logo > a:focus {
     margin-right: 10px;
 }
 
+.margin-right-20 {
+    margin-right: 20px;
+}
+
 .table-scrollable.fit-to-portlet {
     max-height: calc(100vh - 365px);
     overflow-y: auto;

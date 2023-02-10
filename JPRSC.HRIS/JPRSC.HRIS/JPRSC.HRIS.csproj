@@ -316,6 +316,7 @@
     <Compile Include="Features\Reports\GenerateAlphalist.cs" />
     <Compile Include="Features\Reports\GenerateEarningsDeductions.cs" />
     <Compile Include="Features\Reports\GenerateLoanLedger.cs" />
+    <Compile Include="Features\Reports\GenerateMasterlist.cs" />
     <Compile Include="Features\Reports\GeneratePagIbig.cs" />
     <Compile Include="Features\Reports\GeneratePHIC.cs" />
     <Compile Include="Features\Reports\GenerateSingleLoanType.cs" />

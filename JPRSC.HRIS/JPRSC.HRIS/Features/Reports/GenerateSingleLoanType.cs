@@ -37,7 +37,6 @@ namespace JPRSC.HRIS.Features.Reports
             public string DisplayMode { get; set; }
             public byte[] FileContent { get; set; }
             public string Filename { get; set; }
-            public IList<IList<string>> Lines { get; set; } = new List<IList<string>>();
             public int LoanTypeId { get; set; }
             public LoanType LoanTypeResult { get; set; }
             public int? PayrollPeriodMonth { get; set; }

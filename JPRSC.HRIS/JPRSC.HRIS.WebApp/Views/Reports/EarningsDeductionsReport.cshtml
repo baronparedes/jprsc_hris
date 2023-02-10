@@ -44,7 +44,7 @@
             <div class="row hidden-print">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <a href="@Url.Action("GenerateEarningsDeductions", new { ClientId = Model.ClientId, PayrollPeriodFromYear = Model.PayrollPeriodFromYear, PayrollPeriodToYear = Model.PayrollPeriodToYear, FromPayrollPeriodMonth = Model.FromPayrollPeriodMonth, FromPayrollPeriod = Model.FromPayrollPeriod, ToPayrollPeriodMonth = Model.ToPayrollPeriodMonth, ToPayrollPeriod = Model.ToPayrollPeriod, Destination = "Excel" })" class="btn btn-primary" style="margin-right: 20px;">Download Excel</a>
+                        <a href="@Url.Action("GenerateEarningsDeductions", new { ClientId = Model.ClientId, PayrollPeriodFromYear = Model.PayrollPeriodFromYear, PayrollPeriodToYear = Model.PayrollPeriodToYear, FromPayrollPeriodMonth = Model.FromPayrollPeriodMonth, FromPayrollPeriod = Model.FromPayrollPeriod, ToPayrollPeriodMonth = Model.ToPayrollPeriodMonth, ToPayrollPeriod = Model.ToPayrollPeriod, Destination = "Excel" })" class="btn btn-primary margin-right-20">Download Excel</a>
                         @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
                         {
                             <button class="btn btn-primary" disabled="disabled">Sort by Name</button>

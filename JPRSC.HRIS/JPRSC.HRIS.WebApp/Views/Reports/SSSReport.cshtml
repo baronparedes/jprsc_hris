@@ -50,7 +50,7 @@
             <div class="row hidden-print">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <a href="@Url.Action("GenerateSSS", new { ClientId = Model.ClientId, PayrollPeriodMonth = Model.PayrollPeriodMonth, PayrollPeriodYear = Model.PayrollPeriodYear, Destination = "Excel" })" class="btn btn-primary" style="margin-right: 20px;">Download Excel</a>
+                        <a href="@Url.Action("GenerateSSS", new { ClientId = Model.ClientId, PayrollPeriodMonth = Model.PayrollPeriodMonth, PayrollPeriodYear = Model.PayrollPeriodYear, Destination = "Excel" })" class="btn btn-primary margin-right-20">Download Excel</a>
                         @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
                         {
                             <button class="btn btn-primary" disabled="disabled">Sort by Name</button>

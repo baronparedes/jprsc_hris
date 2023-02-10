@@ -78,8 +78,8 @@
                                     <tr ng-repeat="forProcessingBatch in vm.forProcessingBatches track by forProcessingBatch.id">
                                         <td>{{forProcessingBatch.name}}</td>
                                         <td>
-                                            <a ng-href="/Payroll/ExportQueueToDTRExcel?forProcessingBatchId={{forProcessingBatch.id}}" id="downloadDTRExcelLink" class="btn btn-primary" style="margin-right: 20px;">Download DTR Template</a>
-                                            <a ng-href="/Payroll/ExportQueueToEDRExcel?forProcessingBatchId={{forProcessingBatch.id}}" id="downloadEDRExcelLink" class="btn btn-primary" style="margin-right: 20px;">Download EDR Template</a>
+                                            <a ng-href="/Payroll/ExportQueueToDTRExcel?forProcessingBatchId={{forProcessingBatch.id}}" id="downloadDTRExcelLink" class="btn btn-primary margin-right-20">Download DTR Template</a>
+                                            <a ng-href="/Payroll/ExportQueueToEDRExcel?forProcessingBatchId={{forProcessingBatch.id}}" id="downloadEDRExcelLink" class="btn btn-primary margin-right-20">Download EDR Template</a>
                                             <form action="/Payroll/DeleteForProcessingBatch" method="post" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this record?');">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="ForProcessingBatchId" value="{{forProcessingBatch.id}}" />

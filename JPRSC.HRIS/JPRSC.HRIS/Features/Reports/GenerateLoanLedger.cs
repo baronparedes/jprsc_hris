@@ -31,7 +31,6 @@ namespace JPRSC.HRIS.Features.Reports
             public string DisplayMode { get; set; }
             public byte[] FileContent { get; set; }
             public string Filename { get; set; }
-            public IList<IList<string>> Lines { get; set; } = new List<IList<string>>();
             public int? PayrollPeriodMonth { get; set; }
             public Month? PayrollPeriodMonthMonth { get; set; }
             public int PayrollPeriodYear { get; set; }
