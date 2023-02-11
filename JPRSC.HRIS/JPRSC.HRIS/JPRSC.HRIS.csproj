@@ -706,6 +706,7 @@
     <Compile Include="Infrastructure\Data\Seed\ReligionSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\TaxStatusSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\UserSeed.cs" />
+    <Compile Include="Infrastructure\Data\TableBuilder.cs" />
     <Compile Include="Infrastructure\Email\EmailAddresses.cs" />
     <Compile Include="Infrastructure\Email\EmailMessage.cs" />
     <Compile Include="Infrastructure\Email\NoopEmailService.cs" />
