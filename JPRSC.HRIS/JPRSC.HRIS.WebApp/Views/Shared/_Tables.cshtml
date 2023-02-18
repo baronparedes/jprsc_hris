@@ -1,0 +1,54 @@
+﻿@model IEnumerable<JPRSC.HRIS.Infrastructure.Data.Table>
+
+@foreach (var table in Model)
+{
+    if (!String.IsNullOrWhiteSpace(table.Title))
+    {
+        <h2>@table.Title</h2>
+    }
+    <table class="table table-striped table-bordered report-table">
+        <thead>
+            @if (table.HeaderOne != null && table.HeaderOne.Count > 0)
+            {
+                <tr>
+                    @foreach (var cell in table.HeaderOne)
+                    {
+                        <th>@cell</th>
+                    }
+                </tr>
+            }
+            @if (table.HeaderTwo != null && table.HeaderTwo.Count > 0)
+            {
+                <tr>
+                    @foreach (var cell in table.HeaderTwo)
+                    {
+                        <th>@cell</th>
+                    }
+                </tr>
+            }
+        </thead>
+        <tbody>
+            @if (table.Body != null && table.Body.Count > 0)
+            {
+                foreach (var row in table.Body)
+                {
+                    <tr>
+                        @foreach (var cell in row)
+                        {
+                            <td>@cell</td>
+                        }
+                    </tr>
+                }
+            }
+            @if (table.Footer != null && table.Footer.Count > 0)
+            {
+                <tr>
+                    @foreach (var cell in table.Footer)
+                    {
+                        <td>@cell</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}

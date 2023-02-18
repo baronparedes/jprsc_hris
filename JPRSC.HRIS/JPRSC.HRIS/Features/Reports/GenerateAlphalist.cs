@@ -13,6 +13,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.EMMA;
+using static JPRSC.HRIS.Features.Reports.GenerateAlphalist;
+using System.Xml;
 
 namespace JPRSC.HRIS.Features.Reports
 {
@@ -105,6 +108,7 @@ namespace JPRSC.HRIS.Features.Reports
             public Month? ThirteenthMonthToPayrollPeriodMonth { get; set; }
             public int? ThirteenthMonthToPayrollPeriod { get; set; }
             public string DisplayMode { get; set; }
+            public IList<Table> Tables { get; set; } = new List<Table>();
             public byte[] FileContent { get; set; }
             public string Filename { get; set; }
             public IList<AlphalistRecord> AlphalistRecords { get; set; } = new List<AlphalistRecord>();
@@ -176,9 +180,9 @@ namespace JPRSC.HRIS.Features.Reports
             }
         }
 
-        internal class CSVTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
+        public class CSVTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
         {
-            internal CSVTableBuilder(DateTime dateGenerated, string alphalistType)
+            public CSVTableBuilder(DateTime dateGenerated, string alphalistType)
             {
                 Column(String.Empty, item => "D" + alphalistType);
                 Column(BIRFormNumber, item => BIRFormNumber);
@@ -213,9 +217,9 @@ namespace JPRSC.HRIS.Features.Reports
             }
         }
 
-        internal class ExcelTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
+        public class PageTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
         {
-            internal ExcelTableBuilder()
+            public PageTableBuilder()
             {
                 Column(String.Empty, "Employee Last Name", item => item.Employee.LastName);
                 Column(String.Empty, "First Name", item => item.Employee.FirstName);
@@ -275,6 +279,16 @@ namespace JPRSC.HRIS.Features.Reports
                 Column(String.Empty, "Over withheld tax employee", item => item.PRES_YEA_OverWithheldTax);
                 Column(String.Empty, "Amount of tax withheld as adjusted", item => item.PRES_YEA_AmountWithheldRequested);
             }
+
+            public PageTableBuilder(string title) : this()
+            {
+                Title(title);
+            }
+        }
+
+        public class ExcelTableBuilder : PageTableBuilder
+        {
+
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
@@ -358,61 +372,46 @@ namespace JPRSC.HRIS.Features.Reports
                     .Append(" - ")
                     .Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}");
 
+                var queryResult = new QueryResult
+                {
+                    AlphalistType = query.AlphalistType,
+                    ClientId = query.ClientId,
+                    DisplayMode = query.DisplayMode,
+                    AlphalistRecords = alphalistRecords,
+                    PayrollPeriodFromYear = query.PayrollPeriodFromYear,
+                    PayrollPeriodToYear = query.PayrollPeriodToYear,
+                    FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
+                    FromPayrollPeriod = query.FromPayrollPeriod,
+                    ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
+                    ToPayrollPeriod = query.ToPayrollPeriod,
+                    ThirteenthMonthFromPayrollPeriod = query.ThirteenthMonthFromPayrollPeriod,
+                    ThirteenthMonthFromPayrollPeriodMonth = query.ThirteenthMonthFromPayrollPeriodMonth,
+                    ThirteenthMonthPayrollPeriodFromYear = query.ThirteenthMonthPayrollPeriodFromYear,
+                    ThirteenthMonthPayrollPeriodToYear = query.ThirteenthMonthPayrollPeriodToYear,
+                    ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
+                    ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
+                    Query = query
+                };
+
                 if (query.Destination == "Excel")
                 {
                     var excelTableBuilder = new ExcelTableBuilder();
-                    var excelLines = excelTableBuilder.Build(alphalistRecords);
+                    var excelTable = excelTableBuilder.Build(alphalistRecords);
 
-                    return new QueryResult
-                    {
-                        AlphalistType = query.AlphalistType,
-                        ClientId = query.ClientId,
-                        DisplayMode = query.DisplayMode,
-                        AlphalistRecords = alphalistRecords,
-                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
-                        PayrollPeriodToYear = query.PayrollPeriodToYear,
-                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
-                        FromPayrollPeriod = query.FromPayrollPeriod,
-                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
-                        ToPayrollPeriod = query.ToPayrollPeriod,
-                        ThirteenthMonthFromPayrollPeriod = query.ThirteenthMonthFromPayrollPeriod,
-                        ThirteenthMonthFromPayrollPeriodMonth = query.ThirteenthMonthFromPayrollPeriodMonth,
-                        ThirteenthMonthPayrollPeriodFromYear = query.ThirteenthMonthPayrollPeriodFromYear,
-                        ThirteenthMonthPayrollPeriodToYear = query.ThirteenthMonthPayrollPeriodToYear,
-                        ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
-                        ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
-                        Query = query,
-                        FileContent = _excelBuilder.BuildExcelFile(excelLines),
-                        Filename = reportFileNameBase.Append(".xlsx").ToString()
-                    };
+                    queryResult.FileContent = _excelBuilder.BuildExcelFile(excelTable.AllLines);
+                    queryResult.Filename = reportFileNameBase.Append(".xlsx").ToString();
+
+                    return queryResult;
                 }
                 else if (query.Destination == "CSV")
                 {
                     var csvTableBuilder = new CSVTableBuilder(query.DateGenerated, query.AlphalistType);
-                    var csvLines = csvTableBuilder.Build(alphalistRecords);
+                    var csvTable = csvTableBuilder.Build(alphalistRecords);
 
-                    return new QueryResult
-                    {
-                        AlphalistType = query.AlphalistType,
-                        ClientId = query.ClientId,
-                        DisplayMode = query.DisplayMode,
-                        AlphalistRecords = alphalistRecords,
-                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
-                        PayrollPeriodToYear = query.PayrollPeriodToYear,
-                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
-                        FromPayrollPeriod = query.FromPayrollPeriod,
-                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
-                        ToPayrollPeriod = query.ToPayrollPeriod,
-                        ThirteenthMonthFromPayrollPeriod = query.ThirteenthMonthFromPayrollPeriod,
-                        ThirteenthMonthFromPayrollPeriodMonth = query.ThirteenthMonthFromPayrollPeriodMonth,
-                        ThirteenthMonthPayrollPeriodFromYear = query.ThirteenthMonthPayrollPeriodFromYear,
-                        ThirteenthMonthPayrollPeriodToYear = query.ThirteenthMonthPayrollPeriodToYear,
-                        ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
-                        ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
-                        Query = query,
-                        FileContent = _csvBuilder.BuildCSVFile(csvLines),
-                        Filename = reportFileNameBase.Append(".csv").ToString()
-                    };
+                    queryResult.FileContent = _csvBuilder.BuildCSVFile(csvTable.AllLines);
+                    queryResult.Filename = reportFileNameBase.Append(".csv").ToString();
+
+                    return queryResult;
                 }
                 else
                 {
@@ -422,27 +421,37 @@ namespace JPRSC.HRIS.Features.Reports
                         clientName = (await _db.Clients.AsNoTracking().SingleAsync(c => c.Id == query.ClientId)).Name;
                     }
 
-                    return new QueryResult
+                    var tables = new List<Table>();
+
+                    if (String.IsNullOrWhiteSpace(query.DisplayMode))
                     {
-                        AlphalistType = query.AlphalistType,
-                        ClientId = query.ClientId,
-                        ClientName = clientName,
-                        DisplayMode = query.DisplayMode,
-                        AlphalistRecords = alphalistRecords,
-                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
-                        PayrollPeriodToYear = query.PayrollPeriodToYear,
-                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
-                        FromPayrollPeriod = query.FromPayrollPeriod,
-                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
-                        ToPayrollPeriod = query.ToPayrollPeriod,
-                        ThirteenthMonthFromPayrollPeriod = query.ThirteenthMonthFromPayrollPeriod,
-                        ThirteenthMonthFromPayrollPeriodMonth = query.ThirteenthMonthFromPayrollPeriodMonth,
-                        ThirteenthMonthPayrollPeriodFromYear = query.ThirteenthMonthPayrollPeriodFromYear,
-                        ThirteenthMonthPayrollPeriodToYear = query.ThirteenthMonthPayrollPeriodToYear,
-                        ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
-                        ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
-                        Query = query
-                    };
+                        var pageTableBuilder = new PageTableBuilder();
+                        var pageTable = pageTableBuilder.Build(alphalistRecords);
+                        tables.Add(pageTable);
+                    }
+                    else if (query.DisplayMode == "Branch")
+                    {
+                        var pageTableBuilders = new List<PageTableBuilder>();
+
+                        foreach (var alphalistRecord in alphalistRecords.Where(pr => pr.Employee.Department == null))
+                        {
+                            alphalistRecord.Employee.Department = new Department { Id = 0, Name = "No Branch" };
+                        }
+
+                        var groupedByBranch = alphalistRecords.GroupBy(pr => new { pr.Employee.Department.Id, pr.Employee.Department.Name });
+
+                        foreach (var group in groupedByBranch.OrderBy(g => g.Key.Name))
+                        {
+                            var pageTableBuilder = new PageTableBuilder(group.Key.Name);
+                            var pageTable = pageTableBuilder.Build(group);
+                            tables.Add(pageTable);
+                        }
+                    }
+
+                    queryResult.ClientName = clientName;
+                    queryResult.Tables = tables;
+
+                    return queryResult;
                 }
             }
 

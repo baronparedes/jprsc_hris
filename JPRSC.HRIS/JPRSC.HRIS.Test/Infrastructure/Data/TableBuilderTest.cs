@@ -17,33 +17,39 @@ namespace JPRSC.HRIS.Test.Infrastructure.Data
                 new Sample { Name = "Jane", Date = null, Number = 5 }
             };
             var sampleBuilder = new SampleBuilder();
-            var lines = sampleBuilder.Build(items);
+            var table = sampleBuilder.Build(items);
 
-            Assert.Equal(4, lines.Count);
+            Assert.Equal(4, table.AllLines.Count);
 
-            var firstLine = lines[0];
+            var firstLine = table.AllLines[0];
             Assert.Equal(3, firstLine.Count);
             Assert.Equal("Name", firstLine[0]);
             Assert.Equal("Date", firstLine[1]);
             Assert.Equal("Number", firstLine[2]);
 
-            var secondLine = lines[1];
+            var secondLine = table.AllLines[1];
             Assert.Equal(3, secondLine.Count);
             Assert.Equal("John", secondLine[0]);
             Assert.Equal("2/6/2023 12:00:00 AM", secondLine[1]);
             Assert.Equal("9", secondLine[2]);
             
-            var thirdLine = lines[2];
+            var thirdLine = table.AllLines[2];
             Assert.Equal(3, thirdLine.Count);
             Assert.Equal("Jane", thirdLine[0]);
             Assert.Equal("", thirdLine[1]);
             Assert.Equal("5", thirdLine[2]);
 
-            var fourthLine = lines[3];
+            var fourthLine = table.AllLines[3];
             Assert.Equal(3, fourthLine.Count);
             Assert.Equal("", fourthLine[0]);
             Assert.Equal("", fourthLine[1]);
             Assert.Equal("14", fourthLine[2]);
+
+            Assert.NotNull(table.HeaderOne);
+            Assert.Null(table.HeaderTwo);
+            Assert.NotNull(table.Body);
+            Assert.Equal(2, table.Body.Count);
+            Assert.NotNull(table.Footer);
         }
     }
 
