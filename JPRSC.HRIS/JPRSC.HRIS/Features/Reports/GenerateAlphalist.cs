@@ -13,7 +13,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace JPRSC.HRIS.Features.Reports
 {
@@ -111,163 +110,6 @@ namespace JPRSC.HRIS.Features.Reports
             public IList<AlphalistRecord> AlphalistRecords { get; set; } = new List<AlphalistRecord>();
             public Query Query { get; set; }
 
-            public IList<string> GetTotals(IList<AlphalistRecord> alphalistRecords)
-            {
-                var totals = new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, "TOTAL" };
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalEarnings)));
-                totals.Add(String.Empty); // Daily Rate
-                totals.Add(String.Empty); // Monthly Rate
-                totals.Add(String.Empty); // Yearly Rate
-                totals.Add(String.Empty); // Number of weekdays in year
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalOvertimeValue)));
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalThirteenthMonth + a.PRES_NT_TotalEarnings)));
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalContributions)));
-                totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalEarnings + a.PRES_NT_TotalOvertimeValue + a.PRES_NT_TotalThirteenthMonth + a.PRES_NT_TotalContributions)));
-
-                return totals;
-            }
-
-            public IList<string> GetPreHeaders()
-            {
-                return new List<string>
-                {
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-
-                    // Gross Compensation Income Previous Employer Non-Taxable
-                    "Gross Compensation Income Previous Employer Non-Taxable",
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-
-                    // Gross Compensation Income Previous Employer Taxable
-                    "Taxable",
-                    String.Empty,
-                    String.Empty,
-
-                    // Gross Compensation Income Present Employer Non-Taxable
-                    "Gross Compensation Income Present Employer Non-Taxable",
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-
-                    // Gross Compensation Income Present Employer Taxable
-                    "Taxable",
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    "Exemption",
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-                    String.Empty,
-
-                    // Gross Compensation Income Present Employer Tax Withheld
-                    "Tax Withheld",
-                    String.Empty,
-
-                    // Gross Compensation Income Present Employer Year End Adjustments
-                    "Year-End Adjustment (11a or 11b)",
-                    String.Empty,
-                    String.Empty
-                };
-            }
-
-            public IList<string> GetHeaders()
-            {
-                return new List<string>
-                {
-                    "Employee Last Name",
-                    "First Name",
-                    "Middle Name",
-                    "Employee Code",
-                    "Employee TIN",
-                    "Employee Region",
-                    "Permanent Addrress",
-                    "Birth Date",
-                    "Contact Number",
-                    "Zip Code",
-
-                    // Gross Compensation Income Previous Employer Non-Taxable
-                    "Gross compensation income previous",
-                    "Regular Pay",
-                    "Total Earnings",
-                    "Basic/SMW",
-                    "Holiday Pay",
-                    "Overtime Pay",
-                    "Night Shift Differential",
-                    "Hazard Pay",
-                    "13th month pay and other benefits",
-                    "De minimis benefits",
-                    "SSS, GSIS, PHIC and PAG-IBIG Contris and other union dues",
-                    "Salaries and other forms of compensations",
-                    "Total non-taxable/exempt compensation income",
-
-                    // Gross Compensation Income Previous Employer Taxable
-                    "13th month pay and other benefits",
-                    "Salaries and other forms of compensation",
-                    "Total taxable (previous employer)",
-
-                    // Gross Compensation Income Present Employer Non-Taxable
-                    "Date Hired",
-                    "Date Resigned",
-                    "Gross compensation present",
-                     "Regular Pay",
-                    "Total Earnings",
-                    "Basic SMW per day",
-                    "Basic SMW per month",
-                    "Basic SMW per year",
-                    "Factor used (no of days/year)",
-                    "Holiday Pay",
-                    "Overtime Pay",
-                    "Night Shift Differential",
-                    "Hazard Pay",
-                    "13th month pay and other benefits",
-                    "De minimis benefits",
-                    "SSS, GSIS, PHIC and PAG-IBIG Contris and other union dues",
-                    "Salaries and other forms of compensations",
-
-                    // Gross Compensation Income Present Employer Taxable
-                    "13th month pay and other benefits",
-                    "Salaries and other forms of compensations",
-                    "Total compensation present",
-                    "Total compensation income (previous and present employers)",
-                    "Exemption code",
-                    "Amount",
-                    "Premium paid on health and or hospital insurance",
-                    "Net taxable compensation income",
-                    "Tax due (Jan - Dec)",
-
-                    // Gross Compensation Income Present Employer Tax Withheld
-                    "Previous Employer",
-                    "Present Employer",
-
-                    // Gross Compensation Income Present Employer Year End Adjustments
-                    "Amt withheld and paid for in December",
-                    "Over withheld tax employee",
-                    "Amount of tax withheld as adjusted"
-                };
-            }
-
             public class AlphalistRecord
             {
                 public AlphalistRecord()
@@ -284,8 +126,6 @@ namespace JPRSC.HRIS.Features.Reports
 
                 public Employee Employee { get; set; }
                 public Query Query { get; set; }
-
-                // Gross Compensation Income Previous Employer Non-Taxable
                 public string PREV_NT__GrossCompensationIncomePrevious { get; set; } = "NA";
                 public string PREV_NT_BasicSMW { get; set; } = "NA";
                 public string PREV_NT_HolidayPay { get; set; } = "NA";
@@ -297,13 +137,9 @@ namespace JPRSC.HRIS.Features.Reports
                 public string PREV_NT_Contributions { get; set; } = "NA";
                 public string PREV_NT_SalariesAndOtherFormsOfCompensations { get; set; } = "NA";
                 public string PREV_NT_TotalIncome { get; set; } = "NA";
-
-                // Gross Compensation Income Previous Employer Taxable
                 public string PREV_T_ThirteenthMonthPayAndOtherBenefits { get; set; } = "NA";
                 public string PREV_T_SalariesAndOtherFormsOfCompensations { get; set; } = "NA";
                 public string PREV_T_TotalIncome { get; set; } = "NA";
-
-                // Gross Compensation Income Present Employer Non-Taxable
                 public decimal TotalHoursWorkedValue { get; set; }
                 public decimal TotalDaysWorkedValue { get; set; }
                 public decimal PRES_NT_TotalOvertimeValue { get; set; }
@@ -323,8 +159,6 @@ namespace JPRSC.HRIS.Features.Reports
                 public string PRES_NT_NightShiftDifferential { get; set; } = "NA";
                 public string PRES_NT_HazardPay { get; set; } = "NA";
                 public string PRES_NT_DeMinimisBenefits { get; set; } = "NA";
-
-                // Gross Compensation Income Present Employer Taxable
                 public string PRES_T_ThirteenthMonthPayAndOtherBenefits { get; set; } = "NA";
                 public string PRES_T_SalariesAndOtherFormsOfCompensations { get; set; } = "NA";
                 public string PRES_T_TotalCompensationPresent { get; set; } = "NA";
@@ -334,147 +168,112 @@ namespace JPRSC.HRIS.Features.Reports
                 public string PRES_T_PremiumPaidHospital { get; set; } = "NA";
                 public string PRES_T_NetTaxableCompensationIncome { get; set; } = "NA";
                 public string PRES_T_TaxDue { get; set; } = "NA";
-
-                // Gross Compensation Income Present Employer Tax Withheld
                 public string PRES_TW_PreviousEmployer { get; set; } = "NA";
                 public string PRES_TW_PresentEmployer { get; set; } = "NA";
-
-                // Gross Compensation Income Present Employer Year End Adjustments
                 public string PRES_YEA_AmountWithheldPaidDecember { get; set; } = "NA";
                 public string PRES_YEA_OverWithheldTax { get; set; } = "NA";
                 public string PRES_YEA_AmountWithheldRequested { get; set; } = "NA";
-
-                public IList<string> DisplayLine
-                {
-                    get
-                    {
-                        var dateHired = Employee.DateHired.HasValue ? $"{Employee.DateHired.Value:MM/dd/yyyy}" : String.Empty;
-                        var dateResigned = Employee.DateResigned.HasValue ? $"{Employee.DateResigned.Value:MM/dd/yyyy}" : "present";
-                        var employmentDuration = Employee.DateHired.HasValue && Employee.DateResigned.HasValue ? $"{dateHired} - {dateResigned}" :
-                            Employee.DateHired.HasValue && !Employee.DateResigned.HasValue ? $"{dateHired} - present" :
-                            String.Empty;
-                        var yearlyRate = Employee.MonthlyRate.HasValue ? Employee.MonthlyRate.Value * 12 : (decimal?)null;
-
-                        //10 Rows header, 10 rows data.
-                        var displayLine = new List<string>();
-                        displayLine.Add(Employee.LastName);
-                        displayLine.Add(Employee.FirstName);
-                        displayLine.Add(String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? null : $"{Employee.MiddleName}"));
-                        displayLine.Add(Employee.EmployeeCode);
-                        displayLine.Add(Employee.TIN);                       
-                        displayLine.Add(Employee.Region.HasValue ? EnumHelper.GetDisplayName(Employee.Region.Value) : String.Empty);
-
-                        displayLine.Add(Employee.PermanentAddress);
-                        displayLine.Add(Employee.DateOfBirth.HasValue ? $"{Employee.DateOfBirth.Value:MM/dd/yyyy}" : String.Empty);
-                        displayLine.Add(Employee.CelNo);
-                        displayLine.Add(Employee.ZipCode);
-
-                        //13 rows header, 11 rows data. TODO: Mismatch! Temporarily added two lines
-                        // Gross Compensation Income Previous Employer Non-Taxable                    
-                        displayLine.Add(PREV_NT__GrossCompensationIncomePrevious);
-                        displayLine.Add("NA"); //Regular Pay. TODO: missing data
-                        displayLine.Add("NA"); //Total Earnings TODO: missing data
-                        displayLine.Add(PREV_NT_BasicSMW);
-                        displayLine.Add(PREV_NT_HolidayPay);
-                        displayLine.Add(PREV_NT_OvertimePay);
-                        displayLine.Add(PREV_NT_NightShiftDifferential);
-                        displayLine.Add(PREV_NT_HazardPay);
-                        displayLine.Add(PREV_NT_ThirteenthMonthPayAndOtherBenefits);
-                        displayLine.Add(PREV_NT_DeMinimisBenefits);
-                        displayLine.Add(PREV_NT_Contributions);
-                        displayLine.Add(PREV_NT_SalariesAndOtherFormsOfCompensations);
-                        displayLine.Add(PREV_NT_TotalIncome);
-
-                        //3 rows header, 3 rows data
-                        // Gross Compensation Income Previous Employer Taxable
-                        displayLine.Add(PREV_T_ThirteenthMonthPayAndOtherBenefits);
-                        displayLine.Add(PREV_T_SalariesAndOtherFormsOfCompensations);
-                        displayLine.Add(PREV_T_TotalIncome);
-
-                        //15 rows header, 17 rows data. TODO: Mismatch! Temporarily removed two lines.
-                        // Gross Compensation Income Present Employer Non-Taxable
-                        displayLine.Add(dateHired);
-                        displayLine.Add(dateResigned);
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings));
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_RegularPay));
-                        displayLine.Add(String.Format("{0:n}", TotalEarningsValue));
-                        displayLine.Add(Employee.DailyRate.HasValue ? String.Format("{0:n}", Employee.DailyRate) : String.Empty);
-                        displayLine.Add(Employee.MonthlyRate.HasValue ? String.Format("{0:n}", Employee.MonthlyRate) : String.Empty);
-                        displayLine.Add(yearlyRate.HasValue ? String.Format("{0:n}", yearlyRate) : String.Empty);
-                        displayLine.Add(NumberOfWeekdaysInToYear.ToString());
-                        displayLine.Add(PRES_NT_HolidayPay);
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalOvertimeValue));
-                        displayLine.Add(PRES_NT_NightShiftDifferential);
-                        displayLine.Add(PRES_NT_HazardPay);
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalThirteenthMonth));
-                        displayLine.Add(PRES_NT_DeMinimisBenefits);
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalContributions));
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings - PRES_NT_TotalOvertimeValue - PRES_NT_TotalThirteenthMonth - PRES_NT_TotalContributions));
-
-
-                        //9 rows header, 9 rows data
-                        // Gross Compensation Income Present Employer Taxable
-                        displayLine.Add(PRES_T_ThirteenthMonthPayAndOtherBenefits);
-                        displayLine.Add(PRES_T_SalariesAndOtherFormsOfCompensations);
-                        displayLine.Add(PRES_T_TotalCompensationPresent);
-                        displayLine.Add(PRES_T_TotalCompensationIncome);
-                        displayLine.Add(PRES_T_ExemptionCode);
-                        displayLine.Add(PRES_T_Amount);
-                        displayLine.Add(PRES_T_PremiumPaidHospital);
-                        displayLine.Add(PRES_T_NetTaxableCompensationIncome);
-                        displayLine.Add(PRES_T_TaxDue);
-
-                        //2 rows header, 2 rows data
-                        // Gross Compensation Income Present Employer Tax Withheld
-                        displayLine.Add(PRES_TW_PreviousEmployer);
-                        displayLine.Add(PRES_TW_PresentEmployer);
-
-                        //3 rows header, 2 rows data
-                        // Gross Compensation Income Present Employer Year End Adjustments
-                        displayLine.Add(PRES_YEA_AmountWithheldPaidDecember);
-                        displayLine.Add(PRES_YEA_OverWithheldTax);
-                        displayLine.Add(PRES_YEA_AmountWithheldRequested);
-
-                        return displayLine;
-                    }
-                }
             }
         }
 
-        public class CSVTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
+        internal class CSVTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
         {
-            public CSVTableBuilder(DateTime dateGenerated, string alphalistType)
+            internal CSVTableBuilder(DateTime dateGenerated, string alphalistType)
             {
-                Column(String.Empty,  item => "D" + alphalistType);
+                Column(String.Empty, item => "D" + alphalistType);
                 Column(BIRFormNumber, item => BIRFormNumber);
-                Column(CompanyTIN,    item => CompanyTIN);
-                Column(U_0039,        item => U_0039);
-                Column("MM/dd/yyyy",  item => String.Format("{0:MM/dd/yyyy}", dateGenerated));
-                Column(U_N,           item => item.Order.ToString());
-                Column("0",           item => item.Employee.TIN);
-                Column(U_039,         item => U_0000);
-                Column(String.Empty,  item => $"\"{item.Employee.LastName}\"");
-                Column(String.Empty,  item => $"\"{item.Employee.FirstName}\"");
-                Column(String.Empty,  item => $"\"{String.Format("{0}", String.IsNullOrWhiteSpace(item.Employee.MiddleName) ? String.Empty : $", {item.Employee.MiddleName}")}\"");
-                Column(String.Empty,  item => item.Employee.DateHired.HasValue ? $"{item.Employee.DateHired.Value:MM/dd/yyyy}" : String.Empty);
-                Column(String.Empty,  item => item.Employee.DateResigned.HasValue ? $"{item.Employee.DateResigned.Value:MM/dd/yyyy}" : String.Empty);
-                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalEarnings));
-                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalThirteenthMonth));
-                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalContributions));
-                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
-                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "N/A");
-                Column(String.Empty,  item => "Y");
+                Column(CompanyTIN, item => CompanyTIN);
+                Column(U_0039, item => U_0039);
+                Column("MM/dd/yyyy", item => String.Format("{0:MM/dd/yyyy}", dateGenerated));
+                Column(U_N, item => item.Order.ToString());
+                Column("0", item => item.Employee.TIN);
+                Column(U_039, item => U_0000);
+                Column(String.Empty, item => $"\"{item.Employee.LastName}\"");
+                Column(String.Empty, item => $"\"{item.Employee.FirstName}\"");
+                Column(String.Empty, item => $"\"{String.Format("{0}", String.IsNullOrWhiteSpace(item.Employee.MiddleName) ? String.Empty : $", {item.Employee.MiddleName}")}\"");
+                Column(String.Empty, item => item.Employee.DateHired.HasValue ? $"{item.Employee.DateHired.Value:MM/dd/yyyy}" : String.Empty);
+                Column(String.Empty, item => item.Employee.DateResigned.HasValue ? $"{item.Employee.DateResigned.Value:MM/dd/yyyy}" : String.Empty);
+                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalEarnings));
+                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalThirteenthMonth));
+                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalContributions));
+                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
+                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "N/A");
+                Column(String.Empty, item => "Y");
+            }
+        }
+
+        internal class ExcelTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
+        {
+            internal ExcelTableBuilder()
+            {
+                Column(String.Empty, "Employee Last Name", item => item.Employee.LastName);
+                Column(String.Empty, "First Name", item => item.Employee.FirstName);
+                Column(String.Empty, "Middle Name", item => String.Format("{0}", String.IsNullOrWhiteSpace(item.Employee.MiddleName) ? null : $"{item.Employee.MiddleName}"));
+                Column(String.Empty, "Employee Code", item => item.Employee.EmployeeCode);
+                Column("Gross Compensation Income Previous Employer Non-Taxable", "Employee TIN", item => item.Employee.TIN, items => "TOTAL");
+                Column(String.Empty, "Employee Region", item => item.Employee.Region.HasValue ? EnumHelper.GetDisplayName(item.Employee.Region.Value) : String.Empty, items => String.Format("{0:n}", items.Sum(a => a.PRES_NT_TotalEarnings)));
+                Column(String.Empty, "Permanent Addrress", item => item.Employee.PermanentAddress);
+                Column(String.Empty, "Birth Date", item => item.Employee.DateOfBirth.HasValue ? $"{item.Employee.DateOfBirth.Value:MM/dd/yyyy}" : String.Empty);
+                Column(String.Empty, "Contact Number", item => item.Employee.CelNo);
+                Column(String.Empty, "Zip Code", item => item.Employee.ZipCode);
+                Column(String.Empty, "Gross compensation income previous", item => item.PREV_NT__GrossCompensationIncomePrevious, items => String.Format("{0:n}", items.Sum(a => a.PRES_NT_TotalOvertimeValue)));
+                Column(String.Empty, "Regular Pay", item => "NA", items => String.Format("{0:n}", items.Sum(a => a.PRES_NT_TotalThirteenthMonth + a.PRES_NT_TotalEarnings)));
+                Column(String.Empty, "Total Earnings", item => "NA", items => String.Format("{0:n}", items.Sum(a => a.PRES_NT_TotalContributions)));
+                Column(String.Empty, "Basic/SMW", item => item.PREV_NT_BasicSMW, items => String.Format("{0:n}", items.Sum(a => a.PRES_NT_TotalEarnings + a.PRES_NT_TotalOvertimeValue + a.PRES_NT_TotalThirteenthMonth + a.PRES_NT_TotalContributions)));
+                Column(String.Empty, "Holiday Pay", item => item.PREV_NT_HolidayPay);
+                Column("Taxable", "Overtime Pay", item => item.PREV_NT_OvertimePay);
+                Column(String.Empty, "Night Shift Differential", item => item.PREV_NT_NightShiftDifferential);
+                Column(String.Empty, "Hazard Pay", item => item.PREV_NT_HazardPay);
+                Column("Gross Compensation Income Present Employer Non-Taxable", "13th month pay and other benefits", item => item.PREV_NT_ThirteenthMonthPayAndOtherBenefits);
+                Column(String.Empty, "De minimis benefits", item => item.PREV_NT_DeMinimisBenefits);
+                Column(String.Empty, "SSS, GSIS, PHIC and PAG-IBIG Contris and other union dues", item => item.PREV_NT_Contributions);
+                Column(String.Empty, "Salaries and other forms of compensations", item => item.PREV_NT_SalariesAndOtherFormsOfCompensations);
+                Column(String.Empty, "Total non-taxable/exempt compensation income", item => item.PREV_NT_TotalIncome);
+                Column(String.Empty, "13th month pay and other benefits", item => item.PREV_T_ThirteenthMonthPayAndOtherBenefits);
+                Column(String.Empty, "Salaries and other forms of compensation", item => item.PREV_T_SalariesAndOtherFormsOfCompensations);
+                Column(String.Empty, "Total taxable (previous employer)", item => item.PREV_T_TotalIncome);
+                Column(String.Empty, "Date Hired", item => item.Employee.DateHired.HasValue ? $"{item.Employee.DateHired.Value:MM/dd/yyyy}" : String.Empty);
+                Column(String.Empty, "Date Resigned", item => item.Employee.DateResigned.HasValue ? $"{item.Employee.DateResigned.Value:MM/dd/yyyy}" : "present");
+                Column(String.Empty, "Gross compensation present", item => String.Format("{0:n}", item.PRES_NT_TotalEarnings));
+                Column(String.Empty, "Regular Pay", item => String.Format("{0:n}", item.PRES_NT_RegularPay));
+                Column(String.Empty, "Total Earnings", item => String.Format("{0:n}", item.TotalEarningsValue));
+                Column(String.Empty, "Basic SMW per day", item => item.Employee.DailyRate.HasValue ? String.Format("{0:n}", item.Employee.DailyRate) : String.Empty);
+                Column("Taxable", "Basic SMW per month", item => item.Employee.MonthlyRate.HasValue ? String.Format("{0:n}", item.Employee.MonthlyRate) : String.Empty);
+                Column(String.Empty, "Basic SMW per year", item => item.Employee.MonthlyRate.HasValue ? String.Format("{0:n}", item.Employee.MonthlyRate.Value * 12) : String.Empty);
+                Column(String.Empty, "Factor used (no of days/year)", item => item.NumberOfWeekdaysInToYear.ToString());
+                Column(String.Empty, "Holiday Pay", item => item.PRES_NT_HolidayPay);
+                Column("Exemption", "Overtime Pay", item => String.Format("{0:n}", item.PRES_NT_TotalOvertimeValue));
+                Column(String.Empty, "Night Shift Differential", item => item.PRES_NT_NightShiftDifferential);
+                Column(String.Empty, "Hazard Pay", item => item.PRES_NT_HazardPay);
+                Column(String.Empty, "13th month pay and other benefits", item => String.Format("{0:n}", item.PRES_NT_TotalThirteenthMonth));
+                Column(String.Empty, "De minimis benefits", item => item.PRES_NT_DeMinimisBenefits);
+                Column("Tax Withheld", "SSS, GSIS, PHIC and PAG-IBIG Contris and other union dues", item => String.Format("{0:n}", item.PRES_NT_TotalContributions));
+                Column(String.Empty, "Salaries and other forms of compensations", item => String.Format("{0:n}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
+                Column("Year-End Adjustment (11a or 11b)", "13th month pay and other benefits", item => item.PRES_T_ThirteenthMonthPayAndOtherBenefits);
+                Column(String.Empty, "Salaries and other forms of compensations", item => item.PRES_T_SalariesAndOtherFormsOfCompensations);
+                Column(String.Empty, "Total compensation present", item => item.PRES_T_TotalCompensationPresent);
+                Column(String.Empty, "Total compensation income (previous and present employers)", item => item.PRES_T_TotalCompensationIncome);
+                Column(String.Empty, "Exemption code", item => item.PRES_T_ExemptionCode);
+                Column(String.Empty, "Amount", item => item.PRES_T_Amount);
+                Column(String.Empty, "Premium paid on health and or hospital insurance", item => item.PRES_T_PremiumPaidHospital);
+                Column(String.Empty, "Net taxable compensation income", item => item.PRES_T_NetTaxableCompensationIncome);
+                Column(String.Empty, "Tax due (Jan - Dec)", item => item.PRES_T_TaxDue);
+                Column(String.Empty, "Previous Employer", item => item.PRES_TW_PreviousEmployer);
+                Column(String.Empty, "Present Employer", item => item.PRES_TW_PresentEmployer);
+                Column(String.Empty, "Amt withheld and paid for in December", item => item.PRES_YEA_AmountWithheldPaidDecember);
+                Column(String.Empty, "Over withheld tax employee", item => item.PRES_YEA_OverWithheldTax);
+                Column(String.Empty, "Amount of tax withheld as adjusted", item => item.PRES_YEA_AmountWithheldRequested);
             }
         }
 
@@ -561,7 +360,10 @@ namespace JPRSC.HRIS.Features.Reports
 
                 if (query.Destination == "Excel")
                 {
-                    var queryResult = new QueryResult
+                    var excelTableBuilder = new ExcelTableBuilder();
+                    var excelLines = excelTableBuilder.Build(alphalistRecords);
+
+                    return new QueryResult
                     {
                         AlphalistType = query.AlphalistType,
                         ClientId = query.ClientId,
@@ -579,26 +381,10 @@ namespace JPRSC.HRIS.Features.Reports
                         ThirteenthMonthPayrollPeriodToYear = query.ThirteenthMonthPayrollPeriodToYear,
                         ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
                         ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
-                        Query = query
+                        Query = query,
+                        FileContent = _excelBuilder.BuildExcelFile(excelLines),
+                        Filename = reportFileNameBase.Append(".xlsx").ToString()
                     };
-
-                    var excelLines = new List<IList<string>>();
-
-                    foreach (var alphalistRecord in alphalistRecords)
-                    {
-                        excelLines.Add(alphalistRecord.DisplayLine);
-                    }
-
-                    excelLines.Insert(0, queryResult.GetHeaders());
-                    excelLines.Insert(0, queryResult.GetPreHeaders());
-
-                    var totals = queryResult.GetTotals(queryResult.AlphalistRecords);
-                    excelLines.Add(totals);
-
-                    queryResult.FileContent = _excelBuilder.BuildExcelFile(excelLines);
-                    queryResult.Filename = reportFileNameBase.Append(".xlsx").ToString();
-
-                    return queryResult;
                 }
                 else if (query.Destination == "CSV")
                 {

@@ -79,6 +79,7 @@
     <Compile Include="AlphalistRecordSample.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Features\Reports\Generate2316Test.cs" />
+    <Compile Include="Infrastructure\Data\TableBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApp\Features\DailyTimeRecords\BulkUploadDTRTests.cs" />
   </ItemGroup>
