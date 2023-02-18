@@ -424,23 +424,12 @@ namespace JPRSC.HRIS.Features.Reports
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
-                    var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"Thirteenth Month Report - ");
-
-                    if (query.ClientId == -1)
-                    {
-                        reportFileNameBuilder.Append("All Clients");
-                    }
-                    else
-                    {
-                        reportFileNameBuilder.Append(clients.Single().Name);
-                    }
-
-                    reportFileNameBuilder.Append(" - ");
-
-                    reportFileNameBuilder.Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}");
-
-                    reportFileNameBuilder.Append(".xlsx");
+                    var reportFileNameBuilder = new StringBuilder(64)
+                        .Append($"Thirteenth Month Report - ")
+                        .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name)
+                        .Append(" - ")
+                        .Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}")
+                        .Append(".xlsx");
 
                     queryResult.FileContent = reportFileContent;
                     queryResult.Filename = reportFileNameBuilder.ToString();

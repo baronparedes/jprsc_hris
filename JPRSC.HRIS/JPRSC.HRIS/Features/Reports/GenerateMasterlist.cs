@@ -210,19 +210,10 @@ namespace JPRSC.HRIS.Features.Reports
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
-                    var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"Masterlist Report - ");
-
-                    if (query.ClientId == -1)
-                    {
-                        reportFileNameBuilder.Append("All Clients");
-                    }
-                    else
-                    {
-                        reportFileNameBuilder.Append(clients.Single().Name);
-                    }
-
-                    reportFileNameBuilder.Append(".xlsx");
+                    var reportFileNameBuilder = new StringBuilder(64)
+                        .Append($"Masterlist Report - ")
+                        .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name)
+                        .Append(".xlsx");
 
                     return new QueryResult
                     {

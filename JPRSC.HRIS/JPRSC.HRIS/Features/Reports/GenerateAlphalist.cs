@@ -13,9 +13,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DocumentFormat.OpenXml.EMMA;
-using static JPRSC.HRIS.Features.Reports.GenerateAlphalist;
-using System.Xml;
 
 namespace JPRSC.HRIS.Features.Reports
 {

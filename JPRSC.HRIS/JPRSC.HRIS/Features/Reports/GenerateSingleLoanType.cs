@@ -132,30 +132,12 @@ namespace JPRSC.HRIS.Features.Reports
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 
-                    var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"{loanType.Code} Report - ");
-
-                    if (query.ClientId == -1)
-                    {
-                        reportFileNameBuilder.Append("All Clients");
-                    }
-                    else
-                    {
-                        reportFileNameBuilder.Append(clients.Single().Name);
-                    }
-
-                    reportFileNameBuilder.Append(" - ");
-
-                    if (query.PayrollPeriodMonth == -1)
-                    {
-                        reportFileNameBuilder.Append("All Payroll Period Months");
-                    }
-                    else
-                    {
-                        reportFileNameBuilder.Append($"{(Month)query.PayrollPeriodMonth.Value}");
-                    }
-
-                    reportFileNameBuilder.Append(".xlsx");
+                    var reportFileNameBuilder = new StringBuilder(64)
+                        .Append($"{loanType.Code} Report - ")
+                        .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name)
+                        .Append(" - ")
+                        .Append(query.PayrollPeriodMonth == -1 ? "All Payroll Period Months" : $"{(Month)query.PayrollPeriodMonth.Value}")
+                        .Append(".xlsx");
 
                     return new QueryResult
                     {
