@@ -372,46 +372,27 @@ namespace JPRSC.HRIS.Features.Reports
                     .Append(" - ")
                     .Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}");
 
-                var queryResult = new QueryResult
-                {
-                    AlphalistType = query.AlphalistType,
-                    ClientId = query.ClientId,
-                    DisplayMode = query.DisplayMode,
-                    AlphalistRecords = alphalistRecords,
-                    PayrollPeriodFromYear = query.PayrollPeriodFromYear,
-                    PayrollPeriodToYear = query.PayrollPeriodToYear,
-                    FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
-                    FromPayrollPeriod = query.FromPayrollPeriod,
-                    ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
-                    ToPayrollPeriod = query.ToPayrollPeriod,
-                    ThirteenthMonthFromPayrollPeriod = query.ThirteenthMonthFromPayrollPeriod,
-                    ThirteenthMonthFromPayrollPeriodMonth = query.ThirteenthMonthFromPayrollPeriodMonth,
-                    ThirteenthMonthPayrollPeriodFromYear = query.ThirteenthMonthPayrollPeriodFromYear,
-                    ThirteenthMonthPayrollPeriodToYear = query.ThirteenthMonthPayrollPeriodToYear,
-                    ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
-                    ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
-                    Query = query
-                };
-
                 if (query.Destination == "Excel")
                 {
                     var excelTableBuilder = new ExcelTableBuilder();
                     var excelTable = excelTableBuilder.Build(alphalistRecords);
 
-                    queryResult.FileContent = _excelBuilder.BuildExcelFile(excelTable.AllLines);
-                    queryResult.Filename = reportFileNameBase.Append(".xlsx").ToString();
-
-                    return queryResult;
+                    return new QueryResult
+                    {
+                        FileContent = _excelBuilder.BuildExcelFile(excelTable.AllLines),
+                        Filename = reportFileNameBase.Append(".xlsx").ToString()
+                    };
                 }
                 else if (query.Destination == "CSV")
                 {
                     var csvTableBuilder = new CSVTableBuilder(query.DateGenerated, query.AlphalistType);
                     var csvTable = csvTableBuilder.Build(alphalistRecords);
 
-                    queryResult.FileContent = _csvBuilder.BuildCSVFile(csvTable.AllLines);
-                    queryResult.Filename = reportFileNameBase.Append(".csv").ToString();
-
-                    return queryResult;
+                    return new QueryResult
+                    {
+                        FileContent = _csvBuilder.BuildCSVFile(csvTable.AllLines),
+                        Filename = reportFileNameBase.Append(".csv").ToString()
+                    };
                 }
                 else
                 {
@@ -448,10 +429,28 @@ namespace JPRSC.HRIS.Features.Reports
                         }
                     }
 
-                    queryResult.ClientName = clientName;
-                    queryResult.Tables = tables;
-
-                    return queryResult;
+                    return new QueryResult
+                    {
+                        AlphalistType = query.AlphalistType,
+                        ClientId = query.ClientId,
+                        ClientName = clientName,
+                        DisplayMode = query.DisplayMode,
+                        AlphalistRecords = alphalistRecords,
+                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
+                        PayrollPeriodToYear = query.PayrollPeriodToYear,
+                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
+                        FromPayrollPeriod = query.FromPayrollPeriod,
+                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
+                        ToPayrollPeriod = query.ToPayrollPeriod,
+                        ThirteenthMonthFromPayrollPeriod = query.ThirteenthMonthFromPayrollPeriod,
+                        ThirteenthMonthFromPayrollPeriodMonth = query.ThirteenthMonthFromPayrollPeriodMonth,
+                        ThirteenthMonthPayrollPeriodFromYear = query.ThirteenthMonthPayrollPeriodFromYear,
+                        ThirteenthMonthPayrollPeriodToYear = query.ThirteenthMonthPayrollPeriodToYear,
+                        ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
+                        ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
+                        Query = query,
+                        Tables = tables
+                    };
                 }
             }
 
