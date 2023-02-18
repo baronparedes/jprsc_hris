@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace JPRSC.HRIS.Features.Reports
 {
@@ -124,43 +125,6 @@ namespace JPRSC.HRIS.Features.Reports
                 totals.Add(String.Format("{0:n}", alphalistRecords.Sum(a => a.PRES_NT_TotalEarnings + a.PRES_NT_TotalOvertimeValue + a.PRES_NT_TotalThirteenthMonth + a.PRES_NT_TotalContributions)));
 
                 return totals;
-            }
-
-            public IList<string> GetCSVHeader()
-            {
-                var displayLine = new List<string>();
-
-                displayLine.Add(BIRFormNumber);
-                displayLine.Add(CompanyTIN);
-                displayLine.Add(U_0039);
-                displayLine.Add(String.Format("MM/dd/yyyy", Query.DateGenerated));
-                displayLine.Add(U_N);
-                displayLine.Add("0");
-                displayLine.Add(U_039);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-                displayLine.Add(String.Empty);
-
-                return displayLine;
             }
 
             public IList<string> GetPreHeaders()
@@ -380,50 +344,6 @@ namespace JPRSC.HRIS.Features.Reports
                 public string PRES_YEA_OverWithheldTax { get; set; } = "NA";
                 public string PRES_YEA_AmountWithheldRequested { get; set; } = "NA";
 
-                public IList<string> CSVDisplayLine
-                {
-                    get
-                    {
-                        var dateHired = Employee.DateHired.HasValue ? $"{Employee.DateHired.Value:MM/dd/yyyy}" : String.Empty;
-                        var dateResigned = Employee.DateResigned.HasValue ? $"{Employee.DateResigned.Value:MM/dd/yyyy}" : String.Empty;
-
-                        var displayLine = new List<string>();
-
-                        displayLine.Add("D" + Query.AlphalistType);
-                        displayLine.Add(BIRFormNumber);
-                        displayLine.Add(CompanyTIN);
-                        displayLine.Add(U_0039);
-                        displayLine.Add(String.Format("{0:MM/dd/yyyy}", Query.DateGenerated));
-                        displayLine.Add(Order.ToString());
-                        displayLine.Add(Employee.TIN);
-                        displayLine.Add(U_0000);
-                        displayLine.Add($"\"{Employee.LastName}\"");
-                        displayLine.Add($"\"{Employee.FirstName}\"");
-                        displayLine.Add($"\"{String.Format("{0}", String.IsNullOrWhiteSpace(Employee.MiddleName) ? String.Empty : $", {Employee.MiddleName}")}\"");
-                        displayLine.Add(dateHired);
-                        displayLine.Add(dateResigned);
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings));
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalThirteenthMonth));
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalContributions));
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings - PRES_NT_TotalOvertimeValue - PRES_NT_TotalThirteenthMonth - PRES_NT_TotalContributions));
-                        displayLine.Add(String.Format("{0:n}", PRES_NT_TotalEarnings - PRES_NT_TotalOvertimeValue - PRES_NT_TotalThirteenthMonth - PRES_NT_TotalContributions));
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("N/A");
-                        displayLine.Add("Y");
-
-                        return displayLine;
-                    }
-                }
-
                 public IList<string> DisplayLine
                 {
                     get
@@ -521,6 +441,43 @@ namespace JPRSC.HRIS.Features.Reports
             }
         }
 
+        public class CSVTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
+        {
+            public CSVTableBuilder(DateTime dateGenerated, string alphalistType)
+            {
+                Column(String.Empty,  item => "D" + alphalistType);
+                Column(BIRFormNumber, item => BIRFormNumber);
+                Column(CompanyTIN,    item => CompanyTIN);
+                Column(U_0039,        item => U_0039);
+                Column("MM/dd/yyyy",  item => String.Format("{0:MM/dd/yyyy}", dateGenerated));
+                Column(U_N,           item => item.Order.ToString());
+                Column("0",           item => item.Employee.TIN);
+                Column(U_039,         item => U_0000);
+                Column(String.Empty,  item => $"\"{item.Employee.LastName}\"");
+                Column(String.Empty,  item => $"\"{item.Employee.FirstName}\"");
+                Column(String.Empty,  item => $"\"{String.Format("{0}", String.IsNullOrWhiteSpace(item.Employee.MiddleName) ? String.Empty : $", {item.Employee.MiddleName}")}\"");
+                Column(String.Empty,  item => item.Employee.DateHired.HasValue ? $"{item.Employee.DateHired.Value:MM/dd/yyyy}" : String.Empty);
+                Column(String.Empty,  item => item.Employee.DateResigned.HasValue ? $"{item.Employee.DateResigned.Value:MM/dd/yyyy}" : String.Empty);
+                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalEarnings));
+                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalThirteenthMonth));
+                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalContributions));
+                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
+                Column(String.Empty,  item => String.Format("{0:n}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "N/A");
+                Column(String.Empty,  item => "Y");
+            }
+        }
+
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
@@ -596,6 +553,12 @@ namespace JPRSC.HRIS.Features.Reports
                     }
                 }
 
+                var reportFileNameBase = new StringBuilder(64)
+                    .Append($"Alphalist Report - ")
+                    .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name)
+                    .Append(" - ")
+                    .Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}");
+
                 if (query.Destination == "Excel")
                 {
                     var queryResult = new QueryResult
@@ -632,34 +595,17 @@ namespace JPRSC.HRIS.Features.Reports
                     var totals = queryResult.GetTotals(queryResult.AlphalistRecords);
                     excelLines.Add(totals);
 
-                    var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
-
-                    var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"Alphalist Report - ");
-
-                    if (query.ClientId == -1)
-                    {
-                        reportFileNameBuilder.Append("All Clients");
-                    }
-                    else
-                    {
-                        reportFileNameBuilder.Append(clients.Single().Name);
-                    }
-
-                    reportFileNameBuilder.Append(" - ");
-
-                    reportFileNameBuilder.Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}");
-
-                    reportFileNameBuilder.Append(".xlsx");
-
-                    queryResult.FileContent = reportFileContent;
-                    queryResult.Filename = reportFileNameBuilder.ToString();
+                    queryResult.FileContent = _excelBuilder.BuildExcelFile(excelLines);
+                    queryResult.Filename = reportFileNameBase.Append(".xlsx").ToString();
 
                     return queryResult;
                 }
                 else if (query.Destination == "CSV")
                 {
-                    var queryResult = new QueryResult
+                    var csvTableBuilder = new CSVTableBuilder(query.DateGenerated, query.AlphalistType);
+                    var csvLines = csvTableBuilder.Build(alphalistRecords);
+
+                    return new QueryResult
                     {
                         AlphalistType = query.AlphalistType,
                         ClientId = query.ClientId,
@@ -677,42 +623,10 @@ namespace JPRSC.HRIS.Features.Reports
                         ThirteenthMonthPayrollPeriodToYear = query.ThirteenthMonthPayrollPeriodToYear,
                         ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
                         ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
-                        Query = query
+                        Query = query,
+                        FileContent = _csvBuilder.BuildCSVFile(csvLines),
+                        Filename = reportFileNameBase.Append(".csv").ToString()
                     };
-
-                    var csvLines = new List<IList<string>>();
-
-                    foreach (var alphalistRecord in alphalistRecords)
-                    {
-                        csvLines.Add(alphalistRecord.CSVDisplayLine);
-                    }
-
-                    csvLines.Insert(0, queryResult.GetCSVHeader());
-
-                    var reportFileContent = _csvBuilder.BuildCSVFile(csvLines);
-
-                    var reportFileNameBuilder = new StringBuilder(64);
-                    reportFileNameBuilder.Append($"Alphalist Report - ");
-
-                    if (query.ClientId == -1)
-                    {
-                        reportFileNameBuilder.Append("All Clients");
-                    }
-                    else
-                    {
-                        reportFileNameBuilder.Append(clients.Single().Name);
-                    }
-
-                    reportFileNameBuilder.Append(" - ");
-
-                    reportFileNameBuilder.Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}");
-
-                    reportFileNameBuilder.Append(".csv");
-
-                    queryResult.FileContent = reportFileContent;
-                    queryResult.Filename = reportFileNameBuilder.ToString();
-
-                    return queryResult;
                 }
                 else
                 {

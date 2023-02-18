@@ -6,45 +6,58 @@ namespace JPRSC.HRIS.Infrastructure.Data
 {
     public class TableBuilder<T> where T : class, new()
     {
-        public IList<IList<string>> Lines { get; private set; } = new List<IList<string>>();
-        public TableRowBuilder<T> HeaderOneBuilder { get; private set; } = new TableRowBuilder<T>();
-        public TableRowBuilder<T> HeaderTwoBuilder { get; private set; } = new TableRowBuilder<T>();
-        public TableRowBuilder<T> RowBuilder { get; private set; } = new TableRowBuilder<T>();
+        public TableRowBuilder<T> _headerOneBuilder = new TableRowBuilder<T>();
+        public TableRowBuilder<T> _headerTwoBuilder = new TableRowBuilder<T>();
+        public TableRowBuilder<T> _rowBuilder = new TableRowBuilder<T>();
+        private Func<IList<T>, IList<string>> _footerValuesFactory;
 
         public void Column(string headerOne, Func<T, string> value)
         {
-            HeaderOneBuilder.Add(headerOne);
-            RowBuilder.Add(value);
+            _headerOneBuilder.Add(headerOne);
+            _rowBuilder.Add(value);
         }
 
         public void Column(string headerOne, string headerTwo, Func<T, string> value)
         {
             Column(headerOne, value);
-            HeaderTwoBuilder.Add(headerTwo);
+            _headerTwoBuilder.Add(headerTwo);
         }
 
-        public IList<IList<string>> Build(IEnumerable<T> rows)
+        public void Footer(Func<IList<T>, IList<string>> valuesFactory)
+        {
+            _footerValuesFactory = valuesFactory;
+        }
+
+        public IList<IList<string>> Build(IList<T> rows)
         {
             var lines = new List<IList<string>>();
 
-            if (HeaderOneBuilder != null)
+            if (_headerOneBuilder != null && _headerOneBuilder.HasItems())
             {
-                lines.Add(HeaderOneBuilder.Build());
+                lines.Add(_headerOneBuilder.Build());
             }
 
-            if (HeaderTwoBuilder != null)
+            if (_headerTwoBuilder != null && _headerTwoBuilder.HasItems())
             {
-                lines.Add(HeaderTwoBuilder.Build());
+                lines.Add(_headerTwoBuilder.Build());
             }
 
-            if (RowBuilder != null)
+            if (_rowBuilder != null && _rowBuilder.HasItems())
             {
                 if (rows != null && rows.Any())
                 {
                     foreach (var row in rows)
                     {
-                        lines.Add(RowBuilder.Build(row));
+                        lines.Add(_rowBuilder.Build(row));
                     }
+                }
+            }
+
+            if (_footerValuesFactory != null)
+            {
+                if (rows != null && rows.Any())
+                {
+                    lines.Add(_footerValuesFactory(rows));
                 }
             }
 
@@ -80,6 +93,11 @@ namespace JPRSC.HRIS.Infrastructure.Data
                 values.Add(factory(data));
             }
             return values;
+        }
+
+        public bool HasItems()
+        {
+            return _valueFactory.Count > 0;
         }
     }
 }
