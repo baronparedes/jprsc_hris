@@ -17,6 +17,9 @@ namespace JPRSC.HRIS.Models
         Widowed = 40,
 
         [Display(Name = "Separated")]
-        Separated
+        Separated = 41,
+
+        [Display(Name = "Separated")]
+        Separated2 = 50
     }
 }

@@ -29,7 +29,7 @@
                 <h5>@Model.Employees.Count record/s total</h5>
             </div>
         </div>
-        @if (!Model.Employees.Any())
+        @if (Model.Employees.Count == 0)
         {
             <div class="row">
                 <div class="col-sm-12">
@@ -58,118 +58,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    @if (String.IsNullOrWhiteSpace(Model.DisplayMode))
-                    {
-                        <table class="table table-striped table-bordered payroll-table">
-                            <thead>
-                                <tr>
-                                    @*<th>Company PagIbig No.</th>
-                                    <th>&nbsp;</th>
-                                    <th>Employee PagIbig No.</th>
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Birth Date</th>
-                                    <th>&nbsp;</th>
-                                    <th>Middle Initial</th>
-                                    <th>Deduction Basis</th>
-                                    <th>&nbsp;</th>
-                                    <th>Date Generated</th>
-                                    <th>&nbsp;</th>
-                                    <th>PagIbig Employer Share</th>
-                                    <th>PagIbig Employee Share</th>
-                                    <th>Share Total</th>*@
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var employee in Model.Employees)
-                                {
-                                    <tr>
-                                        @foreach (var cell in employee.DisplayLine)
-                                        {
-                                            <td>@cell</td>
-                                        }
-                                    </tr>
-                                }
-                                <tr>
-                                    @*<td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>@String.Format("{0:n}", Model.Employees.Sum(sr => sr.PagIbigDeductionBasis))</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>@String.Format("{0:n}", Model.Employees.Sum(sr => sr.TotalPagIbigEmployer))</td>
-                                    <td>@String.Format("{0:n}", Model.Employees.Sum(sr => sr.TotalPagIbigEmployee))</td>
-                                    <td>@String.Format("{0:n}", Model.Employees.Sum(sr => sr.ShareTotal))</td>*@
-                                </tr>
-                            </tbody>
-                        </table>
-                    }
-                    else if (Model.DisplayMode == "Branch")
-                    {
-                        foreach (var employee in Model.Employees.Where(e => e.Department == null))
-                        {
-                            employee.Department = new JPRSC.HRIS.Features.Reports.GenerateMasterlist.QueryResult.Department { Id = 0, Name = "No Branch" };
-                        }
-
-                        var groupedByBranch = Model.Employees.GroupBy(e => new { e.Department.Id, e.Department.Name });
-                        foreach (var group in groupedByBranch.OrderBy(g => g.Key.Name))
-                        {
-                            <h2>@group.Key.Name</h2>
-                            <table class="table table-striped table-bordered payroll-table">
-                                <thead>
-                                    <tr>
-                                        @*<th>Company PagIbig No.</th>
-                                        <th>&nbsp;</th>
-                                        <th>Employee PagIbig No.</th>
-                                        <th>Last Name</th>
-                                        <th>First Name</th>
-                                        <th>Birth Date</th>
-                                        <th>&nbsp;</th>
-                                        <th>Middle Initial</th>
-                                        <th>Net pay</th>
-                                        <th>&nbsp;</th>
-                                        <th>Date Generated</th>
-                                        <th>&nbsp;</th>
-                                        <th>PagIbig Employer Share</th>
-                                        <th>PagIbig Employee Share</th>
-                                        <th>Share Total</th>*@
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var employee in group)
-                                    {
-                                        <tr>
-                                            @foreach (var cell in employee.DisplayLine)
-                                            {
-                                                <td>@cell</td>
-                                            }
-                                        </tr>
-                                    }
-                                    <tr>
-                                        @*<td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.PagIbigDeductionBasis))</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalPagIbigEmployer))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.TotalPagIbigEmployee))</td>
-                                        <td>@String.Format("{0:n}", group.Sum(sr => sr.ShareTotal))</td>*@
-                                    </tr>
-                                </tbody>
-                            </table>
-                        }
-                    }
+                    @Html.Partial("_Tables", Model.Tables)
                 </div>
             </div>
         }

@@ -22,7 +22,13 @@ namespace JPRSC.HRIS.Infrastructure.NET
 
         public static string GetDisplayName<TEnum>(TEnum enumValue) where TEnum : struct, IComparable, IFormattable, IConvertible
         {
-            return enumValue.GetType().GetMember(enumValue.ToString()).First().GetCustomAttribute<DisplayAttribute>()?.Name;
+            var memberInfo = enumValue.GetType().GetMember(enumValue.ToString()).FirstOrDefault();
+            if (memberInfo == null)
+            {
+                return enumValue.ToString();
+            }
+
+            return memberInfo.GetCustomAttribute<DisplayAttribute>()?.Name;
         }
 
         public static IEnumerable<T> GetValues<T>()
