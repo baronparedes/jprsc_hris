@@ -16,7 +16,7 @@ namespace JPRSC.HRIS.Test.Domain
             var payrollPeriodTo = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
-                new Employee { ResignStatus = "AWOL", DateResigned = new DateTime(2024, 1, 1) }
+                new Employee { ResignStatus = ResignStatus.AWOL, DateResigned = new DateTime(2024, 1, 1) }
             };
 
             // Act
@@ -33,7 +33,7 @@ namespace JPRSC.HRIS.Test.Domain
             var payrollPeriodTo = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
-                new Employee { ResignStatus = "Resigned", DateResigned = new DateTime(2024, 1, 1) }
+                new Employee { ResignStatus = ResignStatus.Resigned, DateResigned = new DateTime(2024, 1, 1) }
             };
 
             // Act
@@ -50,7 +50,7 @@ namespace JPRSC.HRIS.Test.Domain
             var payrollPeriodTo = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
-                new Employee { ResignStatus = "AWOL" }
+                new Employee { ResignStatus = ResignStatus.AWOL }
             };
 
             // Act
@@ -68,7 +68,7 @@ namespace JPRSC.HRIS.Test.Domain
             var payrollPeriodTo = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
-                new Employee { ResignStatus = "Resigned" }
+                new Employee { ResignStatus = ResignStatus.Resigned }
             };
 
             // Act
@@ -120,7 +120,7 @@ namespace JPRSC.HRIS.Test.Domain
             var payrollPeriodTo = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
-                new Employee { ResignStatus = "AWOL", DateResigned = new DateTime(2023, 1, 1) }
+                new Employee { ResignStatus = ResignStatus.AWOL, DateResigned = new DateTime(2023, 1, 1) }
             };
 
             // Act
@@ -137,7 +137,7 @@ namespace JPRSC.HRIS.Test.Domain
             var payrollPeriodTo = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
-                new Employee { ResignStatus = "AWOL", DateResigned = new DateTime(2022, 1, 1) }
+                new Employee { ResignStatus = ResignStatus.AWOL, DateResigned = new DateTime(2022, 1, 1) }
             };
 
             // Act
