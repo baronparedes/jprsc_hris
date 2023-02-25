@@ -139,7 +139,7 @@ namespace JPRSC.HRIS.Features.Reports
             public class EarningsDeductionsRecord
             {
                 public Employee Employee { get; set; }
-                public IDictionary<ValueTuple<int, int>, MonthRecord> MonthRecords { get; set; } = new Dictionary<ValueTuple<int, int>, MonthRecord>();
+                public IDictionary<ValueTuple<int, int>, MonthRecord> MonthRecords { get; set; } = new Dictionary<ValueTuple<int, int>, MonthRecord>(); // key is a month+year combination
                 public Query Query { get; set; }
                 public IList<IList<string>> DisplayLineCollection { get; private set; } = new List<IList<string>>();
 
@@ -172,6 +172,7 @@ namespace JPRSC.HRIS.Features.Reports
                     {
                         var earningLine = new List<string> { String.Empty, earningType.Item2 };
                         var hasEarningType = false;
+                        var earningFound = false;
 
                         for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
@@ -192,6 +193,7 @@ namespace JPRSC.HRIS.Features.Reports
                                     hasEarningType = monthRecord.EarningsValues.TryGetValue(earningType.Item1, out Tuple<string, decimal> earningValue);
                                     if (hasEarningType)
                                     {
+                                        earningFound = true;
                                         earningLine.Add(String.Format("{0:n}", earningValue.Item2));
                                     }
                                     else
@@ -206,13 +208,14 @@ namespace JPRSC.HRIS.Features.Reports
                             }
                         }
 
-                        if (hasEarningType) retVal.Add(earningLine);
+                        if (earningFound) retVal.Add(earningLine);
                     }
 
                     foreach (var deductionType in distinctDeductionTypes)
                     {
                         var deductionLine = new List<string> { String.Empty, deductionType.Item2 };
                         var hasDeductionType = false;
+                        var deductionFound = false;
 
                         for (var i = Query.PayrollPeriodFromYear; i <= Query.PayrollPeriodToYear; i++)
                         {
@@ -233,6 +236,7 @@ namespace JPRSC.HRIS.Features.Reports
                                     hasDeductionType = monthRecord.DeductionsValues.TryGetValue(deductionType.Item1, out Tuple<string, decimal> earningValue);
                                     if (hasDeductionType)
                                     {
+                                        deductionFound = true;
                                         deductionLine.Add(String.Format("{0:n}", earningValue.Item2));
                                     }
                                     else
@@ -247,7 +251,7 @@ namespace JPRSC.HRIS.Features.Reports
                             }
                         }
 
-                        if (hasDeductionType) retVal.Add(deductionLine);
+                        if (deductionFound) retVal.Add(deductionLine);
                     }
 
                     var totalLine = new List<string> { String.Empty, "TOTAL" };
@@ -288,8 +292,8 @@ namespace JPRSC.HRIS.Features.Reports
 
             public class MonthRecord
             {
-                public IDictionary<int, Tuple<string, decimal>> EarningsValues { get; set; } = new Dictionary<int, Tuple<string, decimal>>();
-                public IDictionary<int, Tuple<string, decimal>> DeductionsValues { get; set; } = new Dictionary<int, Tuple<string, decimal>>();
+                public IDictionary<int, Tuple<string, decimal>> EarningsValues { get; set; } = new Dictionary<int, Tuple<string, decimal>>(); // key is earningdeductionid
+                public IDictionary<int, Tuple<string, decimal>> DeductionsValues { get; set; } = new Dictionary<int, Tuple<string, decimal>>(); // key is earningdeductionid
                 public decimal Total => EarningsValues.Sum(e => e.Value.Item2) - DeductionsValues.Sum(d => d.Value.Item2);
             }
         }
@@ -308,7 +312,7 @@ namespace JPRSC.HRIS.Features.Reports
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
-            {                
+            {
                 var clients = query.ClientId == -1 ?
                     await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue).ToListAsync() :
                     await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
@@ -318,31 +322,8 @@ namespace JPRSC.HRIS.Features.Reports
 
                 var earningsDeductionsRecords = GetEarningsDeductionsRecords(query, allPayrollProcessBatches);
 
-                var allEarningTypes = earningsDeductionsRecords
-                    .SelectMany(edr => edr.MonthRecords)
-                    .Select(dict => dict.Value)
-                    .SelectMany(mr => mr.EarningsValues);
-
-                var distinctEarningTypes = new List<Tuple<int, string>>();
-                foreach (var earningType in allEarningTypes)
-                {
-                    if (distinctEarningTypes.Any(et => et.Item1 == earningType.Key)) continue;
-
-                    distinctEarningTypes.Add(Tuple.Create(earningType.Key, earningType.Value.Item1));
-                }
-
-                var allDeductionTypes = earningsDeductionsRecords
-                    .SelectMany(edr => edr.MonthRecords)
-                    .Select(dict => dict.Value)
-                    .SelectMany(mr => mr.DeductionsValues);
-
-                var distinctDeductionTypes = new List<Tuple<int, string>>();
-                foreach (var deductionType in allDeductionTypes)
-                {
-                    if (distinctDeductionTypes.Any(dt => dt.Item1 == deductionType.Key)) continue;
-
-                    distinctDeductionTypes.Add(Tuple.Create(deductionType.Key, deductionType.Value.Item1));
-                }
+                List<Tuple<int, string>> distinctEarningTypes = GetDistinctEarningTypes(earningsDeductionsRecords);
+                List<Tuple<int, string>> distinctDeductionTypes = GetDistinctDeductionTypes(earningsDeductionsRecords);
 
                 foreach (var earningsDeductionsRecord in earningsDeductionsRecords)
                 {
@@ -421,6 +402,42 @@ namespace JPRSC.HRIS.Features.Reports
                         Query = query
                     };
                 }
+            }
+
+            private static List<Tuple<int, string>> GetDistinctDeductionTypes(IList<QueryResult.EarningsDeductionsRecord> earningsDeductionsRecords)
+            {
+                var allDeductionTypes = earningsDeductionsRecords
+                    .SelectMany(edr => edr.MonthRecords)
+                    .Select(dict => dict.Value)
+                    .SelectMany(mr => mr.DeductionsValues);
+
+                var distinctDeductionTypes = new List<Tuple<int, string>>();
+                foreach (var deductionType in allDeductionTypes)
+                {
+                    if (distinctDeductionTypes.Any(dt => dt.Item1 == deductionType.Key)) continue;
+
+                    distinctDeductionTypes.Add(Tuple.Create(deductionType.Key, deductionType.Value.Item1));
+                }
+
+                return distinctDeductionTypes;
+            }
+
+            private static List<Tuple<int, string>> GetDistinctEarningTypes(IList<QueryResult.EarningsDeductionsRecord> earningsDeductionsRecords)
+            {
+                var allEarningTypes = earningsDeductionsRecords
+                    .SelectMany(edr => edr.MonthRecords)
+                    .Select(dict => dict.Value)
+                    .SelectMany(mr => mr.EarningsValues);
+
+                var distinctEarningTypes = new List<Tuple<int, string>>();
+                foreach (var earningType in allEarningTypes)
+                {
+                    if (distinctEarningTypes.Any(et => et.Item1 == earningType.Key)) continue;
+
+                    distinctEarningTypes.Add(Tuple.Create(earningType.Key, earningType.Value.Item1));
+                }
+
+                return distinctEarningTypes;
             }
 
             private async Task<List<PayrollProcessBatch>> GetPayrollProcessBatches(Query query, List<int> clientIds)
@@ -541,6 +558,7 @@ namespace JPRSC.HRIS.Features.Reports
 
             private IList<QueryResult.EarningsDeductionsRecord> GetEarningsDeductionsRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)
             {
+                // Key is employee id
                 var earningsDeductionsRecordsDictionary = new Dictionary<int, QueryResult.EarningsDeductionsRecord>();
 
                 for (var i = query.PayrollPeriodFromYear; i <= query.PayrollPeriodToYear; i++)
@@ -627,38 +645,34 @@ namespace JPRSC.HRIS.Features.Reports
                     if (!earningsDeductionsRecordsDictionary[earningDeductionRecord.EmployeeId.Value].MonthRecords.ContainsKey(key))
                     {
                         var newMonthRecord = new QueryResult.MonthRecord();
-
-                        var earningOrDeductionDictionary = new Dictionary<int, Tuple<string, decimal>>
-                        {
-                            { earningDeductionRecord.EarningDeductionId.GetValueOrDefault(), Tuple.Create(earningDeductionRecord.EarningDeduction.Code, earningDeductionRecord.Amount.GetValueOrDefault()) }
-                        };
-
-                        if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Earnings)
-                        {
-                            newMonthRecord.EarningsValues = earningOrDeductionDictionary;
-                        }
-                        else if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Deductions)
-                        {
-                            newMonthRecord.DeductionsValues = earningOrDeductionDictionary;
-                        }
-
                         earningsDeductionsRecordsDictionary[earningDeductionRecord.EmployeeId.Value].MonthRecords.Add(key, newMonthRecord);
                     }
-                    else
+
+                    var monthRecord = earningsDeductionsRecordsDictionary[earningDeductionRecord.EmployeeId.Value].MonthRecords[key];
+                    var earningDeductionId = earningDeductionRecord.EarningDeductionId.GetValueOrDefault();
+
+                    if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Earnings)
                     {
-                        var monthRecord = earningsDeductionsRecordsDictionary[earningDeductionRecord.EmployeeId.Value].MonthRecords[key];
-
-                        if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Earnings)
+                        if (!monthRecord.EarningsValues.ContainsKey(earningDeductionId))
                         {
-                            var newTuple = Tuple.Create(monthRecord.EarningsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()].Item1, monthRecord.EarningsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()].Item2 + earningDeductionRecord.Amount.GetValueOrDefault());
-
-                            monthRecord.EarningsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()] = newTuple;
+                            monthRecord.EarningsValues.Add(earningDeductionId, Tuple.Create(earningDeductionRecord.EarningDeduction.Code, earningDeductionRecord.Amount.GetValueOrDefault()));
                         }
-                        else if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Deductions)
+                        else
                         {
-                            var newTuple = Tuple.Create(monthRecord.DeductionsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()].Item1, monthRecord.DeductionsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()].Item2 + earningDeductionRecord.Amount.GetValueOrDefault());
-
-                            monthRecord.DeductionsValues[earningDeductionRecord.EarningDeductionId.GetValueOrDefault()] = newTuple;
+                            var earningValue = monthRecord.EarningsValues[earningDeductionId];
+                            monthRecord.EarningsValues[earningDeductionId] = Tuple.Create(earningValue.Item1, earningValue.Item2 + earningDeductionRecord.Amount.GetValueOrDefault());
+                        }
+                    }
+                    else if (earningDeductionRecord.EarningDeduction.EarningDeductionType.GetValueOrDefault() == EarningDeductionType.Deductions)
+                    {
+                        if (!monthRecord.DeductionsValues.ContainsKey(earningDeductionId))
+                        {
+                            monthRecord.DeductionsValues.Add(earningDeductionId, Tuple.Create(earningDeductionRecord.EarningDeduction.Code, earningDeductionRecord.Amount.GetValueOrDefault()));
+                        }
+                        else
+                        {
+                            var deductionValue = monthRecord.DeductionsValues[earningDeductionId];
+                            monthRecord.DeductionsValues[earningDeductionId] = Tuple.Create(deductionValue.Item1, deductionValue.Item2 + earningDeductionRecord.Amount.GetValueOrDefault());
                         }
                     }
                 }
