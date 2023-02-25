@@ -38,6 +38,20 @@
             $http.post(action, data, config).then(function (response) {
                 console.log(response);
                 if (!response.data.errorMessage) {
+                    if (response.data.skippedItems.length) {
+                        var skipMessage = 'Successfully processed.\nSkipping resigned employees: ';
+                        for (var i = 0; i < response.data.skippedItems.length; i++) {
+                            var currentSkippedItem = response.data.skippedItems[i];
+                            skipMessage += `${currentSkippedItem.lastName}, ${currentSkippedItem.firstName}`;
+
+                            if (i < response.data.skippedItems.length - 1) {
+                                skipMessage += '; ';
+                            }
+                        }
+
+                        alert(skipMessage);
+                    }
+
                     $uibModalInstance.close();
                 }
                 else {

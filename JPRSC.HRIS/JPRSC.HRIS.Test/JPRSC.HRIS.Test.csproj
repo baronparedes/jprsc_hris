@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="AlphalistRecordSample.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Domain\EmployeeExtensionsTest.cs" />
     <Compile Include="Features\Reports\Generate2316Test.cs" />
     <Compile Include="Infrastructure\Data\TableBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

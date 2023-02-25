@@ -171,6 +171,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\EmployeeExtensions.cs" />
     <Compile Include="Domain\PermissionHelper.cs" />
     <Compile Include="Features\Accounts\Add.cs" />
     <Compile Include="Features\Accounts\ChangePassword.cs" />
