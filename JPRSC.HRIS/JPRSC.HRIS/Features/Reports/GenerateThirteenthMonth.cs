@@ -256,7 +256,88 @@ namespace JPRSC.HRIS.Features.Reports
                     await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
 
                 var clientIds = clients.Select(c => c.Id).ToList();
+                var allPayrollProcessBatches = await GetPayrollProcessBatches(query, clientIds);
 
+                var thirteenthMonthRecords = GetThirteenthMonthRecords(query, allPayrollProcessBatches);
+
+                if (query.Destination == "Excel")
+                {
+                    var queryResult = new QueryResult
+                    {
+                        ClientId = query.ClientId,
+                        DisplayMode = query.DisplayMode,
+                        ThirteenthMonthRecords = thirteenthMonthRecords,
+                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
+                        PayrollPeriodToYear = query.PayrollPeriodToYear,
+                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
+                        FromPayrollPeriod = query.FromPayrollPeriod,
+                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
+                        ToPayrollPeriod = query.ToPayrollPeriod,
+                        Query = query
+                    };
+
+                    var excelLines = new List<IList<string>>();
+
+                    foreach (var thirteenthMonthRecord in thirteenthMonthRecords)
+                    {
+                        foreach (var displayLine in thirteenthMonthRecord.DisplayLineCollection)
+                        {
+                            excelLines.Add(displayLine);
+                        }
+                    }
+
+                    var header = new List<string> { "Employee Name", "Employee Code" };
+                    var monthHeaders = queryResult.GetMonthHeaders();
+                    foreach (var monthHeader in monthHeaders)
+                    {
+                        header.Add(monthHeader);
+                    }
+                    header.Add("HALF");
+                    header.Add("13th Month Pay");
+
+                    excelLines.Insert(0, header);
+
+                    var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
+
+                    var reportFileNameBuilder = new StringBuilder(64)
+                        .Append($"Thirteenth Month Report - ")
+                        .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name)
+                        .Append(" - ")
+                        .Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}")
+                        .Append(".xlsx");
+
+                    queryResult.FileContent = reportFileContent;
+                    queryResult.Filename = reportFileNameBuilder.ToString();
+
+                    return queryResult;
+                }
+                else
+                {
+                    var clientName = String.Empty;
+                    if (query.ClientId.HasValue && query.ClientId.Value > 0)
+                    {
+                        clientName = (await _db.Clients.AsNoTracking().SingleAsync(c => c.Id == query.ClientId)).Name;
+                    }
+
+                    return new QueryResult
+                    {
+                        ClientId = query.ClientId,
+                        ClientName = clientName,
+                        DisplayMode = query.DisplayMode,
+                        ThirteenthMonthRecords = thirteenthMonthRecords,
+                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
+                        PayrollPeriodToYear = query.PayrollPeriodToYear,
+                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
+                        FromPayrollPeriod = query.FromPayrollPeriod,
+                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
+                        ToPayrollPeriod = query.ToPayrollPeriod,
+                        Query = query
+                    };
+                }
+            }
+
+            private async Task<List<PayrollProcessBatch>> GetPayrollProcessBatches(Query query, List<int> clientIds)
+            {
                 var allPayrollProcessBatches = new List<PayrollProcessBatch>();
 
                 for (var i = query.PayrollPeriodFromYear; i <= query.PayrollPeriodToYear; i++)
@@ -382,83 +463,7 @@ namespace JPRSC.HRIS.Features.Reports
                     .Select(g => g.First())
                     .OrderBy(ppb => ppb.Id)
                     .ToList();
-
-                var thirteenthMonthRecords = GetThirteenthMonthRecords(query, allPayrollProcessBatches);
-
-                if (query.Destination == "Excel")
-                {
-                    var queryResult = new QueryResult
-                    {
-                        ClientId = query.ClientId,
-                        DisplayMode = query.DisplayMode,
-                        ThirteenthMonthRecords = thirteenthMonthRecords,
-                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
-                        PayrollPeriodToYear = query.PayrollPeriodToYear,
-                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
-                        FromPayrollPeriod = query.FromPayrollPeriod,
-                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
-                        ToPayrollPeriod = query.ToPayrollPeriod,
-                        Query = query
-                    };
-
-                    var excelLines = new List<IList<string>>();
-
-                    foreach (var thirteenthMonthRecord in thirteenthMonthRecords)
-                    {
-                        foreach (var displayLine in thirteenthMonthRecord.DisplayLineCollection)
-                        {
-                            excelLines.Add(displayLine);
-                        }
-                    }
-
-                    var header = new List<string> { "Employee Name", "Employee Code" };
-                    var monthHeaders = queryResult.GetMonthHeaders();
-                    foreach (var monthHeader in monthHeaders)
-                    {
-                        header.Add(monthHeader);
-                    }
-                    header.Add("HALF");
-                    header.Add("13th Month Pay");
-
-                    excelLines.Insert(0, header);
-
-                    var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
-
-                    var reportFileNameBuilder = new StringBuilder(64)
-                        .Append($"Thirteenth Month Report - ")
-                        .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name)
-                        .Append(" - ")
-                        .Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}")
-                        .Append(".xlsx");
-
-                    queryResult.FileContent = reportFileContent;
-                    queryResult.Filename = reportFileNameBuilder.ToString();
-
-                    return queryResult;
-                }
-                else
-                {
-                    var clientName = String.Empty;
-                    if (query.ClientId.HasValue && query.ClientId.Value > 0)
-                    {
-                        clientName = (await _db.Clients.AsNoTracking().SingleAsync(c => c.Id == query.ClientId)).Name;
-                    }
-
-                    return new QueryResult
-                    {
-                        ClientId = query.ClientId,
-                        ClientName = clientName,
-                        DisplayMode = query.DisplayMode,
-                        ThirteenthMonthRecords = thirteenthMonthRecords,
-                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
-                        PayrollPeriodToYear = query.PayrollPeriodToYear,
-                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
-                        FromPayrollPeriod = query.FromPayrollPeriod,
-                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
-                        ToPayrollPeriod = query.ToPayrollPeriod,
-                        Query = query
-                    };
-                }
+                return allPayrollProcessBatches;
             }
 
             private IList<QueryResult.ThirteenthMonthRecord> GetThirteenthMonthRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)

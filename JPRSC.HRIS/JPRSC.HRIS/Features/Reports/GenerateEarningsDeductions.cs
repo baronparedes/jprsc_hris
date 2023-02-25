@@ -308,13 +308,123 @@ namespace JPRSC.HRIS.Features.Reports
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
-            {
+            {                
                 var clients = query.ClientId == -1 ?
                     await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue).ToListAsync() :
                     await _db.Clients.AsNoTracking().Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
 
                 var clientIds = clients.Select(c => c.Id).ToList();
+                var allPayrollProcessBatches = await GetPayrollProcessBatches(query, clientIds);
 
+                var earningsDeductionsRecords = GetEarningsDeductionsRecords(query, allPayrollProcessBatches);
+
+                var allEarningTypes = earningsDeductionsRecords
+                    .SelectMany(edr => edr.MonthRecords)
+                    .Select(dict => dict.Value)
+                    .SelectMany(mr => mr.EarningsValues);
+
+                var distinctEarningTypes = new List<Tuple<int, string>>();
+                foreach (var earningType in allEarningTypes)
+                {
+                    if (distinctEarningTypes.Any(et => et.Item1 == earningType.Key)) continue;
+
+                    distinctEarningTypes.Add(Tuple.Create(earningType.Key, earningType.Value.Item1));
+                }
+
+                var allDeductionTypes = earningsDeductionsRecords
+                    .SelectMany(edr => edr.MonthRecords)
+                    .Select(dict => dict.Value)
+                    .SelectMany(mr => mr.DeductionsValues);
+
+                var distinctDeductionTypes = new List<Tuple<int, string>>();
+                foreach (var deductionType in allDeductionTypes)
+                {
+                    if (distinctDeductionTypes.Any(dt => dt.Item1 == deductionType.Key)) continue;
+
+                    distinctDeductionTypes.Add(Tuple.Create(deductionType.Key, deductionType.Value.Item1));
+                }
+
+                foreach (var earningsDeductionsRecord in earningsDeductionsRecords)
+                {
+                    earningsDeductionsRecord.PopulateDisplayLineCollection(distinctEarningTypes, distinctDeductionTypes);
+                }
+
+                if (query.Destination == "Excel")
+                {
+                    var queryResult = new QueryResult
+                    {
+                        ClientId = query.ClientId,
+                        DisplayMode = query.DisplayMode,
+                        EarningsDeductionsRecords = earningsDeductionsRecords,
+                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
+                        PayrollPeriodToYear = query.PayrollPeriodToYear,
+                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
+                        FromPayrollPeriod = query.FromPayrollPeriod,
+                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
+                        ToPayrollPeriod = query.ToPayrollPeriod,
+                        Query = query
+                    };
+
+                    var excelLines = new List<IList<string>>();
+
+                    foreach (var earningsDeductionsRecord in earningsDeductionsRecords)
+                    {
+                        foreach (var displayLine in earningsDeductionsRecord.DisplayLineCollection)
+                        {
+                            excelLines.Add(displayLine);
+                        }
+                    }
+
+                    var header = new List<string> { "Employee Name", "Employee Code" };
+                    var monthHeaders = queryResult.GetMonthHeaders();
+                    foreach (var monthHeader in monthHeaders)
+                    {
+                        header.Add(monthHeader);
+                    }
+
+                    excelLines.Insert(0, header);
+
+                    var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
+
+                    var reportFileNameBuilder = new StringBuilder(64)
+                        .Append($"Earnings and Deductions Report - ")
+                        .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name)
+                        .Append(" - ")
+                        .Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}")
+                        .Append(".xlsx");
+
+                    queryResult.FileContent = reportFileContent;
+                    queryResult.Filename = reportFileNameBuilder.ToString();
+
+                    return queryResult;
+                }
+                else
+                {
+                    var clientName = String.Empty;
+                    if (query.ClientId.HasValue && query.ClientId.Value > 0)
+                    {
+                        clientName = (await _db.Clients.AsNoTracking().SingleAsync(c => c.Id == query.ClientId)).Name;
+                    }
+
+                    return new QueryResult
+                    {
+                        ClientId = query.ClientId,
+                        ClientName = clientName,
+                        DisplayMode = query.DisplayMode,
+                        EarningsDeductionsRecords = earningsDeductionsRecords,
+                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
+                        PayrollPeriodToYear = query.PayrollPeriodToYear,
+                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
+                        FromPayrollPeriod = query.FromPayrollPeriod,
+                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
+                        ToPayrollPeriod = query.ToPayrollPeriod,
+                        Query = query
+                    };
+                }
+            }
+
+            private async Task<List<PayrollProcessBatch>> GetPayrollProcessBatches(Query query, List<int> clientIds)
+            {
                 var allPayrollProcessBatches = new List<PayrollProcessBatch>();
 
                 for (var i = query.PayrollPeriodFromYear; i <= query.PayrollPeriodToYear; i++)
@@ -426,111 +536,7 @@ namespace JPRSC.HRIS.Features.Reports
                     .OrderBy(ppb => ppb.Id)
                     .ToList();
 
-                var earningsDeductionsRecords = GetEarningsDeductionsRecords(query, allPayrollProcessBatches);
-
-                var allEarningTypes = earningsDeductionsRecords
-                    .SelectMany(edr => edr.MonthRecords)
-                    .Select(dict => dict.Value)
-                    .SelectMany(mr => mr.EarningsValues);
-
-                var distinctEarningTypes = new List<Tuple<int, string>>();
-                foreach (var earningType in allEarningTypes)
-                {
-                    if (distinctEarningTypes.Any(et => et.Item1 == earningType.Key)) continue;
-
-                    distinctEarningTypes.Add(Tuple.Create(earningType.Key, earningType.Value.Item1));
-                }
-
-                var allDeductionTypes = earningsDeductionsRecords
-                    .SelectMany(edr => edr.MonthRecords)
-                    .Select(dict => dict.Value)
-                    .SelectMany(mr => mr.DeductionsValues);
-
-                var distinctDeductionTypes = new List<Tuple<int, string>>();
-                foreach (var deductionType in allDeductionTypes)
-                {
-                    if (distinctDeductionTypes.Any(dt => dt.Item1 == deductionType.Key)) continue;
-
-                    distinctDeductionTypes.Add(Tuple.Create(deductionType.Key, deductionType.Value.Item1));
-                }
-
-                foreach (var earningsDeductionsRecord in earningsDeductionsRecords)
-                {
-                    earningsDeductionsRecord.PopulateDisplayLineCollection(distinctEarningTypes, distinctDeductionTypes);
-                }
-
-                if (query.Destination == "Excel")
-                {
-                    var queryResult = new QueryResult
-                    {
-                        ClientId = query.ClientId,
-                        DisplayMode = query.DisplayMode,
-                        EarningsDeductionsRecords = earningsDeductionsRecords,
-                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
-                        PayrollPeriodToYear = query.PayrollPeriodToYear,
-                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
-                        FromPayrollPeriod = query.FromPayrollPeriod,
-                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
-                        ToPayrollPeriod = query.ToPayrollPeriod,
-                        Query = query
-                    };
-
-                    var excelLines = new List<IList<string>>();
-
-                    foreach (var earningsDeductionsRecord in earningsDeductionsRecords)
-                    {
-                        foreach (var displayLine in earningsDeductionsRecord.DisplayLineCollection)
-                        {
-                            excelLines.Add(displayLine);
-                        }
-                    }
-
-                    var header = new List<string> { "Employee Name", "Employee Code" };
-                    var monthHeaders = queryResult.GetMonthHeaders();
-                    foreach (var monthHeader in monthHeaders)
-                    {
-                        header.Add(monthHeader);
-                    }
-
-                    excelLines.Insert(0, header);
-
-                    var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
-
-                    var reportFileNameBuilder = new StringBuilder(64)
-                        .Append($"Earnings and Deductions Report - ")
-                        .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name)
-                        .Append(" - ")
-                        .Append($"{query.PayrollPeriodFromYear} to {query.PayrollPeriodToYear}")
-                        .Append(".xlsx");
-
-                    queryResult.FileContent = reportFileContent;
-                    queryResult.Filename = reportFileNameBuilder.ToString();
-
-                    return queryResult;
-                }
-                else
-                {
-                    var clientName = String.Empty;
-                    if (query.ClientId.HasValue && query.ClientId.Value > 0)
-                    {
-                        clientName = (await _db.Clients.AsNoTracking().SingleAsync(c => c.Id == query.ClientId)).Name;
-                    }
-
-                    return new QueryResult
-                    {
-                        ClientId = query.ClientId,
-                        ClientName = clientName,
-                        DisplayMode = query.DisplayMode,
-                        EarningsDeductionsRecords = earningsDeductionsRecords,
-                        PayrollPeriodFromYear = query.PayrollPeriodFromYear,
-                        PayrollPeriodToYear = query.PayrollPeriodToYear,
-                        FromPayrollPeriodMonth = query.FromPayrollPeriodMonth,
-                        FromPayrollPeriod = query.FromPayrollPeriod,
-                        ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
-                        ToPayrollPeriod = query.ToPayrollPeriod,
-                        Query = query
-                    };
-                }
+                return allPayrollProcessBatches;
             }
 
             private IList<QueryResult.EarningsDeductionsRecord> GetEarningsDeductionsRecords(Query query, IList<PayrollProcessBatch> payrollProcessBatches)
