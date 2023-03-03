@@ -13,6 +13,8 @@ namespace JPRSC.HRIS.Features.Reports
     {
         public static async Task<List<PayrollProcessBatch>> PayrollProcessBatchesByMonthAndYear(this ApplicationDbContext _db, List<int> clientIds, int? payrollPeriodMonth, int payrollPeriodYear)
         {
+            _db.Database.CommandTimeout = 120;
+
             var payrollProcessBatches = payrollPeriodMonth == -1 ?
                 await _db.PayrollProcessBatches
                     .AsNoTracking()
