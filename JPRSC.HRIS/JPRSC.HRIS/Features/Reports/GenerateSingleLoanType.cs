@@ -67,7 +67,9 @@ namespace JPRSC.HRIS.Features.Reports
                         line.Add(SSSOrPagIbigNumber);
                         line.Add(Loan.Employee.LastName);
                         line.Add(Loan.Employee.FirstName);
+                        line.Add(String.IsNullOrWhiteSpace(Loan.Employee.MiddleName) ? null : Loan.Employee.MiddleName);
                         line.Add(String.IsNullOrWhiteSpace(Loan.Employee.MiddleName) ? null : Loan.Employee.MiddleName.Trim().First().ToString());
+                        line.Add(String.Format("{0:M/d/yyyy}", Loan.Employee.DateOfBirth));
                         line.Add(String.Format("{0}", Loan.LoanType.Code));
                         line.Add(String.Format("{0:M/d/yyyy}", Loan.LoanDate));
                         line.Add(String.Format("{0:n}", Loan.PrincipalAmount));
@@ -127,8 +129,8 @@ namespace JPRSC.HRIS.Features.Reports
                     var sssOrPagibig = query.LoanTypeId == HDMFCALL_ID || query.LoanTypeId == HDMFL_ID ? "Employee PagIbig No." : "Employee SSS No.";
 
                     var excelLines = loanRecords.Select(pr => pr.DisplayLine).ToList();
-                    excelLines.Insert(0, new List<string> { sssOrPagibig, "Last Name", "First Name", "Middle Initial", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Monthly Amortization", "AMPSDG", "Status", "Effective Date" });
-                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", loanRecords.Sum(sr => sr.DeductionAmount.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
+                    excelLines.Insert(0, new List<string> { sssOrPagibig, "Last Name", "First Name", "Middle Name", "Middle Initial", "Birth Date", "Loan Type", "Loan Date", "Loan Amount", "Penalty", "Amount Due", "Monthly Amortization", "AMPSDG", "Status", "Effective Date" });
+                    excelLines.Add(new List<string> { String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault())), String.Empty, String.Format("{0:n}", loanRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault())), String.Format("{0:n}", loanRecords.Sum(sr => sr.DeductionAmount.GetValueOrDefault())), String.Empty, String.Empty, String.Empty });
 
                     var reportFileContent = _excelBuilder.BuildExcelFile(excelLines);
 

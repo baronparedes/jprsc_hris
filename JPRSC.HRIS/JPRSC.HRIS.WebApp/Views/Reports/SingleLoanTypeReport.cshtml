@@ -74,7 +74,9 @@
                                     <th>@Model.SSSOrPagibigHeader</th>
                                     <th>Last Name</th>
                                     <th>First Name</th>
+                                    <th>Middle Name</th>
                                     <th>Middle Initial</th>
+                                    <th>Birth Date</th>
                                     <th>Loan Type</th>
                                     <th>Loan Date</th>
                                     <th>Loan Amount</th>
@@ -96,21 +98,23 @@
                                         }
                                     </tr>
                                 }
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>@String.Format("{0:n}", Model.LoanRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault()))</td>
-                                    <td>&nbsp;</td>
-                                    <td>@String.Format("{0:n}", Model.LoanRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault()))</td>
-                                    <td>@String.Format("{0:n}", Model.LoanRecords.Sum(sr => sr.DeductionAmount.GetValueOrDefault()))</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>@String.Format("{0:n}", Model.LoanRecords.Sum(sr => sr.Loan.PrincipalAmount.GetValueOrDefault()))</td>
+                                <td>&nbsp;</td>
+                                <td>@String.Format("{0:n}", Model.LoanRecords.Sum(sr => sr.Loan.RemainingBalanceForDisplay.GetValueOrDefault()))</td>
+                                <td>@String.Format("{0:n}", Model.LoanRecords.Sum(sr => sr.DeductionAmount.GetValueOrDefault()))</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
                             </tbody>
                         </table>
                     }
@@ -131,7 +135,9 @@
                                         <th>@Model.SSSOrPagibigHeader</th>
                                         <th>Last Name</th>
                                         <th>First Name</th>
+                                        <th>Middle Name</th>
                                         <th>Middle Initial</th>
+                                        <th>Birth Date</th>
                                         <th>Loan Type</th>
                                         <th>Loan Date</th>
                                         <th>Loan Amount</th>
