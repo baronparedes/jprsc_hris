@@ -173,11 +173,14 @@ namespace JPRSC.HRIS.Features.Reports
 
                     foreach (var employeePayrollRecords in payrollRecordsInBatchPerEmployee)
                     {
+                        var deductionBasis = employeePayrollRecords.Sum(pr => pr.PHICDeductionBasis.GetValueOrDefault());
+                        if (deductionBasis == 0) continue;
+
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
                         var phicRecord = new QueryResult.PHICRecord();
                         phicRecord.CompanyPhilHealth = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.PhilHealth;
-                        phicRecord.PHICDeductionBasis = employeePayrollRecords.Sum(pr => pr.PHICDeductionBasis.GetValueOrDefault());
+                        phicRecord.PHICDeductionBasis = deductionBasis;
                         phicRecord.Employee = sampleEmployee;
                         phicRecord.NetPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
                         phicRecord.TotalPHICEmployee = employeePayrollRecords.Sum(pr => pr.PHICValueEmployee.GetValueOrDefault());

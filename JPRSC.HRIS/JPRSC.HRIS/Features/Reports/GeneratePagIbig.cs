@@ -173,11 +173,14 @@ namespace JPRSC.HRIS.Features.Reports
 
                     foreach (var employeePayrollRecords in payrollRecordsInBatchPerEmployee)
                     {
+                        var deductionBasis = employeePayrollRecords.Sum(pr => pr.PagIbigDeductionBasis.GetValueOrDefault());
+                        if (deductionBasis == 0) continue;
+
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
                         var pagIbigRecord = new QueryResult.PagIbigRecord();
                         pagIbigRecord.CompanyPagIbig = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.PagIbig;
-                        pagIbigRecord.PagIbigDeductionBasis = employeePayrollRecords.Sum(pr => pr.PagIbigDeductionBasis.GetValueOrDefault());
+                        pagIbigRecord.PagIbigDeductionBasis = deductionBasis;
                         pagIbigRecord.Employee = sampleEmployee;
                         pagIbigRecord.NetPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
                         pagIbigRecord.TotalPagIbigEmployee = employeePayrollRecords.Sum(pr => pr.PagIbigValueEmployee.GetValueOrDefault());
