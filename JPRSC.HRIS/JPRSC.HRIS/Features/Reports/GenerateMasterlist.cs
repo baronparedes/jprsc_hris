@@ -290,6 +290,8 @@ namespace JPRSC.HRIS.Features.Reports
                     await _db.Clients.Where(c => !c.DeletedOn.HasValue).ToListAsync() :
                     await _db.Clients.Where(c => !c.DeletedOn.HasValue && c.Id == query.ClientId.Value).ToListAsync();
 
+                var clientIds = clients.Select(c => c.Id).ToList();
+
                 var employees = await _db.Employees
                     .AsNoTracking()
                     .Include(e => e.Client)
@@ -299,6 +301,7 @@ namespace JPRSC.HRIS.Features.Reports
                     .Include(e => e.PagIbigRecord)
                     .Include(e => e.Religion)
                     .Include(e => e.TaxStatus)
+                    .Where(e => e.ClientId.HasValue && clientIds.Contains(e.ClientId.Value))
                     .ProjectTo<QueryResult.Employee>(_mapper)
                     .ToListAsync();
 
