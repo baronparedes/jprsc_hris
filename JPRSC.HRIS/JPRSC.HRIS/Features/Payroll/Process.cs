@@ -233,12 +233,9 @@ namespace JPRSC.HRIS.Features.Payroll
                             var sssDeductionBasis = GetSSSDeductionBasis(client, dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                             payrollRecord.SSSDeductionBasis = sssDeductionBasis;
 
-                            var matchingRanges = sssRecords.Where(s => s.Range1.HasValue && s.Range1End.HasValue && s.Range1.Value <= sssDeductionBasis && sssDeductionBasis <= s.Range1End.Value).ToList();
-                            if (matchingRanges.Count == 0) throw new Exception($"Matching SSS range not found for amount {sssDeductionBasis}");
-                            if (matchingRanges.Count > 1) throw new Exception($"Multiple SSS ranges found for amount {sssDeductionBasis}");
-
-                            payrollRecord.SSSValueEmployee = matchingRanges.Single().Employee;
-                            payrollRecord.SSSValueEmployer = matchingRanges.Single().Employer;
+                            var matchingSSSRecord = GetMatchingSSSRecord(sssDeductionBasis, sssRecords, client);
+                            payrollRecord.SSSValueEmployee = matchingSSSRecord.Employee;
+                            payrollRecord.SSSValueEmployer = matchingSSSRecord.Employer;
                         }
 
                         if (shouldDeductPHIC && client.PHICExempt != true && employee.PhilHealthExempt != true)
@@ -430,6 +427,44 @@ namespace JPRSC.HRIS.Features.Payroll
                 }
 
                 return earningDeductionRecords;
+            }
+
+            internal static SSSRecord GetMatchingSSSRecord(decimal deductionBasis, List<SSSRecord> sssRecords, Client client)
+            {
+                SSSRecord matchingRange = null;
+                var foundMatchingRange = false;
+                var matchingRangeIndex = 0;
+                var orderedRecords = sssRecords.OrderBy(s => s.Range1).ToList();
+
+                for (var i = 0;  i < orderedRecords.Count; i++)
+                {
+                    var sssRecord = orderedRecords[i];
+
+                    if (sssRecord.Range1.HasValue && sssRecord.Range1End.HasValue && sssRecord.Range1.Value <= deductionBasis && deductionBasis <= sssRecord.Range1End.Value)
+                    {
+                        matchingRange = sssRecord;
+                        matchingRangeIndex = i;
+
+                        if (!foundMatchingRange) foundMatchingRange = true;
+                        else throw new Exception($"Multiple SSS ranges found for deduction basis {deductionBasis}");
+                    }
+                }
+
+                if (matchingRange == null) throw new Exception($"Matching SSS range not found for deduction basis {deductionBasis}");
+
+                if (client.SSSRangeOffset.HasValue && client.SSSRangeOffset.Value != 0)
+                {
+                    // If the offset is positive, then the matching range will move "up", meaning to a lower amount
+                    // If the offset is negative, then the matching range will move "down", meaning to a higher amount
+                    matchingRangeIndex -= client.SSSRangeOffset.Value;
+
+                    if (matchingRangeIndex < 0) throw new Exception($"SSS Range of {client.SSSRangeOffset.Value} for deduction basis {deductionBasis} is too high.");
+                    if (matchingRangeIndex > orderedRecords.Count - 1) throw new Exception($"SSS Range of {client.SSSRangeOffset.Value} for deduction basis {deductionBasis} is too low.");
+
+                    matchingRange = orderedRecords[matchingRangeIndex];
+                }
+
+                return matchingRange;
             }
 
             private decimal GetSSSDeductionBasis(Client client, IList<DailyTimeRecord> dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<DailyTimeRecord> dailyTimeRecordsForPreviousPayrollProcessBatches, IList<DailyTimeRecord> employeeDtrsForPayrollPeriod, IList<Overtime> overtimesFromFifthPayrollPeriodOfPreviousMonth, IList<Overtime> overtimesForPreviousPayrollProcessBatches, IList<Overtime> overtimesForPayrollPeriod, IList<EarningDeductionRecord> earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<EarningDeductionRecord> earningDeductionRecordsForPreviousPayrollProcessBatches, IList<EarningDeductionRecord> employeeEdrsForPayrollPeriod)
