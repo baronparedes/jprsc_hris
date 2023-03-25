@@ -230,7 +230,7 @@ namespace JPRSC.HRIS.Features.Payroll
                             var overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude = shouldIncludeFifthPayrollPeriodFromPreviousMonthSSS ? overtimesFromFifthPayrollPeriodOfPreviousMonth : new List<Overtime>();
                             var earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude = shouldIncludeFifthPayrollPeriodFromPreviousMonthSSS ? earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth : new List<EarningDeductionRecord>();
 
-                            var sssDeductionBasis = GetSSSDeductionBasis(employee, client, dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
+                            var sssDeductionBasis = GetSSSDeductionBasis(client, dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                             payrollRecord.SSSDeductionBasis = sssDeductionBasis;
 
                             var matchingRanges = sssRecords.Where(s => s.Range1.HasValue && s.Range1End.HasValue && s.Range1.Value <= sssDeductionBasis && sssDeductionBasis <= s.Range1End.Value).ToList();
@@ -247,7 +247,7 @@ namespace JPRSC.HRIS.Features.Payroll
                             var overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude = shouldIncludeFifthPayrollPeriodFromPreviousMonthPHIC ? overtimesFromFifthPayrollPeriodOfPreviousMonth : new List<Overtime>();
                             var earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude = shouldIncludeFifthPayrollPeriodFromPreviousMonthPHIC ? earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth : new List<EarningDeductionRecord>();
 
-                            var phicDeductionBasis = GetPHICDeductionBasis(employee, client, dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
+                            var phicDeductionBasis = GetPHICDeductionBasis(client, dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                             payrollRecord.PHICDeductionBasis = phicDeductionBasis;
                             payrollRecord.PHICValueEmployee = ComputePHICEmployee(phicDeductionBasis, phicSettings);
                             payrollRecord.PHICValueEmployer = ComputePHICEmployer(phicDeductionBasis, phicSettings);
@@ -259,7 +259,7 @@ namespace JPRSC.HRIS.Features.Payroll
                             var overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude = shouldIncludeFifthPayrollPeriodFromPreviousMonthPagIbig ? overtimesFromFifthPayrollPeriodOfPreviousMonth : new List<Overtime>();
                             var earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude = shouldIncludeFifthPayrollPeriodFromPreviousMonthPagIbig ? earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth : new List<EarningDeductionRecord>();
 
-                            var pagIbigDeductionBasis = GetPagIbigDeductionBasis(employee, client, dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
+                            var pagIbigDeductionBasis = GetPagIbigDeductionBasis(client, dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                             payrollRecord.PagIbigDeductionBasis = pagIbigDeductionBasis;
                             payrollRecord.PagIbigValueEmployee = ComputePagIbigEmployee(pagIbigDeductionBasis, employee.PagIbigRecord);
                             payrollRecord.PagIbigValueEmployer = ComputePagIbigEmployer(pagIbigDeductionBasis, employee.PagIbigRecord);
@@ -432,7 +432,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 return earningDeductionRecords;
             }
 
-            private decimal GetSSSDeductionBasis(Employee employee, Client client, IList<DailyTimeRecord> dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<DailyTimeRecord> dailyTimeRecordsForPreviousPayrollProcessBatches, IList<DailyTimeRecord> employeeDtrsForPayrollPeriod, IList<Overtime> overtimesFromFifthPayrollPeriodOfPreviousMonth, IList<Overtime> overtimesForPreviousPayrollProcessBatches, IList<Overtime> overtimesForPayrollPeriod, IList<EarningDeductionRecord> earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<EarningDeductionRecord> earningDeductionRecordsForPreviousPayrollProcessBatches, IList<EarningDeductionRecord> employeeEdrsForPayrollPeriod)
+            private decimal GetSSSDeductionBasis(Client client, IList<DailyTimeRecord> dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<DailyTimeRecord> dailyTimeRecordsForPreviousPayrollProcessBatches, IList<DailyTimeRecord> employeeDtrsForPayrollPeriod, IList<Overtime> overtimesFromFifthPayrollPeriodOfPreviousMonth, IList<Overtime> overtimesForPreviousPayrollProcessBatches, IList<Overtime> overtimesForPayrollPeriod, IList<EarningDeductionRecord> earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<EarningDeductionRecord> earningDeductionRecordsForPreviousPayrollProcessBatches, IList<EarningDeductionRecord> employeeEdrsForPayrollPeriod)
             {
                 var deductionBasis = 0m;
 
@@ -446,7 +446,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 return deductionBasis;
             }
 
-            private decimal GetPHICDeductionBasis(Employee employee, Client client, IList<DailyTimeRecord> dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<DailyTimeRecord> dailyTimeRecordsForPreviousPayrollProcessBatches, IList<DailyTimeRecord> employeeDtrsForPayrollPeriod, IList<Overtime> overtimesFromFifthPayrollPeriodOfPreviousMonth, IList<Overtime> overtimesForPreviousPayrollProcessBatches, IList<Overtime> overtimesForPayrollPeriod, IList<EarningDeductionRecord> earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<EarningDeductionRecord> earningDeductionRecordsForPreviousPayrollProcessBatches, IList<EarningDeductionRecord> employeeEdrsForPayrollPeriod)
+            private decimal GetPHICDeductionBasis(Client client, IList<DailyTimeRecord> dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<DailyTimeRecord> dailyTimeRecordsForPreviousPayrollProcessBatches, IList<DailyTimeRecord> employeeDtrsForPayrollPeriod, IList<Overtime> overtimesFromFifthPayrollPeriodOfPreviousMonth, IList<Overtime> overtimesForPreviousPayrollProcessBatches, IList<Overtime> overtimesForPayrollPeriod, IList<EarningDeductionRecord> earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<EarningDeductionRecord> earningDeductionRecordsForPreviousPayrollProcessBatches, IList<EarningDeductionRecord> employeeEdrsForPayrollPeriod)
             {
                 var deductionBasis = 0m;
 
@@ -460,7 +460,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 return deductionBasis;
             }
 
-            private decimal GetPagIbigDeductionBasis(Employee employee, Client client, IList<DailyTimeRecord> dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<DailyTimeRecord> dailyTimeRecordsForPreviousPayrollProcessBatches, IList<DailyTimeRecord> employeeDtrsForPayrollPeriod, IList<Overtime> overtimesFromFifthPayrollPeriodOfPreviousMonth, IList<Overtime> overtimesForPreviousPayrollProcessBatches, IList<Overtime> overtimesForPayrollPeriod, IList<EarningDeductionRecord> earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<EarningDeductionRecord> earningDeductionRecordsForPreviousPayrollProcessBatches, IList<EarningDeductionRecord> employeeEdrsForPayrollPeriod)
+            private decimal GetPagIbigDeductionBasis(Client client, IList<DailyTimeRecord> dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<DailyTimeRecord> dailyTimeRecordsForPreviousPayrollProcessBatches, IList<DailyTimeRecord> employeeDtrsForPayrollPeriod, IList<Overtime> overtimesFromFifthPayrollPeriodOfPreviousMonth, IList<Overtime> overtimesForPreviousPayrollProcessBatches, IList<Overtime> overtimesForPayrollPeriod, IList<EarningDeductionRecord> earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth, IList<EarningDeductionRecord> earningDeductionRecordsForPreviousPayrollProcessBatches, IList<EarningDeductionRecord> employeeEdrsForPayrollPeriod)
             {
                 var deductionBasis = 0m;
 
