@@ -43,6 +43,7 @@ namespace JPRSC.HRIS.Features.Clients
             public bool? SSSEarnings { get; set; }
             public bool? SSSDeductions { get; set; }
             public bool? SSSUndertime { get; set; }
+            public int? SSSRangeOffset { get; set; }
 
             public string PHICPayrollPeriod { get; set; }
             public bool? PHICBasic { get; set; }

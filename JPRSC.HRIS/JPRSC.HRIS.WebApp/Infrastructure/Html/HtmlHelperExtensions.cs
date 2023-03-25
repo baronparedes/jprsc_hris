@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 
@@ -44,6 +45,11 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
         public static IHtmlString TextBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null)
         {
             return HorizontalFormGroup(helper, propertyName, "text", null, null, labelText, placeholder);
+        }
+
+        public static IHtmlString NumberBoxHorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string labelText = null, string placeholder = null, object additionalAttributes = null)
+        {
+            return HorizontalFormGroup(helper, propertyName, "number", null, null, labelText, placeholder, additionalAttributes);
         }
 
         private static HtmlTag CheckboxControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string labelText)
@@ -212,7 +218,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             return propertyValueAsString;
         }
 
-        private static IHtmlString HorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string type, IList<SelectListItem> items, string lookupListName, string labelText, string placeholder)
+        private static IHtmlString HorizontalFormGroup<TModel>(this HtmlHelper<TModel> helper, string propertyName, string type, IList<SelectListItem> items, string lookupListName, string labelText, string placeholder, object additionalAttributes = null)
         {
             if (String.IsNullOrWhiteSpace(labelText))
             {
@@ -238,7 +244,8 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             {
                 case "text":
                 case "password":
-                    control = InputControl(helper, propertyName, type, placeholder, camelCasePropertyName);
+                case "number":
+                    control = InputControl(helper, propertyName, type, placeholder, camelCasePropertyName, additionalAttributes);
                     break;
                 case "checkbox":
                     control = CheckboxControl(helper, propertyName, labelText);
@@ -260,7 +267,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
                     control = StaticControl(helper, propertyName, labelText);
                     break;
                 default:
-                    break;
+                    throw new InvalidOperationException($"Unrecognzied control type \"{type}\".");
             }
 
             controlContainer.Append(control);
@@ -296,7 +303,7 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             return control;
         }
 
-        private static HtmlTag InputControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string type, string placeholder, string camelCasePropertyName)
+        private static HtmlTag InputControl<TModel>(HtmlHelper<TModel> helper, string propertyName, string type, string placeholder, string camelCasePropertyName, object additionalAttributes = null)
         {
             var control = new HtmlTag("input");
             control.Attr("type", type);
@@ -307,6 +314,18 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Html
             if (!String.IsNullOrWhiteSpace(placeholder))
             {
                 control.Attr("placeholder", placeholder);
+            }
+
+            if (additionalAttributes != null)
+            {
+                Type t = additionalAttributes.GetType();
+
+                PropertyInfo[] pi = t.GetProperties();
+
+                foreach (PropertyInfo p in pi)
+                {
+                    control.Attr(p.Name, Convert.ToString(p.GetValue(additionalAttributes)));
+                }
             }
 
             var helpBlock = HelpBlock(camelCasePropertyName);

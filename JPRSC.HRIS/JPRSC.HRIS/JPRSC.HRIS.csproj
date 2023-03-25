@@ -694,6 +694,10 @@
     <Compile Include="Infrastructure\Data\Migrations\202303250037555_AddSSSRange1End.designer.cs">
       <DependentUpon>202303250037555_AddSSSRange1End.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\202303250252075_AddClientSSSRangeOffset.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\202303250252075_AddClientSSSRangeOffset.designer.cs">
+      <DependentUpon>202303250252075_AddClientSSSRangeOffset.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -1043,6 +1047,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\202303250037555_AddSSSRange1End.resx">
       <DependentUpon>202303250037555_AddSSSRange1End.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\202303250252075_AddClientSSSRangeOffset.resx">
+      <DependentUpon>202303250252075_AddClientSSSRangeOffset.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

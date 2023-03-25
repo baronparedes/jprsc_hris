@@ -44,6 +44,7 @@ namespace JPRSC.HRIS.Features.Clients
             public bool? SSSEarnings { get; set; }
             public bool? SSSDeductions { get; set; }
             public bool? SSSUndertime { get; set; }
+            public int? SSSRangeOffset { get; set; }
 
             public string PHICPayrollPeriod { get; set; }
             public bool? PHICBasic { get; set; }
@@ -107,6 +108,15 @@ namespace JPRSC.HRIS.Features.Clients
             {
                 RuleFor(c => c.Name)
                     .NotEmpty();
+
+                When(c => c.SSSRangeOffset.HasValue, () =>
+                {
+                    RuleFor(c => c.SSSRangeOffset)
+                        .GreaterThanOrEqualTo(-100);
+
+                    RuleFor(c => c.SSSRangeOffset)
+                        .LessThanOrEqualTo(100);
+                });
             }
         }
 
@@ -131,6 +141,7 @@ namespace JPRSC.HRIS.Features.Clients
                 client.LoanExempt = command.LoanExempt;
                 client.ModifiedOn = DateTime.UtcNow;
                 client.Name = command.Name;
+                client.NumberOfPayrollPeriodsAMonth = command.NumberOfPayrollPeriodsAMonth;
                 client.NumberOfWorkingDaysForThisPayrollPeriod = command.NumberOfWorkingDaysForThisPayrollPeriod;
                 client.PagIbigExempt = command.PagIbigExempt;
                 client.PagIbigBasic = command.PagIbigBasic.GetValueOrDefault();
@@ -159,6 +170,7 @@ namespace JPRSC.HRIS.Features.Clients
                 client.SSSEarnings = command.SSSEarnings.GetValueOrDefault();
                 client.SSSDeductions = command.SSSDeductions.GetValueOrDefault();
                 client.SSSUndertime = command.SSSUndertime.GetValueOrDefault();
+                client.SSSRangeOffset = command.SSSRangeOffset.GetValueOrDefault();
                 client.SSSPayrollPeriod = command.SSSPayrollPeriod;
                 client.TaxExempt = command.TaxExempt;
                 client.TaxBasic = command.TaxBasic.GetValueOrDefault();

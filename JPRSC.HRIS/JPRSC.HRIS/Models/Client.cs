@@ -45,6 +45,7 @@ namespace JPRSC.HRIS.Models
         public bool? SSSDeductions { get; set; }
         public bool? SSSUndertime { get; set; }
         public string SSSPayrollPeriod { get; set; }
+        public int? SSSRangeOffset { get; set; }
         public IEnumerable<int> SSSPayrollPeriods => String.IsNullOrWhiteSpace(SSSPayrollPeriod) ? new List<int>() : SSSPayrollPeriod.Split(',').Select(p => Convert.ToInt32(p));
         public bool? TaxBasic { get; set; }
         public bool? TaxCola { get; set; }

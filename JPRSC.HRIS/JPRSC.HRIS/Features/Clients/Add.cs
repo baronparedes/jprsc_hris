@@ -34,6 +34,7 @@ namespace JPRSC.HRIS.Features.Clients
             public bool? SSSEarnings { get; set; }
             public bool? SSSDeductions { get; set; }
             public bool? SSSUndertime { get; set; }
+            public int? SSSRangeOffset { get; set; }
 
             public string PHICPayrollPeriod { get; set; }
             public bool? PHICBasic { get; set; }
@@ -72,6 +73,15 @@ namespace JPRSC.HRIS.Features.Clients
             {
                 RuleFor(c => c.Name)
                     .NotEmpty();
+
+                When(c => c.SSSRangeOffset.HasValue, () =>
+                {
+                    RuleFor(c => c.SSSRangeOffset)
+                        .GreaterThanOrEqualTo(-100);
+
+                    RuleFor(c => c.SSSRangeOffset)
+                        .LessThanOrEqualTo(100);
+                });
             }
         }
 
@@ -103,8 +113,8 @@ namespace JPRSC.HRIS.Features.Clients
                     PagIbigCola = command.PagIbigCola.GetValueOrDefault(),
                     PagIbigOvertime = command.PagIbigOvertime.GetValueOrDefault(),
                     PagIbigEarnings = command.PagIbigEarnings.GetValueOrDefault(),
-                    PagIbigDeductions = command.PagIbigEarnings.GetValueOrDefault(),
-                    PagIbigUndertime = command.PagIbigEarnings.GetValueOrDefault(),
+                    PagIbigDeductions = command.PagIbigDeductions.GetValueOrDefault(),
+                    PagIbigUndertime = command.PagIbigUndertime.GetValueOrDefault(),
                     PagIbigPayrollPeriod = command.PagIbigPayrollPeriod,
                     PayrollCode = command.PayrollCode,
                     PayrollPeriodFrom = command.PayrollPeriodFrom,
@@ -115,24 +125,25 @@ namespace JPRSC.HRIS.Features.Clients
                     PHICCola = command.PHICCola.GetValueOrDefault(),
                     PHICOvertime = command.PHICOvertime.GetValueOrDefault(),
                     PHICEarnings = command.PHICEarnings.GetValueOrDefault(),
-                    PHICDeductions = command.PHICEarnings.GetValueOrDefault(),
-                    PHICUndertime = command.PHICEarnings.GetValueOrDefault(),
+                    PHICDeductions = command.PHICDeductions.GetValueOrDefault(),
+                    PHICUndertime = command.PHICUndertime.GetValueOrDefault(),
                     PHICPayrollPeriod = command.PHICPayrollPeriod,
                     SSSExempt = command.SSSExempt,
                     SSSBasic = command.SSSBasic.GetValueOrDefault(),
                     SSSCola = command.SSSCola.GetValueOrDefault(),
                     SSSOvertime = command.SSSOvertime.GetValueOrDefault(),
                     SSSEarnings = command.SSSEarnings.GetValueOrDefault(),
-                    SSSDeductions = command.SSSEarnings.GetValueOrDefault(),
-                    SSSUndertime = command.SSSEarnings.GetValueOrDefault(),
+                    SSSDeductions = command.SSSDeductions.GetValueOrDefault(),
+                    SSSUndertime = command.SSSUndertime.GetValueOrDefault(),
+                    SSSRangeOffset = command.SSSRangeOffset.GetValueOrDefault(),
                     SSSPayrollPeriod = command.SSSPayrollPeriod,
                     TaxExempt = command.TaxExempt,
                     TaxBasic = command.TaxBasic.GetValueOrDefault(),
                     TaxCola = command.TaxCola.GetValueOrDefault(),
                     TaxOvertime = command.TaxOvertime.GetValueOrDefault(),
                     TaxEarnings = command.TaxEarnings.GetValueOrDefault(),
-                    TaxDeductions = command.TaxEarnings.GetValueOrDefault(),
-                    TaxUndertime = command.TaxEarnings.GetValueOrDefault(),
+                    TaxDeductions = command.TaxDeductions.GetValueOrDefault(),
+                    TaxUndertime = command.TaxUndertime.GetValueOrDefault(),
                     TaxPayrollPeriod = command.TaxPayrollPeriod,
                     TaxTable = command.TaxTable,
                     ZeroBasic = command.ZeroBasic

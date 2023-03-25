@@ -103,6 +103,7 @@
                                         @Html.CheckboxHorizontalFormGroup("SSSEarnings", "Earnings")
                                         @Html.CheckboxHorizontalFormGroup("SSSDeductions", "Deductions")
                                         @Html.CheckboxHorizontalFormGroup("SSSUndertime", "Undertime")
+                                        @Html.NumberBoxHorizontalFormGroup("SSSRangeOffset", "Range", additionalAttributes: new { min = -100, max = 100, style = "max-width: 100px;" })
                                     </uib-tab>
                                     <uib-tab index="2" heading="PHIC">
                                         <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.phicPayrollPeriod }">
