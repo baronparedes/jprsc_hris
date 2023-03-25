@@ -232,8 +232,13 @@ namespace JPRSC.HRIS.Features.Payroll
 
                             var sssDeductionBasis = GetSSSDeductionBasis(employee, client, dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, dailyTimeRecordsForPreviousPayrollProcessBatches, employeeDtrsForPayrollPeriod, overtimesFromFifthPayrollPeriodOfPreviousMonthToInclude, overtimesForPreviousPayrollProcessBatches, overtimesForPayrollPeriod, earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonthToInclude, earningDeductionRecordsForPreviousPayrollProcessBatches, employeeEdrsForPayrollPeriod);
                             payrollRecord.SSSDeductionBasis = sssDeductionBasis;
-                            payrollRecord.SSSValueEmployee = ComputeSSSEmployee(sssDeductionBasis, sssRecords);
-                            payrollRecord.SSSValueEmployer = ComputeSSSEmployer(sssDeductionBasis, sssRecords);
+
+                            var matchingRanges = sssRecords.Where(s => s.Range1.HasValue && s.Range1End.HasValue && s.Range1.Value <= sssDeductionBasis && sssDeductionBasis <= s.Range1End.Value).ToList();
+                            if (matchingRanges.Count == 0) throw new Exception($"Matching SSS range not found for amount {sssDeductionBasis}");
+                            if (matchingRanges.Count > 1) throw new Exception($"Multiple SSS ranges found for amount {sssDeductionBasis}");
+
+                            payrollRecord.SSSValueEmployee = matchingRanges.Single().Employee;
+                            payrollRecord.SSSValueEmployer = matchingRanges.Single().Employer;
                         }
 
                         if (shouldDeductPHIC && client.PHICExempt != true && employee.PhilHealthExempt != true)
@@ -467,42 +472,6 @@ namespace JPRSC.HRIS.Features.Payroll
                 if (client.PagIbigUndertime == true) deductionBasis -= dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth.Sum(dtr => dtr.TimeNotWorkedValue) + dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.TimeNotWorkedValue) + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.TimeNotWorkedValue);
 
                 return deductionBasis;
-            }
-
-            private decimal? ComputeSSSEmployee(decimal deductionBasis, IEnumerable<SSSRecord> sssRecords)
-            {
-                SSSRecord matchingRange = null;
-
-                try
-                {
-                    matchingRange = sssRecords
-                        .OrderBy(s => s.Range1)
-                        .First(s => s.Range1 > deductionBasis);
-                }
-                catch
-                {
-                    throw new Exception($"Matching SSS range not found for amount {deductionBasis}");
-                }
-
-                return matchingRange.Employee;
-            }
-
-            private decimal? ComputeSSSEmployer(decimal deductionBasis, IEnumerable<SSSRecord> sssRecords)
-            {
-                SSSRecord matchingRange = null;
-
-                try
-                {
-                    matchingRange = sssRecords
-                        .OrderBy(s => s.Range1)
-                        .First(s => s.Range1 > deductionBasis);
-                }
-                catch
-                {
-                    throw new Exception($"Matching SSS range not found for amount {deductionBasis}");
-                }
-
-                return matchingRange.Employer;
             }
 
             private decimal ComputePHICEmployee(decimal deductionBasis, PhicRecord phicSettings)
