@@ -33,10 +33,18 @@
             var action = '/SSSRecords/Edit';
             var data = sssRecord.copy;
 
+            if (data.range1 >= 0 && data.range1End >= 0) {
+                if (data.range1End < data.range1) {
+                    alert('Invalid range.');
+                    return;
+                }
+            }
+
             $http.post(action, data).then(function (response) {
                 sssRecord.isEditing = false;
                 sssRecord.number = sssRecord.copy.number;
                 sssRecord.range1 = sssRecord.copy.range1;
+                sssRecord.range1End = sssRecord.copy.range1End
                 sssRecord.employer = sssRecord.copy.employer;
                 sssRecord.employee = sssRecord.copy.employee;
                 sssRecord.philHealthEmployer = sssRecord.copy.philHealthEmployer;

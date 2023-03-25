@@ -44,6 +44,7 @@ namespace JPRSC.HRIS.Features.SSSRecords
                 public int Id { get; set; }
                 public int? Number { get; set; }
                 public decimal? Range1 { get; set; }
+                public decimal? Range1End { get; set; }
             }
         }
 

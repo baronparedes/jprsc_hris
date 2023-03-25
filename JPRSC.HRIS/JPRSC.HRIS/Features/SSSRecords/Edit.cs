@@ -27,6 +27,7 @@ namespace JPRSC.HRIS.Features.SSSRecords
             public int Id { get; set; }
             public int? Number { get; set; }
             public decimal? Range1 { get; set; }
+            public decimal? Range1End { get; set; }
         }
 
         public class Mapping : Profile
@@ -58,6 +59,15 @@ namespace JPRSC.HRIS.Features.SSSRecords
         {
             public CommandValidator()
             {
+                When(r => r.Range1.HasValue && r.Range1End.HasValue, () =>
+                {
+                    RuleFor(r => r.Range1End)
+                        .Must((r, range1End) =>
+                        {
+                            return range1End >= r.Range1;
+                        })
+                        .WithMessage("Invalid range.");
+                });
             }
         }
 
@@ -80,6 +90,7 @@ namespace JPRSC.HRIS.Features.SSSRecords
                 sssRecord.ModifiedOn = DateTime.UtcNow;
                 sssRecord.Number = command.Number;
                 sssRecord.Range1 = command.Range1;
+                sssRecord.Range1End = command.Range1End;
 
                 await _db.SaveChangesAsync();
 

@@ -690,6 +690,10 @@
     <Compile Include="Infrastructure\Data\Migrations\201905260537352_AddRehireTransferEventType.Designer.cs">
       <DependentUpon>201905260537352_AddRehireTransferEventType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\202303250037555_AddSSSRange1End.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\202303250037555_AddSSSRange1End.designer.cs">
+      <DependentUpon>202303250037555_AddSSSRange1End.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -1036,6 +1040,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\201905260537352_AddRehireTransferEventType.resx">
       <DependentUpon>201905260537352_AddRehireTransferEventType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\202303250037555_AddSSSRange1End.resx">
+      <DependentUpon>202303250037555_AddSSSRange1End.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

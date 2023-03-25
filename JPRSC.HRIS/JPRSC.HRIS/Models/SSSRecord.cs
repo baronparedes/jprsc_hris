@@ -13,6 +13,7 @@ namespace JPRSC.HRIS.Models
         public DateTime? ModifiedOn { get; set; }
         public int? Number { get; set; }
         public decimal? Range1 { get; set; }
+        public decimal? Range1End { get; set; }
         public decimal? Total => Employer + Employee;
     }
 }

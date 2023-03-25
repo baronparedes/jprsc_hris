@@ -19,12 +19,22 @@ namespace JPRSC.HRIS.Features.SSSRecords
             public decimal? PhilHealthEmployee { get; set; }
             public decimal? PhilHealthEmployer { get; set; }
             public decimal? Range1 { get; set; }
+            public decimal? Range1End { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
+                When(r => r.Range1.HasValue && r.Range1End.HasValue, () =>
+                {
+                    RuleFor(r => r.Range1End)
+                        .Must((r, range1End) =>
+                        {
+                            return range1End >= r.Range1;
+                        })
+                        .WithMessage("Invalid range.");
+                });
             }
         }
 
@@ -46,7 +56,8 @@ namespace JPRSC.HRIS.Features.SSSRecords
                     Employee = command.Employee,
                     Employer = command.Employer,
                     Number = command.Number,
-                    Range1 = command.Range1
+                    Range1 = command.Range1,
+                    Range1End = command.Range1End,
                 };
 
                 _db.SSSRecords.Add(sssRecord);
