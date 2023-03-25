@@ -35,7 +35,7 @@
 
             if (data.range1 >= 0 && data.range1End >= 0) {
                 if (data.range1End < data.range1) {
-                    alert('Invalid range.');
+                    alert('Invalid range. End amount should be greater than start amount.');
                     return;
                 }
             }

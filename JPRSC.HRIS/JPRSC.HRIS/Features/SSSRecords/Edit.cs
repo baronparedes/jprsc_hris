@@ -66,7 +66,7 @@ namespace JPRSC.HRIS.Features.SSSRecords
                         {
                             return range1End >= r.Range1;
                         })
-                        .WithMessage("Invalid range.");
+                        .WithMessage("Invalid range. End amount should be greater than start amount.");
                 });
             }
         }
