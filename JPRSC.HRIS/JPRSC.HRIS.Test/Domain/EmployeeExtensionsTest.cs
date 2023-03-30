@@ -10,51 +10,51 @@ namespace JPRSC.HRIS.Test.Domain
     public class EmployeeExtensionsTest
     {
         [Fact]
-        public void AWOLAndResignedDateAfterPayrollPeriodTo_ShouldBeResigned()
+        public void AWOLAndResignedDateAfterPayrollPeriodFrom_ShouldNotBeResigned()
         {
             // Arrange
-            var payrollPeriodTo = new DateTime(2023, 1, 1);
+            var payrollPeriodFrom = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
                 new Employee { ResignStatus = ResignStatus.AWOL, DateResigned = new DateTime(2024, 1, 1) }
             };
 
             // Act
-            var resigned = employees.Resigned(payrollPeriodTo);
+            var resigned = employees.Resigned(payrollPeriodFrom);
 
             // Assert
-            Assert.Single(resigned);
+            Assert.Empty(resigned);
         }
 
         [Fact]
-        public void ResignedAndResignedDateAfterPayrollPeriodTo_ShouldBeResigned()
+        public void ResignedAndResignedDateAfterPayrollPeriodFrom_ShouldNotBeResigned()
         {
             // Arrange
-            var payrollPeriodTo = new DateTime(2023, 1, 1);
+            var payrollPeriodFrom = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
                 new Employee { ResignStatus = ResignStatus.Resigned, DateResigned = new DateTime(2024, 1, 1) }
             };
 
             // Act
-            var resigned = employees.Resigned(payrollPeriodTo);
+            var resigned = employees.Resigned(payrollPeriodFrom);
 
             // Assert
-            Assert.Single(resigned);
+            Assert.Empty(resigned);
         }
 
         [Fact]
         public void AWOLOnly_ShouldNotBeResigned()
         {
             // Arrange
-            var payrollPeriodTo = new DateTime(2023, 1, 1);
+            var payrollPeriodFrom = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
                 new Employee { ResignStatus = ResignStatus.AWOL }
             };
 
             // Act
-            var resigned = employees.Resigned(payrollPeriodTo);
+            var resigned = employees.Resigned(payrollPeriodFrom);
 
             // Assert
             Assert.Empty(resigned);
@@ -65,14 +65,14 @@ namespace JPRSC.HRIS.Test.Domain
         public void ResignedOnly_ShouldNotBeResigned()
         {
             // Arrange
-            var payrollPeriodTo = new DateTime(2023, 1, 1);
+            var payrollPeriodFrom = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
                 new Employee { ResignStatus = ResignStatus.Resigned }
             };
 
             // Act
-            var resigned = employees.Resigned(payrollPeriodTo);
+            var resigned = employees.Resigned(payrollPeriodFrom);
 
             // Assert
             Assert.Empty(resigned);
@@ -80,71 +80,71 @@ namespace JPRSC.HRIS.Test.Domain
 
 
         [Fact]
-        public void ResignedDateAfterPayrollPeriodToOnly_ShouldNotBeResigned()
+        public void ResignedDateAfterPayrollPeriodFromOnly_ShouldNotBeResigned()
         {
             // Arrange
-            var payrollPeriodTo = new DateTime(2023, 1, 1);
+            var payrollPeriodFrom = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
                 new Employee { DateResigned = new DateTime(2024, 1, 1) }
             };
 
             // Act
-            var resigned = employees.Resigned(payrollPeriodTo);
+            var resigned = employees.Resigned(payrollPeriodFrom);
 
             // Assert
             Assert.Empty(resigned);
         }
 
         [Fact]
-        public void OtherResignStatusAndResignedDateAfterPayrollPeriodTo_ShouldNotBeResigned()
+        public void OtherResignStatusAndResignedDateAfterPayrollPeriodFrom_ShouldNotBeResigned()
         {
             // Arrange
-            var payrollPeriodTo = new DateTime(2023, 1, 1);
+            var payrollPeriodFrom = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
                 new Employee { ResignStatus = "Test", DateResigned = new DateTime(2024, 1, 1) }
             };
 
             // Act
-            var resigned = employees.Resigned(payrollPeriodTo);
+            var resigned = employees.Resigned(payrollPeriodFrom);
 
             // Assert
             Assert.Empty(resigned);
         }
 
         [Fact]
-        public void AWOLAndResignedDateOnPayrollPeriodTo_ShouldNotBeResigned()
+        public void AWOLAndResignedDateOnPayrollPeriodFrom_ShouldNotBeResigned()
         {
             // Arrange
-            var payrollPeriodTo = new DateTime(2023, 1, 1);
+            var payrollPeriodFrom = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
                 new Employee { ResignStatus = ResignStatus.AWOL, DateResigned = new DateTime(2023, 1, 1) }
             };
 
             // Act
-            var resigned = employees.Resigned(payrollPeriodTo);
+            var resigned = employees.Resigned(payrollPeriodFrom);
 
             // Assert
             Assert.Empty(resigned);
         }
 
         [Fact]
-        public void AWOLAndResignedDateBeforePayrollPeriodTo_ShouldNotBeResigned()
+        public void AWOLAndResignedDateBeforePayrollPeriodFrom_ShouldBeResigned()
         {
             // Arrange
-            var payrollPeriodTo = new DateTime(2023, 1, 1);
+            var payrollPeriodFrom = new DateTime(2023, 1, 1);
             var employees = new List<Employee>
             {
                 new Employee { ResignStatus = ResignStatus.AWOL, DateResigned = new DateTime(2022, 1, 1) }
             };
 
             // Act
-            var resigned = employees.Resigned(payrollPeriodTo);
+            var resigned = employees.Resigned(payrollPeriodFrom);
 
             // Assert
-            Assert.Empty(resigned);
+            Assert.Single(resigned);
         }
     }
 }

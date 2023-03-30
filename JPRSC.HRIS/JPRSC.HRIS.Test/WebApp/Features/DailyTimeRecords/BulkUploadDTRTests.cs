@@ -12,7 +12,7 @@ namespace JPRSC.HRIS.Test.WebApp.Features.DailyTimeRecords
 {
     public class BulkUploadDTRTests
     {
-        [Fact]
+        [Fact(Skip = "Relies on hardcoded path")]
         public void BulkUploadDTR()
         {
             // Arrange
