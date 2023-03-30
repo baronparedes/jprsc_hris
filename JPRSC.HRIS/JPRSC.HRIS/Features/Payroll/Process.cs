@@ -365,7 +365,7 @@ namespace JPRSC.HRIS.Features.Payroll
                     .Include(e => e.PagIbigRecord)
                     .ToListAsync();
 
-                var resignedEmployees = clientEmployees.Resigned(command.PayrollPeriodTo.Value);
+                var resignedEmployees = clientEmployees.Resigned(command.PayrollPeriodFrom.Value);
                 if (resignedEmployees.Count == 0) return clientEmployees;
 
                 skippedItems.AddRange(resignedEmployees

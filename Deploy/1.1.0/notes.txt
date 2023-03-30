@@ -1,1 +1,4 @@
 Deployment files for March 2023
+*Run sql queries
+*Set default value for client SSS Range Offset
+*Populate SSS table
