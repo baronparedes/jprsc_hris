@@ -68,6 +68,7 @@ namespace JPRSC.HRIS.Features.Payroll
             public decimal TotalPHICEmployee { get; set; }
             public decimal TotalPagIbigEmployee { get; set; }
             public decimal TotalTaxEmployee { get; set; }
+            public int TotalEmployees { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
@@ -93,7 +94,7 @@ namespace JPRSC.HRIS.Features.Payroll
                     .ThenBy(pr => pr.Employee.FirstName)
                     .ToListAsync();
 
-                var employeeIds = payrollRecords.Select(pr => pr.EmployeeId.Value).ToList();
+                var employeeIds = payrollRecords.Select(pr => pr.EmployeeId.Value).Distinct().ToList();
 
                 var dailyTimeRecords = await _db
                     .DailyTimeRecords
@@ -201,6 +202,8 @@ namespace JPRSC.HRIS.Features.Payroll
                 var totalPagIbigEmployee = payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.PagIbigValueEmployee.GetValueOrDefault());
                 var totalTaxEmployee = payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.TaxValueEmployee.GetValueOrDefault());
 
+                var totalEmployees = employeeIds.Count;
+
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,
@@ -224,7 +227,8 @@ namespace JPRSC.HRIS.Features.Payroll
                     TotalSSSEmployee = totalSSSEmployee,
                     TotalPHICEmployee = totalPHICEmployee,
                     TotalPagIbigEmployee = totalPagIbigEmployee,
-                    TotalTaxEmployee = totalTaxEmployee
+                    TotalTaxEmployee = totalTaxEmployee,
+                    TotalEmployees = totalEmployees
                 };
             }
         }
