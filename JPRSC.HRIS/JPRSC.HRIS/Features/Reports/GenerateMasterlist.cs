@@ -309,6 +309,9 @@ namespace JPRSC.HRIS.Features.Reports
                     .Append($"Masterlist Report - ")
                     .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name);
 
+                // Hard code destination because browsers run out of memory when trying to load a large amount of data
+                query.Destination = "Excel";
+
                 if (query.Destination == "Excel")
                 {
                     var excelTableBuilder = new ExcelTableBuilder();
