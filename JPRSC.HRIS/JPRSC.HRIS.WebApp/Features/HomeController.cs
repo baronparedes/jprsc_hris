@@ -1,6 +1,8 @@
-﻿using JPRSC.HRIS.Infrastructure.Mvc;
+﻿using JPRSC.HRIS.Infrastructure.Configuration;
+using JPRSC.HRIS.Infrastructure.Mvc;
 using JPRSC.HRIS.Models;
 using JPRSC.HRIS.WebApp.Infrastructure.Security;
+using System.Web;
 using System.Web.Mvc;
 
 namespace JPRSC.HRIS.WebApp.Controllers
@@ -25,6 +27,15 @@ namespace JPRSC.HRIS.WebApp.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        public ActionResult Help()
+        {
+            var path = Server.MapPath(AppSettings.String("PDFHelpFilePath"));
+
+            var mime = MimeMapping.GetMimeMapping(path);
+
+            return File(path, mime);
         }
     }
 }

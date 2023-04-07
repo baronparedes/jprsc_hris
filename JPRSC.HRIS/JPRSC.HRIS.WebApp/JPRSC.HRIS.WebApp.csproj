@@ -6923,6 +6923,7 @@
     <Content Include="wwwroot\metronic\pages\media\pages\Thumbs.db" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="wwwroot\docs\" />
     <Folder Include="wwwroot\metronic\apps\img\" />
     <Folder Include="wwwroot\metronic\global\plugins\angularjs\plugins\angular-file-upload\uploads\" />
   </ItemGroup>

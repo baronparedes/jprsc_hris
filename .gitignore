@@ -260,5 +260,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
 /JPRSC.HRIS/JPRSC.HRIS.WebApp/wwwroot/payslips
 /JPRSC.HRIS/JPRSC.HRIS.WebApp/wwwroot/2316
+/JPRSC.HRIS/JPRSC.HRIS.WebApp/wwwroot/docs
