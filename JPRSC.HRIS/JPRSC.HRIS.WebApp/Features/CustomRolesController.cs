@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.CustomRoles
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.CustomRoleDefault)]
     public class CustomRolesController : AppController

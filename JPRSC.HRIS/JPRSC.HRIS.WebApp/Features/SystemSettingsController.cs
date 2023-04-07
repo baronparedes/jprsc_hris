@@ -6,7 +6,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.SystemSettings
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.SystemSettingsDefault)]
     public class SystemSettingsController : AppController

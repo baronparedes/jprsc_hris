@@ -6,7 +6,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.PhicRecords
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.PhicRecordDefault)]
     public class PhicRecordsController : AppController

@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.Accounts
+namespace JPRSC.HRIS.WebApp.Features
 {
     public class AccountsController : AppController
     {

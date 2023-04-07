@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.DailyTimeRecords
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.DailyTimeRecordDefault)]
     public class DailyTimeRecordsController : AppController

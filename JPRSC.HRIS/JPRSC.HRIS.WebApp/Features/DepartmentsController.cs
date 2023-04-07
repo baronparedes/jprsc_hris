@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.Departments
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.BranchDefault)]
     public class DepartmentsController : AppController

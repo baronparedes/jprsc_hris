@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.LoanTypes
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.LoanTypeDefault)]
     public class LoanTypesController : AppController

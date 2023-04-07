@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.Employees
+namespace JPRSC.HRIS.WebApp.Features
 {
     public class EmployeesController : AppController
     {

@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.JobTitles
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.JobTitleDefault)]
     public class JobTitlesController : AppController

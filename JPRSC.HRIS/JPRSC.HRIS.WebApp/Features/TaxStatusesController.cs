@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.TaxStatuses
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.TaxStatusDefault)]
     public class TaxStatusesController : AppController

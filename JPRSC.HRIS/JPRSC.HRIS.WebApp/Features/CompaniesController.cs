@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.Companies
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.CompanyDefault)]
     public class CompaniesController : AppController

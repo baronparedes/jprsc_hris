@@ -6,7 +6,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.EmployeeRates
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.EmployeeRateDefault)]
     public class EmployeeRatesController : AppController

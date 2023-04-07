@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.Reports
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.ReportsDefault)]
     public class ReportsController : AppController

@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.Religions
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.ReligionDefault)]
     public class ReligionsController : AppController

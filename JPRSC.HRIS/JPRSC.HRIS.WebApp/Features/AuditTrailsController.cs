@@ -6,7 +6,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace JPRSC.HRIS.WebApp.Features.AuditTrails
+namespace JPRSC.HRIS.WebApp.Features
 {
     [AuthorizePermission(Permission.AuditTrailDefault)]
     public class AuditTrailsController : AppController
