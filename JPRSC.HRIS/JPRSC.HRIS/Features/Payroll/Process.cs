@@ -48,6 +48,7 @@ namespace JPRSC.HRIS.Features.Payroll
         public class CommandResult
         {
             public string ErrorMessage { get; set; }
+            public IEnumerable<ProcessedItem> ProcessedItems { get; set; } = new List<ProcessedItem>();
             public IEnumerable<UnprocessedItem> SkippedItems { get; set; } = new List<UnprocessedItem>();
 
             public class UnprocessedItem
@@ -55,6 +56,12 @@ namespace JPRSC.HRIS.Features.Payroll
                 public string FirstName { get; set; }
                 public string LastName { get; set; }
                 public string Reason { get; set; }
+            }
+
+            public class ProcessedItem
+            {
+                public string FirstName { get; set; }
+                public string LastName { get; set; }
             }
         }
 
@@ -87,8 +94,10 @@ namespace JPRSC.HRIS.Features.Payroll
                     if (!phicSettings.EmployeePercentageShare.HasValue || !phicSettings.EmployerPercentageShare.HasValue) throw new Exception("No PHIC share percentages set.");
 
                     var skippedItems = new List<CommandResult.UnprocessedItem>();
-                    var clientEmployees = await GetEmployeesForProcessing(command, skippedItems);
+                    var processedItems = new List<CommandResult.ProcessedItem>();
+                    var clientEmployees = await GetEmployeesForProcessing(command, skippedItems, processedItems);
                     commandResult.SkippedItems = skippedItems;
+                    commandResult.ProcessedItems = processedItems;
 
                     var clientEmployeeIds = clientEmployees.Select(e => e.Id).ToList();
 
@@ -358,7 +367,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 return commandResult;
             }
 
-            private async Task<List<Employee>> GetEmployeesForProcessing(Command command, List<CommandResult.UnprocessedItem> skippedItems)
+            private async Task<List<Employee>> GetEmployeesForProcessing(Command command, List<CommandResult.UnprocessedItem> skippedItems, List<CommandResult.ProcessedItem> processedItems)
             {
                 var clientEmployees = await _db.Employees
                     .Where(e => !e.DeletedOn.HasValue && e.ClientId == command.ClientId && e.DailyRate.HasValue)
@@ -370,11 +379,21 @@ namespace JPRSC.HRIS.Features.Payroll
 
                 skippedItems.AddRange(resignedEmployees
                     .Select(e => new CommandResult.UnprocessedItem { FirstName = e.FirstName, LastName = e.LastName, Reason = "Employee resigned" })
+                    .OrderBy(ui => ui.LastName)
+                    .ThenBy(ui => ui.FirstName)
                     .ToList());
 
                 var resignedEmployeeIds = resignedEmployees.Select(e => e.Id).ToList();
 
-                return clientEmployees.Where(e => !resignedEmployeeIds.Contains(e.Id)).ToList();
+                var employeesForProcessing = clientEmployees.Where(e => !resignedEmployeeIds.Contains(e.Id)).ToList();
+
+                processedItems.AddRange(employeesForProcessing
+                    .Select(e => new CommandResult.ProcessedItem { FirstName = e.FirstName, LastName = e.LastName })
+                    .OrderBy(pi => pi.LastName)
+                    .ThenBy(pi => pi.FirstName)
+                    .ToList());
+
+                return employeesForProcessing;
             }
 
             private async Task<IList<DailyTimeRecord>> GetDailyTimeRecordsOfPayrollProcessBatches(Employee employee, IList<PayrollProcessBatch> payrollProcessBatches)

@@ -244,7 +244,8 @@ namespace JPRSC.HRIS.WebApp.Infrastructure.Bundling
                 "~/wwwroot/scripts/payroll/endProcessModal.js",
                 "~/wwwroot/scripts/payroll/forProcessing.js",
                 "~/wwwroot/scripts/payroll/forProcessingQueue.js",
-                "~/wwwroot/scripts/payroll/index.js");
+                "~/wwwroot/scripts/payroll/index.js",
+                "~/wwwroot/scripts/payroll/processedItemsModal.js");
         }
 
         private static void AddPhicRecordBundles(BundleCollection bundles)

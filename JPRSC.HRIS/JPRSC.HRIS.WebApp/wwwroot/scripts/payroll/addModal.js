@@ -1,9 +1,9 @@
 ﻿(function () {
     angular
         .module('app')
-        .controller('AddPayrollModalCtrl', ['$http', '$scope', '$timeout', '$uibModalInstance', 'lookups', 'params', AddPayrollModalCtrl]);
+        .controller('AddPayrollModalCtrl', ['$http', '$scope', '$timeout', '$uibModal', '$uibModalInstance', 'lookups', 'params', AddPayrollModalCtrl]);
 
-    function AddPayrollModalCtrl($http, $scope, $timeout, $uibModalInstance, lookups, params, $window) {
+    function AddPayrollModalCtrl($http, $scope, $timeout, $uibModal, $uibModalInstance, lookups, params, $window) {
         var vm = this;
         vm.addInProgress = false;
         vm.cancel = cancel;
@@ -36,23 +36,36 @@
             var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } };
 
             $http.post(action, data, config).then(function (response) {
-                console.log(response);
                 if (!response.data.errorMessage) {
-                    if (response.data.skippedItems.length) {
-                        var skipMessage = 'Successfully processed.\nSkipping resigned employees: ';
-                        for (var i = 0; i < response.data.skippedItems.length; i++) {
-                            var currentSkippedItem = response.data.skippedItems[i];
-                            skipMessage += `${currentSkippedItem.lastName}, ${currentSkippedItem.firstName}`;
+                    var showProcessedItems = true; // hardcoded for now
+                    var showSkippedItems = false; // hardcoded for now
 
-                            if (i < response.data.skippedItems.length - 1) {
-                                skipMessage += '; ';
+                    if (showProcessedItems || showSkippedItems) {
+                        var modalInstance = $uibModal.open({
+                            animation: true,
+                            ariaLabelledBy: 'modal-title',
+                            ariaDescribedBy: 'modal-body',
+                            templateUrl: 'processedItemsModal.html',
+                            controller: 'ProcessedItemsModalCtrl',
+                            controllerAs: 'vm',
+                            resolve: {
+                                params: function () {
+                                    return {
+                                        processedItems: response.data.processedItems,
+                                        showProcessedItems: showProcessedItems,
+                                        showSkippedItems: showSkippedItems,
+                                        skippedItems: response.data.skippedItems
+                                    }
+                                }
                             }
-                        }
+                        });
 
-                        alert(skipMessage);
+                        modalInstance.result.then(function (result) {
+                            $uibModalInstance.close();
+                        }, function () {
+                            $uibModalInstance.close();
+                        });
                     }
-
-                    $uibModalInstance.close();
                 }
                 else {
                     var errorMessage = 'Unable to process. ' + response.data.errorMessage;
@@ -70,6 +83,7 @@
                 vm.processInProgress = false;
             });
         };
+
         function cancel() {
             $uibModalInstance.dismiss('cancel');
         };

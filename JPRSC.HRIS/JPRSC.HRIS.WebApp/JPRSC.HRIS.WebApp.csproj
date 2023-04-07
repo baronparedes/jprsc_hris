@@ -6165,6 +6165,7 @@
     <Content Include="wwwroot\scripts\payroll\forProcessingQueue.js" />
     <Content Include="wwwroot\scripts\payroll\index.js" />
     <Content Include="wwwroot\scripts\payroll\forProcessing.js" />
+    <Content Include="wwwroot\scripts\payroll\processedItemsModal.js" />
     <Content Include="wwwroot\scripts\phicRecords\add.js" />
     <Content Include="wwwroot\scripts\phicRecords\edit.js" />
     <Content Include="wwwroot\scripts\phicRecords\index.js" />
