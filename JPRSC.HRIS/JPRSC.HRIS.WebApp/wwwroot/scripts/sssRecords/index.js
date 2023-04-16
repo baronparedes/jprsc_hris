@@ -63,7 +63,7 @@
             $http.get('/SSSRecords/Search', { params: vm.searchModel }).then(function (response) {
                 vm.sssRecords = response.data.sssRecords;
                 for (var i = 0; i < vm.sssRecords.length; i++) {
-                    Object.defineProperty(vm.sssRecords[i], 'total', { get: function () { return this.employee + this.employer; }})
+                    Object.defineProperty(vm.sssRecords[i], 'total', { get: function () { return this.employee + this.employer + this.ecc; }})
                 }
                 vm.searchInProgress = false;
             });
