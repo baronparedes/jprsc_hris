@@ -53,6 +53,7 @@ namespace JPRSC.HRIS.Features.Payroll
 
             public class UnprocessedItem
             {
+                public int Id { get; set; }
                 public string FirstName { get; set; }
                 public string LastName { get; set; }
                 public string Reason { get; set; }
@@ -60,6 +61,7 @@ namespace JPRSC.HRIS.Features.Payroll
 
             public class ProcessedItem
             {
+                public int Id { get; set; }
                 public string FirstName { get; set; }
                 public string LastName { get; set; }
             }
@@ -96,14 +98,16 @@ namespace JPRSC.HRIS.Features.Payroll
                     var skippedItems = new List<CommandResult.UnprocessedItem>();
                     var processedItems = new List<CommandResult.ProcessedItem>();
                     var clientEmployees = await GetEmployeesForProcessing(command, skippedItems, processedItems);
-                    commandResult.SkippedItems = skippedItems;
-                    commandResult.ProcessedItems = processedItems;
 
                     var clientEmployeeIds = clientEmployees.Select(e => e.Id).ToList();
 
                     var dailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords
                         .Where(dtr => !dtr.DeletedOn.HasValue && dtr.EmployeeId.HasValue && clientEmployeeIds.Contains(dtr.EmployeeId.Value) && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && !dtr.PayrollProcessBatchId.HasValue)
                         .ToListAsync();
+
+                    var dtrEmployeeIds = dailyTimeRecordsForPayrollPeriod.Select(dtr => dtr.EmployeeId.Value).ToList();
+                    commandResult.SkippedItems = skippedItems.Where(skippedItem => dtrEmployeeIds.Contains(skippedItem.Id)).ToList();
+                    commandResult.ProcessedItems = processedItems.Where(processedItem => dtrEmployeeIds.Contains(processedItem.Id)).ToList();
 
                     var overtimesForPayrollPeriod = await _db.Overtimes
                         .Where(ot => !ot.DeletedOn.HasValue && ot.EmployeeId.HasValue && clientEmployeeIds.Contains(ot.EmployeeId.Value) && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth && !ot.PayrollProcessBatchId.HasValue)
@@ -378,7 +382,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 if (resignedEmployees.Count == 0) return clientEmployees;
 
                 skippedItems.AddRange(resignedEmployees
-                    .Select(e => new CommandResult.UnprocessedItem { FirstName = e.FirstName, LastName = e.LastName, Reason = "Employee resigned" })
+                    .Select(e => new CommandResult.UnprocessedItem { Id = e.Id, FirstName = e.FirstName, LastName = e.LastName, Reason = "Employee resigned" })
                     .OrderBy(ui => ui.LastName)
                     .ThenBy(ui => ui.FirstName)
                     .ToList());
@@ -388,7 +392,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 var employeesForProcessing = clientEmployees.Where(e => !resignedEmployeeIds.Contains(e.Id)).ToList();
 
                 processedItems.AddRange(employeesForProcessing
-                    .Select(e => new CommandResult.ProcessedItem { FirstName = e.FirstName, LastName = e.LastName })
+                    .Select(e => new CommandResult.ProcessedItem { Id = e.Id, FirstName = e.FirstName, LastName = e.LastName })
                     .OrderBy(pi => pi.LastName)
                     .ThenBy(pi => pi.FirstName)
                     .ToList());
