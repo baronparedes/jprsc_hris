@@ -59,10 +59,7 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="sssRecord in vm.sssRecords track by sssRecord.id">
-                                        <td>
-                                            <span ng-show="!sssRecord.isEditing">{{sssRecord.number}}</span>
-                                            <input ng-show="sssRecord.isEditing" class="form-control input-sm" ng-model="sssRecord.copy.number" />
-                                        </td>
+                                        <td>{{sssRecord.number}}</td>
                                         <td>
                                             <span ng-show="!sssRecord.isEditing">{{sssRecord.range1}}</span>
                                             <input ng-show="sssRecord.isEditing" class="form-control input-sm" ng-model="sssRecord.copy.range1" />
