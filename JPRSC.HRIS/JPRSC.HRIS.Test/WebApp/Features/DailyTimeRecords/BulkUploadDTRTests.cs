@@ -1,7 +1,6 @@
 ﻿using JPRSC.HRIS.Features.DailyTimeRecords;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.WebApp.Features.DailyTimeRecords;
 using JPRSC.HRIS.WebApp.Infrastructure.Mvc;
 using System;
 using System.IO;
