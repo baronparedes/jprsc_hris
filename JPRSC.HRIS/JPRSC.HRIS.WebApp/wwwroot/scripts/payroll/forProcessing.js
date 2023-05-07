@@ -70,7 +70,8 @@
                 var match = (employee.employeeCode && employee.employeeCode.toUpperCase().includes(trimmed)) ||
                     (employee.firstName && employee.firstName.toUpperCase().includes(trimmed)) ||
                     (employee.lastName && employee.lastName.toUpperCase().includes(trimmed)) ||
-                    (employee.middleInitial && employee.middleInitial.toUpperCase().includes(trimmed));
+                    (employee.middleInitial && employee.middleInitial.toUpperCase().includes(trimmed)) ||
+                    (employee.resignStatus && employee.resignStatus.toUpperCase().includes(trimmed));
 
                 if (match) {
                     filteredEmployees.push(employee);
