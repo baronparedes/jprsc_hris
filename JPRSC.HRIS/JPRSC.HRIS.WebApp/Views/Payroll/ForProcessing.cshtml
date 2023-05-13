@@ -89,7 +89,7 @@
                                         <td>{{employee.lastName}}</td>
                                         <td>{{employee.firstName}}</td>
                                         <td>{{employee.middleInitial}}</td>
-                                        <td>{{employee.resignStatus}}</td>
+                                        <td ng-style="{'color': employee.resignStatus == 'Resigned' ? 'red' : 'inherit'}">{{employee.resignStatus}}</td>
                                         <td style="width: 120px;">
                                             <span class="badge bg-green-jungle bg-font-green-jungle badge-roundless" ng-show="employee.includeInBatch">For Processing</span>
                                         </td>
