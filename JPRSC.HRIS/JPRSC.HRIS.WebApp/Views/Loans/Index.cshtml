@@ -175,7 +175,7 @@
                                 </div>
                                 <input type="hidden" name="EmployeeId" value="{{vm.employee.id}}" />
                                 <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
-                                    <label class="col-md-4 col-lg-3 control-label">Employee Names<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
+                                    <label class="col-md-4 col-lg-3 control-label">Employee Name<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
                                     <div class="col-md-8 col-lg-9">
                                         <select class="form-control" ng-model="vm.employee" ng-options="employee.name for employee in vm.employees track by employee.id">
                                             <option value="?" selected="selected">Select employee</option>
@@ -184,7 +184,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.employeeId }">
-                                    <label class="col-md-4 col-lg-3 control-label">Employee Codes<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
+                                    <label class="col-md-4 col-lg-3 control-label">Employee Code<i class="fa fa-refresh fa-pulse fa-fw" ng-show="vm.searchInProgress"></i></label>
                                     <div class="col-md-8 col-lg-9">
                                         <select class="form-control" ng-model="vm.employee" ng-options="employee.employeeCode for employee in vm.employees track by employee.id">
                                             <option value="?" selected="selected">Select employee</option>
