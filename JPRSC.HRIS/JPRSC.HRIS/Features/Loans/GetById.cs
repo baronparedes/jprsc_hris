@@ -85,7 +85,10 @@ namespace JPRSC.HRIS.Features.Loans
         {
             public Mapping()
             {
-                CreateMap<Loan, QueryResult>();
+                CreateMap<Loan, QueryResult.Loan>();
+                CreateMap<Client, QueryResult.Client>();
+                CreateMap<Employee, QueryResult.Employee>();
+                CreateMap<LoanType, QueryResult.LoanType>();
             }
         }
 
