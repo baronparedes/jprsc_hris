@@ -37,8 +37,8 @@
 
             $http.post(action, data, config).then(function (response) {
                 if (!response.data.errorMessage) {
-                    var showProcessedItems = true; // hardcoded for now
-                    var showSkippedItems = false; // hardcoded for now
+                    var showProcessedItems = false; // hardcoded for now
+                    var showSkippedItems = true; // hardcoded for now
 
                     if (showProcessedItems || showSkippedItems) {
                         var modalInstance = $uibModal.open({

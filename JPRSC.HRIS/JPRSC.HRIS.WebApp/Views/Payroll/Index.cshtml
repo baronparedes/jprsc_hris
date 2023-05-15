@@ -264,17 +264,19 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-body">
-                            <div class="form-group" ng-show="vm.showProcessedItems && vm.processedItems.length">
-                                <label class="control-label">Processed employees:</label>
-                                <ol>
+                            <div class="form-group" ng-show="vm.showProcessedItems">
+                                <label class="control-label" ng-show="!vm.processedItems.length">No processed employees.</label>
+                                <label class="control-label" ng-show="vm.processedItems.length">Processed employees:</label>
+                                <ol ng-show="vm.processedItems.length">
                                     <li ng-repeat="processedItem in vm.processedItems">
                                         {{processedItem.lastName}}, {{processedItem.firstName}}
                                     </li>
                                 </ol>
                             </div>
-                            <div class="form-group" ng-show="vm.showSkippedItems && vm.skippedItems.length">
-                                <label class="control-label">Skipped employees:</label>
-                                <ol>
+                            <div class="form-group" ng-show="vm.showSkippedItems">
+                                <label class="control-label" ng-show="!vm.skippedItems.length">No skipped employees.</label>
+                                <label class="control-label" ng-show="vm.skippedItems.length">Skipped employees:</label>
+                                <ol ng-show="vm.skippedItems.length">
                                     <li ng-repeat="skippedItem in vm.skippedItems">
                                         {{skippedItem.lastName}}, {{skippedItem.firstName}}
                                     </li>
