@@ -477,12 +477,12 @@ namespace JPRSC.HRIS.Features.Payroll
 
                 if (client.SSSRangeOffset.HasValue && client.SSSRangeOffset.Value != 0)
                 {
-                    // If the offset is positive, then the matching range will move "up", meaning to a lower amount
-                    // If the offset is negative, then the matching range will move "down", meaning to a higher amount
-                    matchingRangeIndex -= client.SSSRangeOffset.Value;
+                    // If the offset is positive, then the matching range will move "down", meaning to a higher amount
+                    // If the offset is negative, then the matching range will move "up", meaning to a lower amount
+                    matchingRangeIndex += client.SSSRangeOffset.Value;
 
-                    if (matchingRangeIndex < 0) throw new Exception($"SSS Range of {client.SSSRangeOffset.Value} for deduction basis {deductionBasis} is too high.");
-                    if (matchingRangeIndex > orderedRecords.Count - 1) throw new Exception($"SSS Range of {client.SSSRangeOffset.Value} for deduction basis {deductionBasis} is too low.");
+                    if (matchingRangeIndex < 0) throw new Exception($"SSS Range of {client.SSSRangeOffset.Value} for deduction basis {deductionBasis} is too low.");
+                    if (matchingRangeIndex > orderedRecords.Count - 1) throw new Exception($"SSS Range of {client.SSSRangeOffset.Value} for deduction basis {deductionBasis} is too high.");
 
                     matchingRange = orderedRecords[matchingRangeIndex];
                 }
