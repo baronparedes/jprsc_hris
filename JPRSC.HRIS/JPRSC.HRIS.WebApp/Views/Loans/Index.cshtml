@@ -230,7 +230,8 @@
                                     <div class="col-md-8 col-lg-9">
                                         <input type="hidden" name="LoanPayrollPeriod" value="{{vm.getPayrollPeriodInput(vm.loanPayrollPeriods)}}" />
                                         <p class="form-control-static" ng-show="!vm.client || !vm.client.id">-- Please select a client --</p>
-                                        <div class="mt-checkbox-list" ng-show="vm.client && vm.client.id">
+                                        <p class="form-control-static" ng-show="vm.client && vm.client.id && (!vm.loanPayrollPeriods || !vm.loanPayrollPeriods.length)">No Number of Payroll Periods a Month found for client.</p>
+                                        <div class="mt-checkbox-list" ng-show="vm.client && vm.client.id && vm.loanPayrollPeriods && vm.loanPayrollPeriods.length">
                                             <label class="mt-checkbox mt-checkbox-outline" ng-repeat="payrollPeriod in vm.loanPayrollPeriods">
                                                 <input type="checkbox" ng-model="payrollPeriod.selected" value="{{payrollPeriod.payrollPeriod}}"> {{payrollPeriod.payrollPeriod}}
                                                 <span></span>
@@ -300,6 +301,7 @@
                                 <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.loanPayrollPeriod }">
                                     <label class="col-md-4 col-lg-3 control-label">Payroll Periods</label>
                                     <div class="col-md-8 col-lg-9">
+                                        <p class="form-control-static" ng-show="vm.client && vm.client.id && (!vm.loanPayrollPeriods || !vm.loanPayrollPeriods.length)">No Number of Payroll Periods a Month found for client.</p>
                                         <input type="hidden" name="LoanPayrollPeriod" value="{{vm.getPayrollPeriodInput(vm.loanPayrollPeriods)}}" />
                                         <div class="mt-checkbox-list">
                                             <label class="mt-checkbox mt-checkbox-outline" ng-repeat="payrollPeriod in vm.loanPayrollPeriods">
