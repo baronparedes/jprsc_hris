@@ -408,7 +408,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 {
                     var dailyTimeRecordsForBatch = await _db
                         .DailyTimeRecords
-                        .Where(dtr => dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && dtr.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo)
+                        .Where(dtr => dtr.EmployeeId == employee.Id && dtr.PayrollPeriodFrom == payrollProcessBatch.PayrollPeriodFrom && dtr.PayrollPeriodTo == payrollProcessBatch.PayrollPeriodTo && dtr.PayrollProcessBatchId == payrollProcessBatch.Id)
                         .ToListAsync();
 
                     dailyTimeRecords.AddRange(dailyTimeRecordsForBatch);
