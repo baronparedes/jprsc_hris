@@ -494,12 +494,59 @@ namespace JPRSC.HRIS.Features.Payroll
             {
                 var deductionBasis = 0m;
 
-                if (client.SSSBasic == true) deductionBasis += dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth.Sum(dtr => dtr.TimeWorkedValue) + dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.TimeWorkedValue) + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.TimeWorkedValue);
-                if (client.SSSCola == true) deductionBasis += dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth.Sum(dtr => dtr.COLATotalValue) + dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.COLATotalValue) + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLATotalValue);
-                if (client.SSSOvertime == true) deductionBasis += overtimesFromFifthPayrollPeriodOfPreviousMonth.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()) + overtimesForPreviousPayrollProcessBatches.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault()) + overtimesForPayrollPeriod.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault());
-                if (client.SSSEarnings == true) deductionBasis += earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount.GetValueOrDefault()) + earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount.GetValueOrDefault()) + employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount.GetValueOrDefault());
-                if (client.SSSDeductions == true) deductionBasis -= earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount.GetValueOrDefault()) + earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount.GetValueOrDefault()) + employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount.GetValueOrDefault());
-                if (client.SSSUndertime == true) deductionBasis -= dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth.Sum(dtr => dtr.TimeNotWorkedValue) + dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.TimeNotWorkedValue) + employeeDtrsForPayrollPeriod.Sum(dtr => dtr.TimeNotWorkedValue);
+                if (client.SSSBasic == true)
+                {
+                    var sumTimeWorkedValue_dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth = dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth.Sum(dtr => dtr.TimeWorkedValue);
+                    var sumTimeWorkedValue_dailyTimeRecordsForPreviousPayrollProcessBatches = dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.TimeWorkedValue);
+                    var sumTimeWorkedValue_employeeDtrsForPayrollPeriod = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.TimeWorkedValue);
+
+                    deductionBasis += sumTimeWorkedValue_dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth + sumTimeWorkedValue_dailyTimeRecordsForPreviousPayrollProcessBatches + sumTimeWorkedValue_employeeDtrsForPayrollPeriod;
+                }
+
+                if (client.SSSCola == true)
+                {
+                    var sumColaTotalValue_dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth = dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth.Sum(dtr => dtr.COLATotalValue);
+                    var sumColaTotalValue_dailyTimeRecordsForPreviousPayrollProcessBatches = dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.COLATotalValue);
+                    var sumColaTotalValue_employeeDtrsForPayrollPeriod = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.COLATotalValue);
+
+                    deductionBasis += sumColaTotalValue_dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth + sumColaTotalValue_dailyTimeRecordsForPreviousPayrollProcessBatches + sumColaTotalValue_employeeDtrsForPayrollPeriod;
+                }
+
+                if (client.SSSOvertime == true)
+                {
+                    var sumNumberOfHoursValue_overtimesFromFifthPayrollPeriodOfPreviousMonth = overtimesFromFifthPayrollPeriodOfPreviousMonth.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault());
+                    var sumNumberOfHoursValue_overtimesForPreviousPayrollProcessBatches = overtimesForPreviousPayrollProcessBatches.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault());
+                    var sumNumberOfHoursValue_overtimesForPayrollPeriod = overtimesForPayrollPeriod.Sum(ot => ot.NumberOfHoursValue.GetValueOrDefault());
+
+                    deductionBasis += sumNumberOfHoursValue_overtimesFromFifthPayrollPeriodOfPreviousMonth + sumNumberOfHoursValue_overtimesForPreviousPayrollProcessBatches + sumNumberOfHoursValue_overtimesForPayrollPeriod;
+                }
+
+                if (client.SSSEarnings == true)
+                {
+                    var sumEarning_earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth = earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount.GetValueOrDefault());
+                    var sumEarning_earningDeductionRecordsForPreviousPayrollProcessBatches = earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount.GetValueOrDefault());
+                    var sumEarning_employeeEdrsForPayrollPeriod = employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Earnings).Sum(edr => edr.Amount.GetValueOrDefault());
+
+                    deductionBasis += sumEarning_earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth + sumEarning_earningDeductionRecordsForPreviousPayrollProcessBatches + sumEarning_employeeEdrsForPayrollPeriod;
+                }
+
+                if (client.SSSDeductions == true)
+                {
+                    var sumDeduction_earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth = earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount.GetValueOrDefault());
+                    var sumDeduction_earningDeductionRecordsForPreviousPayrollProcessBatches = earningDeductionRecordsForPreviousPayrollProcessBatches.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount.GetValueOrDefault());
+                    var sumDeduction_employeeEdrsForPayrollPeriod = employeeEdrsForPayrollPeriod.Where(edr => edr.EarningDeduction.EarningDeductionType == EarningDeductionType.Deductions).Sum(edr => edr.Amount.GetValueOrDefault());
+
+                    deductionBasis -= sumDeduction_earningDeductionRecordsFromFifthPayrollPeriodOfPreviousMonth + sumDeduction_earningDeductionRecordsForPreviousPayrollProcessBatches + sumDeduction_employeeEdrsForPayrollPeriod;
+                }
+
+                if (client.SSSUndertime == true)
+                {
+                    var sumTimeNotWorkedValue_dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth = dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth.Sum(dtr => dtr.TimeNotWorkedValue);
+                    var sumTimeNotWorkedValue_dailyTimeRecordsForPreviousPayrollProcessBatches = dailyTimeRecordsForPreviousPayrollProcessBatches.Sum(dtr => dtr.TimeNotWorkedValue);
+                    var sumTimeNotWorkedValue_employeeDtrsForPayrollPeriod = employeeDtrsForPayrollPeriod.Sum(dtr => dtr.TimeNotWorkedValue);
+
+                    deductionBasis -= sumTimeNotWorkedValue_dailyTimeRecordsFromFifthPayrollPeriodOfPreviousMonth + sumTimeNotWorkedValue_dailyTimeRecordsForPreviousPayrollProcessBatches + sumTimeNotWorkedValue_employeeDtrsForPayrollPeriod;
+                }
 
                 return deductionBasis;
             }
