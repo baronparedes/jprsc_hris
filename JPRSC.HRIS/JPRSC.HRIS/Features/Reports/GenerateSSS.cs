@@ -99,7 +99,7 @@ namespace JPRSC.HRIS.Features.Reports
 
                 var payrollProcessBatches = await _db.PayrollProcessBatchesByMonthAndYear(clientIds, query.PayrollPeriodMonth, query.PayrollPeriodYear);
 
-                var sssRecords = await GetSSSRecords(payrollProcessBatches);
+                var sssRecords = await GetSSSRecords(payrollProcessBatches, clients);
 
                 if (query.Destination == "Excel")
                 {
@@ -149,7 +149,7 @@ namespace JPRSC.HRIS.Features.Reports
                 }                
             }
             
-            private async Task<IList<QueryResult.SSSRecord>> GetSSSRecords(IList<PayrollProcessBatch> payrollProcessBatches)
+            private async Task<IList<QueryResult.SSSRecord>> GetSSSRecords(IList<PayrollProcessBatch> payrollProcessBatches, IList<Client> clients)
             {
                 var allPayrollRecords = payrollProcessBatches.SelectMany(ppb => ppb.PayrollRecords).ToList();
                 var distinctCompanyIds = allPayrollRecords.Select(pr => pr.Employee).Select(e => e.CompanyId).Distinct();
@@ -163,6 +163,8 @@ namespace JPRSC.HRIS.Features.Reports
 
                 var sssRanges = await _db.SSSRecords
                     .ToListAsync();
+
+                var clientsDictionary = new Dictionary<int, Client>();
 
                 foreach (var batch in payrollProcessBatchesPerMonth)
                 {
@@ -180,13 +182,17 @@ namespace JPRSC.HRIS.Features.Reports
 
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
+                        if (!clientsDictionary.ContainsKey(sampleEmployee.ClientId.Value)) clientsDictionary.Add(sampleEmployee.ClientId.Value, clients.Single(c => c.Id == sampleEmployee.ClientId.Value));
+                        
+                        var client = clientsDictionary[sampleEmployee.ClientId.Value];
+
                         var sssRecord = new QueryResult.SSSRecord();
                         sssRecord.CompanySSS = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.SSS;
                         sssRecord.SSSDeductionBasis = deductionBasis;
                         sssRecord.Employee = sampleEmployee;
                         sssRecord.NetPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
                         sssRecord.TotalSSSEmployee = employeePayrollRecords.Sum(pr => pr.SSSValueEmployee.GetValueOrDefault());
-                        sssRecord.TotalSSSEmployer = employeePayrollRecords.Sum(pr => pr.SSSValueEmployer.GetValueOrDefault() + GetECC(sssRanges, pr.SSSDeductionBasis.GetValueOrDefault()));
+                        sssRecord.TotalSSSEmployer = employeePayrollRecords.Sum(pr => pr.SSSValueEmployer.GetValueOrDefault()) + GetECC(deductionBasis, sssRanges, client);
 
                         sssRecords.Add(sssRecord);
                     }
@@ -199,19 +205,40 @@ namespace JPRSC.HRIS.Features.Reports
                     .ToList();
             }
 
-            private decimal GetECC(IList<SSSRecord> sssRanges, decimal deductionBasis)
+            private decimal GetECC(decimal deductionBasis, IList<SSSRecord> sssRecords, Client client)
             {
+                
                 SSSRecord matchingRange = null;
+                var foundMatchingRange = false;
+                var matchingRangeIndex = 0;
+                var orderedRecords = sssRecords.OrderBy(s => s.Range1).ToList();
 
-                try
+                for (var i = 0;  i < orderedRecords.Count; i++)
                 {
-                    matchingRange = sssRanges
-                        .OrderBy(s => s.Range1)
-                        .First(s => s.Range1 > deductionBasis);
+                    var sssRecord = orderedRecords[i];
+
+                    if (sssRecord.Range1.HasValue && sssRecord.Range1End.HasValue && sssRecord.Range1.Value <= deductionBasis && deductionBasis <= sssRecord.Range1End.Value)
+                    {
+                        matchingRange = sssRecord;
+                        matchingRangeIndex = i;
+
+                        if (!foundMatchingRange) foundMatchingRange = true;
+                        else throw new Exception($"Multiple SSS ranges found for deduction basis {deductionBasis}");
+                    }
                 }
-                catch
+
+                if (matchingRange == null) throw new Exception($"Matching SSS range not found for deduction basis {deductionBasis}");
+
+                if (client.SSSRangeOffset.HasValue && client.SSSRangeOffset.Value != 0)
                 {
-                    throw new Exception($"Matching SSS range not found for amount {deductionBasis}");
+                    // If the offset is positive, then the matching range will move "down", meaning to a higher amount
+                    // If the offset is negative, then the matching range will move "up", meaning to a lower amount
+                    matchingRangeIndex += client.SSSRangeOffset.Value;
+
+                    if (matchingRangeIndex < 0) throw new Exception($"SSS Range of {client.SSSRangeOffset.Value} for deduction basis {deductionBasis} is too low.");
+                    if (matchingRangeIndex > orderedRecords.Count - 1) throw new Exception($"SSS Range of {client.SSSRangeOffset.Value} for deduction basis {deductionBasis} is too high.");
+
+                    matchingRange = orderedRecords[matchingRangeIndex];
                 }
 
                 return matchingRange.ECC.GetValueOrDefault();
