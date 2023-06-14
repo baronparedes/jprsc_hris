@@ -37,6 +37,29 @@
                     success: function (data) {
                         $scope.$apply(function () {
                             vm.validationErrors = {};
+
+                            if (data.isInvalidFile) {
+                                var message = 'Invalid file. If you are creating a CSV from Excel, please make sure to use the \'Save As\' functionality.';
+                                alert(message);
+
+                                $uibModalInstance.close();
+                                vm.uploadInProgress = false;
+                                return;
+                            }
+
+                            if (data.duplicateEmployeeCodes.length) {
+                                var message = `Upload failed. There are duplicate employee codes in the csv file: `;
+                                for (var i = 0; i < data.duplicateEmployeeCodes.length; i++) {
+                                    message += data.duplicateEmployeeCodes[i];
+                                    if (i < data.duplicateEmployeeCodes.length - 1) message += ', ';
+                                }
+                                alert(message);
+
+                                $uibModalInstance.close();
+                                vm.uploadInProgress = false;
+                                return;
+                            }
+
                             vm.unprocessedItems = data.unprocessedItems;
 
                             if (!vm.unprocessedItems.length) {
