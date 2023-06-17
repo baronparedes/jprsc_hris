@@ -21,6 +21,7 @@
         vm.previousClicked = previousClicked;
         vm.searchClicked = searchClicked;
         vm.searchModel = { pageNumber: 1, payrollPeriodMonth: '10', payrollPeriodYear: new Date().getFullYear().toString() };
+        vm.searchModelCurrent = { pageNumber: 1, payrollPeriodMonth: '10', payrollPeriodYear: new Date().getFullYear().toString() };
         vm.searchInProgress = false;
         vm.totalResultsCount = 0;
 
@@ -178,6 +179,13 @@
         };
 
         function searchClicked() {
+            // Prevent calling the API when the search parameters have not changed
+            if (angular.equals(vm.searchModelCurrent, vm.searchModel)) {
+                return;
+            }
+
+            vm.searchModelCurrent = angular.copy(vm.searchModel);
+
             if (vm.searchModel.client && vm.searchModel.client.id > 0) {
                 vm.searchModel.clientId = vm.searchModel.client.id;
             }
@@ -193,7 +201,7 @@
             }
 
             vm.searchInProgress = true;
-
+            
             $http.get('/Employees/GetByClientId', { params: vm.searchModel }).then(function (response) {
                 vm.employees = response.data.employees;
                 vm.searchInProgress = false;

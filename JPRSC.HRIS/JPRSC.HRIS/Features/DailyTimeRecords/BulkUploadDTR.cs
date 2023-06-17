@@ -85,7 +85,8 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
             public IEnumerable<EmployeeResult> UnprocessedItems { get; set; } = new List<EmployeeResult>();
             public IEnumerable<EmployeeResult> SkippedItems { get; set; } = new List<EmployeeResult>();
             public IEnumerable<EmployeeResult> MissingRates { get; set; } = new List<EmployeeResult>();
-            public bool HasDuplicateEmployeeCodes { get; set; }
+            public List<string> DuplicateEmployeeCodes { get; set; } = new List<string>();
+            public bool IsInvalidFile { get; set; }
             public int ProcessedItemsCount { get; set; }
 
             public class EmployeeResult
@@ -124,12 +125,20 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                 var allNotProcessedEmployeeDailyTimeRecordsForPayrollPeriod = await _db.DailyTimeRecords.Where(dtr => allEmployeesOfClientIds.Contains(dtr.EmployeeId.Value) && !dtr.DeletedOn.HasValue && dtr.PayrollPeriodFrom == command.PayrollPeriodFrom && dtr.PayrollPeriodTo == command.PayrollPeriodTo && dtr.PayrollPeriodMonth == command.PayrollPeriodMonth && !dtr.PayrollProcessBatchId.HasValue).ToListAsync();
                 var allNotProcessedEmployeeOvertimesForPayrollPeriod = await _db.Overtimes.Where(ot => allEmployeesOfClientIds.Contains(ot.EmployeeId.Value) && !ot.DeletedOn.HasValue && ot.PayrollPeriodFrom == command.PayrollPeriodFrom && ot.PayrollPeriodTo == command.PayrollPeriodTo && ot.PayrollPeriodMonth == command.PayrollPeriodMonth && !ot.PayrollProcessBatchId.HasValue).ToListAsync();
 
-                var csvData = GetCSVData(command, out bool hasDuplicateEmployeeCodes);
-                if (hasDuplicateEmployeeCodes)
+                var csvData = GetCSVData(command, out List<string> duplicateEmployeeCodes, out bool isInvalidFile);
+                if (duplicateEmployeeCodes.Count > 0)
                 {
                     return new CommandResult
                     {
-                        HasDuplicateEmployeeCodes = true
+                        DuplicateEmployeeCodes = duplicateEmployeeCodes
+                    };
+                }
+
+                if (isInvalidFile)
+                {
+                    return new CommandResult
+                    {
+                        IsInvalidFile = true
                     };
                 }
 
@@ -383,7 +392,8 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                     ProcessedItemsCount = unprocessedItems.Any() ? 0 : processedItemsCount,
                     SkippedItems = skippedItems,
                     MissingRates = missingRates,
-                    HasDuplicateEmployeeCodes = hasDuplicateEmployeeCodes
+                    DuplicateEmployeeCodes = duplicateEmployeeCodes,
+                    IsInvalidFile = false
                 };
             }
 
@@ -415,9 +425,10 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                 };
             }
 
-            private Tuple<IList<string>, IList<IList<string>>> GetCSVData(Command command, out bool hasDuplicateEmployeeCodes)
+            private Tuple<IList<string>, IList<IList<string>>> GetCSVData(Command command, out List<string> duplicateEmployeeCodes, out bool isInvalidFile)
             {
-                hasDuplicateEmployeeCodes = false;
+                duplicateEmployeeCodes = new List<string>();
+                isInvalidFile = false;
 
                 IList<string> header = new List<string>();
                 IList<IList<string>> body = new List<IList<string>>();
@@ -428,6 +439,13 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                     while (!csvreader.EndOfStream)
                     {
                         var line = csvreader.ReadLine();
+                        
+                        if (line.Any(c => c > 255))
+                        {
+                            isInvalidFile = true;
+                            return null;
+                        }
+
                         var lineAsColumns = GetLineAsColumns(line);
 
                         if (!headerPopulated)
@@ -457,7 +475,7 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                     }
                     else
                     {
-                        hasDuplicateEmployeeCodes = true;
+                        duplicateEmployeeCodes.Add(employeeCode);
                     }
                 }
 

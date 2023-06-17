@@ -83,6 +83,8 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
         {
             public IEnumerable<UnprocessedItem> UnprocessedItems { get; set; } = new List<UnprocessedItem>();
             public IEnumerable<UnprocessedItem> SkippedItems { get; set; } = new List<UnprocessedItem>();
+            public List<string> DuplicateEmployeeCodes { get; set; } = new List<string>();
+            public bool IsInvalidFile { get; set; }
             public int ProcessedItemsCount { get; set; }
 
             public class UnprocessedItem
@@ -118,7 +120,24 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
 
                 var allNotProcessedEmployeeEarningDeductionRecordsForPayrollPeriod = await _db.EarningDeductionRecords.Where(edr => allEmployeesOfClientIds.Contains(edr.EmployeeId.Value) && !edr.DeletedOn.HasValue && edr.PayrollPeriodFrom == command.PayrollPeriodFrom && edr.PayrollPeriodTo == command.PayrollPeriodTo && edr.PayrollPeriodMonth == command.PayrollPeriodMonth && !edr.PayrollProcessBatchId.HasValue).ToListAsync();
 
-                var csvData = GetCSVData(command);
+                var csvData = GetCSVData(command, out List<string> duplicateEmployeeCodes, out bool isInvalidFile);
+
+                if (duplicateEmployeeCodes.Count > 0)
+                {
+                    return new CommandResult
+                    {
+                        DuplicateEmployeeCodes = duplicateEmployeeCodes
+                    };
+                }
+
+                if (isInvalidFile)
+                {
+                    return new CommandResult
+                    {
+                        IsInvalidFile = true
+                    };
+                }
+
                 var columnToEarningDeductionMap = await GetColumnToEarningDeductionMap(csvData.Item1);
                 var processedItemsCount = 0;
 
@@ -257,12 +276,17 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                 {
                     UnprocessedItems = unprocessedItems,
                     ProcessedItemsCount = unprocessedItems.Any() ? 0 : processedItemsCount,
-                    SkippedItems = skippedItems
+                    SkippedItems = skippedItems,
+                    DuplicateEmployeeCodes = duplicateEmployeeCodes,
+                    IsInvalidFile = false
                 };
             }
 
-            private Tuple<IList<string>, IList<IList<string>>> GetCSVData(Command command)
+            private Tuple<IList<string>, IList<IList<string>>> GetCSVData(Command command, out List<string> duplicateEmployeeCodes, out bool isInvalidFile)
             {
+                duplicateEmployeeCodes = new List<string>();
+                isInvalidFile = false;
+
                 IList<string> header = new List<string>();
                 IList<IList<string>> body = new List<IList<string>>();
                 var headerPopulated = false;
@@ -272,6 +296,13 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                     while (!csvreader.EndOfStream)
                     {
                         var line = csvreader.ReadLine();
+
+                        if (line.Any(c => c > 255))
+                        {
+                            isInvalidFile = true;
+                            return null;
+                        }
+
                         var lineAsColumns = GetLineAsColumns(line);
 
                         if (!headerPopulated)
@@ -299,9 +330,13 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                         reversedBody.Add(body[i]);
                         employeeCodes.Add(employeeCode);
                     }
+                    else
+                    {
+                        duplicateEmployeeCodes.Add(employeeCode);
+                    }
                 }
 
-                return Tuple.Create(header, body);
+                return Tuple.Create(header, reversedBody);
             }
 
             private bool IsBlankLine(IEnumerable<string> items)
