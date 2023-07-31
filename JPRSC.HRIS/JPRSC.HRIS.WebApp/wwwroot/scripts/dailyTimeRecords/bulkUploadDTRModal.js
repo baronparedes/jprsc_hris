@@ -39,7 +39,7 @@
                             vm.validationErrors = {};
 
                             if (data.isInvalidFile) {
-                                var message = 'Invalid file. If you are creating a CSV from Excel, please make sure to use the \'Save As\' functionality.';
+                                var message = 'Invalid file. To check if your file is valid, right click on your file and choose Open With and then Notepad. You should not see any strange characters.';
                                 alert(message);
 
                                 $uibModalInstance.close();

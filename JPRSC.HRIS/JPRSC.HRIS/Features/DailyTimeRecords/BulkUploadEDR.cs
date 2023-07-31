@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Configuration;
+using JPRSC.HRIS.Infrastructure.CSV;
 using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
@@ -297,7 +298,7 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                     {
                         var line = csvreader.ReadLine();
 
-                        if (line.Any(c => c > 255))
+                        if (!CSVValidator.IsValidCSVLine(line))
                         {
                             isInvalidFile = true;
                             return null;
