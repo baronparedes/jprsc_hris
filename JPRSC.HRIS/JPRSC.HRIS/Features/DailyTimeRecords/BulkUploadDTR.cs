@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using JPRSC.HRIS.Infrastructure.CSV;
 
 namespace JPRSC.HRIS.Features.DailyTimeRecords
 {
@@ -439,8 +440,8 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                     while (!csvreader.EndOfStream)
                     {
                         var line = csvreader.ReadLine();
-                        
-                        if (line.Any(c => c > 255))
+
+                        if (!CSVValidator.IsValidCSVLine(line))
                         {
                             isInvalidFile = true;
                             return null;

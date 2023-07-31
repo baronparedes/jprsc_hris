@@ -106,7 +106,7 @@ namespace JPRSC.HRIS.Features.Payroll
                         .ToListAsync();
 
                     var dtrEmployeeIds = dailyTimeRecordsForPayrollPeriod.Select(dtr => dtr.EmployeeId.Value).ToList();
-                    commandResult.SkippedItems = skippedItems.Where(skippedItem => dtrEmployeeIds.Contains(skippedItem.Id)).ToList();
+                    commandResult.SkippedItems = skippedItems;
                     commandResult.ProcessedItems = processedItems.Where(processedItem => dtrEmployeeIds.Contains(processedItem.Id)).ToList();
 
                     var overtimesForPayrollPeriod = await _db.Overtimes

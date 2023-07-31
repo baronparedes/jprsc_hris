@@ -350,6 +350,7 @@
     <Compile Include="Infrastructure\Configuration\AppSettings.cs" />
     <Compile Include="Infrastructure\Configuration\ConnectionStrings.cs" />
     <Compile Include="Infrastructure\CSV\CSVBuilder.cs" />
+    <Compile Include="Infrastructure\CSV\CSVValidator.cs" />
     <Compile Include="Infrastructure\Data\ApplicationDbContext.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CompanyProfileConfiguration.cs" />
     <Compile Include="Infrastructure\Data\EntityConfiguration\CustomRoleConfiguration.cs" />
