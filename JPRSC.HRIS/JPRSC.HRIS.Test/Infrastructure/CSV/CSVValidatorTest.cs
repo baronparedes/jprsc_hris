@@ -8,7 +8,7 @@ namespace JPRSC.HRIS.Test.Infrastructure.CSV
         [Fact]
         public void IsValidCSVLine_GivenValidChars_ShouldReturnTrue()
         {
-            var line = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()-_=+[{]};:'\",<.>/? ñÑ";
+            var line = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()-_=+[{]};:'\",<.>/? ñÑ�";
 
             var isValid = CSVValidator.IsValidCSVLine(line);
 
