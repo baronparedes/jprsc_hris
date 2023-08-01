@@ -44,5 +44,35 @@ namespace JPRSC.HRIS.Test.Infrastructure.CSV
 
             Assert.True(isValid);
         }
+
+        [Fact]
+        public void IsValidCSVLine_GivenLineWithÑ_ShouldReturnTrue()
+        {
+            var line = "43645,CAÑETA,DONAL,11,,,,,12.5,,,,,,,,,,,,,,,,,,8,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,";
+
+            var isValid = CSVValidator.IsValidCSVLine(line);
+
+            Assert.True(isValid);
+        }
+
+        [Fact]
+        public void IsValidCSVLine_GivenLineWithPeriod_ShouldReturnTrue()
+        {
+            var line = "43712,SANTANA JR.,BERNABE,11,,9,,,8,,,,,,,,,,,,,,,,,,8,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,";
+
+            var isValid = CSVValidator.IsValidCSVLine(line);
+
+            Assert.True(isValid);
+        }
+
+        [Fact]
+        public void IsValidCSVLine_GivenEmptyLine_ShouldReturnTrue()
+        {
+            var line = "";
+
+            var isValid = CSVValidator.IsValidCSVLine(line);
+
+            Assert.True(isValid);
+        }
     }
 }
