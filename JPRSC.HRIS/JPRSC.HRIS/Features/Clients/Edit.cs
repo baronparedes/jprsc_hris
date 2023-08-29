@@ -28,7 +28,6 @@ namespace JPRSC.HRIS.Features.Clients
             public int? HoursPerDay { get; set; }
             public int Id { get; set; }
             public string Name { get; set; }
-            public int? NumberOfPayrollPeriodsAMonth { get; set; }
             public int? NumberOfWorkingDaysForThisPayrollPeriod { get; set; }
             public PayrollCode? PayrollCode { get; set; }
             public DateTime? PayrollPeriodFrom { get; set; }
@@ -141,7 +140,6 @@ namespace JPRSC.HRIS.Features.Clients
                 client.LoanExempt = command.LoanExempt;
                 client.ModifiedOn = DateTime.UtcNow;
                 client.Name = command.Name;
-                client.NumberOfPayrollPeriodsAMonth = command.NumberOfPayrollPeriodsAMonth;
                 client.NumberOfWorkingDaysForThisPayrollPeriod = command.NumberOfWorkingDaysForThisPayrollPeriod;
                 client.PagIbigExempt = command.PagIbigExempt;
                 client.PagIbigBasic = command.PagIbigBasic.GetValueOrDefault();
