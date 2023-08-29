@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JPRSC.HRIS", "JPRSC.HRIS\JP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{775B6172-E8F6-4B22-B205-B9CBF699DE02}"
 	ProjectSection(SolutionItems) = preProject
+		docs\deployment.txt = docs\deployment.txt
 		docs\installation.txt = docs\installation.txt
 	EndProjectSection
 EndProject

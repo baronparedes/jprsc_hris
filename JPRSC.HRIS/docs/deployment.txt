@@ -1,0 +1,13 @@
+Deployment (Method 1)
+
+Details:
+- Use when the only changes are in C# code
+
+Steps:
+1. (Optional) Delete the bin and obj folders inside JPRSC.HRIS.WebApp
+2. Build the solution in Release mode
+3. (Optional) Create a backup of the application files in the server.
+4. Overwrite the corresponding files on the server with the following from the bin folder inside JPRSC.HRIS.WebApp:
+   - JPRSC.HRIS.WebApp.dll
+   - JPRSC.HRIS.dll
+5. Restart the IIS web app on the server.
