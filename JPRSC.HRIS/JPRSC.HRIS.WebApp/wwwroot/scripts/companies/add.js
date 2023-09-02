@@ -5,7 +5,7 @@
 
     function AddCompanyCtrl($http, $window, globalSettings) {
         var vm = this;
-        vm.addCompanySubmit = addCompanySubmit;;
+        vm.addCompanySubmit = addCompanySubmit;
         vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.validationErrors = {};
 
