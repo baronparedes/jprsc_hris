@@ -42,12 +42,7 @@
                                         @Html.DropdownHorizontalFormGroup("taxTables", "TaxTable")
                                         @Html.DropdownHorizontalFormGroup("payrollCodes", "PayrollCode")
                                         @Html.TextBoxHorizontalFormGroup("NumberOfWorkingDaysForThisPayrollPeriod")
-                                        <div class="form-group">
-                                            <label class="col-md-3 col-lg-2 control-label">Number Of Payroll Periods A Month</label>
-                                            <div class="col-md-9 col-lg-10">
-                                                <p class="form-control-static">{{vm.numberOfPayrollPeriodsAMonth}}</p>
-                                            </div>
-                                        </div>
+                                        @Html.StaticHorizontalFormGroup("NumberOfPayrollPeriodsAMonth")
                                         <div class="form-group" ng-class="{ 'has-error': vm.validationErrors.payrollPeriodFrom }">
                                             <label class="col-md-3 col-lg-2 control-label">Payroll Period From</label>
                                             <div class="col-md-9 col-lg-10">
