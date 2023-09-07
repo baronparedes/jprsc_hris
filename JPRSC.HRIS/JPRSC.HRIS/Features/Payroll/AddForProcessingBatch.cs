@@ -15,6 +15,10 @@ namespace JPRSC.HRIS.Features.Payroll
         {
             public int ClientId { get; set; }
             public string EmployeeIds { get; set; }
+            public DateTime? PayrollPeriodFrom { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
+            public DateTime? PayrollPeriodTo { get; set; }
+            public bool Overwrite { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -26,6 +30,15 @@ namespace JPRSC.HRIS.Features.Payroll
                     .GreaterThan(0);
 
                 RuleFor(c => c.EmployeeIds)
+                    .NotEmpty();
+
+                RuleFor(c => c.PayrollPeriodFrom)
+                    .NotEmpty();
+
+                RuleFor(c => c.PayrollPeriodTo)
+                    .NotEmpty();
+
+                RuleFor(c => c.PayrollPeriodMonth)
                     .NotEmpty();
             }
         }
@@ -46,7 +59,8 @@ namespace JPRSC.HRIS.Features.Payroll
                     .ForProcessingBatches
                     .CountAsync(fpb => fpb.ClientId == command.ClientId && fpb.DateFormatted == dateFormatted);
 
-                var client = await _db.Clients.SingleOrDefaultAsync(c => !c.DeletedOn.HasValue && c.Id == command.ClientId);
+                var client = await _db.Clients.AsNoTracking().SingleOrDefaultAsync(c => !c.DeletedOn.HasValue && c.Id == command.ClientId);
+                var newBatchName = GetBatchName(client, command.PayrollPeriodMonth.Value, command.PayrollPeriodFrom.Value, command.PayrollPeriodTo.Value);
                 var batchName = GetBatchName(dateFormatted, client, existingForProcessingBatchCount);
 
                 var now = DateTime.UtcNow;
@@ -67,9 +81,9 @@ namespace JPRSC.HRIS.Features.Payroll
                 return Unit.Value;
             }
 
-            private string GetBatchName(string dateFormatted, Client client, int existingForProcessingBatchCount)
+            private static string GetBatchName(string dateFormatted, Client client, int existingForProcessingBatchCount)
             {
-                string name = null;
+                string name;
 
                 if (existingForProcessingBatchCount == 0)
                 {
@@ -81,6 +95,11 @@ namespace JPRSC.HRIS.Features.Payroll
                 }
 
                 return name;
+            }
+
+            private static string GetBatchName(Client client, Month payrollPeriodMonth, DateTime payrollPeriodFrom, DateTime payrollPeriodTo)
+            {
+                return $"{client.Name}-{payrollPeriodMonth}-{payrollPeriodFrom:MM/dd}-{payrollPeriodTo:MM/dd-yyyy}";
             }
         }
     }

@@ -6,11 +6,13 @@
     function ForProcessingCtrl($http, $timeout, $uibModal, $scope, $window, globalSettings) {
         var vm = this;
         vm.addToQueueClicked = addToQueueClicked;
+        vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.employees = [];
         vm.filteredEmployees = [];
         vm.searchClicked = searchClicked;
         vm.searchModel = {};
         vm.searchInProgress = false;
+        vm.validationErrors = {};
 
         $scope.$watch('vm.localSearchTerm', onLocalSearchTermChange);
 
@@ -20,31 +22,29 @@
         });
 
         function addToQueueClicked() {
-            console.log('addToQueueClicked');
-
             var includedEmployeeIds = [];
 
             for (var i = 0; i < vm.filteredEmployees.length; i++) {
                 if (vm.filteredEmployees[i].includeInBatch === true) {
                     includedEmployeeIds.push(vm.filteredEmployees[i].id);
-                    console.log(vm.filteredEmployees[i]);
                 }
             }
 
             var employeeIds = includedEmployeeIds.join();
 
-            console.log(employeeIds);
-
             var action = '/Payroll/AddForProcessingBatch';
             var data = {
                 clientId: vm.searchModel.clientId,
-                employeeIds: employeeIds
+                employeeIds: employeeIds,
+                payrollPeriodFrom: vm.payrollPeriodFrom,
+                payrollPeriodTo: vm.payrollPeriodTo,
+                payrollPeriodMonth: vm.payrollPeriodMonth,
+                overwrite: false
             };
 
             vm.searchInProgresss = true;
 
             $http.post(action, data).then(function (response) {
-                console.log('success');
                 $window.location = '/Payroll/ForProcessingQueue';
             }, function (response) {
                 if (response.status == 400) {
