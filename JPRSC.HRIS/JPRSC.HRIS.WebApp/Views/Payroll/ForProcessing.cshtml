@@ -91,6 +91,7 @@
                                 <div class="input-group" style="width: 100%">
                                     <input type="text" class="form-control" ng-disabled="!vm.employees.length" ng-model="vm.localSearchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
                                 </div>
+                                <span ng-show="vm.validationErrors.employeeIds" class="help-block">{{vm.validationErrors.employeeIds.join(' ')}}</span>
                             </div>
                         </div>
                     </div>
@@ -98,7 +99,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.clientId || !vm.employees.length || !vm.payrollPeriodFrom || !vm.payrollPeriodTo || !vm.payrollPeriodMonth || vm.searchInProgresss" ng-click="vm.addToQueueClicked()">Add to Queue</button>
+                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.clientId || !vm.employees.length || !vm.payrollPeriodFrom || !vm.payrollPeriodTo || !vm.payrollPeriodMonth || vm.searchInProgress" ng-click="vm.addToQueueClicked(false)">Add to Queue</button>
                         </div>
                     </div>
                 </div>

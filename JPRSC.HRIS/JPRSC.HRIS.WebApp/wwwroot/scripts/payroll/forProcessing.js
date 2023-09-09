@@ -21,7 +21,7 @@
             vm.clients.splice(0, 0, { code: '-- Select a client --', name: '-- Select a client --' });
         });
 
-        function addToQueueClicked() {
+        function addToQueueClicked(overwrite) {
             var includedEmployeeIds = [];
 
             for (var i = 0; i < vm.filteredEmployees.length; i++) {
@@ -39,21 +39,43 @@
                 payrollPeriodFrom: vm.payrollPeriodFrom,
                 payrollPeriodTo: vm.payrollPeriodTo,
                 payrollPeriodMonth: vm.payrollPeriodMonth,
-                overwrite: false
+                overwrite: overwrite
             };
 
-            vm.searchInProgresss = true;
+            vm.searchInProgress = true;
 
             $http.post(action, data).then(function (response) {
-                console.log('data', data);
+                if (overwrite === true) {
+                    $window.location = '/Payroll/ForProcessingQueue';
+                    return;
+                }
 
-                //$window.location = '/Payroll/ForProcessingQueue';
+                if (!response || !response.data) {
+                    alert('Error: no response found');
+                    return;
+                }
+
+                if (response.data.hasExisting === false) {
+                    $window.location = '/Payroll/ForProcessingQueue';
+                    return;
+                }
+
+                if (response.data.overwritten === false) {
+                    var shouldOverwrite = confirm('A batch with the same period already exists. Do you want to overwrite it?');
+
+                    if (shouldOverwrite === false) {
+                        vm.searchInProgress = false;
+                    }
+                    else {
+                        vm.addToQueueClicked(true);
+                    }
+                }
             }, function (response) {
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
                 }
 
-                vm.searchInProgresss = false;
+                vm.searchInProgress = false;
             });
         };
 
