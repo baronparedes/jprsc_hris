@@ -45,7 +45,9 @@
             vm.searchInProgresss = true;
 
             $http.post(action, data).then(function (response) {
-                $window.location = '/Payroll/ForProcessingQueue';
+                console.log('data', data);
+
+                //$window.location = '/Payroll/ForProcessingQueue';
             }, function (response) {
                 if (response.status == 400) {
                     vm.validationErrors = response.data;

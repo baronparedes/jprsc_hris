@@ -11,7 +11,7 @@ namespace JPRSC.HRIS.Features.Payroll
 {
     public class AddForProcessingBatch
     {
-        public class Command : IRequest
+        public class Command : IRequest<CommandResult>
         {
             public int ClientId { get; set; }
             public string EmployeeIds { get; set; }
@@ -43,7 +43,13 @@ namespace JPRSC.HRIS.Features.Payroll
             }
         }
 
-        public class CommandHandler : IRequestHandler<Command>
+        public class CommandResult
+        {
+            public bool HasExisting { get; set; }
+            public bool Overwritten { get; set; }
+        }
+
+        public class CommandHandler : IRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _db;
 
@@ -52,7 +58,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command command, CancellationToken token)
+            public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
                 var dateFormatted = $"{DateTime.Now:MM/dd/yyyy}";
                 var existingForProcessingBatchCount = await _db
@@ -60,41 +66,55 @@ namespace JPRSC.HRIS.Features.Payroll
                     .CountAsync(fpb => fpb.ClientId == command.ClientId && fpb.DateFormatted == dateFormatted);
 
                 var client = await _db.Clients.AsNoTracking().SingleOrDefaultAsync(c => !c.DeletedOn.HasValue && c.Id == command.ClientId);
-                var newBatchName = GetBatchName(client, command.PayrollPeriodMonth.Value, command.PayrollPeriodFrom.Value, command.PayrollPeriodTo.Value);
-                var batchName = GetBatchName(dateFormatted, client, existingForProcessingBatchCount);
+                var batchName = GetBatchName(client, command.PayrollPeriodMonth.Value, command.PayrollPeriodFrom.Value, command.PayrollPeriodTo.Value);
 
+                var existingBatchWithSameName = await _db.ForProcessingBatches.SingleOrDefaultAsync(fpb => fpb.ClientId == command.ClientId && fpb.Name == batchName);
+                var hasExisting = existingBatchWithSameName != null;
                 var now = DateTime.UtcNow;
-                
-                var forProcessingBatch = new ForProcessingBatch
+
+                if (!hasExisting)
                 {
-                    AddedOn = now,
-                    ClientId = command.ClientId,
-                    DateFormatted = dateFormatted,
-                    EmployeeIds = command.EmployeeIds,
-                    Name = batchName,
-                    ProcessedOn = now
-                };
-                _db.ForProcessingBatches.Add(forProcessingBatch);
+                    var forProcessingBatch = new ForProcessingBatch
+                    {
+                        AddedOn = now,
+                        ClientId = command.ClientId,
+                        DateFormatted = dateFormatted,
+                        EmployeeIds = command.EmployeeIds,
+                        Name = batchName,
+                        ProcessedOn = now
+                    };
+                    _db.ForProcessingBatches.Add(forProcessingBatch);
+
+                    await _db.SaveChangesAsync();
+
+                    return new CommandResult
+                    {
+                        HasExisting = false,
+                        Overwritten = false
+                    };
+                }
+
+                if (!command.Overwrite)
+                {
+                    return new CommandResult
+                    {
+                        HasExisting = true,
+                        Overwritten = false
+                    };
+                }
+
+                existingBatchWithSameName.DateFormatted = dateFormatted;
+                existingBatchWithSameName.EmployeeIds = command.EmployeeIds;
+                existingBatchWithSameName.ModifiedOn = now;
+                existingBatchWithSameName.ProcessedOn = now;
 
                 await _db.SaveChangesAsync();
 
-                return Unit.Value;
-            }
-
-            private static string GetBatchName(string dateFormatted, Client client, int existingForProcessingBatchCount)
-            {
-                string name;
-
-                if (existingForProcessingBatchCount == 0)
+                return new CommandResult
                 {
-                    name = $"{dateFormatted} {client.Name}";
-                }
-                else
-                {
-                    name = $"{dateFormatted} {client.Name} - {existingForProcessingBatchCount}";
-                }
-
-                return name;
+                    HasExisting = true,
+                    Overwritten = true
+                };
             }
 
             private static string GetBatchName(Client client, Month payrollPeriodMonth, DateTime payrollPeriodFrom, DateTime payrollPeriodTo)
