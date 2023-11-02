@@ -61,9 +61,6 @@ namespace JPRSC.HRIS.Features.Payroll
             public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
                 var dateFormatted = $"{DateTime.Now:MM/dd/yyyy}";
-                var existingForProcessingBatchCount = await _db
-                    .ForProcessingBatches
-                    .CountAsync(fpb => fpb.ClientId == command.ClientId && fpb.DateFormatted == dateFormatted);
 
                 var client = await _db.Clients.AsNoTracking().SingleOrDefaultAsync(c => !c.DeletedOn.HasValue && c.Id == command.ClientId);
                 var batchName = GetBatchName(client, command.PayrollPeriodMonth.Value, command.PayrollPeriodFrom.Value, command.PayrollPeriodTo.Value);
