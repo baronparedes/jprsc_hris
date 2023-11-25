@@ -3,7 +3,9 @@ using JPRSC.HRIS.Infrastructure.Data;
 using JPRSC.HRIS.Models;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,6 +17,7 @@ namespace JPRSC.HRIS.Features.Payroll
         {
             public int ClientId { get; set; }
             public string EmployeeIds { get; set; }
+            public IList<int> EmployeeIdsList => String.IsNullOrWhiteSpace(EmployeeIds) ? new List<int>() : EmployeeIds.Split(',').Select(id => Convert.ToInt32(id)).ToList();
             public DateTime? PayrollPeriodFrom { get; set; }
             public Month? PayrollPeriodMonth { get; set; }
             public DateTime? PayrollPeriodTo { get; set; }
@@ -101,7 +104,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 }
 
                 existingBatchWithSameName.DateFormatted = dateFormatted;
-                existingBatchWithSameName.EmployeeIds = command.EmployeeIds;
+                existingBatchWithSameName.EmployeeIds = String.Join(",", existingBatchWithSameName.EmployeeIdsList.Union(command.EmployeeIdsList));
                 existingBatchWithSameName.ModifiedOn = now;
                 existingBatchWithSameName.ProcessedOn = now;
 
