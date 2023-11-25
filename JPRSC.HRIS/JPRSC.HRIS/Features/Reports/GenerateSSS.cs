@@ -182,7 +182,16 @@ namespace JPRSC.HRIS.Features.Reports
 
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
-                        if (!clientsDictionary.ContainsKey(sampleEmployee.ClientId.Value)) clientsDictionary.Add(sampleEmployee.ClientId.Value, clients.Single(c => c.Id == sampleEmployee.ClientId.Value));
+                        if (!clientsDictionary.ContainsKey(sampleEmployee.ClientId.Value))
+                        {
+                            var matchingClient = clients.SingleOrDefault(c => c.Id == sampleEmployee.ClientId.Value);
+                            if (matchingClient == null)
+                            {
+                                matchingClient = await _db.Clients.SingleAsync(c => c.Id == sampleEmployee.ClientId.Value);
+                            }
+
+                            clientsDictionary.Add(sampleEmployee.ClientId.Value, matchingClient);
+                        }
                         
                         var client = clientsDictionary[sampleEmployee.ClientId.Value];
 
