@@ -41,17 +41,20 @@ namespace JPRSC.HRIS.Features.Payroll
             {
                 var forProcessingBatch = await _db
                     .ForProcessingBatches
+                    .AsNoTracking()
                     .SingleAsync(fpb => fpb.Id == query.ForProcessingBatchId);
 
                 var employeeIds = forProcessingBatch.EmployeeIdsList;
 
                 var employees = await _db
                     .Employees
+                    .AsNoTracking()
                     .Where(e => employeeIds.Contains(e.Id))
                     .ToListAsync();
 
                 var payRates = await _db
                     .PayPercentages
+                    .AsNoTracking()
                     .ToListAsync();
 
                 var dtrLines = GetDTRLines(employees, payRates);
