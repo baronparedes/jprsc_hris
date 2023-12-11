@@ -154,7 +154,8 @@ namespace JPRSC.HRIS.Features.Reports
             {
                 var allPayrollRecords = payrollProcessBatches.SelectMany(ppb => ppb.PayrollRecords).ToList();
                 var distinctCompanyIds = allPayrollRecords.Select(pr => pr.Employee).Select(e => e.CompanyId).Distinct();
-                var companies = await _db.Companies.Where(c => !c.DeletedOn.HasValue && distinctCompanyIds.Contains(c.Id)).ToListAsync();
+                var companies = await _db.Companies.AsNoTracking().Where(c => !c.DeletedOn.HasValue && distinctCompanyIds.Contains(c.Id)).ToListAsync();
+                var companiesDictionary = companies.ToDictionary(c => c.Id, c => c);
 
                 var pagIbigRecords = new List<QueryResult.PagIbigRecord>();
 
@@ -179,7 +180,14 @@ namespace JPRSC.HRIS.Features.Reports
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
                         var pagIbigRecord = new QueryResult.PagIbigRecord();
-                        pagIbigRecord.CompanyPagIbig = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.PagIbig;
+                        var companyFound = companiesDictionary.TryGetValue(sampleEmployee.CompanyId.Value, out Company company);
+                        if (!companyFound)
+                        {
+                            company = await _db.Companies.AsNoTracking().SingleOrDefaultAsync(c => c.Id == sampleEmployee.CompanyId);
+                            companiesDictionary[sampleEmployee.CompanyId.Value] = company;
+                        }
+
+                        pagIbigRecord.CompanyPagIbig = company?.PagIbig;
                         pagIbigRecord.PagIbigDeductionBasis = deductionBasis;
                         pagIbigRecord.Employee = sampleEmployee;
                         pagIbigRecord.NetPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
