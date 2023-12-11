@@ -153,7 +153,8 @@ namespace JPRSC.HRIS.Features.Reports
             {
                 var allPayrollRecords = payrollProcessBatches.SelectMany(ppb => ppb.PayrollRecords).ToList();
                 var distinctCompanyIds = allPayrollRecords.Select(pr => pr.Employee).Select(e => e.CompanyId).Distinct();
-                var companies = await _db.Companies.Where(c => !c.DeletedOn.HasValue && distinctCompanyIds.Contains(c.Id)).ToListAsync();
+                var companies = await _db.Companies.AsNoTracking().Where(c => !c.DeletedOn.HasValue && distinctCompanyIds.Contains(c.Id)).ToListAsync();
+                var companiesDictionary = companies.ToDictionary(c => c.Id, c => c);
 
                 var sssRecords = new List<QueryResult.SSSRecord>();
 
@@ -196,7 +197,14 @@ namespace JPRSC.HRIS.Features.Reports
                         var client = clientsDictionary[sampleEmployee.ClientId.Value];
 
                         var sssRecord = new QueryResult.SSSRecord();
-                        sssRecord.CompanySSS = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.SSS;
+                        var companyFound = companiesDictionary.TryGetValue(sampleEmployee.CompanyId.Value, out Company company);
+                        if (!companyFound)
+                        {
+                            company = await _db.Companies.AsNoTracking().SingleOrDefaultAsync(c => c.Id == sampleEmployee.CompanyId);
+                            companiesDictionary[sampleEmployee.CompanyId.Value] = company;
+                        }
+
+                        sssRecord.CompanySSS = company?.SSS;
                         sssRecord.SSSDeductionBasis = deductionBasis;
                         sssRecord.Employee = sampleEmployee;
                         sssRecord.NetPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);

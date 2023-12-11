@@ -154,7 +154,8 @@ namespace JPRSC.HRIS.Features.Reports
             {
                 var allPayrollRecords = payrollProcessBatches.SelectMany(ppb => ppb.PayrollRecords).ToList();
                 var distinctCompanyIds = allPayrollRecords.Select(pr => pr.Employee).Select(e => e.CompanyId).Distinct();
-                var companies = await _db.Companies.Where(c => !c.DeletedOn.HasValue && distinctCompanyIds.Contains(c.Id)).ToListAsync();
+                var companies = await _db.Companies.AsNoTracking().Where(c => !c.DeletedOn.HasValue && distinctCompanyIds.Contains(c.Id)).ToListAsync();
+                var companiesDictionary = companies.ToDictionary(c => c.Id, c => c);
 
                 var phicRecords = new List<QueryResult.PHICRecord>();
 
@@ -179,7 +180,14 @@ namespace JPRSC.HRIS.Features.Reports
                         var sampleEmployee = employeePayrollRecords.First().Employee;
 
                         var phicRecord = new QueryResult.PHICRecord();
-                        phicRecord.CompanyPhilHealth = companies.SingleOrDefault(c => c.Id == sampleEmployee.CompanyId)?.PhilHealth;
+                        var companyFound = companiesDictionary.TryGetValue(sampleEmployee.CompanyId.Value, out Company company);
+                        if (!companyFound)
+                        {
+                            company = await _db.Companies.AsNoTracking().SingleOrDefaultAsync(c => c.Id == sampleEmployee.CompanyId);
+                            companiesDictionary[sampleEmployee.CompanyId.Value] = company;
+                        }
+
+                        phicRecord.CompanyPhilHealth = company?.PhilHealth;
                         phicRecord.PHICDeductionBasis = deductionBasis;
                         phicRecord.Employee = sampleEmployee;
                         phicRecord.NetPayValue = employeePayrollRecords.Sum(pr => pr.NetPayValue);
