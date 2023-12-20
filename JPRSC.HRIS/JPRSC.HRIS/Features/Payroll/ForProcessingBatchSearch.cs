@@ -47,6 +47,9 @@ namespace JPRSC.HRIS.Features.Payroll
                 public IList<int> EmployeeIdsList => String.IsNullOrWhiteSpace(EmployeeIds) ? new List<int>() : EmployeeIds.Split(',').Select(id => Convert.ToInt32(id)).ToList();
                 public int Id { get; set; }
                 public string Name { get; set; }
+                public DateTime? PayrollPeriodFrom { get; set; }
+                public Month? PayrollPeriodMonth { get; set; }
+                public DateTime? PayrollPeriodTo { get; set; }
             }
         }
 

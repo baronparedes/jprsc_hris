@@ -699,6 +699,10 @@
     <Compile Include="Infrastructure\Data\Migrations\202303250252075_AddClientSSSRangeOffset.designer.cs">
       <DependentUpon>202303250252075_AddClientSSSRangeOffset.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\202312200446584_AddPayrollPeriodValuesToForProcessingBatch.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\202312200446584_AddPayrollPeriodValuesToForProcessingBatch.designer.cs">
+      <DependentUpon>202312200446584_AddPayrollPeriodValuesToForProcessingBatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -1051,6 +1055,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\202303250252075_AddClientSSSRangeOffset.resx">
       <DependentUpon>202303250252075_AddClientSSSRangeOffset.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\202312200446584_AddPayrollPeriodValuesToForProcessingBatch.resx">
+      <DependentUpon>202312200446584_AddPayrollPeriodValuesToForProcessingBatch.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

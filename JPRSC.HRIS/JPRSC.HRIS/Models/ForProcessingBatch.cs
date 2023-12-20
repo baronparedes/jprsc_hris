@@ -17,5 +17,9 @@ namespace JPRSC.HRIS.Models
         public DateTime? ModifiedOn { get; set; }
         public string Name { get; set; }
         public DateTime? ProcessedOn { get; set; }
+
+        public DateTime? PayrollPeriodFrom { get; set; }
+        public Month? PayrollPeriodMonth { get; set; }
+        public DateTime? PayrollPeriodTo { get; set; }
     }
 }
