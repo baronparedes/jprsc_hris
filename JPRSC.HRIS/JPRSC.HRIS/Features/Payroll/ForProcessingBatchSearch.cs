@@ -20,6 +20,9 @@ namespace JPRSC.HRIS.Features.Payroll
             public string SearchTerm { get; set; }
             public int? PageNumber { get; set; }
             public int? PageSize { get; set; }
+            public DateTime? PayrollPeriodFrom { get; set; }
+            public Month? PayrollPeriodMonth { get; set; }
+            public DateTime? PayrollPeriodTo { get; set; }
 
             public string SearchLikeTerm
             {
@@ -85,7 +88,25 @@ namespace JPRSC.HRIS.Features.Payroll
                 if (!String.IsNullOrWhiteSpace(query.SearchLikeTerm))
                 {
                     dbQuery = dbQuery
-                        .Where(r => DbFunctions.Like(r.Name, query.SearchLikeTerm));
+                        .Where(fpb => DbFunctions.Like(fpb.Name, query.SearchLikeTerm));
+                }
+
+                if (query.PayrollPeriodMonth.HasValue)
+                {
+                    dbQuery = dbQuery
+                        .Where(fpb => fpb.PayrollPeriodMonth == query.PayrollPeriodMonth.Value);
+                }
+
+                if (query.PayrollPeriodFrom.HasValue)
+                {
+                    dbQuery = dbQuery
+                        .Where(fpb => fpb.PayrollPeriodFrom == query.PayrollPeriodFrom.Value);
+                }
+
+                if (query.PayrollPeriodTo.HasValue)
+                {
+                    dbQuery = dbQuery
+                        .Where(fpb => fpb.PayrollPeriodTo == query.PayrollPeriodTo.Value);
                 }
 
                 var totalResultsCount = await dbQuery
