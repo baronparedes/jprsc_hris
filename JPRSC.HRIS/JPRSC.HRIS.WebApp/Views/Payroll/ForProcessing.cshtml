@@ -15,10 +15,10 @@
             height: 20px;
         }
 
-        td > label.checkbox {
-            margin-top: 0px;
-        }
-    </style>    
+            td > label.checkbox {
+                margin-top: 0px;
+            }
+    </style>
 }
 
 <div class="page-content-wrapper">
@@ -38,60 +38,22 @@
         @Html.Raw(Html.RenderSuccessNotification())
         <div class="row" ng-controller="ForProcessingCtrl as vm" ng-init='vm.serverModel = @Html.NgInit(Model)'>
             <div class="col-sm-12">
-                <form role="form" class="form-horizontal">
+                <form role="form">
                     <div class="form-body">
-                        <div class="form-group">
-                            <label class="col-md-3 col-lg-2 control-label">Client</label>
-                            <div class="col-md-9 col-lg-10">
-                                <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.searchClicked()"></select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 col-lg-2 control-label">Payroll Period From</label>
-                            <div class="col-md-9 col-lg-10">
-                                <input type="text" class="form-control" ng-model="vm.payrollPeriodFrom"
-                                       uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
-                                       is-open="vm.payrollPeriodFromIsOpen" ng-click="vm.payrollPeriodFromIsOpen = true">
-                                <input type="hidden" name="PayrollPeriodFrom" value="{{vm.payrollPeriodFrom | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
-                                <span ng-show="vm.validationErrors.payrollPeriodFrom" class="help-block">{{vm.validationErrors.payrollPeriodFrom.join(' ')}}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 col-lg-2 control-label">Payroll Period To</label>
-                            <div class="col-md-9 col-lg-10">
-                                <input type="text" class="form-control" ng-model="vm.payrollPeriodTo"
-                                       uib-datepicker-popup="EEE, MMMM dd, yyyy" datepicker-options="vm.datepickerOptions" show-button-bar="false"
-                                       is-open="vm.payrollPeriodToIsOpen" ng-click="vm.payrollPeriodToIsOpen = true">
-                                <input type="hidden" name="PayrollPeriodTo" value="{{vm.payrollPeriodTo | date:'yyyy-MM-ddTHH:mm:ssZ'}}" />
-                                <span ng-show="vm.validationErrors.payrollPeriodTo" class="help-block">{{vm.validationErrors.payrollPeriodTo.join(' ')}}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 col-lg-2 control-label">Payroll Period Month</label>
-                            <div class="col-md-9 col-lg-10">
-                                <select class="form-control" name="PayrollPeriodMonth" ng-model="vm.payrollPeriodMonth">
-                                    <option value="@((int)Month.January)">@Month.January.ToString()</option>
-                                    <option value="@((int)Month.February)">@Month.February.ToString()</option>
-                                    <option value="@((int)Month.March)">@Month.March.ToString()</option>
-                                    <option value="@((int)Month.April)">@Month.April.ToString()</option>
-                                    <option value="@((int)Month.May)">@Month.May.ToString()</option>
-                                    <option value="@((int)Month.June)">@Month.June.ToString()</option>
-                                    <option value="@((int)Month.July)">@Month.July.ToString()</option>
-                                    <option value="@((int)Month.August)">@Month.August.ToString()</option>
-                                    <option value="@((int)Month.September)">@Month.September.ToString()</option>
-                                    <option value="@((int)Month.October)">@Month.October.ToString()</option>
-                                    <option value="@((int)Month.November)">@Month.November.ToString()</option>
-                                    <option value="@((int)Month.December)">@Month.December.ToString()</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 col-lg-2 control-label">Search by Employee Code, First Name, Last Name, or MI</label>
-                            <div class="col-md-9 col-lg-10">
-                                <div class="input-group" style="width: 100%">
-                                    <input type="text" class="form-control" ng-disabled="!vm.employees.length" ng-model="vm.localSearchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Client</label>
+                                    <select class="form-control" ng-model="vm.searchModel.client" ng-options="client.name for client in vm.clients track by client.id" ng-change="vm.searchClicked()"></select>
                                 </div>
-                                <span ng-show="vm.validationErrors.employeeIds" class="help-block">{{vm.validationErrors.employeeIds.join(' ')}}</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Search by Employee Code, First Name, Last Name, or MI</label>
+                                    <div class="input-group" style="width: 100%">
+                                        <input type="text" class="form-control" ng-disabled="!vm.employees.length" ng-model="vm.localSearchTerm" ng-model-options="{ debounce: 500 }" placeholder="" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -99,7 +61,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.clientId || !vm.employees.length || !vm.payrollPeriodFrom || !vm.payrollPeriodTo || !vm.payrollPeriodMonth || vm.searchInProgress" ng-click="vm.addToQueueClicked(false)">Add to Queue</button>
+                            <button type="button" class="btn btn-primary" ng-disabled="!vm.searchModel.clientId || !vm.employees.length || vm.searchInProgresss" ng-click="vm.addToQueueClicked()">Add to Queue</button>
                         </div>
                     </div>
                 </div>

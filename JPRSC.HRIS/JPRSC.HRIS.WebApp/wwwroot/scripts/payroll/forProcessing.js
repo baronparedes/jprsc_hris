@@ -6,13 +6,11 @@
     function ForProcessingCtrl($http, $timeout, $uibModal, $scope, $window, globalSettings) {
         var vm = this;
         vm.addToQueueClicked = addToQueueClicked;
-        vm.datepickerOptions = globalSettings.datepickerOptions;
         vm.employees = [];
         vm.filteredEmployees = [];
         vm.searchClicked = searchClicked;
         vm.searchModel = {};
         vm.searchInProgress = false;
-        vm.validationErrors = {};
 
         $scope.$watch('vm.localSearchTerm', onLocalSearchTermChange);
 
@@ -21,61 +19,39 @@
             vm.clients.splice(0, 0, { code: '-- Select a client --', name: '-- Select a client --' });
         });
 
-        function addToQueueClicked(overwrite) {
+        function addToQueueClicked() {
+            console.log('addToQueueClicked');
+
             var includedEmployeeIds = [];
 
             for (var i = 0; i < vm.filteredEmployees.length; i++) {
                 if (vm.filteredEmployees[i].includeInBatch === true) {
                     includedEmployeeIds.push(vm.filteredEmployees[i].id);
+                    console.log(vm.filteredEmployees[i]);
                 }
             }
 
             var employeeIds = includedEmployeeIds.join();
 
+            console.log(employeeIds);
+
             var action = '/Payroll/AddForProcessingBatch';
             var data = {
                 clientId: vm.searchModel.clientId,
-                employeeIds: employeeIds,
-                payrollPeriodFrom: vm.payrollPeriodFrom,
-                payrollPeriodTo: vm.payrollPeriodTo,
-                payrollPeriodMonth: vm.payrollPeriodMonth,
-                overwrite: overwrite
+                employeeIds: employeeIds
             };
 
-            vm.searchInProgress = true;
+            vm.searchInProgresss = true;
 
             $http.post(action, data).then(function (response) {
-                if (overwrite === true) {
-                    $window.location = '/Payroll/ForProcessingQueue';
-                    return;
-                }
-
-                if (!response || !response.data) {
-                    alert('Error: no response found');
-                    return;
-                }
-
-                if (response.data.hasExisting === false) {
-                    $window.location = '/Payroll/ForProcessingQueue';
-                    return;
-                }
-
-                if (response.data.overwritten === false) {
-                    var shouldOverwrite = confirm('A batch with the same period already exists. Do you want to overwrite it?');
-
-                    if (shouldOverwrite === false) {
-                        vm.searchInProgress = false;
-                    }
-                    else {
-                        vm.addToQueueClicked(true);
-                    }
-                }
+                console.log('success');
+                $window.location = '/Payroll/ForProcessingQueue';
             }, function (response) {
                 if (response.status == 400) {
                     vm.validationErrors = response.data;
                 }
 
-                vm.searchInProgress = false;
+                vm.searchInProgresss = false;
             });
         };
 
