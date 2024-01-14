@@ -62,6 +62,7 @@ namespace JPRSC.HRIS.Features.Reports
             public IList<AlphalistRecord> AlphalistRecords { get; set; } = new List<AlphalistRecord>();
             public Query Query { get; set; }
             public string FilesPath { get; set; }
+            public List<string> Errors { get; set; } = new List<string>();
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
@@ -130,62 +131,95 @@ namespace JPRSC.HRIS.Features.Reports
 
                 foreach (var record in generate2316Result.AlphalistRecords)
                 {
-                    Generate2316File(generate2316Result, record, template2316FilePath, saveFolder);
+                    var success = Generate2316File(generate2316Result, record, template2316FilePath, saveFolder, out string error);
+                    if (!success)
+                    {
+                        generate2316Result.Errors.Add(error);
+                        break;
+                    }
                 }
 
                 generate2316Result.FilesPath = saveFolder;
                 return generate2316Result;
             }
 
-            internal static void Generate2316File(QueryResult queryResult, AlphalistRecord record, string template2316FilePath, string saveFolder)
+            internal static bool Generate2316File(QueryResult queryResult, AlphalistRecord record, string template2316FilePath, string saveFolder, out string error)
             {
                 var fullName = record.Employee.FullName;
                 var filePath = Path.Combine(saveFolder, fullName + ".pdf");
+                error = null;
 
-                Bitmap filledOutImage;
-                using (var template2316 = (Bitmap)System.Drawing.Image.FromFile(template2316FilePath))
+                Bitmap filledOutImage = null;
+                try
                 {
-                    using (var graphics = Graphics.FromImage(template2316))
+                    using (var template2316 = (Bitmap)System.Drawing.Image.FromFile(template2316FilePath))
                     {
-                        using (var courierNew = new System.Drawing.Font("Courier New", 18, FontStyle.Bold))
+                        using (var graphics = Graphics.FromImage(template2316))
                         {
-                            // For the year
-                            if (queryResult.PayrollPeriodToYear != default(int)) graphics.Write(courierNew, queryResult.PayrollPeriodToYear, new PointF(360f, 270f), 48f);
+                            using (var courierNew = new System.Drawing.Font("Courier New", 18, FontStyle.Bold))
+                            {
+                                // For the year
+                                if (queryResult.PayrollPeriodToYear != default(int)) graphics.Write(courierNew, queryResult.PayrollPeriodToYear, new PointF(360f, 270f), 48f);
 
-                            // TIN
-                            var tin = new TIN(record.Employee.TIN);
-                            if (!String.IsNullOrWhiteSpace(tin.FirstPart)) graphics.Write(courierNew, tin.FirstPart, new PointF(247f, 353f), 34f);
-                            if (!String.IsNullOrWhiteSpace(tin.SecondPart)) graphics.Write(courierNew, tin.SecondPart, new PointF(386f, 353f), 34f);
-                            if (!String.IsNullOrWhiteSpace(tin.ThirdPart)) graphics.Write(courierNew, tin.ThirdPart, new PointF(523f, 353f), 34f);
+                                // TIN
+                                var tin = new TIN(record.Employee.TIN);
+                                if (!String.IsNullOrWhiteSpace(tin.FirstPart)) graphics.Write(courierNew, tin.FirstPart, new PointF(247f, 353f), 34f);
+                                if (!String.IsNullOrWhiteSpace(tin.SecondPart)) graphics.Write(courierNew, tin.SecondPart, new PointF(386f, 353f), 34f);
+                                if (!String.IsNullOrWhiteSpace(tin.ThirdPart)) graphics.Write(courierNew, tin.ThirdPart, new PointF(523f, 353f), 34f);
 
-                            // Employee's name
-                            graphics.Write(courierNew, fullName.ToUpperInvariant(), new PointF(135f, 420f));
+                                // Employee's name
+                                graphics.Write(courierNew, fullName.ToUpperInvariant(), new PointF(135f, 420f));
+                            }
                         }
-                    }
 
-                    filledOutImage = new Bitmap(template2316);
+                        filledOutImage = new Bitmap(template2316);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    error = ex.Message;
+                    return false;
+                }
+                finally
+                {
+                    if (filledOutImage != null) filledOutImage.Dispose();
                 }
 
                 Document document = new Document();
-                using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                try
                 {
-                    PdfWriter.GetInstance(document, stream);
-                    document.Open();
-                    using (var ms = new MemoryStream())
+                    using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
-                        filledOutImage.Save(ms, ImageFormat.Jpeg);
-                        ms.Position = 0;
-                        var image = iTextSharp.text.Image.GetInstance(ms);
+                        PdfWriter.GetInstance(document, stream);
+                        document.Open();
+                        using (var ms = new MemoryStream())
+                        {
+                            filledOutImage.Save(ms, ImageFormat.Jpeg);
+                            ms.Position = 0;
+                            var image = iTextSharp.text.Image.GetInstance(ms);
 
-                        image.SetAbsolutePosition(0, 0);
-                        image.ScaleAbsolute(PageSize.A4.Width, PageSize.A4.Height);
+                            image.SetAbsolutePosition(0, 0);
+                            image.ScaleAbsolute(PageSize.A4.Width, PageSize.A4.Height);
 
-                        document.Add(image);
+                            document.Add(image);
+                        }
+                        document.Close();
                     }
-                    document.Close();
+
+                    filledOutImage.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    error = ex.Message;
+                    return false;
+                }
+                finally
+                {
+                    if (filledOutImage != null) filledOutImage.Dispose();
+                    if (document != null) document.Dispose();
                 }
 
-                filledOutImage.Dispose();
+                return true;
             }
 
             private static string GetSaveFolder()

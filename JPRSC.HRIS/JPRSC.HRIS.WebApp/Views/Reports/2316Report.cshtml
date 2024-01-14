@@ -33,7 +33,14 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <h4>Successfully saved to folder "@Model.FilesPath".</h4>
+                @if (Model.Errors.Count > 0)
+                {
+                    <h4>Unable to generate 2316. Error: @Model.Errors[0]</h4>
+                }
+                else
+                {
+                    <h4>Successfully saved to folder "@Model.FilesPath".</h4>
+                }
             </div>
         </div>
     </div>
