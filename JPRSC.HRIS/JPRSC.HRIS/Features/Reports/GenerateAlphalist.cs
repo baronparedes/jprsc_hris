@@ -179,6 +179,8 @@ namespace JPRSC.HRIS.Features.Reports
 
         public class CSVTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
         {
+            int daysInAYear = 313;
+            int daysInAMonth = 20;
             public CSVTableBuilder(DateTime dateGenerated, string alphalistType)
             {
                 string aType = alphalistType == "7.1" ? "2" : "2";
@@ -214,11 +216,13 @@ namespace JPRSC.HRIS.Features.Reports
                 Column(String.Empty, item => item.Employee.DateResigned.HasValue ? $"{item.Employee.DateResigned.Value:MM/dd/yyyy}" : $"12/31/{dateGenerated.Year - 1}");
                 Column(String.Empty, item => String.Format("{0:f2}", item.PRES_NT_TotalEarnings));
 
-                Column(String.Empty, item => String.Format("{0:f2}", item.Employee.DailyRate));
+                Column(String.Empty, item => String.Format("{0:f2}", item.Employee.DailyRate)); // Daily Rate
 
-                Column(String.Empty, item => "0.00"); // Unknown
+                Column(String.Empty, item => String.Format("{0:f2}", (item.Employee.DailyRate * daysInAYear) / 12)); // Mothly rate
 
-                Column(String.Empty, item => String.Format("{0}", "313")); //no of days in the year
+                Column(String.Empty, item => String.Format("{0:f2}", item.Employee.DailyRate * daysInAYear)); // Yearly Rate
+
+                Column(String.Empty, item => String.Format("{0}", daysInAYear)); //no of days in the year
 
 
                 Column(String.Empty, item => "0.00");
@@ -240,7 +244,7 @@ namespace JPRSC.HRIS.Features.Reports
                 Column(String.Empty, item => String.Format("{0:f2}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
 
 
-                Column(String.Empty, item => "0.00");
+
                 Column(String.Empty, item => "0.00");
                 Column(String.Empty, item => "0.00");
                 Column(String.Empty, item => "0.00");
