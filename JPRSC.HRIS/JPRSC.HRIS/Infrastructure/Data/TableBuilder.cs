@@ -13,6 +13,8 @@ namespace JPRSC.HRIS.Infrastructure.Data
         private bool _hasFooter = false;
         private string _title;
 
+        public bool RemoveTrailingHeaderOneCommas { get; set; } = true;
+
         /// <summary>
         /// Sets the title of the table.
         /// </summary>
@@ -92,6 +94,11 @@ namespace JPRSC.HRIS.Infrastructure.Data
                 {
                     footer = _footerBuilder.Build(items);
                 }
+            }
+
+            if (RemoveTrailingHeaderOneCommas)
+            {
+                headerOne = headerOne.RemoveTrailingWhitespace();
             }
 
             return new Table(_title, headerOne, headerTwo, body, footer);
