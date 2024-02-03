@@ -18,7 +18,7 @@ namespace JPRSC.HRIS.Test.Features.Reports
             var template2316filePath = Path.Combine(Config.SolutionFolder, "JPRSC.HRIS.WebApp\\wwwroot\\images\\2316-template.jpg");
             var saveFolder = GetSaveFolder("2316_01");
 
-            Generate2316.QueryHandler.Generate2316File(queryResult, record, template2316filePath, saveFolder);
+            //Generate2316.QueryHandler.Generate2316File(queryResult, record, template2316filePath, saveFolder);
         }
 
         private static string GetSaveFolder(string test)

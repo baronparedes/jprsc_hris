@@ -179,38 +179,87 @@ namespace JPRSC.HRIS.Features.Reports
 
         public class CSVTableBuilder : TableBuilder<QueryResult.AlphalistRecord>
         {
+            int daysInAYear = 313;
+            int daysInAMonth = 20;
             public CSVTableBuilder(DateTime dateGenerated, string alphalistType)
             {
-                Column(String.Empty, item => "D" + alphalistType);
-                Column(BIRFormNumber, item => BIRFormNumber);
+                string aType = alphalistType == "7.1" ? "2" : "2";
+                Column(String.Empty, item => "D" + aType);
+                Column("H" + BIRFormNumber, item => BIRFormNumber);
                 Column(CompanyTIN, item => CompanyTIN);
                 Column(U_0039, item => U_0039);
-                Column("MM/dd/yyyy", item => String.Format("{0:MM/dd/yyyy}", dateGenerated));
+                Column(String.Format("{0:MM/dd/yyyy}", dateGenerated), item => String.Format("{0:MM/dd/yyyy}", dateGenerated));
                 Column(U_N, item => item.Order.ToString());
-                Column("0", item => item.Employee.TIN);
-                Column(U_039, item => U_0000);
+                Column("0", item => String.IsNullOrWhiteSpace(item.Employee.TIN) ? "NO TIN": item.Employee.TIN.Replace("-", ""));
+                Column(U_039, item => U_0039);
                 Column(String.Empty, item => $"\"{item.Employee.LastName}\"");
                 Column(String.Empty, item => $"\"{item.Employee.FirstName}\"");
                 Column(String.Empty, item => $"\"{String.Format("{0}", String.IsNullOrWhiteSpace(item.Employee.MiddleName) ? String.Empty : $", {item.Employee.MiddleName}")}\"");
+                Column(String.Empty, item => $"\"{item.Employee.Region}\"");
+
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+
                 Column(String.Empty, item => item.Employee.DateHired.HasValue ? $"{item.Employee.DateHired.Value:MM/dd/yyyy}" : String.Empty);
-                Column(String.Empty, item => item.Employee.DateResigned.HasValue ? $"{item.Employee.DateResigned.Value:MM/dd/yyyy}" : String.Empty);
-                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalEarnings));
-                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalThirteenthMonth));
-                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalContributions));
-                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
-                Column(String.Empty, item => String.Format("{0:n}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "N/A");
-                Column(String.Empty, item => "Y");
+                Column(String.Empty, item => item.Employee.DateResigned.HasValue ? $"{item.Employee.DateResigned.Value:MM/dd/yyyy}" : $"12/31/{dateGenerated.Year - 1}");
+                Column(String.Empty, item => String.Format("{0:f2}", item.PRES_NT_TotalEarnings));
+
+                Column(String.Empty, item => String.Format("{0:f2}", item.Employee.DailyRate)); // Daily Rate
+
+                Column(String.Empty, item => String.Format("{0:f2}", (item.Employee.DailyRate * daysInAYear) / 12)); // Mothly rate
+
+                Column(String.Empty, item => String.Format("{0:f2}", item.Employee.DailyRate * daysInAYear)); // Yearly Rate
+
+                Column(String.Empty, item => String.Format("{0}", daysInAYear)); //no of days in the year
+
+
+                Column(String.Empty, item => "0.00");
+
+
+                Column(String.Empty, item => String.Format("{0:f2}", item.PRES_NT_TotalOvertimeValue));
+
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+
+                Column(String.Empty, item => String.Format("{0:f2}", item.PRES_NT_TotalThirteenthMonth));
+
+                Column(String.Empty, item => "0.00");
+
+
+                Column(String.Empty, item => String.Format("{0:f2}", item.PRES_NT_TotalContributions));
+
+                Column(String.Empty, item => String.Format("{0:f2}", item.PRES_T_SalariesAndOtherFormsOfCompensations));
+                Column(String.Empty, item => String.Format("{0:f2}", item.PRES_NT_TotalEarnings - item.PRES_NT_TotalOvertimeValue - item.PRES_NT_TotalThirteenthMonth - item.PRES_NT_TotalContributions));
+
+
+
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+                Column(String.Empty, item => "0.00");
+
+
+                Column(String.Empty, item => "FILIPINO");
+                Column(String.Empty, item => "R");
+                Column(String.Empty, item => "TR");
             }
         }
 
