@@ -156,20 +156,7 @@ namespace JPRSC.HRIS.Features.Reports
                     {
                         using (var graphics = Graphics.FromImage(template2316))
                         {
-                            using (var courierNew = new System.Drawing.Font("Courier New", 18, FontStyle.Bold))
-                            {
-                                // For the year
-                                if (queryResult.PayrollPeriodToYear != default(int)) graphics.Write(courierNew, queryResult.PayrollPeriodToYear, new PointF(360f, 270f), 48f);
-
-                                // TIN
-                                var tin = new TIN(record.Employee.TIN);
-                                if (!String.IsNullOrWhiteSpace(tin.FirstPart)) graphics.Write(courierNew, tin.FirstPart, new PointF(247f, 353f), 34f);
-                                if (!String.IsNullOrWhiteSpace(tin.SecondPart)) graphics.Write(courierNew, tin.SecondPart, new PointF(386f, 353f), 34f);
-                                if (!String.IsNullOrWhiteSpace(tin.ThirdPart)) graphics.Write(courierNew, tin.ThirdPart, new PointF(523f, 353f), 34f);
-
-                                // Employee's name
-                                graphics.Write(courierNew, fullName.ToUpperInvariant(), new PointF(135f, 420f));
-                            }
+                            WriteInfo(graphics, queryResult, record);
                         }
 
                         filledOutImage = new Bitmap(template2316);
@@ -178,11 +165,8 @@ namespace JPRSC.HRIS.Features.Reports
                 catch (Exception ex)
                 {
                     error = ex.Message;
-                    return false;
-                }
-                finally
-                {
                     if (filledOutImage != null) filledOutImage.Dispose();
+                    return false;
                 }
 
                 Document document = new Document();
@@ -207,6 +191,7 @@ namespace JPRSC.HRIS.Features.Reports
                     }
 
                     filledOutImage.Dispose();
+                    document.Dispose();
                 }
                 catch (Exception ex)
                 {
@@ -249,6 +234,24 @@ namespace JPRSC.HRIS.Features.Reports
                 foreach (FileInfo file in di.GetFiles())
                 {
                     file.Delete();
+                }
+            }
+
+            private static void WriteInfo(Graphics graphics, QueryResult queryResult, AlphalistRecord record)
+            {
+                using (var courierNew = new System.Drawing.Font("Courier New", 18, FontStyle.Bold))
+                {
+                    // For the year
+                    if (queryResult.PayrollPeriodToYear != default(int)) graphics.Write(courierNew, queryResult.PayrollPeriodToYear, new PointF(360f, 270f), 48f);
+
+                    // TIN
+                    var tin = new TIN(record.Employee.TIN);
+                    if (!String.IsNullOrWhiteSpace(tin.FirstPart)) graphics.Write(courierNew, tin.FirstPart, new PointF(247f, 353f), 34f);
+                    if (!String.IsNullOrWhiteSpace(tin.SecondPart)) graphics.Write(courierNew, tin.SecondPart, new PointF(386f, 353f), 34f);
+                    if (!String.IsNullOrWhiteSpace(tin.ThirdPart)) graphics.Write(courierNew, tin.ThirdPart, new PointF(523f, 353f), 34f);
+
+                    // Employee's name
+                    graphics.Write(courierNew, record.Employee.FullName.ToUpperInvariant(), new PointF(135f, 420f));
                 }
             }
         }
