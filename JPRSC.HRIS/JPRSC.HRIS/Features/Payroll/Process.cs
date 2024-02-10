@@ -160,31 +160,40 @@ namespace JPRSC.HRIS.Features.Payroll
                     var previousPayrollProcessBatchesInMonth = new List<PayrollProcessBatch>();
                     var payrollProcessBatchesFromFifthPayrollPeriodOfPreviousMonth = new List<PayrollProcessBatch>();
 
-                    if (command.PayrollPeriodMonth != Month.January)
+                    var recentPayrollProcessBatches = await _db.PayrollProcessBatches
+                        .Where(ppb => ppb.ClientId == client.Id)
+                        .OrderByDescending(ppb => ppb.AddedOn)
+                        .Take(10) // Assumption: there will never be payroll periods greater than 10
+                        .ToListAsync();
+
+                    var foundBatchWithFirstPayrollPeriod = false;
+                    var foundBatchWithFifthPayrollPeriod = false;
+
+                    foreach (var recentPayrollProcessBatch in recentPayrollProcessBatches)
                     {
-                        previousPayrollProcessBatchesInMonth = await _db.PayrollProcessBatches
-                            .Where(ppb => ppb.ClientId == client.Id && ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year && ppb.PayrollPeriod < command.PayrollPeriod && ppb.PayrollPeriodMonth == command.PayrollPeriodMonth)
-                            .OrderByDescending(ppb => ppb.PayrollPeriodFrom)
-                            .ToListAsync();
+                        if (!foundBatchWithFirstPayrollPeriod)
+                        {
+                            if (recentPayrollProcessBatch.PayrollPeriod < command.PayrollPeriod)
+                            {
+                                previousPayrollProcessBatchesInMonth.Add(recentPayrollProcessBatch);
+                            }
 
-                        var previousPayrollPeriodMonth = (Month)Enum.Parse(typeof(Month), ((int)command.PayrollPeriodMonth - 1).ToString());
+                            if (recentPayrollProcessBatch.PayrollPeriod == 1)
+                            {
+                                foundBatchWithFirstPayrollPeriod = true;
+                            }
+                        }                        
 
-                        payrollProcessBatchesFromFifthPayrollPeriodOfPreviousMonth = await _db.PayrollProcessBatches
-                            .Where(ppb => ppb.ClientId == client.Id && ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year && ppb.PayrollPeriod == 5 && ppb.PayrollPeriodMonth == previousPayrollPeriodMonth)
-                            .OrderByDescending(ppb => ppb.PayrollPeriodFrom)
-                            .ToListAsync();
-                    }
-                    else
-                    {
-                        previousPayrollProcessBatchesInMonth = await _db.PayrollProcessBatches
-                            .Where(ppb => ppb.ClientId == client.Id && (ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year || (ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year - 1 && ppb.PayrollPeriodFrom.Value.Month == 12)) && ppb.PayrollPeriod < command.PayrollPeriod && ppb.PayrollPeriodMonth == command.PayrollPeriodMonth)
-                            .OrderByDescending(ppb => ppb.PayrollPeriodFrom)
-                            .ToListAsync();
+                        if (recentPayrollProcessBatch.PayrollPeriod == 5)
+                        {
+                            payrollProcessBatchesFromFifthPayrollPeriodOfPreviousMonth.Add(recentPayrollProcessBatch);
+                            foundBatchWithFifthPayrollPeriod = true;
+                        }
 
-                        payrollProcessBatchesFromFifthPayrollPeriodOfPreviousMonth = await _db.PayrollProcessBatches
-                            .Where(ppb => ppb.ClientId == client.Id && (ppb.PayrollPeriodFrom.Value.Year == command.PayrollPeriodFrom.Value.Year - 1 && ppb.PayrollPeriodFrom.Value.Month == 12) && ppb.PayrollPeriod == 5 && ppb.PayrollPeriodMonth == Month.December)
-                            .OrderByDescending(ppb => ppb.PayrollPeriodFrom)
-                            .ToListAsync();
+                        if (foundBatchWithFirstPayrollPeriod && foundBatchWithFifthPayrollPeriod)
+                        {
+                            break;
+                        }
                     }
 
                     var systemSettings = await _db.SystemSettings.SingleAsync();

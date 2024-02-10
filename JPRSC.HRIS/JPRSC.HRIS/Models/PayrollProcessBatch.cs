@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace JPRSC.HRIS.Models
 {
+    [System.Diagnostics.DebuggerDisplay("{Id} | {PayrollPeriodFromFormatted,nq} - {PayrollPeriodToFormatted,nq}, Period {PayrollPeriod}, Month {PayrollPeriodMonth.ToString(),nq}")]
     public class PayrollProcessBatch
     {
         public DateTime AddedOn { get; set; }

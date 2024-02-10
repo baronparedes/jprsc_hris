@@ -2,6 +2,7 @@
 
 namespace JPRSC.HRIS.Models
 {
+    [System.Diagnostics.DebuggerDisplay("{Id} | for \"{Employee}\"")]
     public class DailyTimeRecord
     {
         public DateTime AddedOn { get; set; }

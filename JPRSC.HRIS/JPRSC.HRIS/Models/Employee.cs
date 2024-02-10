@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace JPRSC.HRIS.Models
 {
+    [System.Diagnostics.DebuggerDisplay("{Id} | {FullName,nq}")]
     public class Employee
     {
         public AccountType? AccountType { get; set; }
@@ -88,6 +89,6 @@ namespace JPRSC.HRIS.Models
         public string PermanentAddress { get; set; }
         public string PlaceOfBirth { get; set; }
 
-        public string FullName => String.Format("{0}, {1}{2}", LastName, FirstName, String.IsNullOrWhiteSpace(MiddleName) ? null : $", {MiddleName}");
+        public string FullName => String.Format("{0}, {1}{2}", LastName?.Trim(), FirstName?.Trim(), String.IsNullOrWhiteSpace(MiddleName) ? null : $", {MiddleName.Trim()}");
     }
 }
