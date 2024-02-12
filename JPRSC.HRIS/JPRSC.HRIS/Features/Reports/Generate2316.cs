@@ -164,7 +164,7 @@ namespace JPRSC.HRIS.Features.Reports
                 }
                 catch (Exception ex)
                 {
-                    error = ex.Message;
+                    error = $"Error writing 2316 info for employee \"{record.Employee.FullName}\": {ex.Message}";
                     if (filledOutImage != null) filledOutImage.Dispose();
                     return false;
                 }
@@ -195,7 +195,7 @@ namespace JPRSC.HRIS.Features.Reports
                 }
                 catch (Exception ex)
                 {
-                    error = ex.Message;
+                    error = $"Error saving 2316 file for employee \"{record.Employee.FullName}\": {ex.Message}";
                     return false;
                 }
                 finally
@@ -245,7 +245,7 @@ namespace JPRSC.HRIS.Features.Reports
                     if (queryResult.PayrollPeriodToYear != default(int)) graphics.Write(courierNew, queryResult.PayrollPeriodToYear, new PointF(360f, 270f), 48f);
 
                     // TIN
-                    var tin = new TIN(record.Employee.TIN);
+                    var tin = new TIN(record.Employee);
                     if (!String.IsNullOrWhiteSpace(tin.FirstPart)) graphics.Write(courierNew, tin.FirstPart, new PointF(247f, 353f), 34f);
                     if (!String.IsNullOrWhiteSpace(tin.SecondPart)) graphics.Write(courierNew, tin.SecondPart, new PointF(386f, 353f), 34f);
                     if (!String.IsNullOrWhiteSpace(tin.ThirdPart)) graphics.Write(courierNew, tin.ThirdPart, new PointF(523f, 353f), 34f);
@@ -259,13 +259,20 @@ namespace JPRSC.HRIS.Features.Reports
 
     internal class TIN
     {
-        public TIN(string tin)
+        public TIN(Employee employee)
         {
-            if (!String.IsNullOrWhiteSpace(tin))
+            if (!String.IsNullOrWhiteSpace(employee?.TIN))
             {
-                FirstPart = tin.Substring(0, tin.IndexOf("-"));
-                SecondPart = tin.Substring(tin.IndexOf("-") + 1, 3);
-                ThirdPart = tin.Substring(tin.LastIndexOf("-") + 1);
+                try
+                {
+                    FirstPart = employee.TIN.Substring(0, employee.TIN.IndexOf("-"));
+                    SecondPart = employee.TIN.Substring(employee.TIN.IndexOf("-") + 1, 3);
+                    ThirdPart = employee.TIN.Substring(employee.TIN.LastIndexOf("-") + 1);
+                }
+                catch
+                {
+                    throw new Exception($"Unable to parse TIN \"{employee.TIN}\" for employee \"{employee.FullName}\".");
+                }
             }
         }
 
