@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -239,8 +240,18 @@ namespace JPRSC.HRIS.Features.Reports
 
             private static void WriteInfo(Graphics graphics, QueryResult queryResult, AlphalistRecord record)
             {
+                int daysInAYear = 313;
+
                 using (var courierNew = new System.Drawing.Font("Courier New", 18, FontStyle.Bold))
                 {
+                    decimal PRES_NT_TotalEarnings = record.TotalDaysWorkedValue + record.TotalHoursWorkedValue + record.TotalCOLAHourlyValue + record.TotalCOLADailyValue + record.TotalCOLAMonthlyValue +
+                        record.TotalEarningsValue + record.PRES_NT_TotalOvertimeValue;
+
+                    string RDO = "0039";
+
+                    var dailyRate =  record.Employee.DailyRate; // Daily Rate
+                    var monthlyRate = (dailyRate * daysInAYear) / 12;// Mothly rate
+
                     // For the year
                     if (queryResult.PayrollPeriodToYear != default(int)) graphics.Write(courierNew, queryResult.PayrollPeriodToYear, new PointF(360f, 270f), 48f);
 
@@ -249,9 +260,80 @@ namespace JPRSC.HRIS.Features.Reports
                     if (!String.IsNullOrWhiteSpace(tin.FirstPart)) graphics.Write(courierNew, tin.FirstPart, new PointF(247f, 353f), 34f);
                     if (!String.IsNullOrWhiteSpace(tin.SecondPart)) graphics.Write(courierNew, tin.SecondPart, new PointF(386f, 353f), 34f);
                     if (!String.IsNullOrWhiteSpace(tin.ThirdPart)) graphics.Write(courierNew, tin.ThirdPart, new PointF(523f, 353f), 34f);
+                    if (!String.IsNullOrWhiteSpace(RDO)) graphics.Write(courierNew, RDO, new PointF(660f, 353f), 34f); //RDO
 
                     // Employee's name
                     graphics.Write(courierNew, record.Employee.FullName.ToUpperInvariant(), new PointF(135f, 420f));
+
+                    graphics.Write(courierNew, "039", new PointF(740f, 420f), 34f);
+
+                    if (!String.IsNullOrWhiteSpace(record.Employee.PermanentAddress)) graphics.Write(courierNew, record.Employee.PermanentAddress.Substring(0, 50), new PointF(135f, 500f));
+                    if (!String.IsNullOrWhiteSpace(record.Employee.ZipCode)) graphics.Write(courierNew, record.Employee.ZipCode, new PointF(740f, 500f), 34f);
+
+                    if (record.Employee.DateOfBirth != null) graphics.Write(courierNew, String.Format("{0:MM/dd/yyyy}", record.Employee.DateOfBirth.Value), new PointF(135f, 720f), 25f);
+                    if (!String.IsNullOrWhiteSpace(record.Employee.TelNo)) graphics.Write(courierNew, record.Employee.TelNo, new PointF(510f, 720f), 30f);
+
+                    graphics.Write(courierNew, String.Format("{0:N}", dailyRate), new PointF(600f, 770f));
+                    graphics.Write(courierNew, String.Format("{0:N}", monthlyRate), new PointF(600f, 820f));
+                    graphics.Write(courierNew, "X", new PointF(135f, 870f));
+
+                    //if (!String.IsNullOrWhiteSpace(record.Employee.Company.Name)) graphics.Write(courierNew, record.Employee.Company.Name, new PointF(135f, 1050f));
+                    //if (!String.IsNullOrWhiteSpace(record.Employee.Company.Address)) graphics.Write(courierNew, record.Employee.Company.Address, new PointF(135f, 1120f));
+                    //if (!String.IsNullOrWhiteSpace(record.Employee.Company.ZipCode)) graphics.Write(courierNew, record.Employee.Company.ZipCode, new PointF(740f, 1120f));
+
+                    //820f 10 statutory line
+                    //TIN
+                    graphics.Write(courierNew, "225", new PointF(247f, 940f), 34f);
+                    graphics.Write(courierNew, "629", new PointF(386f, 940f), 34f);
+                    graphics.Write(courierNew, "759", new PointF(523f, 940f), 34f);
+                    graphics.Write(courierNew, "00039", new PointF(660f, 940f), 34f); //RDO
+
+                    string companyAddress = "3F M&J Building 123 Don Alejandro Roces \nAvenue Quezon City";
+                    graphics.Write(courierNew, "JOB PLACEMENT RESOURCES SERVICES COOPERATIVE", new PointF(135f, 1010f));
+                    graphics.Write(courierNew, companyAddress.ToUpperInvariant(), new PointF(135f, 1080f));
+                    graphics.Write(courierNew, "1100", new PointF(740f, 1080f));
+
+
+                    float ySpacing = 55f;
+                    float startY = 1440f;
+
+                    graphics.Write(courierNew, String.Format("{0:N}", PRES_NT_TotalEarnings), new PointF(700f, startY));
+                    graphics.Write(courierNew, String.Format("{0:N}", PRES_NT_TotalEarnings), new PointF(700f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", 0), new PointF(740f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", 0), new PointF(740f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", 0), new PointF(740f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", 0), new PointF(740f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", 0), new PointF(740f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", 0), new PointF(740f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", 0), new PointF(740f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", 0), new PointF(740f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", 0), new PointF(740f, startY += ySpacing));
+
+                    graphics.Write(courierNew, record.Employee.FullNameNormal, new PointF(280f, 2200f));
+
+                    //Right-side:
+                    var dateHired = record.Employee.DateHired.Value.Year != queryResult.PayrollPeriodToYear ? new DateTime(queryResult.PayrollPeriodToYear, 1, 1) : record.Employee.DateHired.Value;
+                    var dateResigned = queryResult.AlphalistType.Equals("7.5") ? new DateTime(queryResult.PayrollPeriodToYear, 12,31) : record.Employee.DateResigned.Value;
+
+                    graphics.Write(courierNew, dateHired.ToString("MM dd", CultureInfo.InvariantCulture), new PointF(1090f, 270f), 30f);
+                    graphics.Write(courierNew, dateResigned.ToString("MM dd", CultureInfo.InvariantCulture), new PointF(1450f, 270f), 30f);
+
+                    ySpacing = 55f;
+                    startY = 410f;
+                    var salariesAndOtherFormOnfCompensation = record.PRES_NT_TotalEarnings - record.PRES_NT_TotalOvertimeValue - record.PRES_NT_TotalThirteenthMonth - record.PRES_NT_TotalContributions;
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalThirteenthMonth), new PointF(1350f, startY));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_HolidayPay), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalOvertimeValue), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_NightShiftDifferential), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_HazardPay), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalThirteenthMonth), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_DeMinimisBenefits), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalContributions), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", salariesAndOtherFormOnfCompensation), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalEarnings), new PointF(1350f, startY += ySpacing));
+
+                    graphics.Write(courierNew, record.Employee.FullNameNormal, new PointF(1100f, 2450f));
+
                 }
             }
         }
@@ -268,6 +350,7 @@ namespace JPRSC.HRIS.Features.Reports
                     FirstPart = employee.TIN.Substring(0, employee.TIN.IndexOf("-"));
                     SecondPart = employee.TIN.Substring(employee.TIN.IndexOf("-") + 1, 3);
                     ThirdPart = employee.TIN.Substring(employee.TIN.LastIndexOf("-") + 1);
+
                 }
                 catch
                 {

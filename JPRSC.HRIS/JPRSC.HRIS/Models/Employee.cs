@@ -90,5 +90,7 @@ namespace JPRSC.HRIS.Models
         public string PlaceOfBirth { get; set; }
 
         public string FullName => String.Format("{0}, {1}{2}", LastName?.Trim(), FirstName?.Trim(), String.IsNullOrWhiteSpace(MiddleName) ? null : $", {MiddleName.Trim()}");
+
+        public string FullNameNormal => String.Format("{0} {1} {2}", FirstName?.Trim(), String.IsNullOrWhiteSpace(MiddleName) ? null : $"{MiddleName.Trim()}", LastName?.Trim());
     }
 }
