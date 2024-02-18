@@ -249,7 +249,7 @@ namespace JPRSC.HRIS.Features.Reports
 
                     string RDO = "0039";
 
-                    var dailyRate =  record.Employee.DailyRate; // Daily Rate
+                    var dailyRate = record.Employee.DailyRate; // Daily Rate
                     var monthlyRate = (dailyRate * daysInAYear) / 12;// Mothly rate
 
                     // For the year
@@ -262,19 +262,22 @@ namespace JPRSC.HRIS.Features.Reports
                     if (!String.IsNullOrWhiteSpace(tin.ThirdPart)) graphics.Write(courierNew, tin.ThirdPart, new PointF(523f, 353f), 34f);
                     if (!String.IsNullOrWhiteSpace(RDO)) graphics.Write(courierNew, RDO, new PointF(660f, 353f), 34f); //RDO
 
-                    // Employee's name
+                    //// Employee's name
                     graphics.Write(courierNew, record.Employee.FullName.ToUpperInvariant(), new PointF(135f, 420f));
-
                     graphics.Write(courierNew, "039", new PointF(740f, 420f), 34f);
-
-                    if (!String.IsNullOrWhiteSpace(record.Employee.PermanentAddress)) graphics.Write(courierNew, record.Employee.PermanentAddress.Substring(0, 50), new PointF(135f, 500f));
+       
+                    if (!String.IsNullOrWhiteSpace(record.Employee.PermanentAddress))
+                    {
+                        string address = record.Employee.PermanentAddress.Length > 50 ? record.Employee.PermanentAddress.Substring(0, 50) : record.Employee.PermanentAddress;
+                        graphics.Write(courierNew, address, new PointF(135f, 500f));
+                    }
                     if (!String.IsNullOrWhiteSpace(record.Employee.ZipCode)) graphics.Write(courierNew, record.Employee.ZipCode, new PointF(740f, 500f), 34f);
 
                     if (record.Employee.DateOfBirth != null) graphics.Write(courierNew, String.Format("{0:MM/dd/yyyy}", record.Employee.DateOfBirth.Value), new PointF(135f, 720f), 25f);
                     if (!String.IsNullOrWhiteSpace(record.Employee.TelNo)) graphics.Write(courierNew, record.Employee.TelNo, new PointF(510f, 720f), 30f);
 
-                    graphics.Write(courierNew, String.Format("{0:N}", dailyRate), new PointF(600f, 770f));
-                    graphics.Write(courierNew, String.Format("{0:N}", monthlyRate), new PointF(600f, 820f));
+                    if(dailyRate != null) graphics.Write(courierNew, String.Format("{0:N}", dailyRate), new PointF(600f, 770f));
+                    if(monthlyRate != null) graphics.Write(courierNew, String.Format("{0:N}", monthlyRate), new PointF(600f, 820f));
                     graphics.Write(courierNew, "X", new PointF(135f, 870f));
 
                     //if (!String.IsNullOrWhiteSpace(record.Employee.Company.Name)) graphics.Write(courierNew, record.Employee.Company.Name, new PointF(135f, 1050f));
@@ -313,7 +316,7 @@ namespace JPRSC.HRIS.Features.Reports
 
                     //Right-side:
                     var dateHired = record.Employee.DateHired.Value.Year != queryResult.PayrollPeriodToYear ? new DateTime(queryResult.PayrollPeriodToYear, 1, 1) : record.Employee.DateHired.Value;
-                    var dateResigned = queryResult.AlphalistType.Equals("7.5") ? new DateTime(queryResult.PayrollPeriodToYear, 12,31) : record.Employee.DateResigned.Value;
+                    var dateResigned = queryResult.AlphalistType.Equals("7.5") ? new DateTime(queryResult.PayrollPeriodToYear, 12, 31) : record.Employee.DateResigned.Value;
 
                     graphics.Write(courierNew, dateHired.ToString("MM dd", CultureInfo.InvariantCulture), new PointF(1090f, 270f), 30f);
                     graphics.Write(courierNew, dateResigned.ToString("MM dd", CultureInfo.InvariantCulture), new PointF(1450f, 270f), 30f);
