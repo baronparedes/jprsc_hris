@@ -294,7 +294,7 @@ namespace JPRSC.HRIS.Features.Reports
                     string companyAddress = "3F M&J Building 123 Don Alejandro Roces \nAvenue Quezon City";
                     graphics.Write(courierNew, "JOB PLACEMENT RESOURCES SERVICES COOPERATIVE", new PointF(135f, 1010f));
                     graphics.Write(courierNew, companyAddress.ToUpperInvariant(), new PointF(135f, 1080f));
-                    graphics.Write(courierNew, "1100", new PointF(740f, 1080f));
+                    graphics.Write(courierNew, "1103", new PointF(740f, 1080f));
 
 
                     float ySpacing = 55f;
@@ -315,25 +315,30 @@ namespace JPRSC.HRIS.Features.Reports
                     graphics.Write(courierNew, record.Employee.FullNameNormal, new PointF(280f, 2200f));
 
                     //Right-side:
-                    var dateHired = record.Employee.DateHired.Value.Year != queryResult.PayrollPeriodToYear ? new DateTime(queryResult.PayrollPeriodToYear, 1, 1) : record.Employee.DateHired.Value;
-                    var dateResigned = queryResult.AlphalistType.Equals("7.5") ? new DateTime(queryResult.PayrollPeriodToYear, 12, 31) : record.Employee.DateResigned.Value;
+                    DateTime dateHired = new DateTime(queryResult.PayrollPeriodToYear, 1,1);
+                    if(record.Employee.DateHired != null)
+                    {
+                        dateHired = record.Employee.DateHired.Value.Year != queryResult.PayrollPeriodToYear ? new DateTime(queryResult.PayrollPeriodToYear, 1, 1) : record.Employee.DateHired.Value;
+                    }
 
+                    var dateResigned = queryResult.AlphalistType.Equals("7.5") ? new DateTime(queryResult.PayrollPeriodToYear, 12, 31) : record.Employee.DateResigned != null ? record.Employee.DateResigned.Value : new DateTime(queryResult.PayrollPeriodToYear, 12, 12);
+                    
                     graphics.Write(courierNew, dateHired.ToString("MM dd", CultureInfo.InvariantCulture), new PointF(1090f, 270f), 30f);
                     graphics.Write(courierNew, dateResigned.ToString("MM dd", CultureInfo.InvariantCulture), new PointF(1450f, 270f), 30f);
 
                     ySpacing = 55f;
                     startY = 410f;
                     var salariesAndOtherFormOnfCompensation = record.PRES_NT_TotalEarnings - record.PRES_NT_TotalOvertimeValue - record.PRES_NT_TotalThirteenthMonth - record.PRES_NT_TotalContributions;
-                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalThirteenthMonth), new PointF(1350f, startY));
-                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_HolidayPay), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", PRES_NT_TotalEarnings), new PointF(1350f, startY));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_HolidayPay.Equals("NA") ? "0" : record.PRES_NT_HolidayPay), new PointF(1350f, startY += ySpacing));
                     graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalOvertimeValue), new PointF(1350f, startY += ySpacing));
-                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_NightShiftDifferential), new PointF(1350f, startY += ySpacing));
-                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_HazardPay), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_NightShiftDifferential.Equals("NA") ? "0" : record.PRES_NT_NightShiftDifferential), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_HazardPay.Equals("NA") ? "0" : record.PRES_NT_HazardPay), new PointF(1350f, startY += ySpacing));
                     graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalThirteenthMonth), new PointF(1350f, startY += ySpacing));
-                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_DeMinimisBenefits), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_DeMinimisBenefits.Equals("NA") ? "0" : record.PRES_NT_DeMinimisBenefits), new PointF(1350f, startY += ySpacing));
                     graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalContributions), new PointF(1350f, startY += ySpacing));
                     graphics.Write(courierNew, String.Format("{0:N}", salariesAndOtherFormOnfCompensation), new PointF(1350f, startY += ySpacing));
-                    graphics.Write(courierNew, String.Format("{0:N}", record.PRES_NT_TotalEarnings), new PointF(1350f, startY += ySpacing));
+                    graphics.Write(courierNew, String.Format("{0:N}", PRES_NT_TotalEarnings), new PointF(1350f, startY += ySpacing));
 
                     graphics.Write(courierNew, record.Employee.FullNameNormal, new PointF(1100f, 2450f));
 
