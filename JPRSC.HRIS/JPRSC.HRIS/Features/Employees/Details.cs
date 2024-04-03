@@ -135,6 +135,35 @@ namespace JPRSC.HRIS.Features.Employees
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
             {
+                var rehireTransferEvents = await _db
+                    .RehireTransferEvents
+                    .Where(rte => rte.EmployeeId == query.EmployeeId)
+                    .ToListAsync();
+
+                if (rehireTransferEvents.Count == 0)
+                {
+                    var employee = await _db
+                        .Employees
+                        .Select(e => new
+                        {
+                            AddedOn = e.AddedOn,
+                            ClientId = e.ClientId,
+                            Id = e.Id
+                        })
+                        .SingleAsync(e => e.Id == query.EmployeeId);
+
+                    var originalRehireTransferEvent = new RehireTransferEvent
+                    {
+                        AddedOn = employee.AddedOn,
+                        ClientId = employee.ClientId,
+                        EmployeeId = employee.Id,
+                        RehireTransferDateLocal = employee.AddedOn.AddHours(8), // all employees so far are based in the PH
+                        Type = RehireTransferEventType.New
+                    };
+                    _db.RehireTransferEvents.Add(originalRehireTransferEvent);
+                    await _db.SaveChangesAsync();
+                }
+
                 var queryResult = await _db
                     .Employees
                     .AsNoTracking()

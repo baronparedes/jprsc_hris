@@ -324,10 +324,12 @@ namespace JPRSC.HRIS.Features.Employees
                     .Include(u => u.Company)
                     .SingleAsync(u => u.Id == currentUserId);
 
+                var utcNow = DateTime.UtcNow;
+
                 var employee = new Employee
                 {
                     AccountType = command.AccountType,
-                    AddedOn = DateTime.UtcNow,
+                    AddedOn = utcNow,
                     CelNo = command.CelNo,
                     Citizenship = command.Citizenship,
                     CityAddress = command.CityAddress,
@@ -398,6 +400,17 @@ namespace JPRSC.HRIS.Features.Employees
                 }
 
                 _db.Employees.Add(employee);
+                await _db.SaveChangesAsync();
+
+                var rehireTransferEvent = new RehireTransferEvent
+                {
+                    AddedOn = utcNow,
+                    ClientId = command.ClientId,
+                    EmployeeId = employee.Id,
+                    RehireTransferDateLocal = DateTime.Now,
+                    Type = RehireTransferEventType.New
+                };
+                _db.RehireTransferEvents.Add(rehireTransferEvent);
                 await _db.SaveChangesAsync();
 
                 return Unit.Value;

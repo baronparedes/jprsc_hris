@@ -33,7 +33,21 @@ namespace JPRSC.HRIS.Features.Employees
 
             public async Task<CommandResult> Handle(Command command, CancellationToken token)
             {
-                var employee = await _db.Employees.SingleAsync(r => r.Id == command.EmployeeId);
+                var employee = await _db.Employees.Include(e => e.RehireTransferEvents).SingleAsync(r => r.Id == command.EmployeeId);
+
+                if (employee.RehireTransferEvents.Count == 0)
+                {
+                    var originalRehireTransferEvent = new RehireTransferEvent
+                    {
+                        AddedOn = employee.AddedOn,
+                        ClientId = employee.ClientId,
+                        EmployeeId = employee.Id,
+                        RehireTransferDateLocal = employee.AddedOn.AddHours(8), // all employees so far are based in the PH
+                        Type = RehireTransferEventType.New
+                    };
+                    _db.RehireTransferEvents.Add(originalRehireTransferEvent);
+                }
+
                 employee.ClientId = command.ClientId;
                 employee.ModifiedOn = DateTime.UtcNow;
 
