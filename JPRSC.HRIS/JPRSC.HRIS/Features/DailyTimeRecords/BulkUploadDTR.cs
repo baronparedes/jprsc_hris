@@ -326,10 +326,16 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
                     var existingDailyTimeRecords = allNotProcessedEmployeeDailyTimeRecordsForPayrollPeriod.Where(dtr => dtr.EmployeeId == employee.Id).ToList();
                     if (existingDailyTimeRecords.Count > 1)
                     {
-                        var log = LogHelper.CreateLogEntryFromCurrentContext("Warn", $"More than 1 unprocessed DTR found for employee {employee.Id}. Client: {command.ClientId} From: {command.PayrollPeriodFrom} To: {command.PayrollPeriodTo} Month: {command.PayrollPeriodMonth}");
-                        existingDailyTimeRecord = existingDailyTimeRecords.Single(dtr => dtr.DaysWorked.HasValue || dtr.HoursWorked.HasValue);
+                        unprocessedItems.Add(new CommandResult.EmployeeResult
+                        {
+                            FirstName = firstName,
+                            LastName = lastName,
+                            Reason = $"More than one unprocessed daily time record found for \"{employeeCode}\"."
+                        });
+
+                        continue;
                     }
-                    else if (existingDailyTimeRecords.Count == 1)
+                    else
                     {
                         existingDailyTimeRecord = existingDailyTimeRecords.Single();
                     }
