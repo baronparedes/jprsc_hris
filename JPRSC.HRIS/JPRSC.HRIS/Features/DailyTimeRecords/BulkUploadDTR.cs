@@ -335,7 +335,7 @@ namespace JPRSC.HRIS.Features.DailyTimeRecords
 
                         continue;
                     }
-                    else
+                    else if (existingDailyTimeRecords.Count == 1)
                     {
                         existingDailyTimeRecord = existingDailyTimeRecords.Single();
                     }
