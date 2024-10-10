@@ -64,6 +64,7 @@ namespace JPRSC.HRIS.Features.Reports
             public Query Query { get; set; }
             public string FilesPath { get; set; }
             public List<string> Errors { get; set; } = new List<string>();
+            public string CompanyName { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, QueryResult>
@@ -99,7 +100,10 @@ namespace JPRSC.HRIS.Features.Reports
                     ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
                     ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod
                 };
+
                 var generateAlphalistResult = await _mediator.Send(generateAlphalistQuery);
+
+                var companyClientTag = await _mediator.Send(new CompanyClientTags.GetByClientId.Query { ClientId = query.ClientId });
 
                 var generate2316Result = new QueryResult
                 {
@@ -122,7 +126,8 @@ namespace JPRSC.HRIS.Features.Reports
                     FileContent = generateAlphalistResult.FileContent,
                     Filename = generateAlphalistResult.Filename,
                     AlphalistRecords = generateAlphalistResult.AlphalistRecords,
-                    Query = query
+                    Query = query,
+                    CompanyName = companyClientTag.CompanyName
                 };
 
                 // http://localhost:52654/Reports/Generate2316?alphalistType=7.1&clientId=8&payrollPeriodFromYear=2022&payrollPeriodToYear=2022&fromPayrollPeriod=1&fromPayrollPeriodMonth=10&toPayrollPeriod=1&toPayrollPeriodMonth=120&thirteenthMonthPayrollPeriodFromYear=2022&thirteenthMonthPayrollPeriodToYear=2022&thirteenthMonthFromPayrollPeriod=1&thirteenthMonthFromPayrollPeriodMonth=10&thirteenthMonthToPayrollPeriod=1&thirteenthMonthToPayrollPeriodMonth=120&destination=page
@@ -265,7 +270,7 @@ namespace JPRSC.HRIS.Features.Reports
                     //// Employee's name
                     graphics.Write(courierNew, record.Employee.FullName.ToUpperInvariant(), new PointF(135f, 420f));
                     graphics.Write(courierNew, "039", new PointF(740f, 420f), 34f);
-       
+
                     if (!String.IsNullOrWhiteSpace(record.Employee.PermanentAddress))
                     {
                         string address = record.Employee.PermanentAddress.Length > 50 ? record.Employee.PermanentAddress.Substring(0, 50) : record.Employee.PermanentAddress;
@@ -276,8 +281,8 @@ namespace JPRSC.HRIS.Features.Reports
                     if (record.Employee.DateOfBirth != null) graphics.Write(courierNew, String.Format("{0:MM/dd/yyyy}", record.Employee.DateOfBirth.Value), new PointF(135f, 720f), 25f);
                     if (!String.IsNullOrWhiteSpace(record.Employee.TelNo)) graphics.Write(courierNew, record.Employee.TelNo, new PointF(510f, 720f), 30f);
 
-                    if(dailyRate != null) graphics.Write(courierNew, String.Format("{0:N}", dailyRate), new PointF(600f, 770f));
-                    if(monthlyRate != null) graphics.Write(courierNew, String.Format("{0:N}", monthlyRate), new PointF(600f, 820f));
+                    if (dailyRate != null) graphics.Write(courierNew, String.Format("{0:N}", dailyRate), new PointF(600f, 770f));
+                    if (monthlyRate != null) graphics.Write(courierNew, String.Format("{0:N}", monthlyRate), new PointF(600f, 820f));
                     graphics.Write(courierNew, "X", new PointF(135f, 870f));
 
                     //if (!String.IsNullOrWhiteSpace(record.Employee.Company.Name)) graphics.Write(courierNew, record.Employee.Company.Name, new PointF(135f, 1050f));
@@ -315,14 +320,14 @@ namespace JPRSC.HRIS.Features.Reports
                     graphics.Write(courierNew, record.Employee.FullNameNormal, new PointF(280f, 2200f));
 
                     //Right-side:
-                    DateTime dateHired = new DateTime(queryResult.PayrollPeriodToYear, 1,1);
-                    if(record.Employee.DateHired != null)
+                    DateTime dateHired = new DateTime(queryResult.PayrollPeriodToYear, 1, 1);
+                    if (record.Employee.DateHired != null)
                     {
                         dateHired = record.Employee.DateHired.Value.Year != queryResult.PayrollPeriodToYear ? new DateTime(queryResult.PayrollPeriodToYear, 1, 1) : record.Employee.DateHired.Value;
                     }
 
                     var dateResigned = queryResult.AlphalistType.Equals("7.5") ? new DateTime(queryResult.PayrollPeriodToYear, 12, 31) : record.Employee.DateResigned != null ? record.Employee.DateResigned.Value : new DateTime(queryResult.PayrollPeriodToYear, 12, 12);
-                    
+
                     graphics.Write(courierNew, dateHired.ToString("MM dd", CultureInfo.InvariantCulture), new PointF(1090f, 270f), 30f);
                     graphics.Write(courierNew, dateResigned.ToString("MM dd", CultureInfo.InvariantCulture), new PointF(1450f, 270f), 30f);
 
