@@ -37,6 +37,7 @@ namespace JPRSC.HRIS.Features.Payroll
             public string DisplayMode { get; set; }
             public IEnumerable<PayrollRecord> PayrollRecords { get; set; } = new List<PayrollRecord>();
             public PayrollProcessBatch PayrollProcessBatchResult { get; set; }
+            public string CompanyName { get; set; }
 
             public class PayrollRecord
             {
@@ -180,11 +181,14 @@ namespace JPRSC.HRIS.Features.Payroll
         {
             private readonly ApplicationDbContext _db;
             private readonly IMapper _mapper;
+            private readonly IMediator _mediator;
 
-            public QueryHandler(ApplicationDbContext db, IMapper mapper)
+            public QueryHandler(ApplicationDbContext db, IMapper mapper, IMediator mediator)
             {
                 _db = db;
                 _mapper = mapper;
+                _mediator = mediator;
+
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken cancellationToken)
@@ -204,12 +208,15 @@ namespace JPRSC.HRIS.Features.Payroll
                     .ProjectTo<QueryResult.PayrollRecord>(_mapper)
                     .ToListAsync();
 
+                var companyClientTag = await _mediator.Send(new CompanyClientTags.GetByClientId.Query { ClientId = payrollProcessBatch.ClientId });
+
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,
                     DisplayMode = query.DisplayMode,
                     PayrollProcessBatchResult = _mapper.Map<QueryResult.PayrollProcessBatch>(payrollProcessBatch),
-                    PayrollRecords = payrollRecords
+                    PayrollRecords = payrollRecords,
+                    CompanyName = companyClientTag.CompanyName,
                 };
             }
         }

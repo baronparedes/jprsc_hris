@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Data;
-using JPRSC.HRIS.Models;
 using JPRSC.HRIS.Infrastructure.Excel;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -85,6 +85,7 @@ namespace JPRSC.HRIS.Features.Reports
             public string Filename { get; set; }
             public IList<ThirteenthMonthRecord> ThirteenthMonthRecords { get; set; } = new List<ThirteenthMonthRecord>();
             public Query Query { get; set; }
+            public string CompanyName { get; set; }
 
             public IList<string> GetTotals(IList<ThirteenthMonthRecord> thirteenthMonthRecords)
             {
@@ -260,6 +261,8 @@ namespace JPRSC.HRIS.Features.Reports
 
                 var thirteenthMonthRecords = GetThirteenthMonthRecords(query, allPayrollProcessBatches);
 
+                var companyClientTag = await _mediator.Send(new CompanyClientTags.GetByClientId.Query { ClientId = query.ClientId });
+
                 if (query.Destination == "Excel")
                 {
                     var queryResult = new QueryResult
@@ -273,7 +276,8 @@ namespace JPRSC.HRIS.Features.Reports
                         FromPayrollPeriod = query.FromPayrollPeriod,
                         ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
                         ToPayrollPeriod = query.ToPayrollPeriod,
-                        Query = query
+                        Query = query,
+                        CompanyName = companyClientTag.CompanyName,
                     };
 
                     var excelLines = new List<IList<string>>();
@@ -331,7 +335,8 @@ namespace JPRSC.HRIS.Features.Reports
                         FromPayrollPeriod = query.FromPayrollPeriod,
                         ToPayrollPeriodMonth = query.ToPayrollPeriodMonth,
                         ToPayrollPeriod = query.ToPayrollPeriod,
-                        Query = query
+                        Query = query,
+                        CompanyName = companyClientTag.CompanyName,
                     };
                 }
             }

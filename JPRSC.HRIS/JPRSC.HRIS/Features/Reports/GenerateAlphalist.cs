@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using JPRSC.HRIS.Infrastructure.Configuration;
+using JPRSC.HRIS.Infrastructure.CSV;
 using JPRSC.HRIS.Infrastructure.Data;
+using JPRSC.HRIS.Infrastructure.Excel;
 using JPRSC.HRIS.Infrastructure.NET;
 using JPRSC.HRIS.Models;
-using JPRSC.HRIS.Infrastructure.CSV;
-using JPRSC.HRIS.Infrastructure.Excel;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -110,11 +110,12 @@ namespace JPRSC.HRIS.Features.Reports
             public string Filename { get; set; }
             public IList<AlphalistRecord> AlphalistRecords { get; set; } = new List<AlphalistRecord>();
             public Query Query { get; set; }
+            public string CompanyName { get; set; }
 
             public class AlphalistRecord
             {
                 public AlphalistRecord()
-                {                        
+                {
                 }
 
                 public AlphalistRecord(DateTime dateGenerated)
@@ -190,7 +191,7 @@ namespace JPRSC.HRIS.Features.Reports
                 Column(U_0039, item => U_0039);
                 Column(String.Format("{0:MM/dd/yyyy}", dateGenerated), item => String.Format("{0:MM/dd/yyyy}", dateGenerated));
                 Column(U_N, item => item.Order.ToString());
-                Column("0", item => String.IsNullOrWhiteSpace(item.Employee.TIN) ? "NO TIN": item.Employee.TIN.Replace("-", ""));
+                Column("0", item => String.IsNullOrWhiteSpace(item.Employee.TIN) ? "NO TIN" : item.Employee.TIN.Replace("-", ""));
                 Column(U_039, item => U_0039);
                 Column(String.Empty, item => $"\"{item.Employee.LastName}\"");
                 Column(String.Empty, item => $"\"{item.Employee.FirstName}\"");
@@ -368,6 +369,9 @@ namespace JPRSC.HRIS.Features.Reports
 
                 var alphalistRecords = GetAlphalistRecords(query, allPayrollProcessBatches);
 
+                var companyClientTag = await _mediator.Send(new CompanyClientTags.GetByClientId.Query { ClientId = query.ClientId });
+
+
                 if (query.AlphalistType == "7.1")
                 {
                     alphalistRecords = alphalistRecords
@@ -426,7 +430,8 @@ namespace JPRSC.HRIS.Features.Reports
                     return new QueryResult
                     {
                         FileContent = _excelBuilder.BuildExcelFile(excelTable.AllLines),
-                        Filename = reportFileNameBase.Append(".xlsx").ToString()
+                        Filename = reportFileNameBase.Append(".xlsx").ToString(),
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
                 else if (query.Destination == "CSV")
@@ -437,7 +442,8 @@ namespace JPRSC.HRIS.Features.Reports
                     return new QueryResult
                     {
                         FileContent = _csvBuilder.BuildCSVFile(csvTable.AllLines),
-                        Filename = reportFileNameBase.Append(".csv").ToString()
+                        Filename = reportFileNameBase.Append(".csv").ToString(),
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
                 else
@@ -495,7 +501,8 @@ namespace JPRSC.HRIS.Features.Reports
                         ThirteenthMonthToPayrollPeriod = query.ThirteenthMonthToPayrollPeriod,
                         ThirteenthMonthToPayrollPeriodMonth = query.ThirteenthMonthToPayrollPeriodMonth,
                         Query = query,
-                        Tables = tables
+                        Tables = tables,
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
             }

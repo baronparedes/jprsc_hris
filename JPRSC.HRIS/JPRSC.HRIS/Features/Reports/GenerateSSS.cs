@@ -1,7 +1,6 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
-using JPRSC.HRIS.Models;
-using JPRSC.HRIS.Features.Payroll;
 using JPRSC.HRIS.Infrastructure.Excel;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -35,6 +34,7 @@ namespace JPRSC.HRIS.Features.Reports
             public Month? PayrollPeriodMonthMonth { get; set; }
             public int PayrollPeriodYear { get; set; }
             public IList<SSSRecord> SSSRecords { get; set; } = new List<SSSRecord>();
+            public string CompanyName { get; set; }
 
             public class SSSRecord
             {
@@ -101,6 +101,8 @@ namespace JPRSC.HRIS.Features.Reports
 
                 var sssRecords = await GetSSSRecords(payrollProcessBatches, clients);
 
+                var companyClientTag = await _mediator.Send(new CompanyClientTags.GetByClientId.Query { ClientId = query.ClientId });
+
                 if (query.Destination == "Excel")
                 {
                     var excelLines = sssRecords.Select(pr => pr.DisplayLine).ToList();
@@ -119,7 +121,8 @@ namespace JPRSC.HRIS.Features.Reports
                     return new QueryResult
                     {
                         FileContent = reportFileContent,
-                        Filename = reportFileNameBuilder.ToString()
+                        Filename = reportFileNameBuilder.ToString(),
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
                 else
@@ -144,11 +147,12 @@ namespace JPRSC.HRIS.Features.Reports
                         SSSRecords = sssRecords,
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
                         PayrollPeriodMonthMonth = payrollPeriodMonth,
-                        PayrollPeriodYear = query.PayrollPeriodYear
+                        PayrollPeriodYear = query.PayrollPeriodYear,
+                        CompanyName = companyClientTag.CompanyName
                     };
-                }                
+                }
             }
-            
+
             private async Task<IList<QueryResult.SSSRecord>> GetSSSRecords(IList<PayrollProcessBatch> payrollProcessBatches, IList<Client> clients)
             {
                 var allPayrollRecords = payrollProcessBatches.SelectMany(ppb => ppb.PayrollRecords).ToList();
@@ -193,7 +197,7 @@ namespace JPRSC.HRIS.Features.Reports
 
                             clientsDictionary.Add(sampleEmployee.ClientId.Value, matchingClient);
                         }
-                        
+
                         var client = clientsDictionary[sampleEmployee.ClientId.Value];
 
                         var sssRecord = new QueryResult.SSSRecord();
@@ -224,13 +228,13 @@ namespace JPRSC.HRIS.Features.Reports
 
             private decimal GetECC(decimal deductionBasis, IList<SSSRecord> sssRecords, Client client)
             {
-                
+
                 SSSRecord matchingRange = null;
                 var foundMatchingRange = false;
                 var matchingRangeIndex = 0;
                 var orderedRecords = sssRecords.OrderBy(s => s.Range1).ToList();
 
-                for (var i = 0;  i < orderedRecords.Count; i++)
+                for (var i = 0; i < orderedRecords.Count; i++)
                 {
                     var sssRecord = orderedRecords[i];
 

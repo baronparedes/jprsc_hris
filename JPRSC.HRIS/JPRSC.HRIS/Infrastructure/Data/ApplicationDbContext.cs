@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using JPRSC.HRIS.Models;
+﻿using JPRSC.HRIS.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
@@ -40,6 +40,7 @@ namespace JPRSC.HRIS.Infrastructure.Data
         public DbSet<SystemSettings> SystemSettings { get; set; }
         public DbSet<TaxRange> TaxRanges { get; set; }
         public DbSet<TaxStatus> TaxStatuses { get; set; }
+        public DbSet<CompanyClientTag> CompanyClientTags { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -47,6 +48,10 @@ namespace JPRSC.HRIS.Infrastructure.Data
 
             modelBuilder.Conventions.Remove<DecimalPropertyConvention>();
             modelBuilder.Conventions.Add(new DecimalPropertyConvention(18, 4));
+
+            modelBuilder.Entity<CompanyClientTag>()
+                .HasIndex(c => new { c.ClientId, c.CompanyId })
+                .IsUnique(true);
 
             base.OnModelCreating(modelBuilder);
         }
