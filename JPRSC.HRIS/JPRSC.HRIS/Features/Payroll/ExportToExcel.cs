@@ -42,7 +42,7 @@ namespace JPRSC.HRIS.Features.Payroll
             {
                 byte[] fileContent = new byte[] { };
                 var filename = String.Empty;
-                
+
                 if (query.ReportType == "Bank")
                 {
                     var bankReportQuery = new BankReport.Query { PayrollProcessBatchId = query.PayrollProcessBatchId };
@@ -55,7 +55,7 @@ namespace JPRSC.HRIS.Features.Payroll
                     var excelObject = bankReportResult.PayrollRecords.ToExcelObject(columns);
 
                     var lines = new List<IEnumerable<string>>();
-                    lines.Add(new List<string> { "Job Placement Resources Services Cooperative" });
+                    lines.Add(new List<string> { bankReportResult.CompanyName });
                     lines.Add(new List<string> { $"Bank Report for {bankReportResult.PayrollProcessBatchResult.Client.Name}" });
                     lines.Add(new List<string> { $"For the period {bankReportResult.PayrollProcessBatchResult.PayrollPeriodFromFormatted} to {bankReportResult.PayrollProcessBatchResult.PayrollPeriodToFormatted} ({bankReportResult.PayrollProcessBatchResult.PayrollPeriodFormatted} bank period)" });
                     lines.Add(new List<string> { $"{bankReportResult.PayrollRecords.Count()} record/s total" });
@@ -83,7 +83,7 @@ namespace JPRSC.HRIS.Features.Payroll
                     var excelObject = cashHoldReportResult.PayrollRecords.ToExcelObject(columns);
 
                     var lines = new List<IEnumerable<string>>();
-                    lines.Add(new List<string> { "Job Placement Resources Services Cooperative" });
+                    lines.Add(new List<string> { cashHoldReportResult.CompanyName });
                     lines.Add(new List<string> { $"Cash Hold Report for {cashHoldReportResult.PayrollProcessBatchResult.Client.Name}" });
                     lines.Add(new List<string> { $"For the period {cashHoldReportResult.PayrollProcessBatchResult.PayrollPeriodFromFormatted} to {cashHoldReportResult.PayrollProcessBatchResult.PayrollPeriodToFormatted} ({cashHoldReportResult.PayrollProcessBatchResult.PayrollPeriodFormatted} cashHold period)" });
                     lines.Add(new List<string> { $"{cashHoldReportResult.PayrollRecords.Count()} record/s total" });
@@ -111,7 +111,7 @@ namespace JPRSC.HRIS.Features.Payroll
                     var excelObject = cashReportResult.PayrollRecords.ToExcelObject(columns);
 
                     var lines = new List<IEnumerable<string>>();
-                    lines.Add(new List<string> { "Job Placement Resources Services Cooperative" });
+                    lines.Add(new List<string> { cashReportResult.CompanyName });
                     lines.Add(new List<string> { $"Cash Report for {cashReportResult.PayrollProcessBatchResult.Client.Name}" });
                     lines.Add(new List<string> { $"For the period {cashReportResult.PayrollProcessBatchResult.PayrollPeriodFromFormatted} to {cashReportResult.PayrollProcessBatchResult.PayrollPeriodToFormatted} ({cashReportResult.PayrollProcessBatchResult.PayrollPeriodFormatted} cash period)" });
                     lines.Add(new List<string> { $"{cashReportResult.PayrollRecords.Count()} record/s total" });
@@ -139,7 +139,7 @@ namespace JPRSC.HRIS.Features.Payroll
                     var excelObject = checkReportResult.PayrollRecords.ToExcelObject(columns);
 
                     var lines = new List<IEnumerable<string>>();
-                    lines.Add(new List<string> { "Job Placement Resources Services Cooperative" });
+                    lines.Add(new List<string> { checkReportResult.CompanyName });
                     lines.Add(new List<string> { $"Check Report for {checkReportResult.PayrollProcessBatchResult.Client.Name}" });
                     lines.Add(new List<string> { $"For the period {checkReportResult.PayrollProcessBatchResult.PayrollPeriodFromFormatted} to {checkReportResult.PayrollProcessBatchResult.PayrollPeriodToFormatted} ({checkReportResult.PayrollProcessBatchResult.PayrollPeriodFormatted} check period)" });
                     lines.Add(new List<string> { $"{checkReportResult.PayrollRecords.Count()} record/s total" });
@@ -167,7 +167,7 @@ namespace JPRSC.HRIS.Features.Payroll
                     var excelObject = holdReportResult.PayrollRecords.ToExcelObject(columns);
 
                     var lines = new List<IEnumerable<string>>();
-                    lines.Add(new List<string> { "Job Placement Resources Services Cooperative" });
+                    lines.Add(new List<string> { holdReportResult.CompanyName });
                     lines.Add(new List<string> { $"Hold Report for {holdReportResult.PayrollProcessBatchResult.Client.Name}" });
                     lines.Add(new List<string> { $"For the period {holdReportResult.PayrollProcessBatchResult.PayrollPeriodFromFormatted} to {holdReportResult.PayrollProcessBatchResult.PayrollPeriodToFormatted} ({holdReportResult.PayrollProcessBatchResult.PayrollPeriodFormatted} hold period)" });
                     lines.Add(new List<string> { $"{holdReportResult.PayrollRecords.Count()} record/s total" });
@@ -191,7 +191,7 @@ namespace JPRSC.HRIS.Features.Payroll
                     filename = $"Payroll report for {payrollReportResult.PayrollProcessBatchResult.Client.Name} {payrollReportResult.PayrollProcessBatchResult.PayrollPeriodFromFormatted} - {payrollReportResult.PayrollProcessBatchResult.PayrollPeriodToFormatted}.xlsx";
 
                     var lines = new List<IEnumerable<string>>();
-                    lines.Add(new List<string> { "Job Placement Resources Services Cooperative" });
+                    lines.Add(new List<string> { payrollReportResult.CompanyName });
                     lines.Add(new List<string> { $"Payroll Report for {payrollReportResult.PayrollProcessBatchResult.Client.Name}" });
                     lines.Add(new List<string> { $"For the period {payrollReportResult.PayrollProcessBatchResult.PayrollPeriodFromFormatted} to {payrollReportResult.PayrollProcessBatchResult.PayrollPeriodToFormatted} ({payrollReportResult.PayrollProcessBatchResult.PayrollPeriodFormatted} payroll period)" });
                     lines.Add(new List<string> { $"{payrollReportResult.PayrollReportItems.Count()} record/s total" });
@@ -476,7 +476,7 @@ namespace JPRSC.HRIS.Features.Payroll
                 }
 
                 columns.Add(new ColumnInfo<PayrollReport.QueryResult.PayrollReportItem>("Loan Payments", "LoanPayments", p => String.Format("{0:n}", p.PayrollRecord.LoanPaymentValue.GetValueOrDefault())));
-                
+
                 if (payrollReportItems.Select(p => p.PayrollRecord).Sum(p => p.LoanPaymentValue.GetValueOrDefault()) > 0)
                 {
                     foreach (var loanType in payrollReportResult.LoanTypes)

@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using JPRSC.HRIS.Infrastructure.Data;
-using JPRSC.HRIS.Models;
-using JPRSC.HRIS.Features.Payroll;
 using JPRSC.HRIS.Infrastructure.Excel;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -44,6 +43,7 @@ namespace JPRSC.HRIS.Features.Reports
             public int PayrollPeriodYear { get; set; }
             public IList<LoanRecord> LoanRecords { get; set; } = new List<LoanRecord>();
             public string SSSOrPagibigHeader { get; set; }
+            public string CompanyName { get; set; }
 
             public class LoanType
             {
@@ -99,13 +99,16 @@ namespace JPRSC.HRIS.Features.Reports
             private readonly ApplicationDbContext _db;
             private readonly IExcelBuilder _excelBuilder;
             private readonly IMapper _mapper;
+            private readonly IMediator _mediator;
             private Models.SystemSettings _systemSettings;
 
-            public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMapper mapper)
+            public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMapper mapper, IMediator mediator)
             {
                 _db = db;
                 _excelBuilder = excelBuilder;
                 _mapper = mapper;
+                _mediator = mediator;
+
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken token)
@@ -123,6 +126,8 @@ namespace JPRSC.HRIS.Features.Reports
                 var loanType = await _db.LoanTypes.AsNoTracking().Where(l => l.Id == query.LoanTypeId).ProjectTo<QueryResult.LoanType>(_mapper).SingleAsync();
 
                 var loanRecords = await GetLoanRecords(query, payrollProcessBatches);
+
+                var companyClientTag = await _mediator.Send(new CompanyClientTags.GetByClientId.Query { ClientId = query.ClientId });
 
                 if (query.Destination == "Excel")
                 {
@@ -145,7 +150,8 @@ namespace JPRSC.HRIS.Features.Reports
                     {
                         FileContent = reportFileContent,
                         Filename = reportFileNameBuilder.ToString(),
-                        LoanTypeResult = loanType
+                        LoanTypeResult = loanType,
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
                 else
@@ -173,7 +179,8 @@ namespace JPRSC.HRIS.Features.Reports
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
                         PayrollPeriodMonthMonth = payrollPeriodMonth,
                         PayrollPeriodYear = query.PayrollPeriodYear,
-                        SSSOrPagibigHeader = query.LoanTypeId == HDMFCALL_ID || query.LoanTypeId == HDMFL_ID ? "Employee PagIbig No." : "Employee SSS No."
+                        SSSOrPagibigHeader = query.LoanTypeId == HDMFCALL_ID || query.LoanTypeId == HDMFL_ID ? "Employee PagIbig No." : "Employee SSS No.",
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
             }

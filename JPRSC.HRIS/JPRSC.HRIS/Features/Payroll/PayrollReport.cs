@@ -39,6 +39,7 @@ namespace JPRSC.HRIS.Features.Payroll
             public IEnumerable<Models.LoanType> LoanTypes { get; set; } = new List<Models.LoanType>();
 
             public IEnumerable<PayrollReportItem> PayrollReportItems { get; set; } = new List<PayrollReportItem>();
+            public string CompanyName { get; set; }
 
             public class PayrollReportItem
             {
@@ -53,10 +54,13 @@ namespace JPRSC.HRIS.Features.Payroll
         public class QueryHandler : IRequestHandler<Query, QueryResult>
         {
             private readonly ApplicationDbContext _db;
+            private readonly IMediator _mediator;
 
-            public QueryHandler(ApplicationDbContext db)
+            public QueryHandler(ApplicationDbContext db, IMediator mediator)
             {
                 _db = db;
+                _mediator = mediator;
+
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken cancellationToken)
@@ -143,7 +147,7 @@ namespace JPRSC.HRIS.Features.Payroll
                         };
 
                         Logger.Log(logEntry);
-                    }                        
+                    }
 
                     payrollReportItem.DailyTimeRecord = matchingDailyTimeRecords.FirstOrDefault();
                     payrollReportItem.EarningDeductionRecords = earningDeductionRecords.Where(edr => edr.EmployeeId == payrollRecord.EmployeeId).ToList();
@@ -175,6 +179,8 @@ namespace JPRSC.HRIS.Features.Payroll
                 var earningDeductions = await _db.EarningDeductions.AsNoTracking().Where(ed => !ed.DeletedOn.HasValue).ToListAsync();
                 var loanTypes = await _db.LoanTypes.AsNoTracking().Where(lt => !lt.DeletedOn.HasValue).ToListAsync();
 
+                var companyClientTag = await _mediator.Send(new CompanyClientTags.GetByClientId.Query { ClientId = payrollProcessBatch.ClientId });
+
                 return new QueryResult
                 {
                     PayrollProcessBatchId = query.PayrollProcessBatchId,
@@ -183,7 +189,8 @@ namespace JPRSC.HRIS.Features.Payroll
                     PayrollReportItems = payrollReportItems,
                     PayRates = payRates,
                     EarningDeductions = earningDeductions,
-                    LoanTypes = loanTypes
+                    LoanTypes = loanTypes,
+                    CompanyName = companyClientTag.CompanyName,
                 };
             }
         }

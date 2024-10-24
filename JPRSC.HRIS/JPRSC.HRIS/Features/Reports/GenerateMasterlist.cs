@@ -44,6 +44,7 @@ namespace JPRSC.HRIS.Features.Reports
             public IList<Employee> Employees { get; set; } = new List<Employee>();
             public IList<Table> Tables { get; set; } = new List<Table>();
             public Query Query { get; set; }
+            public string CompanyName { get; set; }
 
             public class Employee
             {
@@ -180,7 +181,7 @@ namespace JPRSC.HRIS.Features.Reports
                 CreateMap<Company, QueryResult.Company>();
                 CreateMap<PagIbigRecord, QueryResult.PagIbigRecord>();
                 CreateMap<Religion, QueryResult.Religion>();
-                CreateMap<TaxStatus,QueryResult.TaxStatus>();
+                CreateMap<TaxStatus, QueryResult.TaxStatus>();
                 CreateMap<JobTitle, QueryResult.JobTitle>();
             }
         }
@@ -222,7 +223,7 @@ namespace JPRSC.HRIS.Features.Reports
                 Column("Id", e => e.Id.ToString());
                 Column("PagIbig Record", e => e.PagIbigRecord?.Name);
                 Column("Position", e => e.Position);
-                Column("Region", e => e.Region.HasValue ? EnumHelper.GetDisplayName(e.Region.Value) : String.Empty);                
+                Column("Region", e => e.Region.HasValue ? EnumHelper.GetDisplayName(e.Region.Value) : String.Empty);
                 Column("Religion", e => e.Religion?.Code);
                 Column("Resign Status", e => e.ResignStatus);
                 Column("Salary Status", e => e.SalaryStatus);
@@ -276,12 +277,15 @@ namespace JPRSC.HRIS.Features.Reports
             private readonly ApplicationDbContext _db;
             private readonly IExcelBuilder _excelBuilder;
             private readonly IMapper _mapper;
+            private readonly IMediator _mediator;
 
-            public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMapper mapper)
+            public QueryHandler(ApplicationDbContext db, IExcelBuilder excelBuilder, IMapper mapper, IMediator mediator)
             {
                 _db = db;
                 _excelBuilder = excelBuilder;
                 _mapper = mapper;
+                _mediator = mediator;
+
             }
 
             public async Task<QueryResult> Handle(Query query, CancellationToken cancellationToken)
@@ -309,6 +313,8 @@ namespace JPRSC.HRIS.Features.Reports
                     .Append($"Masterlist Report - ")
                     .Append(query.ClientId == -1 ? "All Clients" : clients.Single().Name);
 
+                var companyClientTag = await _mediator.Send(new CompanyClientTags.GetByClientId.Query { ClientId = query.ClientId });
+
                 // Hard code destination because browsers run out of memory when trying to load a large amount of data
                 query.Destination = "Excel";
 
@@ -320,7 +326,8 @@ namespace JPRSC.HRIS.Features.Reports
                     return new QueryResult
                     {
                         FileContent = _excelBuilder.BuildExcelFile(excelTable.AllLines),
-                        Filename = reportFileNameBase.Append(".xlsx").ToString()
+                        Filename = reportFileNameBase.Append(".xlsx").ToString(),
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
                 else
@@ -365,7 +372,8 @@ namespace JPRSC.HRIS.Features.Reports
                         DisplayMode = query.DisplayMode,
                         Employees = employees,
                         Query = query,
-                        Tables = tables
+                        Tables = tables,
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
             }

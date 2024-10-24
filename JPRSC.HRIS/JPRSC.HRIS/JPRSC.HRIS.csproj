@@ -212,6 +212,7 @@
     <Compile Include="Features\Companies\Edit.cs" />
     <Compile Include="Features\Companies\Index.cs" />
     <Compile Include="Features\Companies\Search.cs" />
+    <Compile Include="Features\CompanyClientTags\GetByClientId.cs" />
     <Compile Include="Features\CustomRoles\Add.cs" />
     <Compile Include="Features\CustomRoles\Delete.cs" />
     <Compile Include="Features\CustomRoles\Edit.cs" />
@@ -704,6 +705,10 @@
     <Compile Include="Infrastructure\Data\Migrations\202312200446584_AddPayrollPeriodValuesToForProcessingBatch.designer.cs">
       <DependentUpon>202312200446584_AddPayrollPeriodValuesToForProcessingBatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Data\Migrations\202410011022211_AddCompanyClientTags.cs" />
+    <Compile Include="Infrastructure\Data\Migrations\202410011022211_AddCompanyClientTags.Designer.cs">
+      <DependentUpon>202410011022211_AddCompanyClientTags.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\Data\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\Data\Seed\ApprovalLevelSeed.cs" />
     <Compile Include="Infrastructure\Data\Seed\BankSeed.cs" />
@@ -753,6 +758,7 @@
     <Compile Include="Models\CivilStatus.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Company.cs" />
+    <Compile Include="Models\CompanyClientTag.cs" />
     <Compile Include="Models\CutOffPeriod.cs" />
     <Compile Include="Models\DailyTimeRecord.cs" />
     <Compile Include="Models\Department.cs" />
@@ -1059,6 +1065,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data\Migrations\202312200446584_AddPayrollPeriodValuesToForProcessingBatch.resx">
       <DependentUpon>202312200446584_AddPayrollPeriodValuesToForProcessingBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data\Migrations\202410011022211_AddCompanyClientTags.resx">
+      <DependentUpon>202410011022211_AddCompanyClientTags.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

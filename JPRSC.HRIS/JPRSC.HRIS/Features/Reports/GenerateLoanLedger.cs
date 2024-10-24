@@ -1,7 +1,6 @@
 ﻿using JPRSC.HRIS.Infrastructure.Data;
-using JPRSC.HRIS.Models;
-using JPRSC.HRIS.Features.Payroll;
 using JPRSC.HRIS.Infrastructure.Excel;
+using JPRSC.HRIS.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -35,6 +34,7 @@ namespace JPRSC.HRIS.Features.Reports
             public Month? PayrollPeriodMonthMonth { get; set; }
             public int PayrollPeriodYear { get; set; }
             public IList<SSSRecord> SSSRecords { get; set; } = new List<SSSRecord>();
+            public string CompanyName { get; set; }
 
             public class SSSRecord
             {
@@ -103,6 +103,8 @@ namespace JPRSC.HRIS.Features.Reports
 
                 var sssRecords = await GetLoanSSSRecords(payrollProcessBatches);
 
+                var companyClientTag = await _mediator.Send(new CompanyClientTags.GetByClientId.Query { ClientId = query.ClientId });
+
                 if (query.Destination == "Excel")
                 {
                     var excelLines = sssRecords.Select(pr => pr.DisplayLine).ToList();
@@ -121,7 +123,8 @@ namespace JPRSC.HRIS.Features.Reports
                     return new QueryResult
                     {
                         FileContent = reportFileContent,
-                        Filename = reportFileNameBuilder.ToString()
+                        Filename = reportFileNameBuilder.ToString(),
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
                 else
@@ -146,7 +149,8 @@ namespace JPRSC.HRIS.Features.Reports
                         SSSRecords = sssRecords,
                         PayrollPeriodMonth = query.PayrollPeriodMonth,
                         PayrollPeriodMonthMonth = payrollPeriodMonth,
-                        PayrollPeriodYear = query.PayrollPeriodYear
+                        PayrollPeriodYear = query.PayrollPeriodYear,
+                        CompanyName = companyClientTag.CompanyName
                     };
                 }
             }
