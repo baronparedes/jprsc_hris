@@ -297,7 +297,7 @@ namespace JPRSC.HRIS.Features.Reports
                     graphics.Write(courierNew, "00039", new PointF(660f, 940f), 34f); //RDO
 
                     string companyAddress = "3F M&J Building 123 Don Alejandro Roces \nAvenue Quezon City";
-                    graphics.Write(courierNew, "JOB PLACEMENT RESOURCES SERVICES COOPERATIVE", new PointF(135f, 1010f));
+                    graphics.Write(courierNew, queryResult.CompanyName.ToUpperInvariant(), new PointF(135f, 1010f));
                     graphics.Write(courierNew, companyAddress.ToUpperInvariant(), new PointF(135f, 1080f));
                     graphics.Write(courierNew, "1103", new PointF(740f, 1080f));
 
